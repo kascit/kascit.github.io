@@ -1,0 +1,113 @@
+# -----------------------------------------------------------------------------
+# CORE SETTINGS
+# -----------------------------------------------------------------------------
+base_url = "https://dhanur.me"
+title = "Dhanur"
+description = "My cozy corner of the internet."
+default_language = "en"
+theme = "goyo"
+
+# -----------------------------------------------------------------------------
+# BUILD & GENERATION
+# -----------------------------------------------------------------------------
+compile_sass = true
+build_search_index = true
+generate_feeds = true
+feed_filenames = ["rss.xml"]
+
+# -----------------------------------------------------------------------------
+# TAXONOMIES
+# -----------------------------------------------------------------------------
+taxonomies = [
+    { name = "tags", feed = true, paginate_by = 10 },
+    { name = "categories", feed = true, paginate_by = 10 },
+]
+
+# -----------------------------------------------------------------------------
+# MARKDOWN & CODE HIGHLIGHTING
+# -----------------------------------------------------------------------------
+[markdown]
+highlight_code = true
+highlight_theme = "gruvbox-dark"
+smart_punctuation = true
+external_links_target_blank = true
+
+[link_checker]
+skip_prefixes = ["http://127.0.0.1", "http://localhost"]
+external_level = "warn"
+
+# -----------------------------------------------------------------------------
+# THEME CONFIGURATION (GOYO SPECIFIC)
+# -----------------------------------------------------------------------------
+[extra]
+author = "Dhanur"
+
+# Footer Content
+footer_html = "© 2025 Dhanur. Built with <a href='https://getzola.org'>Zola</a>."
+
+# -----------------------------------------------------------------------------
+# NAVIGATION MENU
+# -----------------------------------------------------------------------------
+# Goyo requires 'icon' keys (FontAwesome classes).
+nav = [
+  { name = "About", url = "/about/", type = "url", icon = "fa-solid fa-user" },
+  { name = "Projects", url = "/projects/", type = "url", icon = "fa-solid fa-code" },
+  { name = "Blog", url = "/blog/", type = "url", icon = "fa-solid fa-pen-nib" },
+  { name = "Links", url = "/links/", type = "url", icon = "fa-solid fa-link" },
+  
+  # I've added your social links here as a dropdown so they appear neatly in the nav
+  # { name = "Socials", type = "dropdown", icon = "fa-solid fa-share-nodes", members = [
+  #     { name = "GitHub", url = "https://github.com/kascit", type = "url", icon = "fa-brands fa-github" },
+  #     { name = "Twitter", url = "https://twitter.com/yourhandle", type = "url", icon = "fa-brands fa-twitter" },
+  #     { name = "LinkedIn", url = "https://linkedin.com/in/yourprofile", type = "url", icon = "fa-brands fa-linkedin" },
+  #     { name = "Email", url = "mailto:contact@dhanur.me", type = "url", icon = "fa-solid fa-envelope" }
+  # ]}
+]
+
+# -----------------------------------------------------------------------------
+# LOGO CONFIGURATION
+# -----------------------------------------------------------------------------
+[extra.logo]
+text = "Dhanur"
+# If you have a logo image, uncomment the next line:
+image_path = "images/icon.png"
+
+# -----------------------------------------------------------------------------
+# THEME COLORS & STYLE
+# -----------------------------------------------------------------------------
+[extra.theme]
+colorset = "auto"      # Matches your Gruvbox preference
+brightness = "normal"
+disable_toggle = false # Allows users to switch to light mode if they want
+
+# -----------------------------------------------------------------------------
+# SIDEBAR
+# -----------------------------------------------------------------------------
+[extra.sidebar]
+expand_depth = 1
+disable_root_hide = false
+
+# -----------------------------------------------------------------------------
+# COMMENTS (GISCUS)
+# -----------------------------------------------------------------------------
+[extra.comments]
+enabled = false # Set to true when you have your Repo ID
+system = "giscus"
+repo = "kascit/kascit.github.io"
+repo_id = "" # PASTE YOUR GISCUS REPO ID HERE
+category = "Comments"
+category_id = "" # PASTE YOUR GISCUS CATEGORY ID HERE
+
+# -----------------------------------------------------------------------------
+# SHARE BUTTONS
+# -----------------------------------------------------------------------------
+[extra.share]
+copy_url = true
+x = true
+
+# -----------------------------------------------------------------------------
+# METADATA
+# -----------------------------------------------------------------------------
+[extra.twitter]
+site = "@yourhandle"
+creator = "@yourhandle"

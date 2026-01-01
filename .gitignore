@@ -1,0 +1,14 @@
+# Zola generated files
+public/
+resources/
+
+# OS generated junk (Mac/Windows)
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# Text Editor settings (VS Code, JetBrains, etc)
+.vscode/
+.idea/
+*.swp
+*.swo

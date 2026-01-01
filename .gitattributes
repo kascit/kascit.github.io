@@ -1,0 +1,9 @@
+# Set the default behavior, in case people don't have core.autocrlf set.
+* text=auto
+
+# Force shell scripts and config files to always use LF (Linux style)
+# This prevents Windows from breaking your build scripts.
+*.sh text eol=lf
+*.toml text eol=lf
+*.md text eol=lf
+*.yml text eol=lf

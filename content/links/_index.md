@@ -11,10 +11,6 @@ nav = [
   { name = "Projects", url = "/projects/", type = "link" },
   { name = "Blog", url = "/blog/", type = "link" }
 ]
-
-[extra.comments]
-enabled = false
-
 +++
 
 # Useful Links

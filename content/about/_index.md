@@ -8,9 +8,6 @@ paginate_by = 10
 
 [extra]
 
-
-[extra.comments]
-enabled = false
 +++
 
 # About Me

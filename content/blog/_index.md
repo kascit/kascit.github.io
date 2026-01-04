@@ -16,9 +16,6 @@ nav = [
   { name = "Personal", url = "/blog/tags/personal/", type = "link" }
 ]
 
-[extra.comments]
-enabled = false
-
 +++
 
 # Blog

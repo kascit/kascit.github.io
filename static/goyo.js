@@ -431,6 +431,23 @@ function initToc() {
 
   let activeId = null;
 
+  // Track user's manual open/close actions
+  const userClosedSections = new Set();
+
+  // Add listeners for user interactions with details
+  tocDetails.forEach((detail) => {
+    detail.addEventListener("toggle", (e) => {
+      // Only track if user manually closed it
+      if (!detail.open) {
+        const link = detail.querySelector(".toc-link");
+        if (link) {
+          const id = link.getAttribute("href").split("#")[1];
+          userClosedSections.add(id);
+        }
+      }
+    });
+  });
+
   const activateLink = (id) => {
     if (activeId === id) return; // Already active, no need to update
 
@@ -438,11 +455,6 @@ function initToc() {
 
     // Remove active class from all links
     tocLinks.forEach((link) => link.classList.remove("active"));
-
-    // Only close details if toc_expand is not enabled
-    if (!tocExpand) {
-      tocDetails.forEach((detail) => (detail.open = false));
-    }
 
     // Match links with href ending in #id (handles both relative and absolute URLs)
     const correspondingLink = document.querySelector(
@@ -452,9 +464,18 @@ function initToc() {
     // Add active class to the current link
     if (correspondingLink) {
       correspondingLink.classList.add("active");
+
+      // Open parent details only if user hasn't manually closed them
       let parentDetails = correspondingLink.closest("details");
       while (parentDetails) {
-        parentDetails.open = true;
+        const parentLink = parentDetails.querySelector(".toc-link");
+        const parentId = parentLink
+          ? parentLink.getAttribute("href").split("#")[1]
+          : null;
+
+        if (!parentId || !userClosedSections.has(parentId)) {
+          parentDetails.open = true;
+        }
         parentDetails = parentDetails.parentElement.closest("details");
       }
     }

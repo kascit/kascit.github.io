@@ -1,0 +1,20 @@
+/* Landing page specific styles */
+
+/* Hide the navigation element (prev/next links) completely */
+.landing-page nav {
+  display: none;
+}
+
+/* For landing page: hide sidebar on large screens but keep drawer functional */
+.landing-page .drawer-side {
+  @apply lg:hidden;
+}
+
+/* Ensure drawer label stays visible on all screens */
+.landing-page .drawer-toggle {
+  display: none;
+}
+
+.landing-page .drawer-content {
+  @apply lg:w-full;
+}

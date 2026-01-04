@@ -13,6 +13,7 @@ default_language = "en"
 compile_sass = true
 build_search_index = true
 generate_feeds = true
+generate_sitemap = true
 feed_filenames = ["rss.xml"]
 
 # -----------------------------------------------------------------------------
@@ -43,7 +44,7 @@ external_level = "warn"
 default_thumbnail = "images/default_thumbnail.jpg"
 gtag = "G-XXXXXXXXXX"        # Replace with real GA4 property or leave empty to disable.
 edit_url = "https://github.com/kascit/kascit.github.io/edit/main"
-footer_html = "<p>© 2025 Dhanur. Built with <a href=\"https://www.getzola.org/\" target=\"_blank\" rel=\"noopener\">Zola</a>"
+footer_html = "Dhanur · Built with <a href='https://www.getzola.org/' target='_blank' rel='noopener'>Zola</a>"
 
 # -----------------------------------------------------------------------------
 # NAVIGATION
@@ -52,8 +53,8 @@ footer_html = "<p>© 2025 Dhanur. Built with <a href=\"https://www.getzola.org/\
 nav = [
   { name = "About", url = "/about/", type = "url", icon = "fa-solid fa-user" },
   { name = "Projects", url = "/projects/", type = "url", icon = "fa-solid fa-code" },
-  { name = "Blog", url = "/blog/", type = "url", icon = "fa-solid fa-pen-nib" },
   { name = "Links", url = "/links/", type = "url", icon = "fa-solid fa-link" },
+  { name = "Blog", url = "/blog/", type = "url", icon = "fa-solid fa-pen-nib" },
   # Example dropdown if you want socials grouped:
   # { name = "Socials", type = "dropdown", icon = "fa-solid fa-share-nodes", members = [
   #     { name = "GitHub", url = "https://github.com/kascit", type = "url", icon = "fa-brands fa-github" },
@@ -80,7 +81,7 @@ light_image_path = "images/logo-dark.png"
 colorset = "dark"           # Primary palette (Gruvbox-like).
 brightness = "normal"
 dark_brightness = "darker"  # Slightly darker for dark mode.
-light_brightness = "normal"
+# light_brightness = "darker"
 disable_toggle = false       # Allow visitors to switch themes.
 
 # -----------------------------------------------------------------------------
@@ -122,28 +123,6 @@ creator = "@yourhandle"
 enabled = true
 name = "Roboto"
 path = "https://fonts.googleapis.com/css2?family=Roboto&display=swap"
-
-# -----------------------------------------------------------------------------
-# PWA
-# -----------------------------------------------------------------------------
-[extra.pwa]
-enabled = true
-name = "Dhanur"
-short_name = "Dhanur"
-description = "My cozy corner of the internet."
-background_color = "#f5f5f5"
-theme_color = "#a89984"
-display = "standalone"
-scope = "/"
-start_url = "/"
-
-# -----------------------------------------------------------------------------
-# ANALYTICS (PLAUSIBLE)
-# -----------------------------------------------------------------------------
-[extra.analytics]
-plausible_domain = "dhanur.me"
-plausible_api_host = "https://plausible.io"
-enabled = true
 
 # -----------------------------------------------------------------------------
 # FAVICON

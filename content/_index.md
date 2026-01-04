@@ -14,7 +14,7 @@ title = "Hi, I'm Dhanur 👋"
 badge = "Backend Engineer & DevOps Enthusiast"
 description = "Welcome to my cozy corner of the internet. I'm a developer passionate about building robust backend systems, automating infrastructure, and contributing to open source."
 # You can add a profile picture here, or comment it out for a text-only look
-# image = "/images/profile.jpg" 
+image = "/images/whood.png" 
 
 cta_buttons = [
     { text = "View Projects", url = "/projects", style = "primary" },

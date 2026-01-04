@@ -1,54 +1,77 @@
-name: Deploy Zola Site
+name: Deploy Zola Site to GitHub Pages
 
 on:
-  # Trigger the workflow every time you push to the main branch
   push:
-    branches: ["main"]
-  # Allows you to run this workflow manually from the Actions tab
+    branches: [main]
+    paths-ignore:
+      - "README.md"
+      - "TEMPLATE_GUIDE.md"
+      - "TEMPLATE_EXAMPLES.md"
+      - "FIXES_SUMMARY.md"
+      - ".gitignore"
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN to allow deployment to GitHub Pages
+# Required permissions for GitHub Pages deployment
 permissions:
   contents: read
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment, skipping runs queued between the run in-progress and latest queued.
+# Prevent concurrent deployments
 concurrency:
-  group: "pages"
+  group: pages
   cancel-in-progress: false
 
+# Default shell for all run steps
+defaults:
+  run:
+    shell: bash
+
 jobs:
-  # Build Job
   build:
+    name: Build Zola Site
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          submodules: recursive  # CRITICAL: This ensures the Goyo theme submodule is downloaded
+          submodules: recursive
           fetch-depth: 0
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v4
 
       - name: Install Zola
         uses: taiki-e/install-action@v2
         with:
-          tool: zola@0.19.2 # Using a recent stable version
+          tool: zola@0.19.2
 
-      - name: Build Site
-        run: zola build
+      - name: Verify Zola installation
+        run: zola --version
 
-      - name: Upload Artifact
+      - name: Build site with Zola
+        env:
+          ZOLA_BASE_URL: ${{ steps.pages.outputs.base_url }}
+        run: |
+          echo "Building site with base URL: $ZOLA_BASE_URL"
+          zola build --base-url "$ZOLA_BASE_URL"
+
+      - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./public
 
-  # Deploy Job
   deploy:
+    name: Deploy to GitHub Pages
+    runs-on: ubuntu-latest
+    needs: build
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
+
     steps:
       - name: Deploy to GitHub Pages
         id: deployment

@@ -277,6 +277,57 @@
     <script defer src="{{ get_url(path="js/copy_code.js") | safe }}"></script>
     <script defer src="{{ get_url(path="js/copy_heading_link.js") | safe }}"></script>
 
+    <!-- Global shortcut hint renderer (desktop-only display) -->
+    <script>
+        (function () {
+            const isDesktop =
+                matchMedia('(hover: hover)').matches &&
+                matchMedia('(pointer: fine)').matches;
+
+            function renderShortcut(el) {
+                const spec = el.getAttribute('data-shortcut');
+                if (!spec) return;
+
+                const desktopOnly = el.getAttribute('data-desktop-only') === 'true';
+                if (desktopOnly && !isDesktop) {
+                    el.style.display = 'none';
+                    return;
+                }
+
+                const platform = navigator.userAgentData?.platform || navigator.platform || '';
+                const isMac = /mac/i.test(platform);
+                const primary = isMac ? '⌘' : 'Ctrl';
+                const altLabel = isMac ? 'Option' : 'Alt';
+                const metaLabel = isMac ? '⌘' : 'Win';
+
+                const parts = spec.split('+').map((key) => {
+                    const lower = key.trim().toLowerCase();
+                    if (lower === 'primary') return primary;
+                    if (lower === 'alt') return altLabel;
+                    if (lower === 'meta') return metaLabel;
+                    if (lower === 'shift') return 'Shift';
+                    if (lower === 'cmd' || lower === 'command') return '⌘';
+                    return key.length === 1 ? key.toUpperCase() : key;
+                });
+
+                el.innerHTML = parts.map((k) => `<kbd class="kbd">${k}</kbd>`).join('');
+                el.style.display = 'inline-flex';
+                el.style.gap = '2px';
+                el.classList.add('shortcut-hint-ready');
+            }
+
+            document.addEventListener('DOMContentLoaded', function () {
+                // Hide any desktop-only elements when not desktop
+                if (!isDesktop) {
+                    document.querySelectorAll('[data-desktop-only="true"]').forEach((el) => {
+                        el.style.display = 'none';
+                    });
+                }
+                document.querySelectorAll('[data-shortcut]').forEach(renderShortcut);
+            });
+        })();
+    </script>
+
     <!-- Lazy load Mermaid and KaTeX - only when needed -->
     <script>
         // Lazy load KaTeX and Mermaid when needed

@@ -1,17 +1,25 @@
 {% macro footer(config) %}
-<footer class="footer py-2 px-4 mt-2 border-t border-gray-500/50">
-    <div class="w-full">
-        <!-- Main footer content -->
-        <div class="flex flex-col items-center gap-4 mb-4">
-            <!-- Powered by section with better styling -->
-            <div class="text-center">
-                <p class="text-sm text-base-content/60 leading-relaxed">
-                    {{ config.extra.footer_html | default(value="Powered by <a href='https://www.getzola.org' class='font-medium text-base-content/70 hover:text-base-content transition-colors duration-200'>Zola</a> and <a href='https://github.com/hahwul/goyo' class='font-medium text-base-content/70 hover:text-base-content transition-colors duration-200'>Goyo</a>" | safe) | safe }}
-                </p>
-            </div>
-        </div>
-
-
-    </div>
-</footer>
+<div
+  class="w-full border-t border-gray-500/15 px-4 py-3 mt-auto flex justify-center"
+>
+  <p class="text-xs text-base-content/50 leading-relaxed text-center">
+    © {{ now() | date(format="%Y") }} {{ config.extra.footer_html |
+    default(value='Powered by
+    <a
+      href="https://www.getzola.org"
+      class="hover:text-base-content/70 transition-colors"
+      target="_blank"
+      rel="noopener"
+      >Zola</a
+    >
+    &
+    <a
+      href="https://github.com/hahwul/goyo"
+      class="hover:text-base-content/70 transition-colors"
+      target="_blank"
+      rel="noopener"
+      >Goyo</a
+    >') | safe }}
+  </p>
+</div>
 {% endmacro footer %}

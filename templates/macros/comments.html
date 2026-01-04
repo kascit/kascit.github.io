@@ -1,24 +1,15 @@
-{% macro comments(config, page, section) %}
-{# Only show comments on blog posts (pages under /blog/), not on sections, taxonomies, or other pages #}
-{% set show_comments = false %}
-
-{# Check if this is a page (not a section) and it's under /blog/ #}
-{% if page is defined and page.path is defined %}
-    {% set is_blog_post = page.path is starting_with("/blog/") and not page.path is ending_with("/_index/") %}
-    
-    {# Allow explicit override via page frontmatter #}
-    {% if page.extra.comments is defined %}
-        {% set show_comments = page.extra.comments.enabled | default(value=false) %}
-    {% else %}
-        {# Default: show comments only on blog posts #}
-        {% set show_comments = is_blog_post %}
-    {% endif %}
-{% endif %}
-
-{# Check global config is enabled #}
-{% set global_enabled = config.extra.comments and config.extra.comments.enabled %}
-
-{% if global_enabled and show_comments %}
+{% macro comments(config, page, section) %} {# Only show comments on blog posts
+(pages under /blog/), not on sections, taxonomies, or other pages #} {% set
+show_comments = false %} {# Check if this is a page (not a section) and it's
+under /blog/ #} {% if page is defined and page.path is defined %} {% set
+is_blog_post = page.path is starting_with("/blog/") and not page.path is
+ending_with("/_index/") %} {# Allow explicit override via page frontmatter #} {%
+if page.extra.comments is defined %} {% set show_comments =
+page.extra.comments.enabled | default(value=false) %} {% else %} {# Default:
+show comments only on blog posts #} {% set show_comments = is_blog_post %} {%
+endif %} {% endif %} {# Check global config is enabled #} {% set global_enabled
+= config.extra.comments and config.extra.comments.enabled %} {% if
+global_enabled and show_comments %}
 <div id="comments" class="mt-12">
   {% if config.extra.comments.system == "giscus" %}
   <script>

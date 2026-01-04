@@ -8,7 +8,7 @@
 {% set not_found_url = config.base_url ~ "/404.html" %}
 
 <!DOCTYPE html>
-{{ macros_head::html_tag(config=config, lang=lang) }}
+{{ macros_head::html_tag(config=config, lang=config.default_language) }}
 <head>
     {{ macros_head::head(
         config=config,
@@ -26,7 +26,7 @@
     <div class="drawer lg:drawer-open">
         <input id="my-drawer-2" type="checkbox" class="drawer-toggle" />
         <div class="drawer-content flex flex-col pt-16">
-            {{ macros_header::header(config=config, lang=lang) }}
+            {{ macros_header::header(config=config, lang=config.default_language) }}
             <div class="p-8 w-full max-w-3xl mx-auto flex flex-col justify-center items-center min-h-[60vh]">
                 <main class="flex flex-auto flex-col items-center justify-center px-4 text-center sm:flex-row">
                     <h1 class="text-2xl font-extrabold tracking-tight text-gray-900 sm:mr-6 sm:border-r sm:border-gray-900/10 sm:pr-6 sm:text-3xl dark:text-gray-200 sm:dark:border-gray-300/10">{{ not_found_title }}</h1>
@@ -35,8 +35,11 @@
             </div>
         </div>
         <div id="sidebar" class="drawer-side fixed top-0 pt-12 bottom-0 z-40 border-r border-gray-500/15">
-            {{ macros_sidebar::sidebar(config=config, lang=lang, current_path='/', section=false) }}
+            {{ macros_sidebar::sidebar(config=config, lang=config.default_language, current_path='/', section=false) }}
         </div>
     </div>
+
+    <!-- Theme toggle script - critical for functionality -->
+    <script type="text/javascript" src="{{ get_url(path='goyo.js') | safe }}"></script>
 </body>
 </html>

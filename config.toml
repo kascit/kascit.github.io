@@ -29,7 +29,7 @@ taxonomies = [
 # -----------------------------------------------------------------------------
 [markdown]
 highlight_code = true
-highlight_theme = "gruvbox-dark"
+highlight_theme = "css"  # Use CSS classes instead of inline styles
 smart_punctuation = true
 external_links_target_blank = true
 
@@ -42,7 +42,7 @@ external_level = "warn"
 # -----------------------------------------------------------------------------
 [extra]
 default_thumbnail = "images/default_thumbnail.jpg"
-gtag = "G-XXXXXXXXXX"        # Replace with real GA4 property or leave empty to disable.
+gtag = "G-BY8SPYYYYR"        # Replace with real GA4 property or leave empty to disable.
 edit_url = "https://github.com/kascit/kascit.github.io/edit/main"
 footer_html = "Dhanur · Built with <a href='https://www.getzola.org/' target='_blank' rel='noopener'>Zola</a>"
 

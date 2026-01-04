@@ -1,266 +1,199 @@
 +++
-title = "My Arch Linux Development Setup"
-date = 2026-01-01
-description = "A detailed walkthrough of my Arch Linux configuration, tools, and workflow for productive development"
+title = "I Use Arch BTW: My Setup and Why I Torture Myself"
+date = 2025-12-29
+description = "A walkthrough of my Arch Linux setup, or: how I learned to stop worrying and love the terminal"
 
 [taxonomies]
 tags = ["linux", "arch", "development", "productivity", "tools"]
 categories = ["Personal"]
-
-[extra.comments]
-enabled = true
 +++
 
-# My Arch Linux Development Setup
+Yes, I'm that person. I use Arch Linux. I will tell you about it. Repeatedly.
 
-I've been using Arch Linux as my daily driver for development for over a year now. Here's my complete setup and why I love it.
+But seriously, after a year of daily-driving Arch for development, I've got opinions and a setup that (mostly) doesn't break every update. Let me walk you through it.
 
-## Why Arch Linux?
+## Why Arch? (The Actual Reasons)
 
-**"I use Arch, btw"** - the meme is real, but here's why:
+Look past the memes and superiority complex, and there are legit reasons:
 
-- **Rolling release**: Always up-to-date packages
-- **AUR**: Access to virtually any software
-- **Minimalism**: Install only what you need
-- **Learning**: Forces you to understand your system
-- **Performance**: Lightweight and fast
+**The Good:**
 
-## Installation Essentials
+- Rolling release = always bleeding-edge packages (until something breaks)
+- AUR = literally any software exists here
+- Minimal base = you only install what you need
+- Forces you to actually understand your system
+- Did I mention I can say "I use Arch btw"?
 
-### Base System
+**The Bad:**
 
-I use the standard Arch installation with:
+- Updates can and will break things at the worst possible time
+- You WILL spend a Saturday fixing something that worked yesterday
+- Installation is a rite of passage (or torture, depending on perspective)
+- Reading the wiki becomes your new hobby
 
-- **Bootloader**: GRUB
-- **Init system**: systemd
-- **Shell**: zsh with Oh My Zsh
-- **Terminal**: Alacritty (GPU-accelerated)
+## My Current Setup
 
-### Display Server & Desktop
+### The Foundation
+
+After reinstalling Arch approximately 4 times (learning experience™), here's what stuck:
 
 ```bash
-# Wayland + Hyprland (tiling window manager)
-sudo pacman -S wayland hyprland waybar wofi
-
-# Or if you prefer Xorg
-sudo pacman -S xorg i3-wm polybar rofi
+# Display server: Wayland because it's 2025
+# WM: Hyprland (tiling, because I'm pretentious)
+# Terminal: Alacritty (GPU-accelerated, so fast)
+# Shell: zsh + oh-my-zsh (I know, basic)
 ```
 
-## Development Tools
+### Development Environment
 
-### Essential Packages
+This is where I actually spend my time:
 
 ```bash
-# Core development
-sudo pacman -S base-devel git vim neovim
+# Editor: Neovim
+# Why? Because I like suffering and also it's actually great
+# Config: ~800 lines of Lua I barely understand
 
+# Terminal multiplexer: tmux
+# Because tabs are for quitters
+
+# File manager: ranger + lf
+# Sometimes GUI file managers, when I'm feeling lazy
+```
+
+## The Tools That Matter
+
+### Package Management
+
+```bash
+# Official repos
+sudo pacman -S <package>
+
+# AUR (use yay or paru)
+yay -S <whatever-obscure-package>
+```
+
+Pro tip: Always read the PKGBUILD before installing from AUR. Or don't, and live dangerously.
+
+### Development Essentials
+
+```bash
 # Languages
 sudo pacman -S jdk-openjdk python rust go nodejs npm
 
 # Build tools
-sudo pacman -S make cmake ninja
-
-# Containers
-sudo pacman -S docker docker-compose
+sudo pacman -S base-devel cmake ninja
 
 # Version control
-sudo pacman -S git git-lfs lazygit
+sudo pacman -S git lazygit  # lazygit is a game-changer
 
-# Terminal multiplexer
-sudo pacman -S tmux
+# Docker (because containers)
+sudo pacman -S docker docker-compose
+sudo systemctl enable docker
+sudo usermod -aG docker $USER
 ```
 
-### From AUR
+### My Terminal Setup
 
-```bash
-yay -S visual-studio-code-bin
-yay -S slack-desktop
-yay -S postman-bin
-yay -S jetbrains-toolbox
-```
-
-## My Neovim Configuration
-
-I use Neovim as my primary editor with a custom config:
-
-```lua
--- init.lua
-require('plugins')
-require('settings')
-require('keymaps')
-require('lsp')
-
--- Key features:
--- - LSP for Java, Python, Rust, Go
--- - Telescope for fuzzy finding
--- - nvim-tree for file explorer
--- - Treesitter for syntax highlighting
--- - GitHub Copilot integration
-```
-
-## Terminal Setup
-
-### Alacritty Configuration
+**Alacritty config highlights:**
 
 ```yaml
-# ~/.config/alacritty/alacritty.yml
+# Font that makes code look good
 font:
   normal:
     family: JetBrainsMono Nerd Font
-  size: 12
+  size: 11
 
+# Colors: Gruvbox because it's the law
 colors:
   primary:
-    background: "#1e1e1e"
-    foreground: "#d4d4d4"
-
-window:
-  opacity: 0.95
-  padding:
-    x: 10
-    y: 10
+    background: "#282828"
+    foreground: "#ebdbb2"
 ```
 
-### Zsh with Oh My Zsh
+**Zsh with the good stuff:**
 
 ```bash
-# Install Oh My Zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-
-# My plugins
+# .zshrc essentials
 plugins=(
   git
-  docker
-  kubectl
-  rust
-  golang
-  python
   zsh-autosuggestions
   zsh-syntax-highlighting
+  docker
+  kubectl
 )
 
-# Theme
-ZSH_THEME="powerlevel10k/powerlevel10k"
-```
-
-## Workflow Optimization
-
-### Tmux Configuration
-
-I use tmux for session management:
-
-```bash
-# ~/.tmux.conf
-set -g default-terminal "screen-256color"
-set -g mouse on
-set -g base-index 1
-
-# Vim-like pane navigation
-bind h select-pane -L
-bind j select-pane -D
-bind k select-pane -U
-bind l select-pane -R
-```
-
-### Custom Scripts
-
-I have a collection of bash scripts for common tasks:
-
-```bash
-#!/bin/bash
-# ~/scripts/dev-setup.sh - Start my dev environment
-
-# Start Docker
-sudo systemctl start docker
-
-# Start database
-docker-compose -f ~/dev/docker-compose.yml up -d
-
-# Open tmux with preset layout
-tmux new-session -d -s dev
-tmux split-window -h
-tmux split-window -v
-tmux attach -t dev
-```
-
-## System Maintenance
-
-### Regular Updates
-
-```bash
-# System update
-sudo pacman -Syu
-
-# AUR packages
-yay -Sua
-
-# Clean package cache
-sudo pacman -Sc
-
-# Remove orphaned packages
-sudo pacman -Rns $(pacman -Qtdq)
-```
-
-### Backup Strategy
-
-```bash
-# System backup with rsync
-rsync -aAXv --exclude={"/dev/*","/proc/*","/sys/*","/tmp/*","/run/*","/mnt/*","/media/*","/lost+found"} / /backup/
-
-# Dotfiles in Git
-cd ~/dotfiles
-git add .
-git commit -m "Update configs"
-git push
-```
-
-## Performance Tuning
-
-### Optimizations
-
-```bash
-# Enable trim for SSD
-sudo systemctl enable fstrim.timer
-
-# Reduce swappiness
-echo "vm.swappiness=10" | sudo tee -a /etc/sysctl.conf
-
-# Preload for faster app launches
-sudo pacman -S preload
-sudo systemctl enable preload
-```
-
-## Useful Aliases
-
-```bash
-# ~/.zshrc
+# Aliases that save my sanity
 alias ls='exa --icons'
 alias cat='bat'
-alias find='fd'
-alias grep='rg'
-alias du='dust'
-alias df='duf'
-
-# Docker shortcuts
-alias d='docker'
-alias dc='docker-compose'
-alias dps='docker ps'
-
-# Git shortcuts
-alias gs='git status'
-alias ga='git add'
-alias gc='git commit'
+alias vim='nvim'
+alias gc='git commit -m'
 alias gp='git push'
+alias fucking='sudo' # sudo !!
 ```
 
-## Conclusion
+## The Neovim Rabbit Hole
 
-My Arch Linux setup is constantly evolving, but this configuration has been stable and productive for months. The key is customization - make your system work for YOU.
+My editor config is probably overengineered, but here are the plugins that actually matter:
 
-### Resources
+```lua
+-- Plugin manager: lazy.nvim (ironically not lazy)
 
-- [My dotfiles on GitHub](https://github.com/kascit/dotfiles)
-- [Arch Wiki](https://wiki.archlinux.org/)
-- [r/unixporn](https://reddit.com/r/unixporn) for inspiration
+-- Essential plugins:
+- telescope.nvim  -- Fuzzy finder (cannot live without)
+- nvim-tree       -- File explorer
+- lualine         -- Status line
+- mason.nvim      -- LSP installer
+- nvim-cmp        -- Autocompletion
+- treesitter      -- Syntax highlighting that doesn't suck
+```
 
-**Tags**: #Linux #Arch #Development #Productivity
+## Window Management: Hyprland
+
+Tiling window managers are peak productivity (after the learning curve):
+
+```conf
+# My keybinds (Mod = Super key)
+Mod + Enter     = Launch terminal
+Mod + D         = Launch rofi (app launcher)
+Mod + H/J/K/L   = Move focus
+Mod + 1-9       = Switch workspaces
+Mod + Shift + Q = Kill window
+```
+
+It looks cool in screenshots and actually makes me faster once I stopped accidentally closing the wrong window.
+
+## Backup Strategy
+
+Because I've learned this lesson the hard way:
+
+```bash
+# Dotfiles: Git repo
+# System: Weekly snapshots with Timeshift
+# Important stuff: Synced to cloud
+# My dignity after breaking X11: Unrecoverable
+```
+
+## The Reality Check
+
+Is Arch Linux objectively better than Ubuntu or Fedora? Probably not.
+
+Do I enjoy the control and learning experience? Absolutely.
+
+Would I recommend it to everyone? Hell no. Use what works for you.
+
+But do I use Arch BTW? You bet I do.
+
+## Resources That Saved Me
+
+- [Arch Wiki](https://wiki.archlinux.org/) - Literally everything you need
+- [r/unixporn](https://reddit.com/r/unixporn) - For ricing inspiration
+- StackOverflow - For when things break
+- Twitter Linux community - Surprisingly helpful
+
+---
+
+That's my setup. It'll probably change next month when I discover some new tool and spend a weekend integrating it. But that's half the fun, right?
+
+If you're thinking about trying Arch, go for it. Just maybe do it on a weekend when you don't have important deadlines. And keep the wiki open.
+
+\- Dhanur

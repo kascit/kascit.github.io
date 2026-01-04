@@ -11,42 +11,46 @@ enabled = false
 
 # About Me
 
-Hey there! 👋 I'm **Dhanur**, a backend engineer and DevOps enthusiast passionate about building scalable systems and automating everything.
+Hey there! 👋 I'm **Dhanur**, a person who writes code and occasionally it works.
 
-## Who I Am
+## The Origin Story
 
-I'm a developer who believes in writing clean, maintainable code and sharing knowledge with the community. My journey in tech has been driven by curiosity and a love for solving complex problems.
+Look, I'm not gonna feed you some polished narrative about "always being passionate about technology since age 5." Truth is, I fell into coding like most of us did - I wanted to make something, Googled how to do it, and suddenly it's 3 AM and I'm knee-deep in Stack Overflow tabs.
 
-### What I Do
+Fast forward a few years of breaking things (and sometimes fixing them), and here we are.
 
-- 💻 **Backend Development**: Building robust APIs and services with Java, Spring Boot, and microservices architecture
-- ☁️ **Cloud & DevOps**: Designing scalable infrastructure on AWS, working with Docker, Kubernetes, and CI/CD pipelines
-- 🐧 **Linux Enthusiast**: Daily driving Arch Linux, automating workflows, and living in the terminal
-- 🌐 **Open Source**: Contributing to projects and building tools for the community
+## What I Actually Do
+
+- 💻 **Backend Stuff**: Wrangling Java and Spring Boot to make APIs that don't fall over. Sometimes they even handle production traffic without crying.
+- ☁️ **Cloud Things**: Fighting with AWS until it does what I want. Docker containers that refuse to die. Kubernetes configs that I definitely understand (I don't).
+- 🐧 **Linux Maximalist**: I use Arch btw. Unironically. Send help.
+- 🌐 **Open Source**: Contributing when I can, creating tools for the two other people who have this exact niche problem.
 
 ## My Tech Stack
 
-### Languages
+### Languages I Pretend to Know
 
-Java • Python • Rust • Go • JavaScript/TypeScript • Bash
+Java • Python • Rust (still learning) • Go (when I'm feeling brave) • JavaScript (reluctantly) • Bash (excessively)
 
-### Backend & Frameworks
+### Backend Frameworks
 
-Spring Boot • Hibernate • Node.js • FastAPI
+Spring Boot • Hibernate • Node.js (for side projects that die quickly)
 
-### Cloud & DevOps
+### Cloud & Infrastructure
 
-AWS (EC2, S3, Lambda, RDS) • Docker • Kubernetes • Terraform • Jenkins • GitHub Actions
+AWS (EC2, S3, Lambda, RDS) • Docker • Kubernetes • Terraform • GitHub Actions
 
 ### Databases
 
-PostgreSQL • MySQL • MongoDB • Redis
+PostgreSQL • MySQL • MongoDB • Redis (for when I want to feel fast)
 
-### Tools & Platforms
+### Daily Drivers
 
-Git • Linux • Vim/Neovim • tmux • VS Code • IntelliJ IDEA
+Arch Linux • Neovim (yes, I'm that person) • tmux • Git • Various terminal emulators I switch between monthly
 
-## What Drives Me
+## What Actually Drives Me
+
+Honestly? A mix of curiosity, stubbornness, and the satisfaction of finally getting that green checkmark in CI after 47 failed attempts.
 
 I believe in:
 

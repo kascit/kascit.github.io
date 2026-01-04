@@ -10,9 +10,9 @@ version = "v1.0"
 # HERO SECTION
 # -----------------------------------------------------------------------------
 [extra.hero]
-title = "Hi, I'm Dhanur 👋"
-badge = "Backend Engineer & DevOps Enthusiast"
-description = "Welcome to my cozy corner of the internet. I'm a developer passionate about building robust backend systems, automating infrastructure, and contributing to open source. I believe in writing clean code, sharing knowledge, and continuously learning in this ever-evolving world of technology."
+title = "Hey, I'm Dhanur 👋"
+badge = "Code Wrangler & Infrastructure Tinkerer"
+description = "This is where I dump my brain on the internet. By day, I wrangle backend services and convince servers to behave. By night, I break my Arch setup and frantically Google how to fix it (again). Sometimes I write code that works. Sometimes I write blog posts about why it didn't."
 # You can add a profile picture here, or comment it out for a text-only look
 image = "/images/whood.png" 
 
@@ -25,37 +25,37 @@ cta_buttons = [
 # FEATURES SECTION (Your "What I Do")
 # -----------------------------------------------------------------------------
 [extra.features_section]
-title = "What I Do"
-description = "Exploring the intersection of code, infrastructure, and efficiency. Here's where my passion lies in the tech world."
+title = "What I Actually Do"
+description = "When I'm not Googling error messages or arguing with Docker, here's where I spend my time:"
 
 [[extra.features_section.features]]
-title = "Backend Development"
-desc = "Creating elegant solutions to complex problems with Java, Spring Boot, and microservices architecture. From RESTful APIs to scalable distributed systems, I build robust backend infrastructures that power modern applications."
+title = "Backend Shenanigans"
+desc = "Making APIs that hopefully don't explode in production. Java, Spring Boot, and the occasional existential crisis when debugging race conditions at 2 AM. I promise my code works™ (most of the time)."
 icon = "fa-solid fa-code"
 
 [[extra.features_section.features]]
-title = "Cloud & DevOps"
-desc = "Designing scalable cloud infrastructure using AWS, Docker, and Kubernetes. Automating deployments with CI/CD pipelines, Infrastructure as Code (Terraform), and ensuring high availability and performance of production systems."
+title = "Cloud Chaos Engineering"
+desc = "Spinning up servers faster than I can afford them. AWS bills that make me cry, Docker containers that refuse to die, and Kubernetes configs that work on my machine (your mileage may vary)."
 icon = "fa-solid fa-cloud"
 
 [[extra.features_section.features]]
-title = "Open Source"
-desc = "Contributing to the community and building public tools that make developers' lives easier. Active participation in open-source projects and sharing knowledge through code and documentation."
+title = "Open Source Contributions"
+desc = "Contributing to projects I use and occasionally making tools that solve problems exactly three people have (including me). PRs welcome, judgment not included."
 icon = "fa-brands fa-github"
 
 [[extra.features_section.features]]
-title = "Linux & Automation"
-desc = "Daily driving Arch Linux and mastering terminal-based workflows. Automating repetitive tasks with bash scripts and Python, because if you do it twice, you should automate it."
+title = "Linux Maximalism"
+desc = "Arch Linux is my religion and the terminal is my temple. I spend way too much time ricing my setup, writing bash scripts to automate tasks I do once a year, and pretending Vim is better than your IDE."
 icon = "fa-brands fa-linux"
 
 [[extra.features_section.features]]
 title = "System Design"
-desc = "Architecting scalable and maintainable systems with focus on performance, reliability, and security. Experience in designing microservices, event-driven architectures, and distributed systems."
+desc = "Drawing boxes and arrows until something looks scalable. Microservices, event-driven architectures, and late-night realizations that maybe I should've just used a monolith."
 icon = "fa-solid fa-diagram-project"
 
 [[extra.features_section.features]]
-title = "Technical Writing"
-desc = "Sharing knowledge through detailed blog posts, tutorials, and documentation. Breaking down complex technical concepts into understandable content for the developer community."
+title = "Blog Procrastination"
+desc = "Writing about the stuff I break and occasionally fix. Think of it as documentation, but with more memes and self-deprecating humor. Warning: contains traces of actual technical content."
 icon = "fa-solid fa-pen-nib"
 
 # -----------------------------------------------------------------------------

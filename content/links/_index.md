@@ -12,18 +12,19 @@ enabled = false
     display: block;
     padding: 1.25rem;
     margin-bottom: 1rem;
-    border: 1px solid rgba(107, 114, 128, 0.2);
+    border: 1px solid rgba(51, 65, 85, 0.45);
     border-radius: 0.75rem;
-    transition: all 0.3s ease;
+    transition: all 0.2s ease;
     text-decoration: none;
-    background: rgba(148, 163, 184, 0.03);
+    background: rgba(var(--base-200, 30 41 59), 0.6);
+    color: rgb(var(--base-content, 226 232 240));
 }
 
 .link-card:hover {
     transform: translateY(-2px);
-    border-color: rgba(107, 114, 128, 0.4);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    background: rgba(148, 163, 184, 0.06);
+    border-color: rgba(148, 163, 184, 0.8);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    background: rgba(var(--base-300, 51 65 85), 0.75);
 }
 
 .link-title {
@@ -33,19 +34,19 @@ enabled = false
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    color: rgb(var(--base-content, 226 232 240));
 }
 
 .link-desc {
     font-size: 0.875rem;
-    opacity: 0.7;
+    color: rgba(var(--base-content, 226 232 240), 0.75);
 }
 
 .link-icon {
     font-size: 1.5rem;
+    color: rgb(var(--info, 100 116 139));
 }
 </style>
-
-# 🔗 All My Links
 
 Find me across the web! Here's where I hang out online.
 
@@ -59,7 +60,7 @@ Find me across the web! Here's where I hang out online.
     <div class="link-desc">Open source projects and contributions</div>
 </a>
 
-<a href="https://linkedin.com/in/yourprofile" target="_blank" rel="noopener noreferrer" class="link-card">
+<a href="https://www.linkedin.com/in/dhanur-relhan/" target="_blank" rel="noopener noreferrer" class="link-card">
     <div class="link-title">
         <i class="fa-brands fa-linkedin link-icon"></i>
         LinkedIn
@@ -77,7 +78,7 @@ Find me across the web! Here's where I hang out online.
 
 ## 💻 Coding Profiles
 
-<a href="https://leetcode.com/yourusername" target="_blank" rel="noopener noreferrer" class="link-card">
+<a href="https://leetcode.com/u/kascit/" target="_blank" rel="noopener noreferrer" class="link-card">
     <div class="link-title">
         <i class="fa-solid fa-code link-icon"></i>
         LeetCode
@@ -85,7 +86,7 @@ Find me across the web! Here's where I hang out online.
     <div class="link-desc">Competitive programming and problem solving</div>
 </a>
 
-<a href="https://www.geeksforgeeks.org/user/yourusername" target="_blank" rel="noopener noreferrer" class="link-card">
+<a href="https://www.geeksforgeeks.org/profile/kascit" target="_blank" rel="noopener noreferrer" class="link-card">
     <div class="link-title">
         <i class="fa-solid fa-laptop-code link-icon"></i>
         GeeksforGeeks
@@ -93,7 +94,7 @@ Find me across the web! Here's where I hang out online.
     <div class="link-desc">Practice problems and solutions</div>
 </a>
 
-<a href="https://www.codechef.com/users/yourusername" target="_blank" rel="noopener noreferrer" class="link-card">
+<a href="https://www.codechef.com/users/kascit" target="_blank" rel="noopener noreferrer" class="link-card">
     <div class="link-title">
         <i class="fa-solid fa-trophy link-icon"></i>
         CodeChef
@@ -101,7 +102,7 @@ Find me across the web! Here's where I hang out online.
     <div class="link-desc">Competitive programming contests</div>
 </a>
 
-<a href="https://codeforces.com/profile/yourusername" target="_blank" rel="noopener noreferrer" class="link-card">
+<a href="https://codeforces.com/profile/kascit" target="_blank" rel="noopener noreferrer" class="link-card">
     <div class="link-title">
         <i class="fa-solid fa-chart-line link-icon"></i>
         Codeforces
@@ -109,9 +110,9 @@ Find me across the web! Here's where I hang out online.
     <div class="link-desc">Algorithm competitions and ratings</div>
 </a>
 
-## 🌐 Social
+## 🌐 Social & Writing
 
-<a href="https://twitter.com/yourhandle" target="_blank" rel="noopener noreferrer" class="link-card">
+<a href="https://x.com/nkascit" target="_blank" rel="noopener noreferrer" class="link-card">
     <div class="link-title">
         <i class="fa-brands fa-x-twitter link-icon"></i>
         X (Twitter)
@@ -119,49 +120,57 @@ Find me across the web! Here's where I hang out online.
     <div class="link-desc">Thoughts and updates</div>
 </a>
 
-<a href="https://discord.gg/yourserver" target="_blank" rel="noopener noreferrer" class="link-card">
+<a href="https://mastodon.social/@kascit" target="_blank" rel="noopener noreferrer" class="link-card">
     <div class="link-title">
-        <i class="fa-brands fa-discord link-icon"></i>
-        Discord
+        <i class="fa-brands fa-mastodon link-icon"></i>
+        Mastodon
     </div>
-    <div class="link-desc">Join the community</div>
+    <div class="link-desc">Decentralized social</div>
 </a>
 
-<a href="https://dev.to/yourusername" target="_blank" rel="noopener noreferrer" class="link-card">
+<a href="https://www.reddit.com/u/i_duunno/" target="_blank" rel="noopener noreferrer" class="link-card">
+    <div class="link-title">
+        <i class="fa-brands fa-reddit link-icon"></i>
+        Reddit
+    </div>
+    <div class="link-desc">Communities and discussions</div>
+</a>
+
+<a href="https://dev.to/kascit" target="_blank" rel="noopener noreferrer" class="link-card">
     <div class="link-title">
         <i class="fa-brands fa-dev link-icon"></i>
         DEV Community
     </div>
-    <div class="link-desc">Technical articles and discussions</div>
+    <div class="link-desc">Technical articles and notes</div>
 </a>
 
-## 📚 Learning & Content
+## 🧑‍🤝‍🧑 Communities
 
-<a href="/blog" class="link-card">
+<a href="https://discord.gg/eTjXjGth" target="_blank" rel="noopener noreferrer" class="link-card">
     <div class="link-title">
-        <i class="fa-solid fa-pen-nib link-icon"></i>
-        My Blog
+        <i class="fa-brands fa-discord link-icon"></i>
+        Discord
     </div>
-    <div class="link-desc">Technical posts and tutorials</div>
+    <div class="link-desc">Chat with me and others</div>
 </a>
 
-<a href="https://medium.com/@yourusername" target="_blank" rel="noopener noreferrer" class="link-card">
+<a href="https://t.me/AIO_01" target="_blank" rel="noopener noreferrer" class="link-card">
     <div class="link-title">
-        <i class="fa-brands fa-medium link-icon"></i>
-        Medium
+        <i class="fa-brands fa-telegram link-icon"></i>
+        Telegram
     </div>
-    <div class="link-desc">Long-form articles</div>
-</a>
-
-<a href="https://www.youtube.com/@yourchannel" target="_blank" rel="noopener noreferrer" class="link-card">
-    <div class="link-title">
-        <i class="fa-brands fa-youtube link-icon"></i>
-        YouTube
-    </div>
-    <div class="link-desc">Video tutorials and walkthroughs</div>
+    <div class="link-desc">DMs open</div>
 </a>
 
 ## 🎯 Other
+
+<a href="https://whatsapp.com/channel/0029Vb7NBaYEwEjrmzg6ZS1B" target="_blank" rel="noopener noreferrer" class="link-card">
+    <div class="link-title">
+        <i class="fa-brands fa-whatsapp link-icon"></i>
+        WhatsApp Channel
+    </div>
+    <div class="link-desc">Broadcast updates</div>
+</a>
 
 <a href="/projects" class="link-card">
     <div class="link-title">
@@ -194,6 +203,7 @@ Find me across the web! Here's where I hang out online.
 ### Blogs I Follow
 
 - [Hacker News](https://news.ycombinator.com/)
+- [Smart Nonsense Newsletter](https://www.smartnonsense.com/)
 - [Dev.to](https://dev.to/)
 - [CSS-Tricks](https://css-tricks.com/)
 

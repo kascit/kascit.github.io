@@ -4,17 +4,9 @@ description = "Thoughts, tutorials, and insights"
 template = "section.html"
 sort_by = "date"
 transparent = true
-paginate_by = 10
 
 [extra]
 # Custom navbar for Blog section - focuses on content categories
-nav = [
-  { name = "Home", url = "/", type = "link" },
-  { name = "All Posts", url = "/blog/", type = "link" },
-  { name = "Tutorials", url = "/blog/tags/tutorial/", type = "link" },
-  { name = "DevOps", url = "/blog/tags/devops/", type = "link" },
-  { name = "Personal", url = "/blog/tags/personal/", type = "link" }
-]
 
 +++
 

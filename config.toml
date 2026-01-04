@@ -55,6 +55,7 @@ nav = [
   { name = "Projects", url = "/projects/", type = "url", icon = "fa-solid fa-code" },
   { name = "Links", url = "/links/", type = "url", icon = "fa-solid fa-link" },
   { name = "Blog", url = "/blog/", type = "url", icon = "fa-solid fa-pen-nib" },
+  # { name = "Archive", url = "/archive/", type = "url", icon = "fa-solid fa-box-archive" },
   # Example dropdown if you want socials grouped:
   # { name = "Socials", type = "dropdown", icon = "fa-solid fa-share-nodes", members = [
   #     { name = "GitHub", url = "https://github.com/kascit", type = "url", icon = "fa-brands fa-github" },
@@ -114,7 +115,7 @@ x = true
 # SOCIAL META
 # -----------------------------------------------------------------------------
 [extra.twitter]
-creator = "@yourhandle"
+creator = "@nkascit"
 
 # -----------------------------------------------------------------------------
 # FONT

@@ -73,12 +73,14 @@
                         </nav>
                     </main>
 
+                    {% block toc_sidebar %}
                     {% if page is defined %}
                         {{ macros_toc::toc(page=page) }}
                     {% endif %}
                     {% if section is defined %}
                         {{ macros_toc::toc(page=section) }}
                     {% endif %}
+                    {% endblock toc_sidebar %}
                 </div>
             </div>
             {% endif %}

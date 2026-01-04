@@ -1,39 +1,70 @@
-{% macro comments(config, page, section) %}
-{# Only show comments on blog posts (pages under /blog/), not on sections, taxonomies, or other pages #}
-{% set show_comments = false %}
-{# Check if this is a page (not a section) and it's under /blog/ #}
-{% if page is defined and page.path is defined %}
-    {% set is_blog_post = page.path is starting_with('/blog/') and not page.path is ending_with('/_index/') %}
-    {# Allow explicit override via page frontmatter #}
-    {% if page.extra.comments is defined %}
-        {% set show_comments = page.extra.comments.enabled | default(value=false) %}
-    {% else %}
-        {# Default: show comments only on blog posts #}
-        {% set show_comments = is_blog_post %}
-    {% endif %}
-{% endif %}
-
-{# Check global config is enabled #}
-{% set global_enabled = config.extra.comments and config.extra.comments.enabled %}
-{% if global_enabled and show_comments %}
+{% macro comments(config, page, section) %} {# Only show comments on blog posts
+(pages under /blog/), not on sections, taxonomies, or other pages #} {% set
+show_comments = false %} {# Check if this is a page (not a section) and it's
+under /blog/ #} {% if page is defined and page.path is defined %} {% set
+is_blog_post = page.path is starting_with('/blog/') and not page.path is
+ending_with('/_index/') %} {# Allow explicit override via page frontmatter #} {%
+if page.extra.comments is defined %} {% set show_comments =
+page.extra.comments.enabled | default(value=false) %} {% else %} {# Default:
+show comments only on blog posts #} {% set show_comments = is_blog_post %} {%
+endif %} {% endif %} {# Check global config is enabled #} {% set global_enabled
+= config.extra.comments and config.extra.comments.enabled %} {% if
+global_enabled and show_comments %}
 <div id="comments" class="mt-12">
   {% if config.extra.comments.system == "giscus" %}
   <script>
     (function () {
+      // Determine giscus theme based on current user theme
+      var userTheme = localStorage.getItem("theme") || "goyo-dark";
+      var giscusTheme = userTheme === "goyo-dark" ? "dark" : "light";
+
       var script = document.createElement("script");
       script.src = "https://giscus.app/client.js";
-      script.setAttribute("data-repo", "{{ config.extra.comments.repo | safe }}");
-      script.setAttribute("data-repo-id", "{{ config.extra.comments.repo_id | safe }}");
-      script.setAttribute("data-category", "{{ config.extra.comments.category | safe }}");
-      script.setAttribute("data-category-id", "{{ config.extra.comments.category_id | safe }}");
-      script.setAttribute("data-mapping", "{{ config.extra.comments.mapping | default(value='pathname') }}");
-      script.setAttribute("data-strict", "{{ config.extra.comments.strict | default(value='0') }}");
-      script.setAttribute("data-reactions-enabled", "{{ config.extra.comments.reactions_enabled | default(value='1') }}");
-      script.setAttribute("data-emit-metadata", "{{ config.extra.comments.emit_metadata | default(value='1') }}");
-      script.setAttribute("data-input-position", "{{ config.extra.comments.input_position | default(value='top') }}");
-      script.setAttribute("data-theme", "{{ config.extra.comments.theme | default(value='preferred_color_scheme') }}");
-      script.setAttribute("data-lang", "{{ config.extra.comments.lang | default(value='en') }}");
-      script.setAttribute("data-loading", "{{ config.extra.comments.loading | default(value='lazy') }}");
+      script.setAttribute(
+        "data-repo",
+        "{{ config.extra.comments.repo | safe }}"
+      );
+      script.setAttribute(
+        "data-repo-id",
+        "{{ config.extra.comments.repo_id | safe }}"
+      );
+      script.setAttribute(
+        "data-category",
+        "{{ config.extra.comments.category | safe }}"
+      );
+      script.setAttribute(
+        "data-category-id",
+        "{{ config.extra.comments.category_id | safe }}"
+      );
+      script.setAttribute(
+        "data-mapping",
+        "{{ config.extra.comments.mapping | default(value='pathname') }}"
+      );
+      script.setAttribute(
+        "data-strict",
+        "{{ config.extra.comments.strict | default(value='0') }}"
+      );
+      script.setAttribute(
+        "data-reactions-enabled",
+        "{{ config.extra.comments.reactions_enabled | default(value='1') }}"
+      );
+      script.setAttribute(
+        "data-emit-metadata",
+        "{{ config.extra.comments.emit_metadata | default(value='1') }}"
+      );
+      script.setAttribute(
+        "data-input-position",
+        "{{ config.extra.comments.input_position | default(value='top') }}"
+      );
+      script.setAttribute("data-theme", giscusTheme);
+      script.setAttribute(
+        "data-lang",
+        "{{ config.extra.comments.lang | default(value='en') }}"
+      );
+      script.setAttribute(
+        "data-loading",
+        "{{ config.extra.comments.loading | default(value='lazy') }}"
+      );
       script.crossOrigin = "anonymous";
       script.async = true;
       document.getElementById("comments").appendChild(script);
@@ -50,5 +81,4 @@
   ></script>
   {% endif %}
 </div>
-{% endif %}
-{% endmacro comments %}
+{% endif %} {% endmacro comments %}

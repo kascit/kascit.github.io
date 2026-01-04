@@ -1,0 +1,165 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="mb-12 pb-4 border-b border-gray-500/15">
+  <h1>{{ section.title }}</h1>
+  <p class="text-gray-500">{{ section.description }}</p>
+</div>
+
+{% set_global blog_section = get_section(path="blog/_index.md") %}
+{% if blog_section.pages %}
+
+<div class="space-y-12">
+  {% set_global current_year = "" %}
+  {% set_global current_month = "" %}
+  {% for post in blog_section.pages %}
+    {% set post_year = post.date | date(format="%Y") %}
+    {% set post_month = post.date | date(format="%B") %}
+    {% set post_month_num = post.date | date(format="%m") %}
+    
+    {# Close previous month if needed #}
+    {% if post_year != current_year or post_month != current_month %}
+      {% if current_month != "" %}
+        </div></div>
+      {% endif %}
+    {% endif %}
+    
+    {# New year header #}
+    {% if post_year != current_year %}
+      {% if current_year != "" %}
+        </div>
+      {% endif %}
+      <div class="year-section mb-8">
+        <h2 id="year-{{ post_year }}" class="text-4xl font-black mb-6 pb-3 border-b-2 border-gray-500/30">{{ post_year }}</h2>
+      {% set_global current_year = post_year %}
+      {% set_global current_month = "" %}
+    {% endif %}
+    
+    {# New month header #}
+    {% if post_month != current_month %}
+      <div class="month-section mb-6">
+        <h3 id="month-{{ post_year }}-{{ post_month_num }}" class="text-2xl font-bold mb-4 text-base-content/80">{{ post_month }}</h3>
+        <div class="space-y-2">
+      {% set_global current_month = post_month %}
+    {% endif %}
+    
+    <article class="group flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4 py-2 hover:bg-base-200/50 rounded px-2 transition-colors">
+      <time datetime="{{ post.date }}" class="text-sm text-base-content/60 font-mono flex-shrink-0 w-16">
+        {{ post.date | date(format="%d") }}
+      </time>
+      <div class="flex-grow">
+        <a href="{{ post.permalink }}" class="text-lg font-medium hover:underline group-hover:text-primary">
+          {{ post.title }}
+        </a>
+        {% if post.description %}
+        <p class="text-sm text-base-content/60 mt-1">{{ post.description }}</p>
+        {% endif %}
+        {% if post.taxonomies.tags %}
+        <div class="flex flex-wrap gap-2 mt-2">
+          {% for tag in post.taxonomies.tags %}
+          <a href="{{ get_taxonomy_url(kind='tags', name=tag) }}" class="text-xs px-2 py-0.5 rounded border border-gray-500/30 hover:border-gray-500/70 transition-colors">
+            {{ tag }}
+          </a>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </article>
+  {% endfor %}
+  
+  {# Close last month and year #}
+  {% if current_month != "" %}
+    </div></div>
+  {% endif %}
+  {% if current_year != "" %}
+    </div>
+  {% endif %}
+</div>
+
+{% else %}
+<p class="text-base-content/60 italic">No posts yet. Check back soon!</p>
+{% endif %}
+
+<div class="mt-12 pt-8 border-t border-gray-500/15 text-center">
+  <a href="/blog" class="inline-flex items-center gap-2 text-base-content/70 hover:text-base-content transition-colors">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+    </svg>
+    Back to Blog
+  </a>
+</div>
+{% endblock content %}
+
+{% block toc_sidebar %}
+{# Custom TOC Sidebar for Archive - On This Page #}
+<div class="hidden lg:block">
+  <div class="sticky top-20 px-4 py-2 border-l border-gray-500/15">
+    <h4 class="text-lg font-bold mb-1">ON THIS PAGE</h4>
+    <nav class="space-y-2">
+      {% set_global blog_section = get_section(path="blog/_index.md") %}
+      {% if blog_section.pages %}
+        {% set_global current_year = "" %}
+        {% set_global last_month = "" %}
+        {% for post in blog_section.pages %}
+          {% set post_year = post.date | date(format="%Y") %}
+          {% if post_year != current_year %}
+            {% if current_year != "" %}
+              </div>
+            </div>
+            {% endif %}
+            <div class="toc-year">
+              <a href="#year-{{ post_year }}" class="block py-1 text-sm font-semibold hover:text-primary transition-colors">
+                {{ post_year }}
+              </a>
+              <div class="ml-3 space-y-0.5">
+            {% set_global current_year = post_year %}
+            {% set_global last_month = "" %}
+          {% endif %}
+          {% set post_month = post.date | date(format="%B") %}
+          {% set post_month_num = post.date | date(format="%m") %}
+          {% if post_month != last_month %}
+                <a href="#month-{{ post_year }}-{{ post_month_num }}" class="block py-0.5 text-xs text-base-content/60 hover:text-primary transition-colors">
+                  {{ post_month }}
+                </a>
+            {% set_global last_month = post_month %}
+          {% endif %}
+        {% endfor %}
+        {% if current_year != "" %}
+              </div>
+            </div>
+        {% endif %}
+      {% endif %}
+    </nav>
+  </div>
+</div>
+{% endblock toc_sidebar %}
+
+{% block prev_link %}
+  {# Link to Tags #}
+  <a class="nav-button nav-button-prev group" href="/tags">
+    <div class="nav-button-content">
+      <div class="nav-button-direction">
+        <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+        </svg>
+        <span class="nav-button-label">Browse</span>
+      </div>
+      <div class="nav-button-title">Tags</div>
+    </div>
+  </a>
+{% endblock prev_link %}
+
+{% block next_link %}
+  {# Link to Categories #}
+  <a class="nav-button nav-button-next group" href="/categories">
+    <div class="nav-button-content">
+      <div class="nav-button-direction">
+        <span class="nav-button-label">Browse</span>
+        <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+        </svg>
+      </div>
+      <div class="nav-button-title">Categories</div>
+    </div>
+  </a>
+{% endblock next_link %}

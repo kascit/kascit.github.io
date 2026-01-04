@@ -1,19 +1,13 @@
-{% extends "index.html" %}
-
-{% block extra_head %}
+{% extends "index.html" %} {% block extra_head %}
 <style>
   /* Hide prev/next navigation on landing page */
   nav.mt-12 {
     display: none !important;
   }
 </style>
-{% endblock extra_head %}
-
-{% block prev_link %}{% endblock prev_link %}
-{% block next_link %}{% endblock next_link %}
-
-{# Define macros for each section #} {% macro
-render_hero(section) %} {# Hero Section - Ashen Minimalist Style #} {% if
+{% endblock extra_head %} {% block prev_link %}{% endblock prev_link %} {% block
+next_link %}{% endblock next_link %} {# Define macros for each section #} {%
+macro render_hero(section) %} {# Hero Section - Ashen Minimalist Style #} {% if
 section.extra.hero %}
 <div
   class="relative min-h-screen flex items-center justify-center text-center overflow-hidden"

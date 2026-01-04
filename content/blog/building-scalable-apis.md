@@ -140,4 +140,3 @@ Building scalable APIs requires attention to detail and following established pa
 
 Check out the full code on [GitHub](https://github.com/kascit) and let me know what you think in the comments!
 
-**Tags**: #Java #SpringBoot #Backend #API

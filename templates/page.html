@@ -60,47 +60,89 @@
 {% endblock content %}
 
 {% block prev_link %}
-    {% if page.smaller %}
-        {# Previous blog post (older) #}
-        <a class="nav-button nav-button-prev group" href="{{ page.smaller.permalink | safe }}">
-            <div class="nav-button-content">
-                <div class="nav-button-direction">
-                    <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                    <span class="nav-button-label">Older</span>
-                </div>
-                <div class="nav-button-title">{{ page.smaller.title }}</div>
-            </div>
-        </a>
-    {% else %}
-        {# Oldest post - link to archive #}
-        <a class="nav-button nav-button-prev group" href="/archive">
-            <div class="nav-button-content">
-                <div class="nav-button-direction">
-                    <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-                    </svg>
-                    <span class="nav-button-label">View All</span>
-                </div>
-                <div class="nav-button-title">Archive</div>
-            </div>
-        </a>
+    {# Blog post navigation - only for blog posts #}
+    {% set blog_section = get_section(path="blog/_index.md") %}
+    
+    {# Find previous post by iterating and checking next post's slug #}
+    {% set_global found_prev = false %}
+    {% for post in blog_section.pages %}
+        {% if loop.index < blog_section.pages | length %}
+            {% set next_post = blog_section.pages[loop.index] %}
+            {% if next_post.slug == page.slug and not found_prev %}
+                {% set_global found_prev = true %}
+                <a class="nav-button nav-button-prev group" href="{{ post.permalink | safe }}">
+                    <div class="nav-button-content">
+                        <div class="nav-button-direction">
+                            <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                            <span class="nav-button-label">Previous</span>
+                        </div>
+                        <div class="nav-button-title">{{ post.title }}</div>
+                    </div>
+                </a>
+            {% endif %}
+        {% endif %}
+    {% endfor %}
+    
+    {# If no previous post found and we're in the blog section, show back to blog #}
+    {% if not found_prev %}
+        {% for post in blog_section.pages %}
+            {% if post.slug == page.slug %}
+                <a class="nav-button nav-button-prev group" href="/blog">
+                    <div class="nav-button-content">
+                        <div class="nav-button-direction">
+                            <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+                            </svg>
+                            <span class="nav-button-label">Back to</span>
+                        </div>
+                        <div class="nav-button-title">Blog</div>
+                    </div>
+                </a>
+            {% endif %}
+        {% endfor %}
     {% endif %}
 {% endblock prev_link %}
 
 {% block next_link %}
-    {% if page.higher %}
-        {# Next blog post (newer) #}
-        <a class="nav-button nav-button-next group" href="{{ page.higher.permalink | safe }}">
+    {# Blog post navigation - only for blog posts #}
+    {% set blog_section = get_section(path="blog/_index.md") %}
+    
+    {# Find next post by checking if current matches, then grab next one #}
+    {% set_global found_current = false %}
+    {% set_global found_next = false %}
+    {% for post in blog_section.pages %}
+        {% if found_current and not found_next %}
+            {% set_global found_next = true %}
+            <a class="nav-button nav-button-next group" href="{{ post.permalink | safe }}">
+                <div class="nav-button-content">
+                    <div class="nav-button-direction">
+                        <span class="nav-button-label">Next</span>
+                        <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                        </svg>
+                    </div>
+                    <div class="nav-button-title">{{ post.title }}</div>
+                </div>
+            </a>
+        {% endif %}
+        {% if post.slug == page.slug %}
+            {% set_global found_current = true %}
+        {% endif %}
+    {% endfor %}
+    
+    {# If no next post found and we're in the blog section, show archive #}
+    {% if found_current and not found_next %}
+        <a class="nav-button nav-button-next group" href="/archive">
             <div class="nav-button-content">
                 <div class="nav-button-direction">
-                    <span class="nav-button-label">Newer</span>
+                    <span class="nav-button-label">View All</span>
                     <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                     </svg>
                 </div>
-                <div class="nav-button-title">{{ page.higher.title }}</div>
+                <div class="nav-button-title">Archive</div>
             </div>
         </a>
     {% endif %}

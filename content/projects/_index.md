@@ -15,6 +15,9 @@ nav = [
   { name = "Open Source", url = "/projects/opensource/", type = "link" },
   { name = "Tools", url = "/projects/tools/", type = "link" }
 ]
+
+[extra.comments]
+enabled = false
 +++
 
 # My Projects

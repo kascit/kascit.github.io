@@ -39,7 +39,7 @@
                 <main class="prose w-full mx-auto">
                     {% block content %}{% endblock content %}
 
-                    {{ macros_comments::comments(config=config) }}
+                    {{ macros_comments::comments(config=config, page=page|default(value=false), section=section|default(value=false)) }}
 
                     <nav class="mt-12 pt-8 border-t border-gray-500/15">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -59,7 +59,7 @@
                     <main class="prose w-full">
                         {% block content %}{% endblock content %}
 
-                        {{ macros_comments::comments(config=config) }}
+                        {{ macros_comments::comments(config=config, page=page|default(value=false), section=section|default(value=false)) }}
 
                         <nav class="mt-12 pt-8 border-t border-gray-500/15">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">

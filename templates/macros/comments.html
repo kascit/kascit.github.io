@@ -1,5 +1,16 @@
-{% macro comments(config) %}
-{% if config.extra.comments and config.extra.comments.enabled %}
+{% macro comments(config, page, section) %}
+{# Check if comments are enabled globally #}
+{% set global_enabled = config.extra.comments and config.extra.comments.enabled %}
+
+{# Check page/section level override #}
+{% set page_enabled = true %}
+{% if page is defined and page.extra.comments is defined %}
+    {% set page_enabled = page.extra.comments.enabled | default(value=true) %}
+{% elif section is defined and section.extra.comments is defined %}
+    {% set page_enabled = section.extra.comments.enabled | default(value=true) %}
+{% endif %}
+
+{% if global_enabled and page_enabled %}
     <div id="comments" class="mt-12">
         {% if config.extra.comments.system == "giscus" %}
             <script src="https://giscus.app/client.js"

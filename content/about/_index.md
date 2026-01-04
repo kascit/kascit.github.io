@@ -7,14 +7,10 @@ transparent = true
 paginate_by = 10
 
 [extra]
-# Custom navbar for About section - focuses on personal information
-nav = [
-  { name = "Home", url = "/", type = "link" },
-  { name = "Background", url = "/about/background/", type = "link" },
-  { name = "Skills", url = "/about/skills/", type = "link" },
-  { name = "Experience", url = "/about/experience/", type = "link" },
-  { name = "Resume", url = "/about/resume/", type = "link" }
-]
+
+
+[extra.comments]
+enabled = false
 +++
 
 # About Me

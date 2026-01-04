@@ -15,6 +15,10 @@ nav = [
   { name = "DevOps", url = "/blog/tags/devops/", type = "link" },
   { name = "Personal", url = "/blog/tags/personal/", type = "link" }
 ]
+
+[extra.comments]
+enabled = false
+
 +++
 
 # Blog

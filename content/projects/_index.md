@@ -10,11 +10,6 @@ paginate_by = 12
 enabled = false
 +++
 
-# My Projects
-
-Welcome to my project showcase! Here's a collection of things I've built - from IoT systems to automation tools and web applications.
-
----
 
 ## 🚀 Featured Projects
 

@@ -153,7 +153,8 @@
         {% set lang_root_path = "/" ~ lang ~ "/" %}
         {# Sidebar configuration with backward compatibility (reuse the value from above) #}
         {% if section is defined and (section.path == "/" or section.path == lang_root_path) and not disable_root_sidebar_hide %}
-        <div id="sidebar" class="hidden">
+        {# On landing page: hide sidebar on desktop, keep drawer available on mobile #}
+        <div id="sidebar" class="drawer-side pt-16 border-e border-gray-500/15 overflow-hidden lg:hidden">
         {% else %}
         <div id="sidebar" class="drawer-side pt-16 border-e border-gray-500/15 overflow-hidden">
         {% endif %}

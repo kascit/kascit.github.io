@@ -2,7 +2,7 @@
 title = "Privacy Policy"
 description = "Privacy policy for dhanur.me"
 template = "page.html"
-date = 2026-01-04
+date = 2026-01-05
 
 [extra.comments]
 enabled = false
@@ -10,89 +10,74 @@ enabled = false
 
 # Privacy Policy
 
-Read the Privacy Policy for dhanur.me. Learn how your data is handled, what information is collected, and your rights regarding privacy.
+Plain-English summary of what this site collects, why, and how you can control it.
 
-> **Last updated on January 4, 2026.**
+> **Last updated: January 5, 2026**
 
 ## About This Website
 
-**dhanur.me** is an independent website whose sole owner is Dhanur and is not part of any company or organization. This privacy policy will explain how this website uses your personal data when you use our website.
-
-We do not sell any personal information, and only collect information as necessary for diagnostic, anti-abuse, functional, debugging, and analytical purposes. Please read the entire policy carefully for details applicable to each specific property, application, and/or service we provide.
+**dhanur.me** is a personal site owned and operated by Dhanur. It is not part of any company. Data collection is minimal and only for comments, security, and analytics. No personal data is sold.
 
 ## Cookies
 
-This website uses **cookies** from:
-
-- **[giscus.app](https://giscus.app)** for comments, which allows authenticated users via GitHub to post comments
-- **[github.com](https://github.com)** for authentication when posting comments
+- **Giscus** (comments) uses cookies/session storage when you opt to comment via GitHub.
+- **GitHub** may set auth cookies when you log in to comment.
+- **Google Analytics (GA4)** is enabled via `gtag` to measure usage; it sets analytics cookies unless you block them.
 
 ## Hosting
 
-We use **GitHub Pages** to host this website. GitHub Pages may collect some information about visitors to provide and maintain the service. For more information, please refer to [GitHub's Privacy Statement](https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement).
+The site is hosted on **GitHub Pages**. GitHub may process server logs (e.g., IP address, user agent) for security and abuse prevention. See [GitHub's Privacy Statement](https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement).
 
-## Comments System
+## Comments
 
-This website uses **[Giscus](https://giscus.app)** for the comments system, which is powered by GitHub Discussions. When you post a comment:
-
-- You authenticate through your GitHub account
-- Your GitHub profile information (username, avatar) is publicly displayed
-- Comments are stored in GitHub Discussions associated with this repository
-
-For more information about how GitHub handles your data, please see:
-
-- [GitHub's Privacy Statement](https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement)
-- [Giscus Privacy Policy](https://github.com/giscus/giscus/blob/main/PRIVACY-POLICY.md)
+- Comments run through **[Giscus](https://giscus.app)**, backed by GitHub Discussions.
+- If you comment, you authenticate with GitHub; your GitHub username/avatar become public with your comment.
+- Comment content is stored on GitHub. GitHub’s privacy terms apply.
+- More info: [GitHub Privacy](https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement), [Giscus Privacy](https://github.com/giscus/giscus/blob/main/PRIVACY-POLICY.md)
 
 ## Analytics
 
-Currently, this website **does not use** any analytics services. If this changes in the future, this policy will be updated accordingly.
+- **Google Analytics (GA4)**: enabled via `gtag` to measure aggregate usage (page views, device type, referrers, coarse location). Data is processed by Google per their policies. You can block GA cookies, use a browser blocker, or the GA opt-out add-on.
 
 ## External Links
 
-Our website contains links to other websites. Our privacy policy applies only to our website, so if you click on a link to another website, you should read their privacy policy, especially that of:
+Links out of this site (e.g., GitHub, Giscus, newsletters) are covered by their own policies. Please review those before using them.
 
-- **[GitHub](https://github.com)** - for authentication and comments
-- **[Giscus](https://giscus.app)** - for comment functionality
+## What We Collect (minimal)
 
-## Data Collection
+- **Server logs** (via GitHub Pages): IP, user agent, timestamps for security/ops.
+- **Comments (optional)**: Your GitHub handle/avatar and comment text if you choose to post via Giscus.
+- **Analytics**: GA4 metrics as described above; no user-level profiling by this site.
 
-We do not:
+## Your Choices & Rights
 
-- Collect personal information directly
-- Use tracking cookies
-- Share your data with third parties
-- Store user data on our servers
+- Don’t comment if you prefer not to share your GitHub handle.
+- Clear/block cookies to limit third-party storage.
+- For GitHub/Giscus data (comments, logs), contact GitHub per their policy or delete your GitHub account/content.
+- Block analytics cookies, use a blocker, or the GA opt-out add-on to stop analytics capture.
 
-The only data collected is through:
+## Changes
 
-1. **GitHub Pages hosting** - basic server logs (IP addresses, browser information)
-2. **Giscus comments** - only if you choose to comment (via your GitHub account)
-
-## Your Rights
-
-Since we don't collect or store personal data directly:
-
-- You can delete your GitHub account to remove comment data
-- You can contact GitHub Pages for hosting-related data inquiries
-- You can block cookies in your browser settings
-
-## Changes to This Policy
-
-We reserve the right to update this privacy policy at any time without notice. The "Last updated" date at the top will reflect any changes.
+This policy may change; the “Last updated” date will be refreshed when it does.
 
 ## Contact
 
-If you have any questions about this privacy policy or how your data is handled, please contact:
-
-- **Email**: [contact@dhanur.me](mailto:contact@dhanur.me)
-- **GitHub**: [github.com/kascit](https://github.com/kascit)
+Questions? Reach out at [contact@dhanur.me](mailto:contact@dhanur.me) or [github.com/kascit](https://github.com/kascit).
 
 ## Open Source
 
 This website is open source. You can view the code and how it works:
 
 - **Repository**: [github.com/kascit/kascit.github.io](https://github.com/kascit/kascit.github.io)
+
+## Copyright & Licensing
+
+- Site content (posts, pages) © <span id="copyright-year">2026</span> Dhanur Relhan, all rights reserved unless otherwise noted.
+- Site source code follows its repo license (e.g., MIT). Code snippets in posts may be reused with attribution.
+
+<script>
+document.getElementById('copyright-year').textContent = new Date().getFullYear();
+</script>
 
 ---
 

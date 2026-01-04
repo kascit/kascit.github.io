@@ -10,10 +10,9 @@ version = "v1.0"
 # HERO SECTION
 # -----------------------------------------------------------------------------
 [extra.hero]
-title = "Hey, I'm Dhanur 👋"
+title = "Hey, I'm Dhanur"
 badge = "Code Wrangler & Infrastructure Tinkerer"
 description = "This is where I dump my brain on the internet. By day, I wrangle backend services and convince servers to behave. By night, I break my Arch setup and frantically Google how to fix it (again). Sometimes I write code that works. Sometimes I write blog posts about why it didn't."
-# You can add a profile picture here, or comment it out for a text-only look
 image = "/images/whood.png" 
 
 cta_buttons = [

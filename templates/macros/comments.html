@@ -13,20 +13,30 @@
 {% if global_enabled and page_enabled %}
     <div id="comments" class="mt-12">
         {% if config.extra.comments.system == "giscus" %}
-            <script src="https://giscus.app/client.js"
-                data-repo="{{ config.extra.comments.repo }}"
-                data-repo-id="{{ config.extra.comments.repo_id }}"
-                data-category="{{ config.extra.comments.category }}"
-                data-category-id="{{ config.extra.comments.category_id }}"
-                data-mapping="{{ config.extra.comments.mapping | default(value='pathname') }}"
-                data-strict="{{ config.extra.comments.strict | default(value='0') }}"
-                data-reactions-enabled="{{ config.extra.comments.reactions_enabled | default(value='1') }}"
-                data-emit-metadata="{{ config.extra.comments.emit_metadata | default(value='0') }}"
-                data-input-position="{{ config.extra.comments.input_position | default(value='bottom') }}"
-                data-theme="{{ config.extra.comments.theme | default(value='preferred_color_scheme') }}"
-                data-lang="{{ config.extra.comments.lang | default(value='en') }}"
-                crossorigin="anonymous"
-                async>
+            <script>
+              // Set initial giscus theme based on current site theme
+              (function() {
+                var currentTheme = localStorage.getItem('theme') || (window.fallbackTheme || 'goyo-dark');
+                var giscusTheme = currentTheme === 'goyo-dark' ? 'dark' : 'light';
+                
+                var script = document.createElement('script');
+                script.src = 'https://giscus.app/client.js';
+                script.setAttribute('data-repo', '{{ config.extra.comments.repo }}');
+                script.setAttribute('data-repo-id', '{{ config.extra.comments.repo_id }}');
+                script.setAttribute('data-category', '{{ config.extra.comments.category }}');
+                script.setAttribute('data-category-id', '{{ config.extra.comments.category_id }}');
+                script.setAttribute('data-mapping', '{{ config.extra.comments.mapping | default(value="pathname") }}');
+                script.setAttribute('data-strict', '{{ config.extra.comments.strict | default(value="0") }}');
+                script.setAttribute('data-reactions-enabled', '{{ config.extra.comments.reactions_enabled | default(value="1") }}');
+                script.setAttribute('data-emit-metadata', '{{ config.extra.comments.emit_metadata | default(value="0") }}');
+                script.setAttribute('data-input-position', '{{ config.extra.comments.input_position | default(value="bottom") }}');
+                script.setAttribute('data-theme', giscusTheme);
+                script.setAttribute('data-lang', '{{ config.extra.comments.lang | default(value="en") }}');
+                script.crossOrigin = 'anonymous';
+                script.async = true;
+                
+                document.getElementById('comments').appendChild(script);
+              })();
             </script>
         {% elif config.extra.comments.system == "utterances" %}
             <script src="https://utteranc.es/client.js"

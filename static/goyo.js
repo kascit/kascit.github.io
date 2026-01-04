@@ -346,6 +346,9 @@ function initTheme() {
 
     // Update logo when theme changes
     updateLogoForTheme(userTheme);
+    
+    // Update giscus comments theme
+    updateGiscusTheme(userTheme);
   });
 }
 
@@ -373,6 +376,25 @@ function updateLogoForTheme(userTheme) {
   }
   if (logoLight) {
     logoLight.classList.toggle('hidden', isDarkTheme);
+  }
+}
+
+// Function to update giscus comments theme
+function updateGiscusTheme(userTheme) {
+  var giscusTheme = userTheme === 'goyo-dark' ? 'dark' : 'light';
+  var iframe = document.querySelector('iframe.giscus-frame');
+  
+  if (iframe) {
+    iframe.contentWindow.postMessage(
+      {
+        giscus: {
+          setConfig: {
+            theme: giscusTheme
+          }
+        }
+      },
+      'https://giscus.app'
+    );
   }
 }
 

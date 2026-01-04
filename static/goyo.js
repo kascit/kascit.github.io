@@ -109,7 +109,9 @@ function formatSearchResultItem(item, terms) {
   var li = document.createElement("li");
   li.className = "search-result-item";
   li.innerHTML = `
-    <a href="${item.item.id}" class="search-result-link block px-4 py-3 rounded-lg hover:bg-base-200/50 transition-colors duration-150 border-gray-500/15">
+    <a href="${
+      item.item.id
+    }" class="search-result-link block px-4 py-3 rounded-lg hover:bg-base-200/50 transition-colors duration-150 border-gray-500/15">
       <div class="flex items-start gap-3">
         <div class="search-result-icon flex-shrink-0 mt-1">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-base-content/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -117,8 +119,13 @@ function formatSearchResultItem(item, terms) {
           </svg>
         </div>
         <div class="flex-1 min-w-0">
-          <div class="search-result-title font-semibold text-sm text-base-content mb-1">${item.item.title}</div>
-          <div class="search-result-excerpt text-xs text-base-content/60 line-clamp-2">${makeTeaser(item.item.body, terms)}</div>
+          <div class="search-result-title font-semibold text-sm text-base-content mb-1">${
+            item.item.title
+          }</div>
+          <div class="search-result-excerpt text-xs text-base-content/60 line-clamp-2">${makeTeaser(
+            item.item.body,
+            terms
+          )}</div>
         </div>
         <div class="search-result-arrow flex-shrink-0 opacity-0 transition-opacity duration-150">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-base-content/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -144,7 +151,7 @@ function formatSearchResultItem(item, terms) {
 
 function initSearch() {
   // Only initialize if search dependencies are loaded
-  if (typeof Fuse === 'undefined' || !window.searchIndex) {
+  if (typeof Fuse === "undefined" || !window.searchIndex) {
     return;
   }
 
@@ -154,7 +161,7 @@ function initSearch() {
   }
 
   var $searchResultsContainer = document.querySelector(
-    ".search-results-container",
+    ".search-results-container"
   );
   var $searchResultsHeader = document.querySelector(".search-results__header");
   var $searchResultsItems = document.querySelector(".search-results__items");
@@ -221,16 +228,20 @@ function initSearch() {
       }
 
       currentTerm = term;
-      $searchResultsHeader.innerHTML = `<span class="text-base-content/60">${results.length} result${results.length === 1 ? "" : "s"} for <strong class="text-base-content">"${term}"</strong></span>`;
+      $searchResultsHeader.innerHTML = `<span class="text-base-content/60">${
+        results.length
+      } result${
+        results.length === 1 ? "" : "s"
+      } for <strong class="text-base-content">"${term}"</strong></span>`;
       for (var i = 0; i < Math.min(results.length, MAX_ITEMS); i++) {
         if (!results[i].item.body) {
           continue;
         }
         $searchResultsItems.appendChild(
-          formatSearchResultItem(results[i], term.split(" ")),
+          formatSearchResultItem(results[i], term.split(" "))
         );
       }
-    }, 150),
+    }, 150)
   );
 
   // Focus search input when modal is opened
@@ -320,11 +331,12 @@ function initTheme() {
   // Map user theme to actual DaisyUI theme
   var actualTheme = themeMapping[currentUserTheme] || currentUserTheme;
   document.documentElement.setAttribute("data-theme", actualTheme);
-  
+
   // Set brightness based on current theme (per-theme brightness support)
   var darkBrightness = window.darkBrightness || "normal";
   var lightBrightness = window.lightBrightness || "normal";
-  var currentBrightness = (currentUserTheme === "goyo-dark") ? darkBrightness : lightBrightness;
+  var currentBrightness =
+    currentUserTheme === "goyo-dark" ? darkBrightness : lightBrightness;
   document.documentElement.setAttribute("data-brightness", currentBrightness);
 
   // Set checkbox state based on current theme
@@ -339,14 +351,15 @@ function initTheme() {
 
     document.documentElement.setAttribute("data-theme", actualTheme);
     localStorage.setItem("theme", userTheme); // Store user-friendly name
-    
+
     // Update brightness based on the new theme (per-theme brightness support)
-    var newBrightness = (userTheme === "goyo-dark") ? darkBrightness : lightBrightness;
+    var newBrightness =
+      userTheme === "goyo-dark" ? darkBrightness : lightBrightness;
     document.documentElement.setAttribute("data-brightness", newBrightness);
 
     // Update logo when theme changes
     updateLogoForTheme(userTheme);
-    
+
     // Update giscus comments theme
     updateGiscusTheme(userTheme);
   });
@@ -359,11 +372,13 @@ function updateLogoForTheme(userTheme) {
   // Only query for logo elements once and cache the reference
   var logoDark = updateLogoForTheme._logoDark;
   var logoLight = updateLogoForTheme._logoLight;
-  
+
   // Cache elements on first call
   if (logoDark === undefined || logoLight === undefined) {
-    logoDark = updateLogoForTheme._logoDark = document.querySelector('.logo-dark');
-    logoLight = updateLogoForTheme._logoLight = document.querySelector('.logo-light');
+    logoDark = updateLogoForTheme._logoDark =
+      document.querySelector(".logo-dark");
+    logoLight = updateLogoForTheme._logoLight =
+      document.querySelector(".logo-light");
   }
 
   // If no theme-specific logos exist, nothing to do
@@ -372,35 +387,35 @@ function updateLogoForTheme(userTheme) {
   }
 
   if (logoDark) {
-    logoDark.classList.toggle('hidden', !isDarkTheme);
+    logoDark.classList.toggle("hidden", !isDarkTheme);
   }
   if (logoLight) {
-    logoLight.classList.toggle('hidden', isDarkTheme);
+    logoLight.classList.toggle("hidden", isDarkTheme);
   }
 }
 
 // Function to update giscus comments theme
 function updateGiscusTheme(userTheme) {
-  var giscusTheme = userTheme === 'goyo-dark' ? 'dark' : 'light';
-  var iframe = document.querySelector('iframe.giscus-frame');
-  
+  var giscusTheme = userTheme === "goyo-dark" ? "dark" : "light";
+  var iframe = document.querySelector("iframe.giscus-frame");
+
   if (iframe) {
     iframe.contentWindow.postMessage(
       {
         giscus: {
           setConfig: {
-            theme: giscusTheme
-          }
-        }
+            theme: giscusTheme,
+          },
+        },
       },
-      'https://giscus.app'
+      "https://giscus.app"
     );
   }
 }
 
 function initToc() {
   const headings = document.querySelectorAll(
-    ".prose h1[id], .prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id], .prose h6[id]",
+    ".prose h1[id], .prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id], .prose h6[id]"
   );
   const tocLinks = document.querySelectorAll(".toc-link");
   const tocDetails = document.querySelectorAll(".toc-details");
@@ -411,18 +426,19 @@ function initToc() {
 
   // Check if TOC should always be expanded
   const tocContainer = document.querySelector(".hidden.lg\\:block");
-  const tocExpand = tocContainer && tocContainer.getAttribute("data-toc-expand") === "true";
+  const tocExpand =
+    tocContainer && tocContainer.getAttribute("data-toc-expand") === "true";
 
   let activeId = null;
 
   const activateLink = (id) => {
     if (activeId === id) return; // Already active, no need to update
-    
+
     activeId = id;
-    
+
     // Remove active class from all links
     tocLinks.forEach((link) => link.classList.remove("active"));
-    
+
     // Only close details if toc_expand is not enabled
     if (!tocExpand) {
       tocDetails.forEach((detail) => (detail.open = false));
@@ -430,7 +446,7 @@ function initToc() {
 
     // Match links with href ending in #id (handles both relative and absolute URLs)
     const correspondingLink = document.querySelector(
-      `.toc-link[href$="#${id}"]`,
+      `.toc-link[href$="#${id}"]`
     );
 
     // Add active class to the current link
@@ -482,7 +498,7 @@ function initToc() {
 
 function initMath() {
   // Only render if KaTeX is loaded
-  if (typeof katex === 'undefined') {
+  if (typeof katex === "undefined") {
     return;
   }
 

@@ -22,10 +22,10 @@
     (function () {
       var script = document.createElement("script");
       script.src = "https://giscus.app/client.js";
-      script.setAttribute("data-repo", "{{ config.extra.comments.repo }}");
-      script.setAttribute("data-repo-id", "{{ config.extra.comments.repo_id }}");
-      script.setAttribute("data-category", "{{ config.extra.comments.category }}");
-      script.setAttribute("data-category-id", "{{ config.extra.comments.category_id }}");
+      script.setAttribute("data-repo", "{{ config.extra.comments.repo | safe }}");
+      script.setAttribute("data-repo-id", "{{ config.extra.comments.repo_id | safe }}");
+      script.setAttribute("data-category", "{{ config.extra.comments.category | safe }}");
+      script.setAttribute("data-category-id", "{{ config.extra.comments.category_id | safe }}");
       script.setAttribute("data-mapping", "{{ config.extra.comments.mapping | default(value='pathname') }}");
       script.setAttribute("data-strict", "{{ config.extra.comments.strict | default(value='0') }}");
       script.setAttribute("data-reactions-enabled", "{{ config.extra.comments.reactions_enabled | default(value='1') }}");

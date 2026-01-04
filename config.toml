@@ -120,9 +120,9 @@ creator = "@yourhandle"
 # FONT
 # -----------------------------------------------------------------------------
 [extra.font]
-enabled = true
-name = "Roboto"
-path = "https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+# enabled = true
+# name = "Roboto"
+# path = "https://fonts.googleapis.com/css2?family=Roboto&display=swap"
 
 # -----------------------------------------------------------------------------
 # FAVICON

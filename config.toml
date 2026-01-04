@@ -1,14 +1,14 @@
 # -----------------------------------------------------------------------------
-# CORE SETTINGS
+# CORE
 # -----------------------------------------------------------------------------
+# Note: base_url should stay canonical (no trailing slash) for sitemap/feeds.
 base_url = "https://dhanur.me"
 title = "Dhanur"
 description = "My cozy corner of the internet."
 default_language = "en"
-theme = "goyo"
 
 # -----------------------------------------------------------------------------
-# BUILD & GENERATION
+# BUILD & OUTPUT
 # -----------------------------------------------------------------------------
 compile_sass = true
 build_search_index = true
@@ -16,7 +16,7 @@ generate_feeds = true
 feed_filenames = ["rss.xml"]
 
 # -----------------------------------------------------------------------------
-# TAXONOMIES
+# CONTENT MODEL
 # -----------------------------------------------------------------------------
 taxonomies = [
     { name = "tags", feed = true, paginate_by = 10 },
@@ -24,7 +24,7 @@ taxonomies = [
 ]
 
 # -----------------------------------------------------------------------------
-# MARKDOWN & CODE HIGHLIGHTING
+# MARKDOWN & LINKS
 # -----------------------------------------------------------------------------
 [markdown]
 highlight_code = true
@@ -37,48 +37,51 @@ skip_prefixes = ["http://127.0.0.1", "http://localhost"]
 external_level = "warn"
 
 # -----------------------------------------------------------------------------
-# THEME CONFIGURATION (GOYO SPECIFIC)
+# THEME (GOYO)
 # -----------------------------------------------------------------------------
 [extra]
-author = "Dhanur"
-
-# Footer Content
-footer_html = "© 2025 Dhanur. Built with <a href='https://getzola.org'>Zola</a>."
+default_thumbnail = "images/default_thumbnail.jpg"
+gtag = "G-XXXXXXXXXX"        # Replace with real GA4 property or leave empty to disable.
+edit_url = "https://github.com/kascit/kascit.github.io/edit/main"
+footer_html = "<p>© 2025 Dhanur. Built with <a href=\"https://www.getzola.org/\" target=\"_blank\" rel=\"noopener\">Zola</a>"
 
 # -----------------------------------------------------------------------------
-# NAVIGATION MENU
+# NAVIGATION
 # -----------------------------------------------------------------------------
-# Goyo requires 'icon' keys (FontAwesome classes).
+# Goyo requires an 'icon' (FontAwesome class) per item.
 nav = [
   { name = "About", url = "/about/", type = "url", icon = "fa-solid fa-user" },
   { name = "Projects", url = "/projects/", type = "url", icon = "fa-solid fa-code" },
   { name = "Blog", url = "/blog/", type = "url", icon = "fa-solid fa-pen-nib" },
   { name = "Links", url = "/links/", type = "url", icon = "fa-solid fa-link" },
-  
-  # I've added your social links here as a dropdown so they appear neatly in the nav
+  # Example dropdown if you want socials grouped:
   # { name = "Socials", type = "dropdown", icon = "fa-solid fa-share-nodes", members = [
   #     { name = "GitHub", url = "https://github.com/kascit", type = "url", icon = "fa-brands fa-github" },
-  #     { name = "Twitter", url = "https://twitter.com/yourhandle", type = "url", icon = "fa-brands fa-twitter" },
+  #     { name = "X", url = "https://x.com/yourhandle", type = "url", icon = "fa-brands fa-x-twitter" },
   #     { name = "LinkedIn", url = "https://linkedin.com/in/yourprofile", type = "url", icon = "fa-brands fa-linkedin" },
   #     { name = "Email", url = "mailto:contact@dhanur.me", type = "url", icon = "fa-solid fa-envelope" }
   # ]}
 ]
 
 # -----------------------------------------------------------------------------
-# LOGO CONFIGURATION
+# LOGO
 # -----------------------------------------------------------------------------
 [extra.logo]
-text = "Dhanur"
-# If you have a logo image, uncomment the next line:
-image_path = "images/icon.png"
+text = "~/dhanur"
+image_path = "images/web-app-manifest-512x512.png"
+image_padding = "15px"
+dark_image_path = "images/logo-light.png"
+light_image_path = "images/logo-dark.png"
 
 # -----------------------------------------------------------------------------
-# THEME COLORS & STYLE
+# THEME COLORS & TOGGLE
 # -----------------------------------------------------------------------------
 [extra.theme]
-colorset = "auto"      # Matches your Gruvbox preference
+colorset = "dark"           # Primary palette (Gruvbox-like).
 brightness = "normal"
-disable_toggle = false # Allows users to switch to light mode if they want
+dark_brightness = "darker"  # Slightly darker for dark mode.
+light_brightness = "normal"
+disable_toggle = false       # Allow visitors to switch themes.
 
 # -----------------------------------------------------------------------------
 # SIDEBAR
@@ -91,23 +94,64 @@ disable_root_hide = false
 # COMMENTS (GISCUS)
 # -----------------------------------------------------------------------------
 [extra.comments]
-enabled = false # Set to true when you have your Repo ID
+enabled = true
 system = "giscus"
 repo = "kascit/kascit.github.io"
-repo_id = "" # PASTE YOUR GISCUS REPO ID HERE
-category = "Comments"
-category_id = "" # PASTE YOUR GISCUS CATEGORY ID HERE
+repo_id = "R_kgDOQP4ZUQ"
+category = "Blog Comments"
+category_id = "DIC_kwDOQP4ZUc4C0UPe"
+theme = "preferred_color_scheme"
 
 # -----------------------------------------------------------------------------
-# SHARE BUTTONS
+# SHARING
 # -----------------------------------------------------------------------------
 [extra.share]
 copy_url = true
 x = true
 
 # -----------------------------------------------------------------------------
-# METADATA
+# SOCIAL META
 # -----------------------------------------------------------------------------
 [extra.twitter]
-site = "@yourhandle"
 creator = "@yourhandle"
+
+# -----------------------------------------------------------------------------
+# FONT
+# -----------------------------------------------------------------------------
+[extra.font]
+enabled = true
+name = "Roboto"
+path = "https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+
+# -----------------------------------------------------------------------------
+# PWA
+# -----------------------------------------------------------------------------
+[extra.pwa]
+enabled = true
+name = "Dhanur"
+short_name = "Dhanur"
+description = "My cozy corner of the internet."
+background_color = "#f5f5f5"
+theme_color = "#a89984"
+display = "standalone"
+scope = "/"
+start_url = "/"
+
+# -----------------------------------------------------------------------------
+# ANALYTICS (PLAUSIBLE)
+# -----------------------------------------------------------------------------
+[extra.analytics]
+plausible_domain = "dhanur.me"
+plausible_api_host = "https://plausible.io"
+enabled = true
+
+# -----------------------------------------------------------------------------
+# FAVICON
+# -----------------------------------------------------------------------------
+[extra.favicon]
+base_path = "/icons/"                              # Base path for all favicon files (default: /icons/)
+favicon_96x96 = "/icons/favicon-96x96.png"         # Override path for 96x96 PNG favicon
+favicon_svg = "/icons/favicon.svg"                 # Override path for SVG favicon
+favicon_ico = "/icons/favicon.ico"                 # Override path for ICO favicon
+apple_touch_icon = "/icons/apple-touch-icon.png"   # Override path for Apple touch icon
+site_webmanifest = "/icons/site.webmanifest"       # Override path for site manifest

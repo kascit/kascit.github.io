@@ -1,0 +1,17 @@
+{% macro footer(config) %}
+<footer class="footer py-2 px-4 mt-2 border-t border-gray-500/50">
+    <div class="w-full">
+        <!-- Main footer content -->
+        <div class="flex flex-col items-center gap-4 mb-4">
+            <!-- Powered by section with better styling -->
+            <div class="text-center">
+                <p class="text-sm text-base-content/60 leading-relaxed">
+                    {{ config.extra.footer_html | default(value="Powered by <a href='https://www.getzola.org' class='font-medium text-base-content/70 hover:text-base-content transition-colors duration-200'>Zola</a> and <a href='https://github.com/hahwul/goyo' class='font-medium text-base-content/70 hover:text-base-content transition-colors duration-200'>Goyo</a>" | safe) | safe }}
+                </p>
+            </div>
+        </div>
+
+
+    </div>
+</footer>
+{% endmacro footer %}

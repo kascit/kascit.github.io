@@ -1,0 +1,92 @@
+/* Ashen Monochromatic Theme Overrides */
+:root,
+[data-theme="night"] {
+  --primary: 156 163 175;
+  --primary-focus: 107 114 128;
+  --primary-content: 17 24 39;
+  --secondary: 75 85 99;
+  --secondary-focus: 55 65 81;
+  --secondary-content: 248 250 252;
+  --accent: 148 163 184;
+  --accent-focus: 100 116 139;
+  --accent-content: 15 23 42;
+  --neutral: 30 41 59;
+  --neutral-focus: 15 23 42;
+  --neutral-content: 241 245 249;
+  --base-100: 15 23 42;
+  --base-200: 30 41 59;
+  --base-300: 51 65 85;
+  --base-content: 226 232 240;
+  --info: 100 116 139;
+  --success: 107 114 128;
+  --warning: 161 161 170;
+  --error: 127 29 29;
+
+  --rounded-box: 0.5rem;
+  --rounded-btn: 0.375rem;
+  --rounded-badge: 1rem;
+  --animation-btn: 0.2s;
+  --animation-input: 0.15s;
+  --btn-text-case: normal;
+  --btn-focus-scale: 0.98;
+  --border-btn: 1px;
+  --tab-border: 1px;
+  --tab-radius: 0.375rem;
+}
+
+[data-theme="night"][data-brightness="darker"] {
+  --base-100: 0 0 0;
+  --base-200: 10 10 15;
+  --base-300: 20 25 30;
+  --neutral: 10 10 15;
+  --neutral-focus: 0 0 0;
+  --primary-content: 10 10 15;
+  --accent-content: 5 8 12;
+}
+
+[data-theme="night"][data-brightness="lighter"] {
+  --base-100: 30 41 59;
+  --base-200: 45 55 72;
+  --base-300: 71 85 105;
+  --neutral: 51 65 85;
+  --neutral-focus: 30 41 59;
+}
+
+[data-theme="lofi"] {
+  --primary: 37 99 235;
+  --primary-focus: 29 78 216;
+  --primary-content: 255 255 255;
+  --secondary: 75 85 99;
+  --secondary-focus: 55 65 81;
+  --secondary-content: 255 255 255;
+  --accent: 79 70 229;
+  --accent-focus: 67 56 202;
+  --accent-content: 255 255 255;
+  --neutral: 243 244 246;
+  --neutral-focus: 229 231 235;
+  --neutral-content: 17 24 39;
+  --base-100: 255 255 255;
+  --base-200: 249 250 251;
+  --base-300: 243 244 246;
+  --base-content: 17 24 39;
+  --info: 59 130 246;
+  --success: 34 197 94;
+  --warning: 245 158 11;
+  --error: 239 68 68;
+}
+
+[data-theme="lofi"][data-brightness="darker"] {
+  --base-100: 226 232 240;
+  --base-200: 203 213 225;
+  --base-300: 186 198 215;
+  --base-content: 15 23 42;
+  --neutral: 203 213 225;
+  --neutral-focus: 186 198 215;
+  --neutral-content: 10 15 30;
+}
+
+[data-theme="lofi"][data-brightness="lighter"] {
+  --base-100: 255 255 255;
+  --base-200: 252 253 254;
+  --base-300: 249 250 251;
+}

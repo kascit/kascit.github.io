@@ -394,4 +394,15 @@
             }
         });
     </script>
+
+    <!-- Service Worker Registration for offline support and caching -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', function() {
+                navigator.serviceWorker.register('{{ get_url(path="sw.js") | safe }}').catch(function(error) {
+                    console.error('Service Worker registration failed:', error);
+                });
+            });
+        }
+    </script>
 {% endmacro head %}

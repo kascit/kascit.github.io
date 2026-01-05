@@ -61,6 +61,10 @@
     <link rel="preconnect" href="https://www.googletagmanager.com">
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
     {% endif %}
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="preconnect" href="https://giscus.app">
+    <link rel="dns-prefetch" href="https://giscus.app">
 
     <!-- Initialize theme and brightness before CSS loads to prevent FOUC -->
     <script>
@@ -275,6 +279,9 @@
       <link rel="manifest" href="{{ site_webmanifest | safe }}" />
 
       <!-- CSS -->
+    <!-- Preload critical stylesheets for faster rendering -->
+    <link rel="preload" href="{{ get_url(path="css/main.css") | safe }}" as="style">
+    <link rel="preload" href="{{ get_url(path="css/font-awesome.min.css") | safe }}" as="style">
     <link rel="stylesheet" href="{{ get_url(path="css/main.css") | safe }}">
     <link rel="stylesheet" href="{{ get_url(path="css/font-awesome.min.css") | safe }}">
 

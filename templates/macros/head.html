@@ -47,6 +47,14 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Security: Content Security Policy (for GitHub Pages) -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://giscus.app/client.js; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://giscus.app; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https: wss: ws: localhost:* 127.0.0.1:*; frame-src 'self' https://giscus.app; object-src 'none'; base-uri 'self'; form-action 'self';">
+    
+    <!-- Security: Prevent MIME type sniffing and XSS -->
+    <meta http-equiv="X-Content-Type-Options" content="nosniff">
+    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <meta name="referrer" content="strict-origin-when-cross-origin">
 
     <!-- Resource Hints for better performance -->
     {% if config.extra.gtag and config.extra.gtag != "" %}

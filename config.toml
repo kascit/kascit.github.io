@@ -59,8 +59,8 @@ nav = [
   # Example dropdown if you want socials grouped:
   # { name = "Socials", type = "dropdown", icon = "fa-solid fa-share-nodes", members = [
   #     { name = "GitHub", url = "https://github.com/kascit", type = "url", icon = "fa-brands fa-github" },
-  #     { name = "X", url = "https://x.com/yourhandle", type = "url", icon = "fa-brands fa-x-twitter" },
-  #     { name = "LinkedIn", url = "https://linkedin.com/in/yourprofile", type = "url", icon = "fa-brands fa-linkedin" },
+  #     { name = "X", url = "https://x.com/", type = "url", icon = "fa-brands fa-x-twitter" },
+  #     { name = "LinkedIn", url = "https://linkedin.com/in/", type = "url", icon = "fa-brands fa-linkedin" },
   #     { name = "Email", url = "mailto:contact@dhanur.me", type = "url", icon = "fa-solid fa-envelope" }
   # ]}
 ]

@@ -10,15 +10,6 @@ transparent = true
 
 +++
 
-# Blog
-
-Welcome to my blog! Here I share my thoughts on technology, write tutorials, and document my learning journey.
-
-## Recent Posts
-
-_Check back soon for posts!_
-
----
 
 ## What You'll Find Here
 

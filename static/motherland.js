@@ -299,6 +299,53 @@
   };
 
   // ============================================================================
+  // AUTO-INIT MODULE
+  // ============================================================================
+
+  const AutoInit = {
+    getScriptTag() {
+      const scripts = document.currentScript || document.scripts;
+      if (scripts && scripts.length > 0) {
+        return scripts[scripts.length - 1];
+      }
+      return null;
+    },
+
+    parseDataAttributes(script) {
+      if (!script) return {};
+
+      const config = {};
+      const attrs = script.dataset;
+
+      // Parse data attributes
+      if (attrs.mode) config.mode = attrs.mode;
+      if (attrs.theme) config.theme = attrs.theme;
+      if (attrs.position) config.position = attrs.position;
+      if (attrs.size) {
+        const size = attrs.size;
+        config.size = isNaN(size) ? size : parseInt(size);
+      }
+      if (attrs.gap) {
+        const gap = attrs.gap;
+        config.gap = isNaN(gap) ? gap : parseInt(gap);
+      }
+      if (attrs.animate) config.animate = attrs.animate !== "false";
+
+      return config;
+    },
+
+    autoInit() {
+      const script = this.getScriptTag();
+      const config = this.parseDataAttributes(script);
+
+      // Only auto-init if there are data attributes
+      if (Object.keys(config).length > 0) {
+        window.Motherland.init(config);
+      }
+    },
+  };
+
+  // ============================================================================
   // PUBLIC API
   // ============================================================================
 
@@ -325,4 +372,11 @@
       };
     },
   };
+
+  // Auto-initialize if data attributes are present
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", () => AutoInit.autoInit());
+  } else {
+    AutoInit.autoInit();
+  }
 })(window);

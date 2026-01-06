@@ -86,50 +86,39 @@
         padding: var(--padding, 0.3em);
         cursor: pointer;
         text-decoration: none;
-        border-radius: 0.35em;
+        border-radius: 0.4em;
         box-sizing: border-box;
-        border: 1px solid rgba(255,255,255,0.15);
-        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(128,128,128,0.15);
         box-shadow: 
-          0 8px 32px rgba(0,0,0,0.25),
-          inset 0 1px 0 rgba(255,255,255,0.12);
-        backdrop-filter: saturate(200%) blur(30px);
-        -webkit-backdrop-filter: saturate(200%) blur(30px);
-        transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-        will-change: transform, box-shadow;
-      }
-
-      .motherland-badge::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        background: linear-gradient(135deg, 
-          rgba(255,255,255,0.15) 0%,
-          rgba(255,255,255,0.05) 50%,
-          transparent 100%);
-        pointer-events: none;
+          0 4px 16px rgba(0,0,0,0.12),
+          0 2px 6px rgba(0,0,0,0.08);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        will-change: transform, box-shadow, border-color;
       }
 
       .motherland-badge img {
-        position: relative;
-        z-index: 1;
         display: block;
         width: 100%;
         height: 100%;
         object-fit: contain;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       }
 
       .motherland-badge:hover {
-        transform: translateY(-0.1em) scale(1.02);
+        transform: scale(1.05);
         box-shadow: 
-          0 12px 40px rgba(0,0,0,0.35),
-          inset 0 1px 0 rgba(255,255,255,0.15);
-        border-color: rgba(255,255,255,0.2);
+          0 8px 24px rgba(0,0,0,0.18),
+          0 4px 12px rgba(0,0,0,0.12);
+        border-color: rgba(128,128,128,0.25);
+      }
+
+      .motherland-badge:hover img {
+        transform: scale(1.02);
       }
 
       .motherland-badge:active {
-        transform: translateY(0) scale(1.005);
+        transform: scale(0.98);
+        transition: all 0.1s ease;
       }
 
       .motherland-badge.no-animate,
@@ -138,20 +127,28 @@
         transform: none !important;
       }
 
+      .motherland-badge.no-animate img,
+      .motherland-badge.no-animate:hover img {
+        transition: none !important;
+        transform: none !important;
+      }
+
       @media (max-width: 640px) {
         .motherland-badge {
-          transform: scale(0.85);
+          transform: scale(0.9);
         }
         .motherland-badge:hover:not(.no-animate) {
-          transform: scale(0.87) translateY(-0.08em);
+          transform: scale(0.95);
         }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        .motherland-badge {
+        .motherland-badge,
+        .motherland-badge img {
           transition: none !important;
         }
-        .motherland-badge:hover {
+        .motherland-badge:hover,
+        .motherland-badge:hover img {
           transform: none !important;
         }
       }
@@ -196,9 +193,12 @@
           ? { width: sizeValue, height: sizeValue }
           : { width: "auto", height: sizeValue };
 
+      // Set background based on theme
+      const bgColor = theme === "dark" ? "#000000" : "#ffffff";
+
       Object.assign(el.style, {
         ...dims,
-        backgroundColor: Theme.getBgColor(theme),
+        backgroundColor: bgColor,
       });
     },
 
@@ -244,7 +244,8 @@
       const query = window.matchMedia("(prefers-color-scheme: dark)");
       const update = () => {
         const newTheme = query.matches ? "dark" : "light";
-        el.style.backgroundColor = Theme.getBgColor(newTheme);
+        const bgColor = newTheme === "dark" ? "#000000" : "#ffffff";
+        el.style.backgroundColor = bgColor;
         img.src = Theme.getSvgUrl(newTheme, config.mode);
       };
 
@@ -302,20 +303,15 @@
   // AUTO-INIT MODULE
   // ============================================================================
 
-  const AutoInit = {
-    getScriptTag() {
-      const scripts = document.currentScript || document.scripts;
-      if (scripts && scripts.length > 0) {
-        return scripts[scripts.length - 1];
-      }
-      return null;
-    },
+  // Capture script tag immediately during execution
+  const currentScript = document.currentScript;
 
-    parseDataAttributes(script) {
-      if (!script) return {};
+  const AutoInit = {
+    parseDataAttributes() {
+      if (!currentScript || !currentScript.dataset) return {};
 
       const config = {};
-      const attrs = script.dataset;
+      const attrs = currentScript.dataset;
 
       // Parse data attributes
       if (attrs.mode) config.mode = attrs.mode;
@@ -335,8 +331,7 @@
     },
 
     autoInit() {
-      const script = this.getScriptTag();
-      const config = this.parseDataAttributes(script);
+      const config = this.parseDataAttributes();
 
       // Only auto-init if there are data attributes
       if (Object.keys(config).length > 0) {

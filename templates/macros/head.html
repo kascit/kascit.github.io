@@ -63,8 +63,6 @@
     {% endif %}
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link rel="dns-prefetch" href="https://fonts.gstatic.com">
-    <link rel="preconnect" href="https://giscus.app">
-    <link rel="dns-prefetch" href="https://giscus.app">
 
     <!-- Initialize theme and brightness before CSS loads to prevent FOUC -->
     <script>
@@ -281,12 +279,20 @@
       <!-- CSS -->
     <!-- Preload critical stylesheets for faster rendering -->
     <link rel="preload" href="{{ get_url(path="css/main.css") | safe }}" as="style">
-    <link rel="preload" href="{{ get_url(path="css/font-awesome.min.css") | safe }}" as="style">
     <link rel="stylesheet" href="{{ get_url(path="css/main.css") | safe }}">
-    <link rel="stylesheet" href="{{ get_url(path="css/font-awesome.min.css") | safe }}">
+    <!-- Load Font Awesome asynchronously (not render-blocking) -->
+    <link rel="preload" href="{{ get_url(path="css/font-awesome.min.css") | safe }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{{ get_url(path="css/font-awesome.min.css") | safe }}"></noscript>
 
-    <!-- Preload critical fonts -->
-    <link rel="preload" href="{{ get_url(path="fonts/Pretendard-Regular.woff") | safe }}" as="font" type="font/woff" crossorigin>
+        <!-- Preload critical fonts with font-display: swap to prevent FOIT -->
+        <link rel="preload" href="{{ get_url(path="fonts/Pretendard-Regular.woff") | safe }}" as="font" type="font/woff" crossorigin>
+        <style>
+            @font-face {
+                font-family: 'Pretendard';
+                src: url('{{ get_url(path="fonts/Pretendard-Regular.woff") | safe }}') format('woff');
+                font-display: swap;
+            }
+        </style>
 
     <!-- Defer non-critical scripts -->
     <script defer src="{{ get_url(path="js/copy_code.js") | safe }}"></script>

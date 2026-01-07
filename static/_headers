@@ -1,0 +1,40 @@
+# Cache headers for static assets
+# Images
+/images/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Fonts
+/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# CSS
+/css/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# JavaScript
+/js/*
+  Cache-Control: public, max-age=31536000, immutable
+
+*.woff
+  Cache-Control: public, max-age=31536000, immutable
+
+*.woff2
+  Cache-Control: public, max-age=31536000, immutable
+
+*.ttf
+  Cache-Control: public, max-age=31536000, immutable
+
+# HTML pages - shorter cache or revalidate
+/*.html
+  Cache-Control: public, max-age=3600
+
+# RSS and XML
+/rss.xml
+  Cache-Control: public, max-age=3600
+
+/sitemap.xml
+  Cache-Control: public, max-age=86400
+
+# Service worker
+/sw.js
+  Cache-Control: public, max-age=0, must-revalidate

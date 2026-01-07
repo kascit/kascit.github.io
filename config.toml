@@ -15,6 +15,7 @@ build_search_index = true
 generate_feeds = true
 generate_sitemap = true
 feed_filenames = ["rss.xml"]
+minify_html = true
 
 # -----------------------------------------------------------------------------
 # CONTENT MODEL

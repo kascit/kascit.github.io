@@ -4,7 +4,13 @@ const CACHE_VERSION = "v1";
 const CACHE_NAME = `kascit-${CACHE_VERSION}`;
 
 // Critical assets that must be cached on install
-const CRITICAL_ASSETS = ["/", "/index.html"];
+const CRITICAL_ASSETS = [
+  "/",
+  "/index.html",
+  "/about/",
+  "/links/",
+  "/blog/",
+];
 
 // Asset patterns to cache (will be cached on-demand)
 const CACHEABLE_PATTERNS = [

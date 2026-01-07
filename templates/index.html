@@ -167,7 +167,7 @@
     </div>
 
     {% block js_body %}
-        <script type="text/javascript" src="{{ get_url(path='goyo.js') | safe }}"></script>
+        <script defer src="{{ get_url(path='goyo.js') | safe }}"></script>
         {% if config.build_search_index %}
         <!-- Lazy load search functionality -->
         <script>

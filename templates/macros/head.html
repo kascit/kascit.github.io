@@ -58,7 +58,6 @@
 
     <!-- Resource Hints for better performance -->
     {% if config.extra.gtag and config.extra.gtag != "" %}
-    <link rel="preconnect" href="https://www.googletagmanager.com">
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
     {% endif %}
     {# Removed fonts.gstatic preconnect/prefetch since fonts are served locally #}
@@ -282,8 +281,34 @@
     <!-- Load Font Awesome asynchronously (not render-blocking) -->
     <link rel="preload" href="{{ get_url(path="css/font-awesome.min.css") | safe }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="{{ get_url(path="css/font-awesome.min.css") | safe }}"></noscript>
-    <!-- Override Font Awesome font-display to swap to reduce FOIT/CLS -->
-    <link rel="stylesheet" href="{{ get_url(path="css/fa-display-swap.css") | safe }}">
+        <!-- Override Font Awesome font-display to swap to reduce FOIT/CLS -->
+        <style>
+            /* Inline override to avoid an extra render-blocking request */
+            @font-face {
+                font-family: "Font Awesome 6 Brands";
+                font-style: normal;
+                font-weight: 400;
+                font-display: swap;
+                src: url({{ get_url(path="fonts/fa-brands-400.woff2") | safe }}) format("woff2"),
+                         url({{ get_url(path="fonts/fa-brands-400.ttf") | safe }}) format("truetype");
+            }
+            @font-face {
+                font-family: "Font Awesome 6 Free";
+                font-style: normal;
+                font-weight: 400;
+                font-display: swap;
+                src: url({{ get_url(path="fonts/fa-regular-400.woff2") | safe }}) format("woff2"),
+                         url({{ get_url(path="fonts/fa-regular-400.ttf") | safe }}) format("truetype");
+            }
+            @font-face {
+                font-family: "Font Awesome 6 Free";
+                font-style: normal;
+                font-weight: 900;
+                font-display: swap;
+                src: url({{ get_url(path="fonts/fa-solid-900.woff2") | safe }}) format("woff2"),
+                         url({{ get_url(path="fonts/fa-solid-900.ttf") | safe }}) format("truetype");
+            }
+        </style>
 
         <!-- Preload critical fonts with font-display: swap to prevent FOIT -->
         <link rel="preload" href="{{ get_url(path="fonts/Pretendard-Regular.woff") | safe }}" as="font" type="font/woff" crossorigin>

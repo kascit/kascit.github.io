@@ -1,14 +1,65 @@
 {
+  "id": "/",
+  "scope": "/",
+  "start_url": "/",
   "name": "dhanur.me",
   "short_name": "dhanur.me",
   "description": "mah corner",
   "dir": "auto",
   "lang": "en-US",
   "display": "standalone",
+  "display_override": ["standalone"],
   "orientation": "any",
-  "start_url": "/?homescreen=1",
-  "background_color": "#fff",
   "theme_color": "#fff",
+  "background_color": "#fff",
+  "categories": ["personal", "blog"],
+  "protocol_handlers": [
+    {
+      "protocol": "web+placeholder",
+      "url": "/?open=%s"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Blog",
+      "short_name": "Blog",
+      "description": "Read the latest posts",
+      "url": "/blog/",
+      "icons": [
+        {
+          "src": "/icons/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "short_name": "Projects",
+      "description": "Explore my projects",
+      "url": "/projects/",
+      "icons": [
+        {
+          "src": "/icons/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    },
+    {
+      "name": "About",
+      "short_name": "About",
+      "description": "Learn more about me",
+      "url": "/about/",
+      "icons": [
+        {
+          "src": "/icons/android-chrome-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ]
+    }
+  ],
   "icons": [
     {
       "src": "/icons/android-chrome-192x192.png",
@@ -17,10 +68,48 @@
       "purpose": "any"
     },
     {
+      "src": "/icons/android-chrome-192x192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
       "src": "/icons/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "/icons/android-chrome-512x512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/images/wide-light.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/images/wide-dark.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/images/narrow-light.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow"
+    },
+    {
+      "src": "/images/narrow-dark.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow"
     }
   ]
 }

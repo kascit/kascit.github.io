@@ -28,12 +28,27 @@ section.extra.hero %}
       ></div>
     </div>
     {% if section.extra.hero.image %} {% set image_opacity =
-    section.extra.hero.image_opacity | default(value=20) %}
-    <img
-      src="{{ section.extra.hero.image | safe }}"
-      alt="Hero Background"
-      class="w-full h-full rounded-none object-cover object-center opacity-{{ image_opacity }}"
-    />
+    section.extra.hero.image_opacity | default(value=20) %} {# Derive responsive
+    WebP variants from the configured hero image #} {% set _hero =
+    section.extra.hero.image %} {% set hero_800 = _hero | replace(from=".png",
+    to="-800.webp") | replace(from=".jpg", to="-800.webp") %} {% set hero_1200 =
+    _hero | replace(from=".png", to="-1200.webp") | replace(from=".jpg",
+    to="-1200.webp") %} {% set hero_1600 = _hero | replace(from=".png",
+    to="-1600.webp") | replace(from=".jpg", to="-1600.webp") %}
+    <picture>
+      <source
+        type="image/webp"
+        srcset="{{ get_url(path=hero_800) | safe }} 800w, {{ get_url(path=hero_1200) | safe }} 1200w, {{ get_url(path=hero_1600) | safe }} 1600w"
+        sizes="100vw"
+      />
+      <img
+        src="{{ section.extra.hero.image | safe }}"
+        alt="Hero Background"
+        class="w-full h-full rounded-none object-cover object-center opacity-{{ image_opacity }}"
+        fetchpriority="high"
+        decoding="async"
+      />
+    </picture>
     {% endif %}
   </div>
   <div class="relative z-10 p-8 max-w-6xl mx-auto">

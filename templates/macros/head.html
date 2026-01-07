@@ -61,8 +61,7 @@
     <link rel="preconnect" href="https://www.googletagmanager.com">
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
     {% endif %}
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    {# Removed fonts.gstatic preconnect/prefetch since fonts are served locally #}
 
     <!-- Initialize theme and brightness before CSS loads to prevent FOUC -->
     <script>
@@ -283,6 +282,8 @@
     <!-- Load Font Awesome asynchronously (not render-blocking) -->
     <link rel="preload" href="{{ get_url(path="css/font-awesome.min.css") | safe }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
     <noscript><link rel="stylesheet" href="{{ get_url(path="css/font-awesome.min.css") | safe }}"></noscript>
+    <!-- Override Font Awesome font-display to swap to reduce FOIT/CLS -->
+    <link rel="stylesheet" href="{{ get_url(path="css/fa-display-swap.css") | safe }}">
 
         <!-- Preload critical fonts with font-display: swap to prevent FOIT -->
         <link rel="preload" href="{{ get_url(path="fonts/Pretendard-Regular.woff") | safe }}" as="font" type="font/woff" crossorigin>

@@ -38,21 +38,27 @@
                 {% set light_logo_src = logo_light_image_path %}
                 {% if light_logo_src == "" %}{% set light_logo_src = logo_image_path %}{% endif %}
                 {# Dark theme logo #}
-                <img 
-                    src="{{ get_url(path=dark_logo_src) | safe }}" 
-                    alt="{{ logo_text }}" 
-                    class="h-18 w-auto logo-dark"
-                    data-logo-type="dark"
-                    {% if logo_image_padding != "" %}style="padding: {{ logo_image_padding }};"{% endif %}
-                />
+                                <picture>
+                                    <source type="image/webp" srcset="{{ get_url(path=dark_logo_src | replace(from=".png", to=".webp") | replace(from=".svg", to=".webp")) | safe }}">
+                                    <img 
+                                            src="{{ get_url(path=dark_logo_src) | safe }}" 
+                                            alt="{{ logo_text }}" 
+                                            class="h-18 w-auto logo-dark"
+                                            data-logo-type="dark"
+                                            {% if logo_image_padding != "" %}style="padding: {{ logo_image_padding }};"{% endif %}
+                                    />
+                                </picture>
                 {# Light theme logo #}
-                <img 
-                    src="{{ get_url(path=light_logo_src) | safe }}" 
-                    alt="{{ logo_text }}" 
-                    class="h-18 w-auto logo-light hidden"
-                    data-logo-type="light"
-                    {% if logo_image_padding != "" %}style="padding: {{ logo_image_padding }};"{% endif %}
-                />
+                                <picture>
+                                    <source type="image/webp" srcset="{{ get_url(path=light_logo_src | replace(from=".png", to=".webp") | replace(from=".svg", to=".webp")) | safe }}">
+                                    <img 
+                                            src="{{ get_url(path=light_logo_src) | safe }}" 
+                                            alt="{{ logo_text }}" 
+                                            class="h-18 w-auto logo-light hidden"
+                                            data-logo-type="light"
+                                            {% if logo_image_padding != "" %}style="padding: {{ logo_image_padding }};"{% endif %}
+                                    />
+                                </picture>
             {% elif logo_image_path != "" %}
                 {# Single logo for all themes #}
                 <img 

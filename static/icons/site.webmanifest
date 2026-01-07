@@ -9,7 +9,7 @@
   "lang": "en-US",
   "display": "standalone",
   "display_override": ["standalone"],
-  "orientation": "any",
+  "orientation": "portrait-primary",
   "theme_color": "#fff",
   "background_color": "#fff",
   "categories": ["personal", "blog"],

@@ -58,7 +58,10 @@
 
     <!-- Resource Hints for better performance -->
     {% if config.extra.gtag and config.extra.gtag != "" %}
+    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+    <link rel="preconnect" href="https://www.google-analytics.com" crossorigin>
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
+    <link rel="dns-prefetch" href="https://www.google-analytics.com">
     {% endif %}
     {# Removed fonts.gstatic preconnect/prefetch since fonts are served locally #}
 
@@ -278,8 +281,8 @@
     <!-- Preload critical stylesheets for faster rendering -->
     <link rel="preload" href="{{ get_url(path="css/main.css") | safe }}" as="style">
     <link rel="stylesheet" href="{{ get_url(path="css/main.css") | safe }}">
-    <!-- Load Font Awesome asynchronously (not render-blocking) -->
-    <link rel="preload" href="{{ get_url(path="css/font-awesome.min.css") | safe }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <!-- Load Font Awesome asynchronously without preload to reduce critical chain -->
+    <link rel="stylesheet" href="{{ get_url(path="css/font-awesome.min.css") | safe }}" media="print" onload="this.media='all'">
     <noscript><link rel="stylesheet" href="{{ get_url(path="css/font-awesome.min.css") | safe }}"></noscript>
         <!-- Override Font Awesome font-display to swap to reduce FOIT/CLS -->
         <style>

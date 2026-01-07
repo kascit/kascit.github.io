@@ -7,9 +7,9 @@ transparent = true
 
 [extra]
 # Custom navbar for Blog section - focuses on content categories
+link_title = "Welcome"
 
 +++
-
 
 ## What You'll Find Here
 

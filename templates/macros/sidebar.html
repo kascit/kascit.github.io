@@ -45,7 +45,7 @@
                         <summary {% if normalized_current_path == s1.path %}class="rounded bg-gray-500/15"{% endif %}>{{ s1.title }}</summary>
                         <ul>
                             <li {% if normalized_current_path == s1.path %}class="rounded bg-gray-500/15"{% endif %}>
-                                <a class="hover:no-underline" href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.title }}</a>
+                                <a class="hover:no-underline" href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.extra.link_title | default(value=s1.title) }}</a>
                             </li>
                             {# Level 2 #}
                             {% for page in s1.pages %}

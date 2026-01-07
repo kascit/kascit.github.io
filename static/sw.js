@@ -1,10 +1,18 @@
 // Service Worker with smart caching strategy
 // Cache versioning: Update CACHE_VERSION when assets change
-const CACHE_VERSION = "v1";
+const CACHE_VERSION = "v2";
 const CACHE_NAME = `kascit-${CACHE_VERSION}`;
 
 // Critical assets that must be cached on install
-const CRITICAL_ASSETS = ["/", "/index.html", "/about/", "/links/", "/blog/"];
+const CRITICAL_ASSETS = [
+  "/",
+  "/index.html",
+  "/about/",
+  "/links/",
+  "/blog/",
+  "/projects/",
+  "/privacy/",
+];
 
 // Asset patterns to cache (will be cached on-demand)
 const CACHEABLE_PATTERNS = [
@@ -57,6 +65,107 @@ self.addEventListener("activate", (event) => {
       })
       .then(() => self.clients.claim())
   );
+});
+
+// Simple metadata storage via Cache API
+const META_CACHE = `kascit-meta-${CACHE_VERSION}`;
+
+async function getStoredLatest() {
+  try {
+    const cache = await caches.open(META_CACHE);
+    const res = await cache.match("/__meta/latest_post");
+    if (!res) return null;
+    const json = await res.json();
+    return json;
+  } catch (e) {
+    return null;
+  }
+}
+
+async function setStoredLatest(info) {
+  try {
+    const cache = await caches.open(META_CACHE);
+    await cache.put(
+      "/__meta/latest_post",
+      new Response(JSON.stringify(info), {
+        headers: { "Content-Type": "application/json" },
+      })
+    );
+  } catch (e) {
+    // ignore
+  }
+}
+
+function parseLatestFromRSS(xmlText) {
+  try {
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(xmlText, "application/xml");
+    const firstItem = doc.querySelector("item");
+    if (!firstItem) return null;
+    const title = firstItem.querySelector("title")?.textContent || "New post";
+    const link = firstItem.querySelector("link")?.textContent || "/blog/";
+    const pubDate = firstItem.querySelector("pubDate")?.textContent || "";
+    const guid = firstItem.querySelector("guid")?.textContent || link;
+    return { title, link, pubDate, guid };
+  } catch (e) {
+    return null;
+  }
+}
+
+async function checkLatestAndNotify() {
+  try {
+    const res = await fetch("/rss.xml", { cache: "no-store" });
+    if (!res.ok) return;
+    const text = await res.text();
+    const latest = parseLatestFromRSS(text);
+    if (!latest) return;
+    const stored = await getStoredLatest();
+
+    // First run: store baseline without notifying
+    if (!stored) {
+      await setStoredLatest(latest);
+      return;
+    }
+
+    const changed =
+      stored.guid !== latest.guid || stored.pubDate !== latest.pubDate;
+    if (!changed) return;
+
+    // Update stored latest
+    await setStoredLatest(latest);
+
+    // Show notification if permitted
+    if (
+      self.registration &&
+      typeof self.registration.showNotification === "function" &&
+      typeof Notification !== "undefined" &&
+      Notification.permission === "granted"
+    ) {
+      await self.registration.showNotification("New blog post", {
+        body: latest.title,
+        tag: "new-post",
+        data: { url: latest.link },
+        icon: "/icons/favicon-96x96.png",
+        badge: "/icons/favicon-96x96.png",
+      });
+    }
+  } catch (e) {
+    // ignore
+  }
+}
+
+// Periodic Background Sync - check RSS
+self.addEventListener("periodicsync", (event) => {
+  if (event.tag === "content-sync") {
+    event.waitUntil(checkLatestAndNotify());
+  }
+});
+
+// One-off Background Sync - also check RSS
+self.addEventListener("sync", (event) => {
+  if (event.tag === "sync-site-refresh") {
+    event.waitUntil(checkLatestAndNotify());
+  }
 });
 
 // Service Worker Fetch Event - Smart caching strategy
@@ -153,5 +262,35 @@ self.addEventListener("fetch", (event) => {
 self.addEventListener("message", (event) => {
   if (event.data && event.data.type === "SKIP_WAITING") {
     self.skipWaiting();
+  }
+  if (event.data && event.data.type === "CHECK_LATEST_POST") {
+    event.waitUntil(checkLatestAndNotify());
+  }
+});
+
+// Open post on notification click
+self.addEventListener("notificationclick", (event) => {
+  const url = event.notification?.data?.url;
+  event.notification?.close();
+  if (url) {
+    event.waitUntil(
+      (async () => {
+        const allClients = await clients.matchAll({
+          type: "window",
+          includeUncontrolled: true,
+        });
+        for (const client of allClients) {
+          try {
+            const clientUrl = new URL(client.url);
+            if (clientUrl.pathname === new URL(url, location.origin).pathname) {
+              return client.focus();
+            }
+          } catch (_) {
+            /* ignore */
+          }
+        }
+        return clients.openWindow(url);
+      })()
+    );
   }
 });

@@ -42,7 +42,7 @@
             <li>
                 {% if s1.subsections or s1.pages %}
                     <details {% if is_active1 %}open{% endif %}>
-                        <summary {% if normalized_current_path == s1.path %}class="rounded bg-gray-500/15"{% endif %}>{{ s1.title }}</summary>
+                        <summary>{{ s1.title }}</summary>
                         <ul>
                             <li {% if normalized_current_path == s1.path %}class="rounded bg-gray-500/15"{% endif %}>
                                 <a class="hover:no-underline" href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.extra.link_title | default(value=s1.title) }}</a>
@@ -153,7 +153,7 @@
         {% set disable_theme_toggle = config.extra.disable_theme_toggle | default(value=false) %}
     {% endif %}
     {% if not disable_theme_toggle %}
-    <div class="px-4 py-3 border-t border-gray-500/15">
+    <div class="px-4 py-3 border-t border-gray-500/15 lg:hidden">
         <label class="swap swap-rotate btn btn-ghost w-full" for="theme-toggle-mobile">
             <input id="theme-toggle-mobile" name="theme-toggle" type="checkbox" class="theme-controller" value="night" aria-labelledby="theme-toggle-mobile-label"/>
             <span id="theme-toggle-mobile-label" class="sr-only">Toggle theme</span>

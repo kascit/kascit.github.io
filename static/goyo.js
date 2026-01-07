@@ -503,16 +503,21 @@ function initToc() {
   });
 
   // Handle initial state on load
-  // Find the first heading with ID that is in the viewport
-  const firstVisibleHeading = Array.from(headings).find((heading) => {
-    const rect = heading.getBoundingClientRect();
-    return rect.top >= 0 && rect.top <= window.innerHeight;
-  });
+  // Prefer URL hash if present, else first visible heading
+  const hashId = location.hash ? location.hash.slice(1) : null;
+  if (hashId && document.getElementById(hashId)) {
+    activateLink(hashId);
+  } else {
+    const firstVisibleHeading = Array.from(headings).find((heading) => {
+      const rect = heading.getBoundingClientRect();
+      return rect.top >= 0 && rect.top <= window.innerHeight;
+    });
 
-  if (firstVisibleHeading) {
-    const id = firstVisibleHeading.getAttribute("id");
-    if (id) {
-      activateLink(id);
+    if (firstVisibleHeading) {
+      const id = firstVisibleHeading.getAttribute("id");
+      if (id) {
+        activateLink(id);
+      }
     }
   }
 }

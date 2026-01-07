@@ -1,74 +1,118 @@
-# -----------------------------------------------------------------------------
-# CORE
-# -----------------------------------------------------------------------------
-# Note: base_url should stay canonical (no trailing slash) for sitemap/feeds.
+# =============================================================================
+# CORE SITE IDENTITY
+# =============================================================================
+# Canonical base URL (no trailing slash).
 base_url = "https://dhanur.me"
+
 title = "Dhanur"
 description = "My cozy corner of the internet."
+author = "Dhanur"
+
 default_language = "en"
 
-# -----------------------------------------------------------------------------
+# =============================================================================
 # BUILD & OUTPUT
-# -----------------------------------------------------------------------------
-compile_sass = true
-build_search_index = true
-generate_feeds = true
-generate_sitemap = true
-feed_filenames = ["rss.xml"]
-minify_html = true
+# =============================================================================
+compile_sass = true                 # Required by Goyo
+minify_html = true                  # Always enable in production
 
-# -----------------------------------------------------------------------------
-# CONTENT MODEL
-# -----------------------------------------------------------------------------
+build_search_index = true           # Required for site search
+generate_feeds = true
+feed_filenames = ["rss.xml"]
+feed_limit = 20
+
+generate_sitemap = true
+generate_robots_txt = true
+
+preserve_dotfiles_in_output = true  # Needed for .well-known / security files
+
+# =============================================================================
+# CONTENT MODEL (TAXONOMIES)
+# =============================================================================
 taxonomies = [
-    { name = "tags", feed = true, paginate_by = 10 },
-    { name = "categories", feed = true, paginate_by = 10 },
+  { name = "tags", feed = true, paginate_by = 10 },
+  { name = "categories", feed = true, paginate_by = 10 },
 ]
 
-# -----------------------------------------------------------------------------
-# MARKDOWN & LINKS
-# -----------------------------------------------------------------------------
+# =============================================================================
+# URL & SLUG BEHAVIOR
+# =============================================================================
+[slugify]
+paths = "on"
+taxonomies = "on"
+anchors = "on"
+
+# =============================================================================
+# MARKDOWN RENDERING
+# =============================================================================
 [markdown]
 highlight_code = true
-highlight_theme = "css"  # Use CSS classes instead of inline styles
+highlight_theme = "css"             # Use CSS classes (best for theming)
 smart_punctuation = true
-external_links_target_blank = true
+render_emoji = true
 
+external_links_target_blank = true
+external_links_noopener = true      # Security best practice
+external_links_noreferrer = true
+
+# =============================================================================
+# LINK CHECKING (BUILD-TIME)
+# =============================================================================
 [link_checker]
-skip_prefixes = ["http://127.0.0.1", "http://localhost"]
+skip_prefixes = [
+  "http://127.0.0.1",
+  "http://localhost",
+]
+internal_level = "warn"
 external_level = "warn"
 
-# -----------------------------------------------------------------------------
-# THEME (GOYO)
-# -----------------------------------------------------------------------------
+# =============================================================================
+# SEARCH INDEX
+# =============================================================================
+[search]
+include_title = true
+include_description = true
+include_content = true
+
+# =============================================================================
+# THEME CONFIGURATION (GOYO)
+# =============================================================================
 [extra]
 default_thumbnail = "images/default_thumbnail.jpg"
-gtag = "G-BY8SPYYYYR"        # Replace with real GA4 property or leave empty to disable.
-edit_url = "https://github.com/kascit/kascit.github.io/edit/main"
-footer_html = "Dhanur · Built with <a href='https://www.getzola.org/' target='_blank' rel='noopener'>Zola</a>"
 
-# -----------------------------------------------------------------------------
-# NAVIGATION
-# -----------------------------------------------------------------------------
-# Goyo requires an 'icon' (FontAwesome class) per item.
+# Analytics (leave empty to disable cleanly)
+gtag = "G-BY8SPYYYYR"
+
+# GitHub edit link (used by theme templates)
+edit_url = "https://github.com/kascit/kascit.github.io/edit/main"
+
+footer_html = """
+Dhanur · Built with
+<a href="https://www.getzola.org/" target="_blank" rel="noopener noreferrer">Zola</a>
+"""
+
+# =============================================================================
+# NAVIGATION (GOYO)
+# =============================================================================
+# Goyo requires an icon (FontAwesome class) per item.
 nav = [
-  { name = "About", url = "/about/", type = "url", icon = "fa-solid fa-user" },
+  { name = "About",    url = "/about/",    type = "url", icon = "fa-solid fa-user" },
   { name = "Projects", url = "/projects/", type = "url", icon = "fa-solid fa-code" },
-  { name = "Links", url = "/links/", type = "url", icon = "fa-solid fa-link" },
-  { name = "Blog", url = "/blog/", type = "url", icon = "fa-solid fa-pen-nib" },
-  # { name = "Archive", url = "/archive/", type = "url", icon = "fa-solid fa-box-archive" },
-  # Example dropdown if you want socials grouped:
+  { name = "Links",    url = "/links/",    type = "url", icon = "fa-solid fa-link" },
+  { name = "Blog",     url = "/blog/",     type = "url", icon = "fa-solid fa-pen-nib" },
+
+  # Example dropdown (kept commented by default)
   # { name = "Socials", type = "dropdown", icon = "fa-solid fa-share-nodes", members = [
-  #     { name = "GitHub", url = "https://github.com/kascit", type = "url", icon = "fa-brands fa-github" },
-  #     { name = "X", url = "https://x.com/", type = "url", icon = "fa-brands fa-x-twitter" },
-  #     { name = "LinkedIn", url = "https://linkedin.com/in/", type = "url", icon = "fa-brands fa-linkedin" },
-  #     { name = "Email", url = "mailto:contact@dhanur.me", type = "url", icon = "fa-solid fa-envelope" }
+  #   { name = "GitHub",   url = "https://github.com/kascit", type = "url", icon = "fa-brands fa-github" },
+  #   { name = "X",        url = "https://x.com/",            type = "url", icon = "fa-brands fa-x-twitter" },
+  #   { name = "LinkedIn", url = "https://linkedin.com/in/",  type = "url", icon = "fa-brands fa-linkedin" },
+  #   { name = "Email",    url = "mailto:contact@dhanur.me",  type = "url", icon = "fa-solid fa-envelope" }
   # ]}
 ]
 
-# -----------------------------------------------------------------------------
+# =============================================================================
 # LOGO
-# -----------------------------------------------------------------------------
+# =============================================================================
 [extra.logo]
 text = "~/dhanur"
 image_path = "images/web-app-manifest-512x512.png"
@@ -76,63 +120,63 @@ image_padding = "15px"
 dark_image_path = "images/logo-light.png"
 light_image_path = "images/logo-dark.png"
 
-# -----------------------------------------------------------------------------
+# =============================================================================
 # THEME COLORS & TOGGLE
-# -----------------------------------------------------------------------------
+# =============================================================================
 [extra.theme]
-colorset = "dark"           # Primary palette (Gruvbox-like).
+colorset = "dark"
 brightness = "normal"
-dark_brightness = "darker"  # Slightly darker for dark mode.
-# light_brightness = "darker"
-disable_toggle = false       # Allow visitors to switch themes.
+dark_brightness = "darker"
+disable_toggle = false
 
-# -----------------------------------------------------------------------------
+# =============================================================================
 # SIDEBAR
-# -----------------------------------------------------------------------------
+# =============================================================================
 [extra.sidebar]
 expand_depth = 1
 disable_root_hide = false
 
-# -----------------------------------------------------------------------------
+# =============================================================================
 # COMMENTS (GISCUS)
-# -----------------------------------------------------------------------------
+# =============================================================================
 [extra.comments]
 enabled = true
 system = "giscus"
+
 repo = "kascit/kascit.github.io"
 repo_id = "R_kgDOQP4ZUQ"
 category = "Blog Comments"
 category_id = "DIC_kwDOQP4ZUc4C0UPe"
 theme = "preferred_color_scheme"
 
-# -----------------------------------------------------------------------------
+# =============================================================================
 # SHARING
-# -----------------------------------------------------------------------------
+# =============================================================================
 [extra.share]
 copy_url = true
 x = true
 
-# -----------------------------------------------------------------------------
+# =============================================================================
 # SOCIAL META
-# -----------------------------------------------------------------------------
+# =============================================================================
 [extra.twitter]
 creator = "@nkascit"
 
-# -----------------------------------------------------------------------------
-# FONT
-# -----------------------------------------------------------------------------
+# =============================================================================
+# FONTS (OPTIONAL)
+# =============================================================================
 [extra.font]
 # enabled = true
 # name = "Roboto"
 # path = "https://fonts.googleapis.com/css2?family=Roboto&display=swap"
 
-# -----------------------------------------------------------------------------
-# FAVICON
-# -----------------------------------------------------------------------------
+# =============================================================================
+# FAVICONS & PWA
+# =============================================================================
 [extra.favicon]
-base_path = "/icons/"                              # Base path for all favicon files (default: /icons/)
-favicon_96x96 = "/icons/favicon-96x96.png"         # Override path for 96x96 PNG favicon
-favicon_svg = "/icons/favicon.svg"                 # Override path for SVG favicon
-favicon_ico = "/icons/favicon.ico"                 # Override path for ICO favicon
-apple_touch_icon = "/icons/apple-touch-icon.png"   # Override path for Apple touch icon
-site_webmanifest = "/icons/site.webmanifest"       # Override path for site manifest
+base_path = "/icons/"
+favicon_96x96 = "/icons/favicon-96x96.png"
+favicon_svg = "/icons/favicon.svg"
+favicon_ico = "/icons/favicon.ico"
+apple_touch_icon = "/icons/apple-touch-icon.png"
+site_webmanifest = "/icons/site.webmanifest"

@@ -62,7 +62,7 @@
   ],
   "icons": [
     {
-      "src": "/icons/android-chrome-192x192.png",
+      "src": "/icons/android-chrome-192x192-maskable.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
@@ -74,7 +74,7 @@
       "purpose": "maskable"
     },
     {
-      "src": "/icons/android-chrome-512x512.png",
+      "src": "/icons/android-chrome-512x512-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
@@ -88,25 +88,25 @@
   ],
   "screenshots": [
     {
-      "src": "/images/wide-light.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide"
-    },
-    {
       "src": "/images/wide-dark.png",
       "sizes": "1280x720",
       "type": "image/png",
       "form_factor": "wide"
     },
     {
-      "src": "/images/narrow-light.png",
+      "src": "/images/wide-light.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/images/narrow-dark.png",
       "sizes": "720x1280",
       "type": "image/png",
       "form_factor": "narrow"
     },
     {
-      "src": "/images/narrow-dark.png",
+      "src": "/images/narrow-light.png",
       "sizes": "720x1280",
       "type": "image/png",
       "form_factor": "narrow"

@@ -10,7 +10,6 @@ paginate_by = 12
 enabled = false
 +++
 
-
 ## 🚀 Featured Projects
 
 ### Face Rekognition

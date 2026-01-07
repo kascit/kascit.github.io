@@ -1,5 +1,5 @@
 +++
-title = "Dhanur"
+title = "Home"
 description = "Welcome to my corner of the internet"
 template = "landing.html"
 

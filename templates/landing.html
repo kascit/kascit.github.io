@@ -237,25 +237,15 @@ Section - Tabbed Content #} {% if section.extra.showcase_section %}
 
     {% if section.extra.showcase_section.tabs %}
     <div class="w-full">
-      {# Tab Navigation #}
-      <div class="tabs tabs-lifted tabs-lg justify-center mb-0">
+      <div class="tabs tabs-lift tabs-lg justify-center mb-0">
         {% for tab in section.extra.showcase_section.tabs %} <input type="radio"
         name="showcase_tabs" id="tab-{{ loop.index0 }}" class="tab text-lg
-        font-semibold" {% if loop.index0 == 0 %}checked="checked"{% endif %} />
-        <label
-          for="tab-{{ loop.index0 }}"
-          class="tab text-lg font-semibold cursor-pointer"
-          >{{ tab.name }}</label
-        >
-        {% endfor %}
-      </div>
-      {# Tab Content #}
-      <div class="tabs-content-wrapper">
-        {% for tab in section.extra.showcase_section.tabs %}
+        font-semibold" aria-label="{{ tab.name }}" {% if loop.index0 == 0
+        %}checked{% endif %} />
         <div
           class="tab-content rounded-box p-8 md:p-12"
-          hidden
-          id="tab-panel-{{ loop.index0 }}"
+          role="tabpanel"
+          aria-labelledby="tab-{{ loop.index0 }}"
         >
           {% if tab.image %} {# Show only image when image is provided #}
           <div class="flex justify-center">
@@ -277,28 +267,6 @@ Section - Tabbed Content #} {% if section.extra.showcase_section %}
         {% endfor %}
       </div>
     </div>
-    <script>
-      (function () {
-        const radioButtons = document.querySelectorAll(
-          'input[name="showcase_tabs"]'
-        );
-        radioButtons.forEach((radio) => {
-          radio.addEventListener("change", function () {
-            const panelId = "tab-panel-" + this.id.split("-")[1];
-            document
-              .querySelectorAll(".tabs-content-wrapper > div")
-              .forEach((panel) => {
-                panel.hidden = panel.id !== panelId;
-              });
-          });
-        });
-        // Show first panel on load
-        const firstPanel = document.querySelector(
-          ".tabs-content-wrapper > div"
-        );
-        if (firstPanel) firstPanel.hidden = false;
-      })();
-    </script>
     {% endif %}
   </div>
 </div>

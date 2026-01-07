@@ -307,8 +307,8 @@ function initSearch() {
 }
 
 function initTheme() {
-  var themeController = document.querySelector(".theme-controller");
-  if (!themeController) {
+  var themeControllers = document.querySelectorAll(".theme-controller");
+  if (!themeControllers.length) {
     return;
   }
 
@@ -339,29 +339,41 @@ function initTheme() {
     currentUserTheme === "goyo-dark" ? darkBrightness : lightBrightness;
   document.documentElement.setAttribute("data-brightness", currentBrightness);
 
-  // Set checkbox state based on current theme
-  themeController.checked = currentUserTheme === "goyo-dark";
+  // Set checkbox state based on current theme for all controllers
+  themeControllers.forEach(function (controller) {
+    controller.checked = currentUserTheme === "goyo-dark";
+  });
 
   // Update logo visibility based on current theme
   updateLogoForTheme(currentUserTheme);
 
-  themeController.addEventListener("change", function (e) {
-    var userTheme = e.target.checked ? "goyo-dark" : "goyo-light";
-    var actualTheme = themeMapping[userTheme];
+  // Add change listener to all theme controllers
+  themeControllers.forEach(function (controller) {
+    controller.addEventListener("change", function (e) {
+      var userTheme = e.target.checked ? "goyo-dark" : "goyo-light";
+      var actualTheme = themeMapping[userTheme];
 
-    document.documentElement.setAttribute("data-theme", actualTheme);
-    localStorage.setItem("theme", userTheme); // Store user-friendly name
+      document.documentElement.setAttribute("data-theme", actualTheme);
+      localStorage.setItem("theme", userTheme); // Store user-friendly name
 
-    // Update brightness based on the new theme (per-theme brightness support)
-    var newBrightness =
-      userTheme === "goyo-dark" ? darkBrightness : lightBrightness;
-    document.documentElement.setAttribute("data-brightness", newBrightness);
+      // Update brightness based on the new theme (per-theme brightness support)
+      var newBrightness =
+        userTheme === "goyo-dark" ? darkBrightness : lightBrightness;
+      document.documentElement.setAttribute("data-brightness", newBrightness);
 
-    // Update logo when theme changes
-    updateLogoForTheme(userTheme);
+      // Sync all other theme controllers
+      themeControllers.forEach(function (otherController) {
+        if (otherController !== e.target) {
+          otherController.checked = e.target.checked;
+        }
+      });
 
-    // Update giscus comments theme
-    updateGiscusTheme(userTheme);
+      // Update logo when theme changes
+      updateLogoForTheme(userTheme);
+
+      // Update giscus comments theme
+      updateGiscusTheme(userTheme);
+    });
   });
 }
 

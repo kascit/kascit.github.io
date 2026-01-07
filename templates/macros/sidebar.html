@@ -42,8 +42,11 @@
             <li>
                 {% if s1.subsections or s1.pages %}
                     <details {% if is_active1 %}open{% endif %}>
-                        <summary {% if normalized_current_path == s1.path %}class="rounded bg-gray-500/15"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.title }}</a></summary>
+                        <summary {% if normalized_current_path == s1.path %}class="rounded bg-gray-500/15"{% endif %}>{{ s1.title }}</summary>
                         <ul>
+                            <li {% if normalized_current_path == s1.path %}class="rounded bg-gray-500/15"{% endif %}>
+                                <a class="hover:no-underline" href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.title }}</a>
+                            </li>
                             {# Level 2 #}
                             {% for page in s1.pages %}
                                 <li {% if normalized_current_path == page.path %}class="rounded bg-gray-500/15"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
@@ -53,8 +56,11 @@
                                 <li>
                                     {% if s2.subsections or s2.pages %}
                                         <details {% if is_active2 %}open{% endif %}>
-                                            <summary {% if normalized_current_path == s2.path %}class="rounded bg-gray-500/15"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=s2.path, lang=lang) | safe }}">{{ s2.title }}</a></summary>
+                                            <summary {% if normalized_current_path == s2.path %}class="rounded bg-gray-500/15"{% endif %}>{{ s2.title }}</summary>
                                             <ul>
+                                                <li {% if normalized_current_path == s2.path %}class="rounded bg-gray-500/15"{% endif %}>
+                                                    <a class="hover:no-underline" href="{{ get_url(path=s2.path, lang=lang) | safe }}">{{ s2.title }}</a>
+                                                </li>
                                                 {# Level 3 #}
                                                 {% for page in s2.pages %}
                                                     <li {% if normalized_current_path == page.path %}class="rounded bg-gray-500/15"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
@@ -64,8 +70,11 @@
                                                     <li>
                                                         {% if s3.subsections or s3.pages %}
                                                             <details {% if is_active3 %}open{% endif %}>
-                                                                <summary {% if normalized_current_path == s3.path %}class="rounded bg-gray-500/15"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=s3.path, lang=lang) | safe }}">{{ s3.title }}</a></summary>
+                                                                <summary {% if normalized_current_path == s3.path %}class="rounded bg-gray-500/15"{% endif %}>{{ s3.title }}</summary>
                                                                 <ul>
+                                                                    <li {% if normalized_current_path == s3.path %}class="rounded bg-gray-500/15"{% endif %}>
+                                                                        <a class="hover:no-underline" href="{{ get_url(path=s3.path, lang=lang) | safe }}">{{ s3.title }}</a>
+                                                                    </li>
                                                                     {# Level 4 #}
                                                                     {% for page in s3.pages %}
                                                                         <li {% if normalized_current_path == page.path %}class="rounded bg-gray-500/15"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
@@ -75,8 +84,11 @@
                                                                         <li>
                                                                             {% if s4.subsections or s4.pages %}
                                                                                 <details {% if is_active4 %}open{% endif %}>
-                                                                                    <summary {% if normalized_current_path == s4.path %}class="rounded bg-gray-500/15"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=s4.path, lang=lang) | safe }}">{{ s4.title }}</a></summary>
+                                                                                    <summary {% if normalized_current_path == s4.path %}class="rounded bg-gray-500/15"{% endif %}>{{ s4.title }}</summary>
                                                                                     <ul>
+                                                                                        <li {% if normalized_current_path == s4.path %}class="rounded bg-gray-500/15"{% endif %}>
+                                                                                            <a class="hover:no-underline" href="{{ get_url(path=s4.path, lang=lang) | safe }}">{{ s4.title }}</a>
+                                                                                        </li>
                                                                                         {# Level 5 #}
                                                                                         {% for page in s4.pages %}
                                                                                             <li {% if normalized_current_path == page.path %}class="rounded bg-gray-500/15"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
@@ -117,8 +129,11 @@
                 <li>
                     {% if s1.subsections or s1.pages %}
                         <details {% if is_active1 %}open{% endif %}>
-                            <summary {% if normalized_current_path == s1.path %}class="rounded bg-gray-500/15"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.title }}</a></summary>
+                            <summary {% if normalized_current_path == s1.path %}class="rounded bg-gray-500/15"{% endif %}>{{ s1.title }}</summary>
                             <ul>
+                                <li {% if normalized_current_path == s1.path %}class="rounded bg-gray-500/15"{% endif %}>
+                                    <a class="hover:no-underline" href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.title }}</a>
+                                </li>
                                 {# Level 2 #}
                                 {% for page in s1.pages %}
                                     <li {% if normalized_current_path == page.path %}class="rounded bg-gray-500/15"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>

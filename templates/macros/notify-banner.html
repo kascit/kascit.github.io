@@ -1,0 +1,150 @@
+{% macro notify_banner(config, page) %} {# Only show notification banner on blog
+posts (like comments) #} {% set show_banner = false %} {# Check if this is a
+page under /blog/ #} {% if page is defined and page.path is defined %} {% set
+is_blog_post = page.path is starting_with('/blog/') and not page.path is
+ending_with('/_index/') %} {# Allow explicit override via page frontmatter #} {%
+if page.extra.notify_banner is defined %} {% set show_banner =
+page.extra.notify_banner %} {% else %} {# Default: show banner only on blog
+posts #} {% set show_banner = is_blog_post %} {% endif %} {% endif %} {% if
+show_banner %}
+<div class="my-3">
+  <!-- Notification Banner -->
+  <div
+    id="notify-banner"
+    class="alert border border-base-300 py-2 px-3 flex-wrap sm:flex-nowrap gap-2 rounded-md"
+    style="display: none"
+  >
+    <i class="fa fa-bell text-base"></i>
+    <div class="flex-1 min-w-0">
+      <div class="font-medium text-sm">Get notified about new posts</div>
+      <div class="text-xs opacity-60 mt-0.5">
+        Stay updated when I publish new content
+      </div>
+    </div>
+    <div class="flex gap-2 w-full sm:w-auto">
+      <button
+        class="btn btn-ghost btn-sm flex-1 sm:flex-none rounded-md"
+        id="notify-dismiss"
+      >
+        Dismiss
+      </button>
+      <button
+        class="btn btn-primary btn-sm flex-1 sm:flex-none rounded-md"
+        id="notify-enable"
+      >
+        Enable
+      </button>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div
+    id="notify-toast"
+    class="toast toast-bottom toast-end z-50"
+    style="display: none"
+  >
+    <div class="alert shadow-lg">
+      <span id="notify-toast-message" class="text-sm"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+  (function () {
+    "use strict";
+
+    const banner = document.getElementById("notify-banner");
+    const dismissBtn = document.getElementById("notify-dismiss");
+    const enableBtn = document.getElementById("notify-enable");
+    const toast = document.getElementById("notify-toast");
+    const toastMsg = document.getElementById("notify-toast-message");
+
+    if (!banner) return;
+
+    // Toast helper
+    function showToast(message, type) {
+      const alertEl = toast.querySelector(".alert");
+      alertEl.className =
+        "alert shadow-lg " +
+        (type === "success"
+          ? "alert-success"
+          : type === "error"
+          ? "alert-error"
+          : "alert-info");
+      toastMsg.textContent = message;
+      toast.style.display = "block";
+
+      setTimeout(function () {
+        toast.style.display = "none";
+      }, 3500);
+    }
+
+    // Check if should show banner
+    const dismissed = localStorage.getItem("notify-banner-dismissed");
+    const notificationsGranted =
+      typeof Notification !== "undefined" &&
+      Notification.permission === "granted";
+
+    // Don't show if dismissed recently (7 days) or already granted
+    if (
+      dismissed &&
+      Date.now() - parseInt(dismissed) < 7 * 24 * 60 * 60 * 1000
+    ) {
+      return;
+    }
+
+    if (notificationsGranted) {
+      return;
+    }
+
+    // Show banner
+    banner.style.display = "flex";
+
+    // Dismiss handler
+    dismissBtn.addEventListener("click", function () {
+      banner.style.display = "none";
+      localStorage.setItem("notify-banner-dismissed", Date.now());
+      showToast("No worries! We will ask again later", "info");
+    });
+
+    // Enable handler
+    enableBtn.addEventListener("click", function () {
+      if (typeof Notification === "undefined") {
+        showToast("Your browser does not support notifications", "error");
+        return;
+      }
+
+      if (Notification.permission === "granted") {
+        banner.style.display = "none";
+        showToast("You are already subscribed!", "success");
+        return;
+      }
+
+      if (Notification.permission === "denied") {
+        showToast(
+          "Notifications blocked. Enable them in browser settings",
+          "error"
+        );
+        return;
+      }
+
+      // Request permission
+      Notification.requestPermission().then(function (permission) {
+        if (permission === "granted") {
+          banner.style.display = "none";
+          localStorage.setItem("notify-banner-dismissed", Date.now());
+          showToast(
+            "Awesome! You will get notified about new posts",
+            "success"
+          );
+        } else {
+          showToast(
+            "Permission denied. You can enable it later in settings",
+            "error"
+          );
+        }
+      });
+    });
+  })();
+</script>
+{% endif %} {% endmacro notify_banner %}

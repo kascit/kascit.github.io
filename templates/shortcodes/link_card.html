@@ -1,0 +1,17 @@
+<a
+  href="{{ url }}"
+  {%
+  if
+  external
+  %}target="_blank"
+  rel="noopener noreferrer"
+  {%
+  endif
+  %}
+  class="link-card"
+>
+  <div class="link-title">
+    {% if icon %}<i class="{{ icon }} link-icon"></i>{% endif %} {{ title }}
+  </div>
+  <div class="link-desc">{{ description }}</div>
+</a>

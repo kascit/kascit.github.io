@@ -13,6 +13,8 @@ Desktop.ini
 *.swp
 *.swo
 
-# dev stuff
-justfile
-*.exe
+# Build artifacts & dependencies (downloaded on setup)
+src/tailwindcss.exe
+src/daisyui.js
+src/daisyui-theme.js
+static/css/main.css

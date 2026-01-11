@@ -19,18 +19,19 @@
         reg.sync.register("sync-site-refresh").catch(function () {});
       }
 
-      if (
-        typeof Notification !== "undefined" &&
-        Notification.permission === "default"
-      ) {
-        try {
-          Notification.requestPermission().catch(function () {});
-        } catch (e) {}
-      }
-
       if (reg.active) {
         reg.active.postMessage({ type: "CHECK_LATEST_POST" });
       }
     });
+  });
+
+  // Request notification permission only on app install
+  window.addEventListener("appinstalled", function () {
+    if (
+      typeof Notification !== "undefined" &&
+      Notification.permission === "default"
+    ) {
+      Notification.requestPermission().catch(function () {});
+    }
   });
 })();

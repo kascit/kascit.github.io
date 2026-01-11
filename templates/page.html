@@ -1,6 +1,7 @@
 {% extends "index.html" %}
 
 {% import "macros/content-footer.html" as macros_content_footer %}
+{% import "macros/notify-banner.html" as macros_notify_banner %}
 
 {% block header %}
     {{ macros_header::header(config=config, lang=lang, page=page) }}
@@ -16,6 +17,9 @@
         </h1>
         <p class="text-gray-500">{{ page.description }}</p>
     </div>
+    
+    {{ macros_notify_banner::notify_banner(config=config, page=page) }}
+    
     {{ page.content | safe }}
 
     {# Taxonomies (tags / categories) #}

@@ -106,7 +106,7 @@ AWS-related utilities and tools.
 [Project description coming soon]  
 **Links**: [GitHub](https://github.com/kascit/wallowords)
 
----
+<!-- ---
 
 ## 🤝 Open Source
 
@@ -115,7 +115,7 @@ AWS-related utilities and tools.
 Contributing to the Goyo documentation theme - a clean and simple theme for Zola.  
 **Tech**: CSS, HTML  
 **License**: MIT  
-**Links**: [GitHub](https://github.com/kascit/goyo) | [Original](https://github.com/hahwul/goyo)
+**Links**: [GitHub](https://github.com/kascit/goyo) | [Original](https://github.com/hahwul/goyo) -->
 
 ---
 

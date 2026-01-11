@@ -7,7 +7,6 @@ description = "Lessons learned from building REST APIs that people actually want
 tags = ["java", "spring-boot", "backend", "api", "development"]
 categories = ["Backend Development"]
 +++
-
 I've built a lot of APIs. Some were good. Most were "good enough." A few were trainwrecks that still haunt me. Here's what I've learned about building REST APIs with Spring Boot that won't make your teammates (or your future self) want to cry.
 
 ## Why Spring Boot Though?

@@ -1,9 +1,36 @@
-# Set the default behavior, in case people don't have core.autocrlf set.
+# -------------------------------------------------
+# Default behavior
+# -------------------------------------------------
 * text=auto
 
-# Force shell scripts and config files to always use LF (Linux style)
-# This prevents Windows from breaking your build scripts.
-*.sh text eol=lf
-*.toml text eol=lf
-*.md text eol=lf
-*.yml text eol=lf
+# -------------------------------------------------
+# Force LF for scripts, configs, and content
+# -------------------------------------------------
+*.sh        text eol=lf
+*.toml      text eol=lf
+*.md        text eol=lf
+*.yml       text eol=lf
+*.yaml      text eol=lf
+*.json      text eol=lf
+
+# -------------------------------------------------
+# Static site assets
+# -------------------------------------------------
+*.js        text eol=lf
+*.css       text eol=lf
+*.html      text eol=lf
+*.svg       text eol=lf
+*_headers   text eol=lf
+
+# -------------------------------------------------
+# Binary files
+# -------------------------------------------------
+*.png       binary
+*.jpg       binary
+*.jpeg      binary
+*.webp      binary
+*.avif      binary
+*.ico       binary
+*.woff      binary
+*.woff2    binary
+*.ttf       binary

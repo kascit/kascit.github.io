@@ -48,12 +48,8 @@
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- Security: Content Security Policy (for GitHub Pages + Cloudflare) -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://www.googletagmanager.com https://www.google-analytics.com https://giscus.app/client.js https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://giscus.app; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https: wss: ws: localhost:* 127.0.0.1:*; frame-src 'self' https://giscus.app; object-src 'none'; base-uri 'self'; form-action 'self';">
-    
-    <!-- Security: Prevent MIME type sniffing and XSS -->
-    <meta http-equiv="X-Content-Type-Options" content="nosniff">
-    <meta http-equiv="X-XSS-Protection" content="1; mode=block">
+    <!-- Security headers are now managed in _headers file for better control -->
+    <!-- CSP, HSTS, COOP, X-Frame-Options, etc. are configured via HTTP headers -->
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
     <!-- Resource Hints for better performance -->
@@ -65,48 +61,21 @@
     {% endif %}
     {# Removed fonts.gstatic preconnect/prefetch since fonts are served locally #}
 
-    <!-- Initialize theme and brightness before CSS loads to prevent FOUC -->
-    <script>
-        (function() {
-            // Theme mapping - maps user-friendly names to actual DaisyUI theme names
-            var themeMapping = { "goyo-dark": "night", "goyo-light": "lofi" };
-
-            {# Theme configuration with backward compatibility #}
-            {# Priority: theme.dark_brightness/light_brightness (new per-theme) > theme.brightness (common) > brightness (legacy) #}
-            {% if config.extra.theme is defined %}
-                {% set theme_colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) %}
-                {% set common_brightness = config.extra.theme.brightness | default(value=config.extra.brightness | default(value='normal')) %}
-                {% set dark_brightness = config.extra.theme.dark_brightness | default(value=common_brightness) %}
-                {% set light_brightness = config.extra.theme.light_brightness | default(value=common_brightness) %}
-            {% else %}
-                {% set theme_colorset = config.extra.default_colorset | default(value='dark') %}
-                {% set common_brightness = config.extra.brightness | default(value='normal') %}
-                {% set dark_brightness = common_brightness %}
-                {% set light_brightness = common_brightness %}
-            {% endif %}
-            // Get default values from config
-            var defaultColorset = "{{ theme_colorset }}";
-            var darkBrightness = "{{ dark_brightness }}";
-            var lightBrightness = "{{ light_brightness }}";
-            var themeMap = { "dark": "goyo-dark", "light": "goyo-light" };
-            var fallbackTheme = themeMap[defaultColorset] || "goyo-dark";
-
-            // Expose brightness config for global use (e.g., goyo.js)
-            window.darkBrightness = darkBrightness;
-            window.lightBrightness = lightBrightness;
-
-            // Get theme from localStorage or use fallback
-            var currentUserTheme = localStorage.getItem('theme') || fallbackTheme;
-            var actualTheme = themeMapping[currentUserTheme] || currentUserTheme;
-
-            // Determine brightness based on current theme
-            var currentBrightness = (currentUserTheme === "goyo-dark") ? darkBrightness : lightBrightness;
-
-            // Set theme and brightness attributes immediately
-            document.documentElement.setAttribute("data-theme", actualTheme);
-            document.documentElement.setAttribute("data-brightness", currentBrightness);
-        })();
-    </script>
+    {% if config.extra.theme is defined %}
+        {% set theme_colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) %}
+        {% set common_brightness = config.extra.theme.brightness | default(value=config.extra.brightness | default(value='normal')) %}
+        {% set dark_brightness = config.extra.theme.dark_brightness | default(value=common_brightness) %}
+        {% set light_brightness = config.extra.theme.light_brightness | default(value=common_brightness) %}
+    {% else %}
+        {% set theme_colorset = config.extra.default_colorset | default(value='dark') %}
+        {% set common_brightness = config.extra.brightness | default(value='normal') %}
+        {% set dark_brightness = common_brightness %}
+        {% set light_brightness = common_brightness %}
+    {% endif %}
+    <script src="{{ get_url(path="js/theme-init.js") | safe }}"
+            data-default-colorset="{{ theme_colorset }}"
+            data-dark-brightness="{{ dark_brightness }}"
+            data-light-brightness="{{ light_brightness }}"></script>
 
     <style>
         {# Font configuration with backward compatibility #}
@@ -176,17 +145,11 @@
     </title>
 
     {# Google Analytics gtag.js integration #}
-    {% if config.extra.gtag and config.extra.gtag != "" %}
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ config.extra.gtag }}"></script>
-    <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-
-      gtag('config', '{{ config.extra.gtag }}');
-    </script>
-    {% endif %}
+        {% if config.extra.gtag and config.extra.gtag != "" %}
+        <!-- Google tag (gtag.js) -->
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ config.extra.gtag }}"></script>
+        <script src="{{ get_url(path="js/gtag-init.js") | safe }}" data-gtag-id="{{ config.extra.gtag }}"></script>
+        {% endif %}
 
       <!-- SEO: Open Graph / Twitter Card -->
       <meta property="og:title" content="
@@ -327,154 +290,11 @@
     <script defer src="{{ get_url(path="js/copy_code.js") | safe }}"></script>
     <script defer src="{{ get_url(path="js/copy_heading_link.js") | safe }}"></script>
     <script defer src="{{ get_url(path="js/clipboard.js") | safe }}"></script>
-
-    <!-- Global shortcut hint renderer (desktop-only display) -->
-    <script>
-        (function () {
-            const isDesktop =
-                matchMedia('(hover: hover)').matches &&
-                matchMedia('(pointer: fine)').matches;
-
-            function renderShortcut(el) {
-                const spec = el.getAttribute('data-shortcut');
-                if (!spec) return;
-
-                const desktopOnly = el.getAttribute('data-desktop-only') === 'true';
-                if (desktopOnly && !isDesktop) {
-                    el.style.display = 'none';
-                    return;
-                }
-
-                const platform = navigator.userAgentData?.platform || navigator.platform || '';
-                const isMac = /mac/i.test(platform);
-                const primary = isMac ? '⌘' : 'Ctrl';
-                const altLabel = isMac ? 'Option' : 'Alt';
-                const metaLabel = isMac ? '⌘' : 'Win';
-
-                const parts = spec.split('+').map((key) => {
-                    const lower = key.trim().toLowerCase();
-                    if (lower === 'primary') return primary;
-                    if (lower === 'alt') return altLabel;
-                    if (lower === 'meta') return metaLabel;
-                    if (lower === 'shift') return 'Shift';
-                    if (lower === 'cmd' || lower === 'command') return '⌘';
-                    return key.length === 1 ? key.toUpperCase() : key;
-                });
-
-                el.innerHTML = parts.map((k) => `<kbd class="kbd">${k}</kbd>`).join('');
-                el.style.display = 'inline-flex';
-                el.style.gap = '2px';
-                el.classList.add('shortcut-hint-ready');
-            }
-
-            document.addEventListener('DOMContentLoaded', function () {
-                // Hide any desktop-only elements when not desktop
-                if (!isDesktop) {
-                    document.querySelectorAll('[data-desktop-only="true"]').forEach((el) => {
-                        el.style.display = 'none';
-                    });
-                }
-                document.querySelectorAll('[data-shortcut]').forEach(renderShortcut);
-            });
-        })();
-    </script>
-
-    <!-- Lazy load Mermaid and KaTeX - only when needed -->
-    <script>
-        // Lazy load KaTeX and Mermaid when needed
-        window.addEventListener('DOMContentLoaded', function() {
-            // Check for both KaTeX inline and block elements in one pass
-            var katexInlineElements = document.querySelectorAll('.katex-inline');
-            var katexBlockElements = document.querySelectorAll('.katex-block');
-            var hasKatex = katexInlineElements.length > 0 || katexBlockElements.length > 0;
-            var hasMermaid = document.querySelector('.mermaid');
-
-            // Load KaTeX if math elements are present
-            if (hasKatex) {
-                // Load KaTeX CSS first
-                var katexCSS = document.createElement('link');
-                katexCSS.rel = 'stylesheet';
-                katexCSS.href = '{{ get_url(path="css/katex.min.css") | safe }}';
-                document.head.appendChild(katexCSS);
-
-                // Load KaTeX JS
-                var katexScript = document.createElement('script');
-                katexScript.src = '{{ get_url(path="js/katex.min.js") | safe }}';
-                katexScript.onload = function() {
-                    // Render inline elements
-                    katexInlineElements.forEach(function(elem) {
-                        var texContent = elem.textContent || elem.innerText;
-                        try {
-                            katex.render(texContent, elem, {
-                                throwOnError: false,
-                                displayMode: false
-                            });
-                        } catch(e) {
-                            console.error('KaTeX render error:', e);
-                        }
-                    });
-
-                    // Render block elements
-                    katexBlockElements.forEach(function(elem) {
-                        var texContent = elem.textContent || elem.innerText;
-                        try {
-                            katex.render(texContent, elem, {
-                                throwOnError: false,
-                                displayMode: true
-                            });
-                        } catch(e) {
-                            console.error('KaTeX render error:', e);
-                        }
-                    });
-                };
-                document.head.appendChild(katexScript);
-            }
-
-            // Load Mermaid if diagram elements are present
-            if (hasMermaid) {
-                var mermaidScript = document.createElement('script');
-                mermaidScript.src = '{{ get_url(path="js/mermaid.min.js") | safe }}';
-                mermaidScript.onload = function() {
-                    // Initialize Mermaid after loading
-                    if (typeof window.initMermaid === 'function') {
-                        window.initMermaid();
-                    }
-                };
-                document.head.appendChild(mermaidScript);
-            }
-        });
-    </script>
-
-    <!-- Service Worker Registration for offline support and caching -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', function() {
-                navigator.serviceWorker.register('{{ get_url(path="sw.js") | safe }}').catch(function(error) {
-                    console.error('Service Worker registration failed:', error);
-                });
-
-                // Try to register periodic background sync (if supported)
-                navigator.serviceWorker.ready.then(function(reg) {
-                    if ('periodicSync' in reg) {
-                        reg.periodicSync.register('content-sync', { minInterval: 24 * 60 * 60 * 1000 }).catch(function(e){ /* ignore */ });
-                    }
-                    if ('sync' in reg) {
-                        // Example one-off sync tag
-                        reg.sync.register('sync-site-refresh').catch(function(e){ /* ignore */ });
-                    }
-
-                    // Optional: request notification permission gently
-                    if (typeof Notification !== 'undefined' && Notification.permission === 'default') {
-                        // Light-touch prompt; browsers may ignore without user gesture
-                        try { Notification.requestPermission().catch(function(){/* ignore */}); } catch(e) { /* ignore */ }
-                    }
-
-                    // Ask SW to perform an immediate RSS check
-                    if (reg.active) {
-                        reg.active.postMessage({ type: 'CHECK_LATEST_POST' });
-                    }
-                });
-            });
-        }
-    </script>
+    <script defer src="{{ get_url(path="js/shortcut-hints.js") | safe }}"></script>
+    <script defer src="{{ get_url(path="js/lazy-modules.js") | safe }}"
+            data-katex-css="{{ get_url(path="css/katex.min.css") | safe }}"
+            data-katex-js="{{ get_url(path="js/katex.min.js") | safe }}"
+            data-mermaid-js="{{ get_url(path="js/mermaid.min.js") | safe }}"></script>
+    <script defer src="{{ get_url(path="js/sw-register.js") | safe }}"
+            data-sw-path="{{ get_url(path="sw.js") | safe }}"></script>
 {% endmacro head %}

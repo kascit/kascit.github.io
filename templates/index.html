@@ -85,68 +85,21 @@
             </div>
             {% endif %}
 
-            <script>
-              // Determine theme: localStorage > extra.default_colorset > goyo-dark
-              // Expose theme config for global use (e.g., goyo.js)
-              {# Theme configuration with backward compatibility #}
-              {# Priority: theme.dark_brightness/light_brightness (new per-theme) > theme.brightness (common) > brightness (legacy) #}
-              {% if config.extra.theme is defined %}
-                  {% set js_theme_colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) %}
-                  {% set js_common_brightness = config.extra.theme.brightness | default(value=config.extra.brightness | default(value='normal')) %}
-                  {% set js_dark_brightness = config.extra.theme.dark_brightness | default(value=js_common_brightness) %}
-                  {% set js_light_brightness = config.extra.theme.light_brightness | default(value=js_common_brightness) %}
-              {% else %}
-                  {% set js_theme_colorset = config.extra.default_colorset | default(value='dark') %}
-                  {% set js_common_brightness = config.extra.brightness | default(value='normal') %}
-                  {% set js_dark_brightness = js_common_brightness %}
-                  {% set js_light_brightness = js_common_brightness %}
-              {% endif %}
-              window.defaultColorset = "{{ js_theme_colorset }}";
-              window.darkBrightness = "{{ js_dark_brightness }}";
-              window.lightBrightness = "{{ js_light_brightness }}";
-              window.themeMap = { "dark": "goyo-dark", "light": "goyo-light" };
-              window.fallbackTheme = window.themeMap[window.defaultColorset] || "goyo-dark";
-
-              // Theme mapping - maps user-friendly names to actual DaisyUI theme names
-              var themeMapping = { "goyo-dark": "night", "goyo-light": "lofi" };
-              var currentUserTheme = localStorage.getItem('theme') || window.fallbackTheme;
-              var actualTheme = themeMapping[currentUserTheme] || currentUserTheme;
-
-              // Initialize and run Mermaid only when loaded
-              window.initMermaid = function() {
-                var mermaidTheme = "dark";
-                if(currentUserTheme == "goyo-light") {
-                  mermaidTheme = "light";
-                }
-
-                if (typeof mermaid !== 'undefined') {
-                  mermaid.initialize({ startOnLoad: false, theme: mermaidTheme });
-
-                  // Function to render mermaid diagrams
-                  var renderMermaid = async function() {
-                    const mermaidElements = document.querySelectorAll('.mermaid');
-                    if (mermaidElements.length > 0) {
-                        await mermaid.run({
-                            nodes: mermaidElements
-                        });
-                    }
-                  };
-
-                  // Check if DOMContentLoaded has already fired
-                  if (document.readyState === 'loading') {
-                    document.addEventListener('DOMContentLoaded', renderMermaid);
-                  } else {
-                    // DOMContentLoaded already fired, run immediately
-                    renderMermaid();
-                  }
-                }
-              };
-
-              // Auto-initialize if Mermaid is already loaded
-              if (typeof mermaid !== 'undefined') {
-                window.initMermaid();
-              }
-            </script>
+                        {% if config.extra.theme is defined %}
+                                {% set js_theme_colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) %}
+                                {% set js_common_brightness = config.extra.theme.brightness | default(value=config.extra.brightness | default(value='normal')) %}
+                                {% set js_dark_brightness = config.extra.theme.dark_brightness | default(value=js_common_brightness) %}
+                                {% set js_light_brightness = config.extra.theme.light_brightness | default(value=js_common_brightness) %}
+                        {% else %}
+                                {% set js_theme_colorset = config.extra.default_colorset | default(value='dark') %}
+                                {% set js_common_brightness = config.extra.brightness | default(value='normal') %}
+                                {% set js_dark_brightness = js_common_brightness %}
+                                {% set js_light_brightness = js_common_brightness %}
+                        {% endif %}
+                        <script defer src="{{ get_url(path='js/page-init.js') | safe }}"
+                                        data-default-colorset="{{ js_theme_colorset }}"
+                                        data-dark-brightness="{{ js_dark_brightness }}"
+                                        data-light-brightness="{{ js_light_brightness }}"></script>
 
         </div>
 
@@ -169,82 +122,10 @@
     {% block js_body %}
         <script defer src="{{ get_url(path='goyo.js') | safe }}"></script>
         {% if config.build_search_index %}
-        <!-- Lazy load search functionality -->
-        <script>
-            var searchLoaded = false;
-            var searchLoadCallbacks = [];
-
-            function loadSearchLibraries(callback) {
-                // If already loaded, execute callback immediately
-                if (searchLoaded && typeof Fuse !== 'undefined' && window.searchIndex) {
-                    if (callback) callback();
-                    return;
-                }
-
-                // Add callback to queue
-                if (callback) searchLoadCallbacks.push(callback);
-
-                // If already loading, don't start again
-                if (searchLoaded) return;
-                searchLoaded = true;
-
-                // Show loading indicator in search input
-                var searchInput = document.getElementById('search');
-                if (searchInput) {
-                    searchInput.placeholder = 'Loading search...';
-                    searchInput.disabled = true;
-                }
-
-                // Load Fuse.js
-                var fuseScript = document.createElement('script');
-                fuseScript.src = '{{ get_url(path="fuse.min.js") | safe }}';
-
-                // Load search index after Fuse.js
-                fuseScript.onload = function() {
-                    var searchIndexScript = document.createElement('script');
-                    searchIndexScript.src = '{{ get_url(path="search_index." ~ lang ~ ".js") | safe }}';
-                    searchIndexScript.onload = function() {
-                        // Re-enable search input
-                        if (searchInput) {
-                            searchInput.placeholder = 'Search documentation...';
-                            searchInput.disabled = false;
-                            searchInput.focus();
-                        }
-
-                        // Initialize search functionality
-                        if (typeof initSearch === 'function') {
-                            initSearch();
-                        }
-
-                        // Execute all queued callbacks
-                        searchLoadCallbacks.forEach(function(cb) { cb(); });
-                        searchLoadCallbacks = [];
-                    };
-                    document.body.appendChild(searchIndexScript);
-                };
-
-                document.body.appendChild(fuseScript);
-            }
-
-            // Load search on first interaction with search modal
-            document.addEventListener('DOMContentLoaded', function() {
-                var searchModal = document.getElementById('search-modal');
-                if (searchModal) {
-                    searchModal.addEventListener('change', function() {
-                        if (this.checked) {
-                            loadSearchLibraries();
-                        }
-                    });
-                }
-
-                // Also load on Ctrl+K / Cmd+K
-                document.addEventListener('keydown', function(e) {
-                    if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
-                        loadSearchLibraries();
-                    }
-                });
-            });
-        </script>
+        <script defer src="{{ get_url(path='js/search-loader.js') | safe }}"
+                data-lang="{{ lang | default(value='en') }}"
+                data-fuse="{{ get_url(path="fuse.min.js") | safe }}"
+                data-search-index="{{ get_url(path="search_index." ~ lang ~ ".js") | safe }}"></script>
         {% endif %}
     {% endblock js_body %}
 </body>

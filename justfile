@@ -39,7 +39,8 @@ setup:
     @Invoke-WebRequest -Uri "https://use.fontawesome.com/releases/v6.7.2/fontawesome-free-6.7.2-web.zip" -OutFile "fontawesome.zip"
     @Expand-Archive -Path "fontawesome.zip" -DestinationPath "temp" -Force
     @Copy-Item "temp/fontawesome-free-6.7.2-web/css/all.min.css" -Destination "static/css/font-awesome.min.css" -Force
-    @Copy-Item "temp/fontawesome-free-6.7.2-web/webfonts" -Destination "static/fonts" -Recurse -Force
+    @if (Test-Path "static/webfonts") { Remove-Item "static/webfonts" -Recurse -Force }
+    @Copy-Item "temp/fontawesome-free-6.7.2-web/webfonts" -Destination "static/webfonts" -Recurse -Force
     @Remove-Item "fontawesome.zip" -Force
     @Remove-Item "temp" -Recurse -Force
     @Write-Host "✓ Font Awesome installed" -ForegroundColor Green
@@ -108,9 +109,9 @@ build: clean build-css
 [group('build')]
 stats: build
     @echo ""
-    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo "=================================="
     @echo "BUILD STATISTICS"
-    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo "=================================="
     @$count = (Get-ChildItem -Recurse public | Measure-Object).Count; Write-Host "Files:    $count" -ForegroundColor Cyan
     @$size = (Get-ChildItem -Recurse public | Measure-Object -Property Length -Sum).Sum / 1MB; Write-Host ("Size:     {0:N2} MB" -f $size) -ForegroundColor Cyan
 
@@ -150,7 +151,8 @@ _update-fontawesome:
     @Invoke-WebRequest -Uri "https://use.fontawesome.com/releases/v6.7.2/fontawesome-free-6.7.2-web.zip" -OutFile "fontawesome.zip"
     @Expand-Archive -Path "fontawesome.zip" -DestinationPath "temp" -Force
     @Copy-Item "temp/fontawesome-free-6.7.2-web/css/all.min.css" -Destination "static/css/font-awesome.min.css" -Force
-    @Copy-Item "temp/fontawesome-free-6.7.2-web/webfonts" -Destination "static/fonts" -Recurse -Force
+    @if (Test-Path "static/webfonts") { Remove-Item "static/webfonts" -Recurse -Force }
+    @Copy-Item "temp/fontawesome-free-6.7.2-web/webfonts" -Destination "static/webfonts" -Recurse -Force
     @Remove-Item "fontawesome.zip" -Force
     @Remove-Item "temp" -Recurse -Force
     @echo "✓ Font Awesome updated"
@@ -177,9 +179,9 @@ _update-katex:
 # 📋 Show all tool versions
 [group('info')]
 versions:
-    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo "=================================="
     @echo "TOOL VERSIONS"
-    @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+    @echo "=================================="
     @echo ""
     @Write-Host "Platform: " -NoNewline -ForegroundColor Gray; Write-Host "Windows" -ForegroundColor Cyan
     @Write-Host "Zola:     " -NoNewline -ForegroundColor Gray; zola --version

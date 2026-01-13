@@ -7,6 +7,47 @@
     {{ macros_header::header(config=config, lang=lang, page=page) }}
 {% endblock header %}
 
+{% block extra_head %}
+<!-- Structured Data for Blog Post (Schema.org JSON-LD) -->
+{% if page.taxonomies and (page.taxonomies.tags or page.taxonomies.categories) %}
+{% set_global headline = page.title | replace(from='"', to='\\"') | replace(from="'", to="\\'") %}
+{% set_global desc = page.description | default(value='') | replace(from='"', to='\\"') | replace(from="'", to="\\'") %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "{{ headline | safe }}",
+  "description": "{{ desc | safe }}",
+  "author": {
+    "@type": "Person",
+    "name": "{{ config.author | default(value='Dhanur') }}"
+  },
+  "datePublished": "{{ page.date | date(format='%Y-%m-%dT%H:%M:%S%:z') }}",{% if page.updated %}
+  "dateModified": "{{ page.updated | date(format='%Y-%m-%dT%H:%M:%S%:z') }}",{% endif %}
+  "publisher": {
+    "@type": "Organization",
+    "name": "{{ config.title | default(value='Dhanur') }}",{% if config.extra.logo and config.extra.logo.image_path %}
+    "logo": {
+      "@type": "ImageObject",
+      "url": "{{ get_url(path=config.extra.logo.image_path) | safe }}"
+    },{% endif %}
+    "url": "{{ config.base_url | safe }}"
+  },
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": "{{ page.permalink | safe }}"
+  },
+  "url": "{{ page.permalink | safe }}",{% if page.extra.image or config.extra.default_thumbnail %}
+  "image": "{{ get_url(path=page.extra.image | default(value=config.extra.default_thumbnail)) | safe }}",{% endif %}{% if page.taxonomies.tags %}
+  "keywords": "{{ page.taxonomies.tags | join(sep=', ') }}",{% endif %}
+  "articleSection": "{{ page.taxonomies.categories | default(value=['Blog']) | first }}",
+  "inLanguage": "{{ lang | default(value='en') }}",
+  "wordCount": {{ page.word_count | default(value=0) }}
+}
+</script>
+{% endif %}
+{% endblock extra_head %}
+
 {% block content %}
     <div class="mb-12 pb-4 border-b border-gray-500/15">
         <h1 class="flex items-center gap-3">

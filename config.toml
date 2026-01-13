@@ -115,7 +115,7 @@ nav = [
 # =============================================================================
 [extra.logo]
 text = "~/dhanur"
-image_path = "images/web-app-manifest-512x512.png"
+image_path = "images/favi-dark.png"
 image_padding = "15px"
 dark_image_path = "images/logo-light.png"
 light_image_path = "images/logo-dark.png"

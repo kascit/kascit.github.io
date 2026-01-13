@@ -16,4 +16,4 @@ This is where I document my journey through the chaos of modern software develop
 
 ## Latest Posts
 
-Check out the posts in the navbar, sorted by most recent or hope right into em using the below next button. Everything's also available via [RSS feed](/rss.xml) if you're into that.
+Check out the posts in the navbar, sorted by most recent or hop right into em using the below next button. Everything's also available via [RSS feed](/rss.xml) if you're into that.

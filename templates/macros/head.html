@@ -212,8 +212,38 @@
       <meta name="twitter:image" content="{{ get_url(path=config.extra.default_thumbnail) | safe }}" />
       {% endif %}
 
+      <!-- Structured Data (Schema.org JSON-LD) -->
+      <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebSite",
+        "name": "{{ config.title | default(value='Dhanur') }}",
+        "url": "{{ config.base_url | safe }}",
+        "description": "{{ config.description | default(value='') }}",
+        {% if config.extra.logo and config.extra.logo.image_path %}
+        "publisher": {
+          "@type": "Organization",
+          "name": "{{ config.title | default(value='Dhanur') }}",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "{{ get_url(path=config.extra.logo.image_path) | safe }}"
+          }
+        },
+        {% endif %}
+        "author": {
+          "@type": "Person",
+          "name": "{{ config.author | default(value='') }}"
+        }
+      }
+      </script>
+
       <!-- Browser address bar color -->
       <meta name="theme-color" content="{{ self::get_theme_color(config=config) | trim }}">
+
+      <!-- RSS Feed -->
+      {% if config.generate_feeds %}
+      <link rel="alternate" type="application/rss+xml" title="{{ config.title | default(value='RSS Feed') }}" href="{{ get_url(path='rss.xml', trailing_slash=false) | safe }}" />
+      {% endif %}
 
       <!-- Favicon -->
       {# Favicon configuration #}

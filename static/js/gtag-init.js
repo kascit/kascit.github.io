@@ -1,14 +1,12 @@
 (function () {
   "use strict";
-  var el = document.currentScript;
-  if (!el) return;
-  var gtagId = (el.dataset && el.dataset.gtagId) || "";
-  if (!gtagId) return;
-
+  var e = document.currentScript;
+  if (!e) return;
+  var t = (e.dataset && e.dataset.gtagId) || "";
+  if (!t) return;
   window.dataLayer = window.dataLayer || [];
-  function gtag() {
+  function a() {
     dataLayer.push(arguments);
   }
-  gtag("js", new Date());
-  gtag("config", gtagId);
+  a("js", new Date()), a("config", t);
 })();

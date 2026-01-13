@@ -59,7 +59,10 @@
     <link rel="dns-prefetch" href="https://www.googletagmanager.com">
     <link rel="dns-prefetch" href="https://www.google-analytics.com">
     {% endif %}
-    {# Removed fonts.gstatic preconnect/prefetch since fonts are served locally #}
+    {# Preload critical fonts to reduce critical path latency #}
+    <link rel="preload" href="{{ get_url(path="webfonts/fa-solid-900.woff2") | safe }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ get_url(path="webfonts/fa-brands-400.woff2") | safe }}" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="{{ get_url(path="fonts/Pretendard-Regular.woff") | safe }}" as="font" type="font/woff" crossorigin>
 
     {% if config.extra.theme is defined %}
         {% set theme_colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) %}
@@ -72,7 +75,23 @@
         {% set dark_brightness = common_brightness %}
         {% set light_brightness = common_brightness %}
     {% endif %}
-    <script src="{{ get_url(path="js/theme-init.js") | safe }}"
+    <!-- Inline critical theme init to prevent FOUC, but kept minimal -->
+    <script>
+        (function() {
+            var colorset = localStorage.getItem('colorset') || '{{ theme_colorset }}';
+            var darkBrightness = localStorage.getItem('darkBrightness') || '{{ dark_brightness }}';
+            var lightBrightness = localStorage.getItem('lightBrightness') || '{{ light_brightness }}';
+            if (colorset === 'dark') {
+                document.documentElement.classList.add('dark');
+                document.documentElement.style.colorScheme = 'dark';
+            } else {
+                document.documentElement.classList.add('light');
+                document.documentElement.style.colorScheme = 'light';
+            }
+        })();
+    </script>
+    <!-- Defer full theme initialization for performance -->
+    <script src="{{ get_url(path="js/theme-init.js") | safe }}" defer
             data-default-colorset="{{ theme_colorset }}"
             data-dark-brightness="{{ dark_brightness }}"
             data-light-brightness="{{ light_brightness }}"></script>
@@ -144,11 +163,11 @@
       {%- endif -%}
     </title>
 
-    {# Google Analytics gtag.js integration #}
+    {# Google Analytics gtag.js integration - deferred to not block rendering #}
         {% if config.extra.gtag and config.extra.gtag != "" %}
         <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id={{ config.extra.gtag }}"></script>
-        <script src="{{ get_url(path="js/gtag-init.js") | safe }}" data-gtag-id="{{ config.extra.gtag }}"></script>
+        <script src="{{ get_url(path="js/gtag-init.js") | safe }}" defer data-gtag-id="{{ config.extra.gtag }}"></script>
         {% endif %}
 
       <!-- SEO: Open Graph / Twitter Card -->
@@ -285,24 +304,24 @@
                 font-style: normal;
                 font-weight: 400;
                 font-display: swap;
-                src: url({{ get_url(path="fonts/fa-brands-400.woff2") | safe }}) format("woff2"),
-                         url({{ get_url(path="fonts/fa-brands-400.ttf") | safe }}) format("truetype");
+                src: url({{ get_url(path="webfonts/fa-brands-400.woff2") | safe }}) format("woff2"),
+                         url({{ get_url(path="webfonts/fa-brands-400.ttf") | safe }}) format("truetype");
             }
             @font-face {
                 font-family: "Font Awesome 6 Free";
                 font-style: normal;
                 font-weight: 400;
                 font-display: swap;
-                src: url({{ get_url(path="fonts/fa-regular-400.woff2") | safe }}) format("woff2"),
-                         url({{ get_url(path="fonts/fa-regular-400.ttf") | safe }}) format("truetype");
+                src: url({{ get_url(path="webfonts/fa-regular-400.woff2") | safe }}) format("woff2"),
+                         url({{ get_url(path="webfonts/fa-regular-400.ttf") | safe }}) format("truetype");
             }
             @font-face {
                 font-family: "Font Awesome 6 Free";
                 font-style: normal;
                 font-weight: 900;
                 font-display: swap;
-                src: url({{ get_url(path="fonts/fa-solid-900.woff2") | safe }}) format("woff2"),
-                         url({{ get_url(path="fonts/fa-solid-900.ttf") | safe }}) format("truetype");
+                src: url({{ get_url(path="webfonts/fa-solid-900.woff2") | safe }}) format("woff2"),
+                         url({{ get_url(path="webfonts/fa-solid-900.ttf") | safe }}) format("truetype");
             }
         </style>
 

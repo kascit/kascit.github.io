@@ -1,82 +1,105 @@
 # =============================================================================
+
 # SECURITY HEADERS - Applied to all pages
-# =============================================================================
-
-/*
-  # HSTS - Force HTTPS for 2 years
-  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-
-  # Content Security Policy - "The Working Version"
-  # Updated to allow inline scripts (required for Zola themes) and remove strict blocking
-  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://giscus.app https://utteranc.es https://static.cloudflareinsights.com https://gist.github.com https://asciinema.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://giscus.app; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https: wss:; frame-src 'self' https://giscus.app https://utteranc.es; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
-
-  # X-Frame-Options - Clickjacking protection
-  X-Frame-Options: SAMEORIGIN
-
-  # X-Content-Type-Options - Prevent MIME sniffing
-  X-Content-Type-Options: nosniff
-
-  # X-XSS-Protection - Legacy XSS filter
-  X-XSS-Protection: 1; mode=block
-
-  # Referrer-Policy - Control referrer information
-  Referrer-Policy: strict-origin-when-cross-origin
-
-  # Permissions-Policy - Lock down unused hardware
-  Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()
-
 
 # =============================================================================
+
+/\*
+
+# HSTS - Force HTTPS for 2 years
+
+Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+
+# Content Security Policy - "The Working Version"
+
+# Updated to allow inline scripts (required for Zola themes) and remove strict blocking
+
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://giscus.app https://utteranc.es https://static.cloudflareinsights.com https://gist.github.com https://asciinema.org; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://giscus.app; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https: wss:; frame-src 'self' https://giscus.app https://utteranc.es; frame-ancestors 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
+
+# X-Frame-Options - Clickjacking protection
+
+X-Frame-Options: SAMEORIGIN
+
+# X-Content-Type-Options - Prevent MIME sniffing
+
+X-Content-Type-Options: nosniff
+
+# X-XSS-Protection - Legacy XSS filter
+
+X-XSS-Protection: 1; mode=block
+
+# Referrer-Policy - Control referrer information
+
+Referrer-Policy: strict-origin-when-cross-origin
+
+# Permissions-Policy - Lock down unused hardware
+
+Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()
+
+# =============================================================================
+
 # CACHE HEADERS FOR STATIC ASSETS (Long Cache - 1 Year)
+
 # =============================================================================
 
 # Images
-/images/*
-  Cache-Control: public, max-age=31536000, immutable
+
+/images/\*
+Cache-Control: public, max-age=31536000, immutable
 
 # Fonts
-/fonts/*
-  Cache-Control: public, max-age=31536000, immutable
+
+/fonts/\*
+Cache-Control: public, max-age=31536000, immutable
 
 # CSS
-/css/*
-  Cache-Control: public, max-age=31536000, immutable
+
+/css/\*
+Cache-Control: public, max-age=31536000, immutable
 
 # JavaScript
-/js/*
-  Cache-Control: public, max-age=31536000, immutable
+
+/js/\*
+Cache-Control: public, max-age=31536000, immutable
 
 # Individual file types (catch-all)
-*.woff
-  Cache-Control: public, max-age=31536000, immutable
-*.woff2
-  Cache-Control: public, max-age=31536000, immutable
-*.ttf
-  Cache-Control: public, max-age=31536000, immutable
-*.webp
-  Cache-Control: public, max-age=31536000, immutable
-*.ico
-  Cache-Control: public, max-age=31536000, immutable
 
+_.woff
+Cache-Control: public, max-age=31536000, immutable
+_.woff2
+Cache-Control: public, max-age=31536000, immutable
+_.ttf
+Cache-Control: public, max-age=31536000, immutable
+_.webp
+Cache-Control: public, max-age=31536000, immutable
+\*.ico
+Cache-Control: public, max-age=31536000, immutable
 
 # =============================================================================
+
 # CACHE HEADERS FOR DYNAMIC CONTENT (Short Cache - 1 Hour)
+
 # =============================================================================
 
 # HTML pages - Short cache for blog updates
-/*.html
-  Cache-Control: public, max-age=3600
+
+/\*.html
+Cache-Control: public, max-age=3600
 
 # RSS and XML
+
 /rss.xml
-  Cache-Control: public, max-age=3600
+Content-Type: application/rss+xml; charset=utf-8
+Cache-Control: public, max-age=3600
 
 /sitemap.xml
-  Cache-Control: public, max-age=86400
+Content-Type: application/xml; charset=utf-8
+Cache-Control: public, max-age=86400
 
 /robots.txt
-  Cache-Control: public, max-age=3600
+Cache-Control: public, max-age=3600
 
 # Service worker - NEVER cache this
+
 /sw.js
-  Cache-Control: public, max-age=0, must-revalidate
+Cache-Control: public, max-age=0, must-revalidate

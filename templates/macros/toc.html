@@ -13,10 +13,8 @@
       <li>
         {% if h1.children %}
         <details class="toc-details">
-          <summary>
-            <a href="{{ h1.permalink | safe }}" class="toc-link"
-              >{{ h1.title }}</a
-            >
+          <summary role="button" data-toc-href="{{ h1.permalink | safe }}">
+            <span class="toc-link">{{ h1.title }}</span>
           </summary>
           <ul>
             {% for h2 in h1.children %}
@@ -36,4 +34,16 @@
     </ul>
   </div>
 </aside>
+<script defer>
+  document
+    .querySelectorAll(".toc-menu summary[data-toc-href]")
+    .forEach((summary) => {
+      summary.addEventListener("click", function (e) {
+        const href = this.getAttribute("data-toc-href");
+        if (href) {
+          window.location.hash = href.split("#")[1] || "";
+        }
+      });
+    });
+</script>
 {% endif %} {% endmacro toc %}

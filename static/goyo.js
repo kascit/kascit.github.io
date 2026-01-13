@@ -451,9 +451,21 @@ function initToc() {
     detail.addEventListener("toggle", (e) => {
       // Only track if user manually closed it
       if (!detail.open) {
-        const link = detail.querySelector(".toc-link");
-        if (link) {
-          const id = link.getAttribute("href").split("#")[1];
+        const summary = detail.querySelector("summary");
+        let id = null;
+
+        // Try to get id from data-toc-href attribute on summary
+        if (summary && summary.hasAttribute("data-toc-href")) {
+          id = summary.getAttribute("data-toc-href").split("#")[1];
+        } else {
+          // Fallback: try to get id from first toc-link anchor child
+          const link = detail.querySelector(".toc-link[href]");
+          if (link) {
+            id = link.getAttribute("href").split("#")[1];
+          }
+        }
+
+        if (id) {
           userClosedSections.add(id);
         }
       }
@@ -480,10 +492,19 @@ function initToc() {
       // Open parent details only if user hasn't manually closed them
       let parentDetails = correspondingLink.closest("details");
       while (parentDetails) {
-        const parentLink = parentDetails.querySelector(".toc-link");
-        const parentId = parentLink
-          ? parentLink.getAttribute("href").split("#")[1]
-          : null;
+        const summary = parentDetails.querySelector("summary");
+        let parentId = null;
+
+        // Try to get id from data-toc-href on summary
+        if (summary && summary.hasAttribute("data-toc-href")) {
+          parentId = summary.getAttribute("data-toc-href").split("#")[1];
+        } else {
+          // Fallback: try to get id from first toc-link anchor
+          const parentLink = parentDetails.querySelector(".toc-link[href]");
+          parentId = parentLink
+            ? parentLink.getAttribute("href").split("#")[1]
+            : null;
+        }
 
         if (!parentId || !userClosedSections.has(parentId)) {
           parentDetails.open = true;
@@ -515,23 +536,13 @@ function initToc() {
   });
 
   // Handle initial state on load
-  // Prefer URL hash if present, else first visible heading
+  // Prefer URL hash if present
   const hashId = location.hash ? location.hash.slice(1) : null;
   if (hashId && document.getElementById(hashId)) {
     activateLink(hashId);
-  } else {
-    const firstVisibleHeading = Array.from(headings).find((heading) => {
-      const rect = heading.getBoundingClientRect();
-      return rect.top >= 0 && rect.top <= window.innerHeight;
-    });
-
-    if (firstVisibleHeading) {
-      const id = firstVisibleHeading.getAttribute("id");
-      if (id) {
-        activateLink(id);
-      }
-    }
   }
+  // Note: Intersection observer will handle finding the first visible heading
+  // without forcing a reflow by querying getBoundingClientRect()
 }
 
 function initMath() {

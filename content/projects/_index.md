@@ -10,7 +10,7 @@ paginate_by = 12
 enabled = false
 +++
 
-## 🚀 Featured Projects
+## Featured Projects
 
 ### Face Rekognition
 
@@ -44,7 +44,7 @@ Personal Selenium-based automation built as a learning project to explore real-w
 
 ---
 
-## 🌐 Web Projects
+## Web Projects
 
 ### Personal Website (This Site!)
 
@@ -71,7 +71,7 @@ Classic tic-tac-toe game implementation.
 
 ---
 
-## 💻 Development & Learning
+## Development & Learning
 
 ### LeetCode Solutions
 
@@ -91,7 +91,7 @@ Implementations and practice of data structures and algorithms in Java.
 
 ---
 
-## 🔧 Other Projects
+## Other Projects
 
 ### toAWS
 
@@ -108,7 +108,7 @@ AWS-related utilities and tools.
 
 <!-- ---
 
-## 🤝 Open Source
+## Open Source
 
 ### Goyo Theme Fork
 
@@ -119,7 +119,7 @@ Contributing to the Goyo documentation theme - a clean and simple theme for Zola
 
 ---
 
-## 📚 Academic Projects
+## Academic Projects
 
 ### Backend Project
 

@@ -35,6 +35,25 @@ setup:
     @Invoke-WebRequest -Uri "https://github.com/saadeghi/daisyui/releases/latest/download/daisyui-theme.js" -OutFile "src/daisyui-theme.js"
     @Write-Host "✓ DaisyUI installed" -ForegroundColor Green
     @Write-Host ""
+    @Write-Host "Downloading Font Awesome..." -ForegroundColor Yellow
+    @Invoke-WebRequest -Uri "https://use.fontawesome.com/releases/v6.7.2/fontawesome-free-6.7.2-web.zip" -OutFile "fontawesome.zip"
+    @Expand-Archive -Path "fontawesome.zip" -DestinationPath "temp" -Force
+    @Copy-Item "temp/fontawesome-free-6.7.2-web/css/all.min.css" -Destination "static/css/font-awesome.min.css" -Force
+    @Copy-Item "temp/fontawesome-free-6.7.2-web/webfonts" -Destination "static/fonts" -Recurse -Force
+    @Remove-Item "fontawesome.zip" -Force
+    @Remove-Item "temp" -Recurse -Force
+    @Write-Host "✓ Font Awesome installed" -ForegroundColor Green
+    @Write-Host ""
+    @Write-Host "Downloading KaTeX..." -ForegroundColor Yellow
+    @Invoke-WebRequest -Uri "https://github.com/KaTeX/KaTeX/releases/download/v0.16.11/katex.zip" -OutFile "katex.zip"
+    @Expand-Archive -Path "katex.zip" -DestinationPath "temp" -Force
+    @Copy-Item "temp/katex/katex.min.css" -Destination "static/css/katex.min.css" -Force
+    @Copy-Item "temp/katex/katex.min.js" -Destination "static/js/katex.min.js" -Force
+    @Copy-Item "temp/katex/fonts" -Destination "static/fonts/katex" -Recurse -Force
+    @Remove-Item "katex.zip" -Force
+    @Remove-Item "temp" -Recurse -Force
+    @Write-Host "✓ KaTeX installed" -ForegroundColor Green
+    @Write-Host ""
     @Write-Host "✨ Setup complete! Run 'just dev' to start developing" -ForegroundColor Green
 
 # =============================================================================
@@ -90,10 +109,8 @@ stats: build
     @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
     @echo "BUILD STATISTICS"
     @echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-    @$count = (Get-ChildItem -Recurse public | Measure-Object).Count
-    @$size = (Get-ChildItem -Recurse public | Measure-Object -Property Length -Sum).Sum / 1MB
-    @Write-Host "Files:    $count" -ForegroundColor Cyan
-    @Write-Host ("Size:     {0:N2} MB" -f $size) -ForegroundColor Cyan
+    @$count = (Get-ChildItem -Recurse public | Measure-Object).Count; Write-Host "Files:    $count" -ForegroundColor Cyan
+    @$size = (Get-ChildItem -Recurse public | Measure-Object -Property Length -Sum).Sum / 1MB; Write-Host ("Size:     {0:N2} MB" -f $size) -ForegroundColor Cyan
 
 # =============================================================================
 # MAINTENANCE
@@ -105,6 +122,8 @@ update:
     @echo "🔄 Updating dependencies..."
     @just _update-tailwind
     @just _update-daisyui
+    @just _update-fontawesome
+    @just _update-katex
     @echo "✨ All dependencies updated!"
 
 # Update Tailwind CSS
@@ -121,6 +140,31 @@ _update-daisyui:
     @Invoke-WebRequest -Uri "https://github.com/saadeghi/daisyui/releases/latest/download/daisyui.js" -OutFile "src/daisyui.js"
     @Invoke-WebRequest -Uri "https://github.com/saadeghi/daisyui/releases/latest/download/daisyui-theme.js" -OutFile "src/daisyui-theme.js"
     @echo "✓ DaisyUI updated"
+
+# Update Font Awesome
+[private]
+_update-fontawesome:
+    @echo "Updating Font Awesome..."
+    @Invoke-WebRequest -Uri "https://use.fontawesome.com/releases/v6.7.2/fontawesome-free-6.7.2-web.zip" -OutFile "fontawesome.zip"
+    @Expand-Archive -Path "fontawesome.zip" -DestinationPath "temp" -Force
+    @Copy-Item "temp/fontawesome-free-6.7.2-web/css/all.min.css" -Destination "static/css/font-awesome.min.css" -Force
+    @Copy-Item "temp/fontawesome-free-6.7.2-web/webfonts" -Destination "static/fonts" -Recurse -Force
+    @Remove-Item "fontawesome.zip" -Force
+    @Remove-Item "temp" -Recurse -Force
+    @echo "✓ Font Awesome updated"
+
+# Update KaTeX
+[private]
+_update-katex:
+    @echo "Updating KaTeX..."
+    @Invoke-WebRequest -Uri "https://github.com/KaTeX/KaTeX/releases/download/v0.16.11/katex.zip" -OutFile "katex.zip"
+    @Expand-Archive -Path "katex.zip" -DestinationPath "temp" -Force
+    @Copy-Item "temp/katex/katex.min.css" -Destination "static/css/katex.min.css" -Force
+    @Copy-Item "temp/katex/katex.min.js" -Destination "static/js/katex.min.js" -Force
+    @Copy-Item "temp/katex/fonts" -Destination "static/fonts/katex" -Recurse -Force
+    @Remove-Item "katex.zip" -Force
+    @Remove-Item "temp" -Recurse -Force
+    @echo "✓ KaTeX updated"
 
 # =============================================================================
 # DIAGNOSTICS
@@ -147,5 +191,7 @@ doctor:
     @if (Get-Command zola -ErrorAction SilentlyContinue) { Write-Host "✓ Zola installed" -ForegroundColor Green } else { Write-Host "✗ Zola not found" -ForegroundColor Red; Write-Host "  Install: https://www.getzola.org/documentation/getting-started/installation/" -ForegroundColor Yellow }
     @if (Test-Path {{tailwind}}) { Write-Host "✓ Tailwind CSS found" -ForegroundColor Green } else { Write-Host "✗ Tailwind CSS not found" -ForegroundColor Red; Write-Host "  Run: just setup" -ForegroundColor Yellow }
     @if (Test-Path "src/daisyui.js") { Write-Host "✓ DaisyUI found" -ForegroundColor Green } else { Write-Host "✗ DaisyUI not found" -ForegroundColor Red; Write-Host "  Run: just setup" -ForegroundColor Yellow }
+    @if (Test-Path "static/css/font-awesome.min.css") { Write-Host "✓ Font Awesome found" -ForegroundColor Green } else { Write-Host "✗ Font Awesome not found" -ForegroundColor Red; Write-Host "  Run: just setup" -ForegroundColor Yellow }
+    @if (Test-Path "static/css/katex.min.css") { Write-Host "✓ KaTeX found" -ForegroundColor Green } else { Write-Host "✗ KaTeX not found" -ForegroundColor Red; Write-Host "  Run: just setup" -ForegroundColor Yellow }
     @if (Test-Path {{css_out}}) { Write-Host "✓ CSS built" -ForegroundColor Green } else { Write-Host "⚠ CSS not built yet" -ForegroundColor Yellow; Write-Host "  Run: just build-css" -ForegroundColor Yellow }
     @echo ""

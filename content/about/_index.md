@@ -63,18 +63,18 @@ Started coding in college, fell in love with backend development and Linux. Spen
 
 ### Highlights
 
-- 🎓 Computer Science graduate
-- 💼 Backend Engineer with focus on Java and Spring ecosystem
-- 🏆 Active on LeetCode and competitive programming platforms
-- 📝 Writing technical content to help others learn
-- 🔧 Building open source tools and contributing to projects
+- Computer Science graduate
+- Backend Engineer with focus on Java and Spring ecosystem
+- Active on LeetCode and competitive programming platforms
+- Writing technical content to help others learn
+- Building open source tools and contributing to projects
 
 ## When I'm Not Coding
 
-- 🎮 Gaming (strategy games and RPGs)
-- 📚 Reading (sci-fi, tech books, and blogs)
-- 🎵 Listening to music (lo-fi and synthwave while coding)
-- 🏃 Staying active and exploring outdoors
+- Gaming (strategy games and RPGs)
+- Reading (sci-fi, tech books, and blogs)
+- Listening to music (lo-fi and synthwave while coding)
+- Staying active and exploring outdoors
 
 ## Let's Connect!
 

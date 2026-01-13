@@ -68,9 +68,7 @@ Find me across the web! Here's where I hang out online.
 
 {{ link_card(url="https://codeforces.com/profile/kascit", external=true, icon="fa-solid fa-chart-line", title="Codeforces", description="Algorithm competitions and ratings") }}
 
-## 🌐 Social & Writing
-
-{{ link_card(url="https://dev.to/kascit", external=true, icon="fa-brands fa-dev", title="DEV Community", description="Technical articles and notes") }}
+## 🌐 Socials
 
 {{ link_card(url="https://x.com/nkascit", external=true, icon="fa-brands fa-x-twitter", title="X (Twitter)", description="Thoughts and updates") }}
 
@@ -78,6 +76,7 @@ Find me across the web! Here's where I hang out online.
 
 {{ link_card(url="https://www.reddit.com/u/i_duunno/", external=true, icon="fa-brands fa-reddit", title="Reddit", description="scary bot") }}
 
+{{ link_card(url="https://dev.to/kascit", external=true, icon="fa-brands fa-dev", title="DEV Community", description="Technical articles and notes") }}
 
 <!-- ## 🧑‍🤝‍🧑 Communities -->
 
@@ -96,22 +95,3 @@ Find me across the web! Here's where I hang out online.
 <div style="text-align: center; margin-top: 3rem; opacity: 0.6;">
     <p>👋 Feel free to reach out on any platform!</p>
 </div>
-
-- [MDN Web Docs](https://developer.mozilla.org/) - Web development reference
-- [Rust Book](https://doc.rust-lang.org/book/) - Learn Rust
-- [freeCodeCamp](https://www.freecodecamp.org/) - Free coding courses
-
-### Blogs I Follow
-
-- [Hacker News](https://news.ycombinator.com/)
-- [Smart Nonsense Newsletter](https://www.smartnonsense.com/)
-- [Dev.to](https://dev.to/)
-- [CSS-Tricks](https://css-tricks.com/)
-
----
-
-## Other Cool Sites
-
-- [Uses This](https://usesthis.com/) - What people use to get stuff done
-- [DevDocs](https://devdocs.io/) - API documentation browser
-- [Can I Use](https://caniuse.com/) - Browser compatibility tables

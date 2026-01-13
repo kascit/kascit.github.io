@@ -286,15 +286,33 @@
             }
         </style>
 
+    <!-- Critical: Fix drawer state on back navigation (must NOT be deferred) -->
+    <script>
+        (function() {
+            window.addEventListener('pageshow', function(e) {
+                if (e.persisted) {
+                    var d = document.getElementById('my-drawer-2');
+                    if (d) d.checked = false;
+                }
+            });
+        })();
+    </script>
+
     <!-- Defer non-critical scripts -->
+    <script defer src="{{ get_url(path="js/responsive-helpers.js") | safe }}"></script>
     <script defer src="{{ get_url(path="js/copy_code.js") | safe }}"></script>
     <script defer src="{{ get_url(path="js/copy_heading_link.js") | safe }}"></script>
     <script defer src="{{ get_url(path="js/clipboard.js") | safe }}"></script>
     <script defer src="{{ get_url(path="js/shortcut-hints.js") | safe }}"></script>
+    <script defer src="{{ get_url(path="js/scroll-to-top.js") | safe }}"></script>
     <script defer src="{{ get_url(path="js/lazy-modules.js") | safe }}"
             data-katex-css="{{ get_url(path="css/katex.min.css") | safe }}"
             data-katex-js="{{ get_url(path="js/katex.min.js") | safe }}"
             data-mermaid-js="{{ get_url(path="js/mermaid.min.js") | safe }}"></script>
+    <script defer src="{{ get_url(path="js/page-init.js") | safe }}"
+            data-default-colorset="{{ config.extra.default_colorset | default(value="dark") }}"
+            data-dark-brightness="{{ config.extra.dark_brightness | default(value="normal") }}"
+            data-light-brightness="{{ config.extra.light_brightness | default(value="normal") }}"></script>
     <script defer src="{{ get_url(path="js/sw-register.js") | safe }}"
             data-sw-path="{{ get_url(path="sw.js") | safe }}"></script>
 {% endmacro head %}

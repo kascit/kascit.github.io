@@ -1,0 +1,205 @@
+/**
+ * RESPONSIVE DISPLAY UTILITIES
+ * Centralizes all mobile/desktop visibility patterns for consistency
+ * 
+ * These utilities complement Tailwind's built-in responsive classes
+ * and provide semantic names for common patterns.
+ */
+
+/* ============================================================================
+   DISPLAY BREAKPOINTS
+   All breakpoints must match Tailwind CSS and BREAKPOINTS constant in JS
+   sm: 640px
+   md: 768px
+   lg: 1024px
+   xl: 1280px
+   2xl: 1536px
+   ========================================================================= */
+
+/* ============================================================================
+   NAVBAR & HEADER
+   ========================================================================= */
+
+/* Hamburger menu - mobile only (hidden on lg) */
+.navbar-hamburger {
+  /* Handled by Tailwind: flex-none lg:hidden */
+}
+
+/* Desktop navbar content - desktop only (hidden on mobile) */
+.navbar-desktop {
+  /* Handled by Tailwind: flex-none hidden lg:flex */
+}
+
+/* ============================================================================
+   SIDEBAR & NAVIGATION
+   ========================================================================= */
+
+/* Sidebar - visible by default, can be toggled on mobile via drawer */
+.sidebar {
+  /* Handled by drawer component and Tailwind responsive classes */
+}
+
+/* Main content area responsive */
+.main-content {
+  /* Handled by grid: lg:grid lg:grid-cols-[1fr_250px] */
+}
+
+/* ============================================================================
+   TABLE OF CONTENTS
+   ========================================================================= */
+
+/* TOC - desktop only, sticky positioning */
+.toc {
+  /* Handled by Tailwind: hidden lg:block */
+}
+
+/* Mobile alternative: could be collapsible drawer (not implemented) */
+.toc-mobile {
+  display: none;
+}
+
+/* ============================================================================
+   KEYBOARD SHORTCUTS & HINTS
+   ========================================================================= */
+
+/* Keyboard hint elements - desktop only */
+.shortcut-hint {
+  /* Handled by data-desktop-only attribute + JS */
+  /* On mobile: display: none */
+}
+
+.shortcut-hint-ready {
+  /* Applied after rendering keyboard shortcuts */
+}
+
+/* ============================================================================
+   BUTTONS & INTERACTIVE ELEMENTS
+   ========================================================================= */
+
+/* Scroll-to-top button - mobile only */
+#scroll-to-top {
+  /* Positioned and shown/hidden via JS based on responsive state */
+  position: fixed;
+  z-index: 50;
+}
+
+/* Back-to-top only shows on mobile */
+@media (min-width: 1024px) {
+  #scroll-to-top {
+    display: none !important;
+  }
+}
+
+/* ============================================================================
+   RESPONSIVE CONTENT GRIDS
+   ========================================================================= */
+
+/* Single column on mobile, multi-column on larger screens */
+.responsive-grid {
+  /* Handled by Tailwind: grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 */
+}
+
+/* ============================================================================
+   ADAPTIVE SPACING & LAYOUT
+   ========================================================================= */
+
+/* Reduced padding/margins on mobile */
+.content-area {
+  @apply p-4 md:p-6 lg:p-8;
+}
+
+/* Adjusted max-width for different screen sizes */
+.max-content-width {
+  @apply max-w-full md:max-w-3xl lg:max-w-7xl mx-auto;
+}
+
+/* ============================================================================
+   VISIBILITY HELPERS
+   ========================================================================= */
+
+/* Show only on mobile */
+.mobile-only {
+  @apply block md:hidden;
+}
+
+/* Show only on tablet and up */
+.tablet-and-up {
+  @apply hidden md:block;
+}
+
+/* Show only on desktop (lg and up) */
+.desktop-only {
+  @apply hidden lg:block;
+}
+
+/* Show only on mobile and tablet */
+.not-desktop {
+  @apply block lg:hidden;
+}
+
+/* ============================================================================
+   TOUCH-FRIENDLY ADJUSTMENTS
+   ========================================================================= */
+
+/* Larger touch targets on mobile */
+@media (hover: none) and (pointer: coarse) {
+  button,
+  a,
+  input[type="checkbox"],
+  input[type="radio"] {
+    /* Ensure minimum 44x44px touch target */
+    min-height: 2.75rem;
+    min-width: 2.75rem;
+  }
+
+  .btn {
+    /* Already sized appropriately by DaisyUI */
+  }
+
+  .kbd {
+    /* Keyboard hints - can be larger on touch devices */
+  }
+}
+
+/* ============================================================================
+   RESPONSIVE TEXT & TYPOGRAPHY
+   ========================================================================= */
+
+/* Heading sizes scale with screen size */
+.responsive-heading {
+  @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl;
+}
+
+/* Body text adjusts for readability */
+.responsive-text {
+  @apply text-base md:text-lg;
+}
+
+/* ============================================================================
+   RESPONSIVE MODALS & OVERLAYS
+   ========================================================================= */
+
+/* Modals use full height on mobile, constrained on desktop */
+.modal {
+  /* DaisyUI handles this */
+}
+
+/* ============================================================================
+   ANIMATION CONSIDERATIONS
+   ========================================================================= */
+
+/* Disable animations on mobile for better performance */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Smooth scroll only on desktop with mouse */
+@media (hover: hover) and (pointer: fine) {
+  html {
+    scroll-behavior: smooth;
+  }
+}

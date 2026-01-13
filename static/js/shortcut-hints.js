@@ -1,15 +1,24 @@
 (function () {
   "use strict";
-  var isDesktop =
-    matchMedia("(hover: hover)").matches &&
-    matchMedia("(pointer: fine)").matches;
+
+  /**
+   * Keyboard shortcut hints renderer
+   * Shows platform-specific keyboard shortcuts (Ctrl/⌘, etc.)
+   * Automatically hides on mobile devices using centralized responsive helpers
+   */
 
   function renderShortcut(el) {
     var spec = el.getAttribute("data-shortcut");
     if (!spec) return;
 
     var desktopOnly = el.getAttribute("data-desktop-only") === "true";
-    if (desktopOnly && !isDesktop) {
+
+    // Use centralized responsive helpers for consistent behavior
+    if (
+      desktopOnly &&
+      window.ResponsiveHelpers &&
+      window.ResponsiveHelpers.isMobile()
+    ) {
       el.style.display = "none";
       return;
     }
@@ -44,13 +53,6 @@
   }
 
   document.addEventListener("DOMContentLoaded", function () {
-    if (!isDesktop) {
-      document
-        .querySelectorAll('[data-desktop-only="true"]')
-        .forEach(function (el) {
-          el.style.display = "none";
-        });
-    }
     document.querySelectorAll("[data-shortcut]").forEach(renderShortcut);
   });
 })();

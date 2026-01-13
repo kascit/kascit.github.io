@@ -456,12 +456,14 @@ function initToc() {
 
         // Try to get id from data-toc-href attribute on summary
         if (summary && summary.hasAttribute("data-toc-href")) {
-          id = summary.getAttribute("data-toc-href").split("#")[1];
+          const href = summary.getAttribute("data-toc-href");
+          id = href.includes("#") ? href.split("#")[1] : null;
         } else {
           // Fallback: try to get id from first toc-link anchor child
           const link = detail.querySelector(".toc-link[href]");
           if (link) {
-            id = link.getAttribute("href").split("#")[1];
+            const href = link.getAttribute("href");
+            id = href.includes("#") ? href.split("#")[1] : null;
           }
         }
 
@@ -497,13 +499,15 @@ function initToc() {
 
         // Try to get id from data-toc-href on summary
         if (summary && summary.hasAttribute("data-toc-href")) {
-          parentId = summary.getAttribute("data-toc-href").split("#")[1];
+          const href = summary.getAttribute("data-toc-href");
+          parentId = href.includes("#") ? href.split("#")[1] : null;
         } else {
           // Fallback: try to get id from first toc-link anchor
           const parentLink = parentDetails.querySelector(".toc-link[href]");
-          parentId = parentLink
-            ? parentLink.getAttribute("href").split("#")[1]
-            : null;
+          if (parentLink) {
+            const href = parentLink.getAttribute("href");
+            parentId = href.includes("#") ? href.split("#")[1] : null;
+          }
         }
 
         if (!parentId || !userClosedSections.has(parentId)) {

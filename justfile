@@ -48,7 +48,9 @@ setup:
     @Invoke-WebRequest -Uri "https://github.com/KaTeX/KaTeX/releases/download/v0.16.11/katex.zip" -OutFile "katex.zip"
     @Expand-Archive -Path "katex.zip" -DestinationPath "temp" -Force
     @Copy-Item "temp/katex/katex.min.css" -Destination "static/css/katex.min.css" -Force
+    @(Get-Content "static/css/katex.min.css" -Raw) -replace 'url\(fonts/', 'url(../fonts/katex/' | Set-Content "static/css/katex.min.css"
     @Copy-Item "temp/katex/katex.min.js" -Destination "static/js/katex.min.js" -Force
+    @if (Test-Path "static/fonts/katex") { Remove-Item "static/fonts/katex" -Recurse -Force }
     @Copy-Item "temp/katex/fonts" -Destination "static/fonts/katex" -Recurse -Force
     @Remove-Item "katex.zip" -Force
     @Remove-Item "temp" -Recurse -Force
@@ -92,8 +94,8 @@ build-css:
 # 🧹 Clean all build artifacts
 [group('build')]
 clean:
-    @Remove-Item -Recurse -Force public -ErrorAction SilentlyContinue
-    @Remove-Item {{css_out}} -ErrorAction SilentlyContinue
+    @if (Test-Path "public") { Remove-Item -Recurse -Force public }
+    @if (Test-Path {{css_out}}) { Remove-Item {{css_out}} }
 
 # 📦 Full production build
 [group('build')]
@@ -160,7 +162,9 @@ _update-katex:
     @Invoke-WebRequest -Uri "https://github.com/KaTeX/KaTeX/releases/download/v0.16.11/katex.zip" -OutFile "katex.zip"
     @Expand-Archive -Path "katex.zip" -DestinationPath "temp" -Force
     @Copy-Item "temp/katex/katex.min.css" -Destination "static/css/katex.min.css" -Force
+    @(Get-Content "static/css/katex.min.css" -Raw) -replace 'url\(fonts/', 'url(../fonts/katex/' | Set-Content "static/css/katex.min.css"
     @Copy-Item "temp/katex/katex.min.js" -Destination "static/js/katex.min.js" -Force
+    @if (Test-Path "static/fonts/katex") { Remove-Item "static/fonts/katex" -Recurse -Force }
     @Copy-Item "temp/katex/fonts" -Destination "static/fonts/katex" -Recurse -Force
     @Remove-Item "katex.zip" -Force
     @Remove-Item "temp" -Recurse -Force

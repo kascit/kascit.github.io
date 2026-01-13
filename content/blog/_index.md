@@ -6,44 +6,14 @@ sort_by = "date"
 transparent = true
 
 [extra]
-# Custom navbar for Blog section - focuses on content categories
 link_title = "Welcome"
 
 +++
 
-## What You'll Find Here
+This is where I document my journey through the chaos of modern software development. Some posts are meticulously researched deep-dives into infrastructure and code patterns. Others are just me venting about why Docker decided to stop working on a random Tuesday. Consider it part technical guide, part digital therapy session. Either way, you might learn something useful—or at least feel better knowing you're not alone in your struggles with technology.
 
-### 📚 Tutorials
 
-Step-by-step guides on various technologies and frameworks. From beginner-friendly introductions to advanced deep-dives.
 
-### 💻 Development
+## Latest Posts
 
-Insights into software development practices, code patterns, and architectural decisions.
-
-### 🚀 DevOps
-
-Posts about CI/CD, containerization, cloud infrastructure, and automation.
-
-### 🤔 Thoughts
-
-Reflections on technology, career development, and the tech industry.
-
-### 📖 Learning Logs
-
-Documenting what I'm learning and exploring in the world of technology.
-
----
-
-## Coming Soon
-
-I'm working on some exciting posts about:
-
-- Building scalable web applications
-- Modern DevOps practices
-- My journey with open source
-- Tips for junior developers
-
-## Stay Updated
-
-Subscribe to the [RSS feed](/rss.xml) to get notified when I publish new posts!
+Check out the posts in the navbar, sorted by most recent or hope right into em using the below next button. Everything's also available via [RSS feed](/rss.xml) if you're into that.

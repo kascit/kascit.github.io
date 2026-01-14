@@ -96,4 +96,57 @@ header %} {% block content %}
     </div>
   </div>
 </div>
-{% endblock content %}
+{{ macros_content_footer::content_footer(config=config, item=section) }} {%
+endblock content %} {% block prev_link %} {# Projects -> About #} {% set
+prev_section = get_section(path="about/_index.md") %}
+<a
+  class="nav-button nav-button-prev group"
+  href="{{ prev_section.permalink | safe }}"
+>
+  <div class="nav-button-content">
+    <div class="nav-button-direction">
+      <svg
+        class="w-5 h-5 transition-transform group-hover:-translate-x-1"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M15 19l-7-7 7-7"
+        ></path>
+      </svg>
+      <span class="nav-button-label">Previous</span>
+    </div>
+    <div class="nav-button-title">{{ prev_section.title }}</div>
+  </div>
+</a>
+{% endblock prev_link %} {% block next_link %} {# Projects -> Links #} {% set
+next_section = get_section(path="links/_index.md") %}
+<a
+  class="nav-button nav-button-next group"
+  href="{{ next_section.permalink | safe }}"
+>
+  <div class="nav-button-content">
+    <div class="nav-button-direction">
+      <span class="nav-button-label">Next</span>
+      <svg
+        class="w-5 h-5 transition-transform group-hover:translate-x-1"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 5l7 7-7 7"
+        ></path>
+      </svg>
+    </div>
+    <div class="nav-button-title">{{ next_section.title }}</div>
+  </div>
+</a>
+{% endblock next_link %}

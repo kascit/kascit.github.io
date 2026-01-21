@@ -74,8 +74,6 @@ Find me across the web! Here's where I hang out online.
 
 {{ link_card(url="https://mastodon.social/@kascit", external=true, icon="fa-brands fa-mastodon", title="Mastodon", description="cuz why not") }}
 
-{{ link_card(url="https://www.reddit.com/u/i_duunno/", external=true, icon="fa-brands fa-reddit", title="Reddit", description="scary bot") }}
-
 {{ link_card(url="https://dev.to/kascit", external=true, icon="fa-brands fa-dev", title="DEV Community", description="Technical articles and notes") }}
 
 <!-- ## 🧑‍🤝‍🧑 Communities -->
@@ -83,6 +81,10 @@ Find me across the web! Here's where I hang out online.
 {{ link_card(url="https://discord.gg/eTjXjGth", external=true, icon="fa-brands fa-discord", title="Discord", description="Chat with me?") }}
 
 {{ link_card(url="https://t.me/AIO_01", external=true, icon="fa-brands fa-telegram", title="Telegram", description="DMs closed") }}
+
+{{ link_card(url="https://lemmy.zip/u/nkascit", external=true, icon="fa-solid fa-otter", title="Lemmy.zip", description="no idea") }}
+
+{{ link_card(url="https://www.reddit.com/u/i_duunno/", external=true, icon="fa-brands fa-reddit", title="Reddit", description="scary bot") }}
 
 ## 🎯 Other
 

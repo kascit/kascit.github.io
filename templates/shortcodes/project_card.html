@@ -1,0 +1,74 @@
+{% set is_external = external | default(value=false) %} {% set label = url_label
+| default(value="Visit") %} {% set project_status = status | default(value="")
+%} {% set project_icon = icon | default(value="") %} {% set project_lang = lang
+| default(value="") %} {% set project_techs = techs | default(value="") %} {%
+set project_live = live_url | default(value="") %} {% set project_github =
+github_url | default(value="") %} {% set project_url = url | default(value="")
+%}
+<div class="project-card">
+  <div class="project-card-header">
+    <div class="project-card-title-group">
+      {% if project_icon %}
+      <div class="project-card-icon-wrap">
+        <i class="{{ project_icon }}"></i>
+      </div>
+      {% endif %}
+      <div class="project-card-info">
+        <div class="project-card-title">{{ title }}</div>
+        {% if project_lang %}
+        <div class="project-card-lang">{{ project_lang }}</div>
+        {% endif %}
+      </div>
+    </div>
+    {% if project_status == "live" %}<span class="project-card-badge badge-live"
+      >Live</span
+    >
+    {% elif project_status == "academic" %}<span
+      class="project-card-badge badge-academic"
+      >Academic</span
+    >
+    {% elif project_status == "archived" %}<span
+      class="project-card-badge badge-archived"
+      >Archived</span
+    >
+    {% elif project_status == "wip" %}<span class="project-card-badge badge-wip"
+      >WIP</span
+    >
+    {% endif %}
+  </div>
+  <div class="project-card-desc">{{ description }}</div>
+  {% if project_techs %}
+  <div class="project-card-techs">
+    {% for tech in project_techs | split(pat=",") %}
+    <span class="project-card-tech">{{ tech | trim }}</span>
+    {% endfor %}
+  </div>
+  {% endif %}
+  <div class="project-card-actions">
+    {% if project_live %}<a
+      href="{{ project_live }}"
+      target="_blank"
+      rel="noopener"
+      class="project-card-btn btn-live"
+      ><i class="fa-solid fa-arrow-up-right-from-square"></i> Live</a
+    >{% endif %} {% if project_github %}<a
+      href="{{ project_github }}"
+      target="_blank"
+      rel="noopener"
+      class="project-card-btn"
+      ><i class="fa-brands fa-github"></i> Code</a
+    >{% endif %} {% if project_url %}<a
+      href="{{ project_url }}"
+      {%
+      if
+      is_external
+      %}target="_blank"
+      rel="noopener"
+      {%
+      endif
+      %}
+      class="project-card-btn"
+      ><i class="fa-solid fa-link"></i> {{ label }}</a
+    >{% endif %}
+  </div>
+</div>

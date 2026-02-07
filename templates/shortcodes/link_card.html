@@ -1,49 +1,10 @@
-<style>
-  .link-card {
-    display: block;
-    padding: 1.25rem;
-    margin-bottom: 1rem;
-    border: 1px solid rgba(51, 65, 85, 0.45);
-    border-radius: 0.75rem;
-    transition: all 0.2s ease;
-    text-decoration: none;
-    background: rgba(var(--base-200, 30 41 59), 0.6);
-    color: rgb(var(--base-content, 226 232 240));
-  }
-
-  .link-card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(148, 163, 184, 0.8);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
-    background: rgba(var(--base-300, 51 65 85), 0.75);
-  }
-
-  .link-title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: rgb(var(--base-content, 226 232 240));
-  }
-
-  .link-desc {
-    font-size: 0.875rem;
-    color: rgba(var(--base-content, 226 232 240), 0.75);
-  }
-
-  .link-icon {
-    font-size: 1.5rem;
-    color: rgb(var(--info, 100 116 139));
-  }
-</style>
-
+{% set is_external = external | default(value=false) %} {% set link_icon = icon
+| default(value="") %}
 <a
   href="{{ url }}"
   {%
   if
-  external
+  is_external
   %}target="_blank"
   rel="noopener noreferrer"
   {%
@@ -52,7 +13,8 @@
   class="link-card"
 >
   <div class="link-title">
-    {% if icon %}<i class="{{ icon }} link-icon"></i>{% endif %} {{ title }}
+    {% if link_icon %}<i class="{{ link_icon }} link-icon"></i>{% endif %} {{
+    title }}
   </div>
   <div class="link-desc">{{ description }}</div>
 </a>

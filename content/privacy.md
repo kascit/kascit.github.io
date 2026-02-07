@@ -2,7 +2,6 @@
 title = "Privacy Policy"
 description = "Privacy policy for dhanur.me"
 template = "page.html"
-date = 2026-01-05
 
 [extra.comments]
 enabled = false

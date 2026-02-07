@@ -1,6 +1,6 @@
 // Service Worker with smart caching strategy
 // Cache versioning: Update CACHE_VERSION when assets change
-const CACHE_VERSION = "v3";
+const CACHE_VERSION = "v4";
 const CACHE_NAME = `kascit-${CACHE_VERSION}`;
 
 // Critical assets that must be cached on install
@@ -110,14 +110,21 @@ async function setStoredLatest(info) {
 
 function parseLatestFromRSS(xmlText) {
   try {
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(xmlText, "application/xml");
-    const firstItem = doc.querySelector("item");
-    if (!firstItem) return null;
-    const title = firstItem.querySelector("title")?.textContent || "New post";
-    const link = firstItem.querySelector("link")?.textContent || "/blog/";
-    const pubDate = firstItem.querySelector("pubDate")?.textContent || "";
-    const guid = firstItem.querySelector("guid")?.textContent || link;
+    // Service Workers have no DOM access, so use regex instead of DOMParser
+    const itemMatch = xmlText.match(/<item[\s\S]*?<\/item>/);
+    if (!itemMatch) return null;
+    const item = itemMatch[0];
+
+    const getTag = (tag) => {
+      const m = item.match(new RegExp(`<${tag}[^>]*>([\\s\\S]*?)<\\/${tag}>`));
+      return m ? m[1].trim() : null;
+    };
+
+    // <link> in RSS is self-closing-ish; handle both <link>url</link> and bare text
+    const title = getTag("title") || "New post";
+    const link = getTag("link") || "/blog/";
+    const pubDate = getTag("pubDate") || "";
+    const guid = getTag("guid") || link;
     return { title, link, pubDate, guid };
   } catch (e) {
     return null;

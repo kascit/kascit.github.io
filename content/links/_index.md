@@ -7,47 +7,6 @@ template = "section.html"
 enabled = false
 +++
 
-<style>
-.link-card {
-    display: block;
-    padding: 1.25rem;
-    margin-bottom: 1rem;
-    border: 1px solid rgba(51, 65, 85, 0.45);
-    border-radius: 0.75rem;
-    transition: all 0.2s ease;
-    text-decoration: none;
-    background: rgba(var(--base-200, 30 41 59), 0.6);
-    color: rgb(var(--base-content, 226 232 240));
-}
-
-.link-card:hover {
-    transform: translateY(-2px);
-    border-color: rgba(148, 163, 184, 0.8);
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
-    background: rgba(var(--base-300, 51 65 85), 0.75);
-}
-
-.link-title {
-    font-size: 1.125rem;
-    font-weight: 600;
-    margin-bottom: 0.25rem;
-    display: flex;
-    align-items: center;
-    gap: 0.75rem;
-    color: rgb(var(--base-content, 226 232 240));
-}
-
-.link-desc {
-    font-size: 0.875rem;
-    color: rgba(var(--base-content, 226 232 240), 0.75);
-}
-
-.link-icon {
-    font-size: 1.5rem;
-    color: rgb(var(--info, 100 116 139));
-}
-</style>
-
 Find me across the web! Here's where I hang out online.
 
 ## 💼 Professional
@@ -57,6 +16,8 @@ Find me across the web! Here's where I hang out online.
 {{ link_card(url="https://www.linkedin.com/in/dhanur-relhan/", external=true, icon="fa-brands fa-linkedin", title="LinkedIn", description="Professional profile and network") }}
 
 {{ link_card(url="mailto:contact@dhanur.me", external=false, icon="fa-solid fa-envelope", title="Email", description="Reach out directly") }}
+
+{{ link_card(url="https://dev.to/kascit", external=true, icon="fa-brands fa-dev", title="DEV Community", description="Technical articles and notes") }}
 
 ## 💻 Coding Profiles
 
@@ -70,23 +31,35 @@ Find me across the web! Here's where I hang out online.
 
 ## 🌐 Socials
 
+{{ link_card(url="https://t.me/AIO_01", external=true, icon="fa-brands fa-telegram", title="Telegram", description="DMs closed") }}
+
+{{ link_card(url="https://line.me/ti/p/PYwDaFRe6x", external=true, icon="fa-brands fa-line", title="Line", description="amalgation of points") }}
+
+{{ link_card(url="https://www.instagram.com/d_dhanur_r", external=true, icon="fa-brands fa-instagram", title="Instagram", description="i dont use it") }}
+
+{{ link_card(url="https://www.snapchat.com/add/dhanur25", external=true, icon="fa-brands fa-snapchat", title="Snapchat", description="alergic to snaps") }}
+
+## 🧑‍🤝‍🧑 Communities
+
+{{ link_card(url="https://discord.gg/U2UTGParYX", external=true, icon="fa-brands fa-discord", title="Discord", description="Chat with me?") }}
+
 {{ link_card(url="https://x.com/nkascit", external=true, icon="fa-brands fa-x-twitter", title="X (Twitter)", description="Thoughts and updates") }}
 
-{{ link_card(url="https://mastodon.social/@kascit", external=true, icon="fa-brands fa-mastodon", title="Mastodon", description="cuz why not") }}
+{{ link_card(url="https://mastodon.social/@kascit", external=true, icon="fa-brands fa-mastodon", title="Mastodon", description="Decentralized social") }}
 
-{{ link_card(url="https://dev.to/kascit", external=true, icon="fa-brands fa-dev", title="DEV Community", description="Technical articles and notes") }}
+{{ link_card(url="https://pinterest.com/nkascit/", external=true, icon="fa-brands fa-pinterest", title="Pinterest", description="cuz i aint puting my deviant acc here") }}
 
-<!-- ## 🧑‍🤝‍🧑 Communities -->
-
-{{ link_card(url="https://discord.gg/eTjXjGth", external=true, icon="fa-brands fa-discord", title="Discord", description="Chat with me?") }}
-
-{{ link_card(url="https://t.me/AIO_01", external=true, icon="fa-brands fa-telegram", title="Telegram", description="DMs closed") }}
+{{ link_card(url="https://www.tumblr.com/kascit", external=true, icon="fa-brands fa-tumblr", title="Tumblr", description="Creative musings") }}
 
 {{ link_card(url="https://lemmy.zip/u/nkascit", external=true, icon="fa-solid fa-otter", title="Lemmy.zip", description="no idea") }}
 
 {{ link_card(url="https://www.reddit.com/u/i_duunno/", external=true, icon="fa-brands fa-reddit", title="Reddit", description="scary bot") }}
 
 ## 🎯 Other
+
+{{ link_card(url="https://steamcommunity.com/id/nkascit/", external=true, icon="fa-brands fa-steam", title="Steam", description="Gaming profile") }}
+
+{{ link_card(url="https://www.duolingo.com/profile/kascit", external=true, icon="fa-solid fa-language", title="Duolingo", description="Language learning journey") }}
 
 {{ link_card(url="https://whatsapp.com/channel/0029Vb7NBaYEwEjrmzg6ZS1B", external=true, icon="fa-brands fa-whatsapp", title="WhatsApp Channel", description="Don't you dare") }}
 

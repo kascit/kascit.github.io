@@ -1,7 +1,8 @@
 // Service Worker with smart caching strategy
 // Cache versioning: Update CACHE_VERSION when assets change
-const CACHE_VERSION = "v4";
+const CACHE_VERSION = "v5";
 const CACHE_NAME = `kascit-${CACHE_VERSION}`;
+const META_CACHE = `kascit-meta-${CACHE_VERSION}`;
 
 // Critical assets that must be cached on install
 const CRITICAL_ASSETS = [
@@ -62,14 +63,15 @@ self.addEventListener("install", (event) => {
 
 // Service Worker Activate Event
 self.addEventListener("activate", (event) => {
+  const KEEP_CACHES = [CACHE_NAME, META_CACHE];
   event.waitUntil(
-    // Clean up old caches
+    // Clean up old caches (including stale meta caches)
     caches
       .keys()
       .then((cacheNames) => {
         return Promise.all(
           cacheNames.map((cacheName) => {
-            if (cacheName !== CACHE_NAME) {
+            if (!KEEP_CACHES.includes(cacheName)) {
               return caches.delete(cacheName);
             }
           }),
@@ -80,7 +82,6 @@ self.addEventListener("activate", (event) => {
 });
 
 // Simple metadata storage via Cache API
-const META_CACHE = `kascit-meta-${CACHE_VERSION}`;
 
 async function getStoredLatest() {
   try {
@@ -202,9 +203,8 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Skip files that should not be cached
+  // Skip files that should not be cached (let the browser handle natively)
   if (DO_NOT_CACHE.some((pattern) => pattern.test(url.pathname))) {
-    event.respondWith(fetch(request));
     return;
   }
 

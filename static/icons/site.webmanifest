@@ -8,21 +8,15 @@
   "dir": "auto",
   "lang": "en-US",
   "display": "standalone",
-  "display_override": ["window-controls-overlay", "tabbed", "standalone"],
-  "orientation": "portrait-primary",
-  "theme_color": "#fff",
-  "background_color": "#fff",
+  "display_override": ["window-controls-overlay", "standalone"],
+  "orientation": "any",
+  "theme_color": "#000000",
+  "background_color": "#000000",
   "categories": ["personal", "blog"],
   "launch_handler": {
     "route_to": "existing-client",
     "navigate_existing_client": "always"
   },
-  "protocol_handlers": [
-    {
-      "protocol": "web+placeholder",
-      "url": "/?open=%s"
-    }
-  ],
   "shortcuts": [
     {
       "name": "Blog",
@@ -66,16 +60,28 @@
   ],
   "icons": [
     {
-      "src": "/icons/android-chrome-192x192-maskable.png",
+      "src": "/icons/android-chrome-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/android-chrome-512x512-maskable.png",
+      "src": "/icons/android-chrome-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
+    },
+    {
+      "src": "/icons/android-chrome-192x192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/android-chrome-512x512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ],
   "screenshots": [

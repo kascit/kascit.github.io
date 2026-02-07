@@ -1,6 +1,6 @@
 +++
 title = "About"
-description = "Learn more about me, YAY!"
+description = "Hey there! 👋 I'm Dhanur, a person who writes code and occasionally it works."
 template = "section.html"
 sort_by = "date"
 transparent = true
@@ -8,7 +8,6 @@ transparent = true
 [extra.comments]
 enabled = false
 +++
-Hey there! 👋 I'm **Dhanur**, a person who writes code and occasionally it works.
 
 ## The Origin Story
 

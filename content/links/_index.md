@@ -1,15 +1,13 @@
 +++
 title = "Links"
-description = "All my links in one place"
+description = "Find me across the web! Here's where I hang out online."
 template = "section.html"
 
 [extra.comments]
 enabled = false
 +++
 
-Find me across the web! Here's where I hang out online.
-
-## 💼 Professional
+## Professional
 
 {{ link_card(url="https://github.com/kascit", external=true, icon="fa-brands fa-github", title="GitHub", description="Open source projects and contributions") }}
 
@@ -19,7 +17,7 @@ Find me across the web! Here's where I hang out online.
 
 {{ link_card(url="https://dev.to/kascit", external=true, icon="fa-brands fa-dev", title="DEV Community", description="Technical articles and notes") }}
 
-## 💻 Coding Profiles
+## Coding Profiles
 
 {{ link_card(url="https://leetcode.com/u/kascit/", external=true, icon="fa-solid fa-code", title="LeetCode", description="Competitive programming and problem solving") }}
 
@@ -29,7 +27,7 @@ Find me across the web! Here's where I hang out online.
 
 {{ link_card(url="https://codeforces.com/profile/kascit", external=true, icon="fa-solid fa-chart-line", title="Codeforces", description="Algorithm competitions and ratings") }}
 
-## 🌐 Socials
+## Socials
 
 {{ link_card(url="https://t.me/AIO_01", external=true, icon="fa-brands fa-telegram", title="Telegram", description="DMs closed") }}
 
@@ -39,7 +37,7 @@ Find me across the web! Here's where I hang out online.
 
 {{ link_card(url="https://www.snapchat.com/add/dhanur25", external=true, icon="fa-brands fa-snapchat", title="Snapchat", description="alergic to snaps") }}
 
-## 🧑‍🤝‍🧑 Communities
+## Communities
 
 {{ link_card(url="https://discord.gg/U2UTGParYX", external=true, icon="fa-brands fa-discord", title="Discord", description="Chat with me?") }}
 
@@ -55,7 +53,7 @@ Find me across the web! Here's where I hang out online.
 
 {{ link_card(url="https://www.reddit.com/u/i_duunno/", external=true, icon="fa-brands fa-reddit", title="Reddit", description="scary bot") }}
 
-## 🎯 Other
+## Other
 
 {{ link_card(url="https://steamcommunity.com/id/nkascit/", external=true, icon="fa-brands fa-steam", title="Steam", description="Gaming profile") }}
 

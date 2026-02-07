@@ -1,203 +1,223 @@
-# =============================================================================
-# JUSTFILE — ZOLA STATIC SITE WITH TAILWIND CSS & DAISYUI
-# =============================================================================
-# Intelligent cross-platform build system for static site development
-# Run `just` to see all available commands
-# =============================================================================
+# Justfile — Zola + Tailwind CSS v4 + DaisyUI v5
+# Cross-platform build system. Run `just` to list commands.
 
-# PowerShell on Windows, bash elsewhere
-set shell := ["pwsh", "-NoLogo", "-NoProfile", "-Command"]
+set windows-shell := ["powershell", "-NoLogo", "-NoProfile", "-Command"]
 
-# Paths
-tailwind := "src/tailwindcss.exe"
-css_in := "src/main.css"
-css_out := "static/css/main.css"
+# ---------------------------------------------------------------------------
+# Platform detection
+# ---------------------------------------------------------------------------
 
-# =============================================================================
-# QUICK START
-# =============================================================================
+os           := os()
+tailwind     := if os == "windows" { "src/tailwindcss.exe" } else { "src/tailwindcss" }
+tailwind_url := if os == "windows" { "https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-windows-x64.exe" } else if os == "macos" { "https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-macos-arm64" } else { "https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-linux-x64" }
+css_in       := "src/main.css"
+css_out      := "static/css/main.css"
+fa_version   := "6.7.2"
+katex_version := "0.16.11"
 
-# Show available commands
+# ---------------------------------------------------------------------------
+# Default
+# ---------------------------------------------------------------------------
+
+[doc("List available commands")]
 default:
     @just --list
 
-# First-time setup (downloads all dependencies)
+# ---------------------------------------------------------------------------
+# Setup
+# ---------------------------------------------------------------------------
+
+[doc("Download or update all third-party dependencies")]
 [group('setup')]
-setup:
-    @Write-Host "🚀 Setting up project..." -ForegroundColor Cyan
-    @Write-Host ""
-    @Write-Host "Downloading Tailwind CSS..." -ForegroundColor Yellow
-    @Invoke-WebRequest -Uri "https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-windows-x64.exe" -OutFile "{{tailwind}}"
-    @Write-Host "✓ Tailwind CSS installed" -ForegroundColor Green
-    @Write-Host ""
-    @Write-Host "Downloading DaisyUI..." -ForegroundColor Yellow
+setup: _dl-tailwind _dl-daisyui _dl-fontawesome _dl-katex
+    @echo "Setup complete. Run 'just dev' to start."
+
+[private, unix]
+_dl-tailwind:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "Installing Tailwind CSS..."
+    curl -fsSL "{{ tailwind_url }}" -o "{{ tailwind }}"
+    chmod +x "{{ tailwind }}" 2>/dev/null || true
+    echo "  done."
+
+[private]
+[windows]
+_dl-tailwind:
+    @echo "Installing Tailwind CSS..."
+    @Invoke-WebRequest -Uri "{{ tailwind_url }}" -OutFile "{{ tailwind }}"
+    @echo "  done."
+
+[private, unix]
+_dl-daisyui:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "Installing DaisyUI..."
+    curl -fsSL "https://github.com/saadeghi/daisyui/releases/latest/download/daisyui.js" -o src/daisyui.js
+    curl -fsSL "https://github.com/saadeghi/daisyui/releases/latest/download/daisyui-theme.js" -o src/daisyui-theme.js
+    echo "  done."
+
+[private]
+[windows]
+_dl-daisyui:
+    @echo "Installing DaisyUI..."
     @Invoke-WebRequest -Uri "https://github.com/saadeghi/daisyui/releases/latest/download/daisyui.js" -OutFile "src/daisyui.js"
     @Invoke-WebRequest -Uri "https://github.com/saadeghi/daisyui/releases/latest/download/daisyui-theme.js" -OutFile "src/daisyui-theme.js"
-    @Write-Host "✓ DaisyUI installed" -ForegroundColor Green
-    @Write-Host ""
-    @Write-Host "Downloading Font Awesome..." -ForegroundColor Yellow
-    @Invoke-WebRequest -Uri "https://use.fontawesome.com/releases/v6.7.2/fontawesome-free-6.7.2-web.zip" -OutFile "fontawesome.zip"
-    @Expand-Archive -Path "fontawesome.zip" -DestinationPath "temp" -Force
-    @Copy-Item "temp/fontawesome-free-6.7.2-web/css/all.min.css" -Destination "static/css/font-awesome.min.css" -Force
+    @echo "  done."
+
+[private, unix]
+_dl-fontawesome:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "Installing Font Awesome {{ fa_version }}..."
+    curl -fsSL "https://use.fontawesome.com/releases/v{{ fa_version }}/fontawesome-free-{{ fa_version }}-web.zip" -o fontawesome.zip
+    unzip -qo fontawesome.zip -d _tmp
+    cp "_tmp/fontawesome-free-{{ fa_version }}-web/css/all.min.css" static/css/font-awesome.min.css
+    rm -rf static/webfonts
+    cp -r "_tmp/fontawesome-free-{{ fa_version }}-web/webfonts" static/webfonts
+    rm -rf fontawesome.zip _tmp
+    echo "  done."
+
+[private]
+[windows]
+_dl-fontawesome:
+    @echo "Installing Font Awesome {{ fa_version }}..."
+    @Invoke-WebRequest -Uri "https://use.fontawesome.com/releases/v{{ fa_version }}/fontawesome-free-{{ fa_version }}-web.zip" -OutFile "fontawesome.zip"
+    @Expand-Archive -Path "fontawesome.zip" -DestinationPath "_tmp" -Force
+    @Copy-Item "_tmp/fontawesome-free-{{ fa_version }}-web/css/all.min.css" -Destination "static/css/font-awesome.min.css" -Force
     @if (Test-Path "static/webfonts") { Remove-Item "static/webfonts" -Recurse -Force }
-    @Copy-Item "temp/fontawesome-free-6.7.2-web/webfonts" -Destination "static/webfonts" -Recurse -Force
-    @Remove-Item "fontawesome.zip" -Force
-    @Remove-Item "temp" -Recurse -Force
-    @Write-Host "✓ Font Awesome installed" -ForegroundColor Green
-    @Write-Host ""
-    @Write-Host "Downloading KaTeX..." -ForegroundColor Yellow
-    @Invoke-WebRequest -Uri "https://github.com/KaTeX/KaTeX/releases/download/v0.16.11/katex.zip" -OutFile "katex.zip"
-    @Expand-Archive -Path "katex.zip" -DestinationPath "temp" -Force
-    @Copy-Item "temp/katex/katex.min.css" -Destination "static/css/katex.min.css" -Force
+    @Copy-Item "_tmp/fontawesome-free-{{ fa_version }}-web/webfonts" -Destination "static/webfonts" -Recurse -Force
+    @Remove-Item "fontawesome.zip" -Force; Remove-Item "_tmp" -Recurse -Force
+    @echo "  done."
+
+[private, unix]
+_dl-katex:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "Installing KaTeX {{ katex_version }}..."
+    curl -fsSL "https://github.com/KaTeX/KaTeX/releases/download/v{{ katex_version }}/katex.zip" -o katex.zip
+    unzip -qo katex.zip -d _tmp
+    cp _tmp/katex/katex.min.css static/css/katex.min.css
+    sed -i 's|url(fonts/|url(../fonts/katex/|g' static/css/katex.min.css
+    cp _tmp/katex/katex.min.js static/js/katex.min.js
+    rm -rf static/fonts/katex
+    cp -r _tmp/katex/fonts static/fonts/katex
+    rm -rf katex.zip _tmp
+    echo "  done."
+
+[private]
+[windows]
+_dl-katex:
+    @echo "Installing KaTeX {{ katex_version }}..."
+    @Invoke-WebRequest -Uri "https://github.com/KaTeX/KaTeX/releases/download/v{{ katex_version }}/katex.zip" -OutFile "katex.zip"
+    @Expand-Archive -Path "katex.zip" -DestinationPath "_tmp" -Force
+    @Copy-Item "_tmp/katex/katex.min.css" -Destination "static/css/katex.min.css" -Force
     @(Get-Content "static/css/katex.min.css" -Raw) -replace 'url\(fonts/', 'url(../fonts/katex/' | Set-Content "static/css/katex.min.css"
-    @Copy-Item "temp/katex/katex.min.js" -Destination "static/js/katex.min.js" -Force
+    @Copy-Item "_tmp/katex/katex.min.js" -Destination "static/js/katex.min.js" -Force
     @if (Test-Path "static/fonts/katex") { Remove-Item "static/fonts/katex" -Recurse -Force }
-    @Copy-Item "temp/katex/fonts" -Destination "static/fonts/katex" -Recurse -Force
-    @Remove-Item "katex.zip" -Force
-    @Remove-Item "temp" -Recurse -Force
-    @Write-Host "✓ KaTeX installed" -ForegroundColor Green
-    @Write-Host ""
-    @Write-Host "✨ Setup complete! Run 'just dev' to start developing" -ForegroundColor Green
+    @Copy-Item "_tmp/katex/fonts" -Destination "static/fonts/katex" -Recurse -Force
+    @Remove-Item "katex.zip" -Force; Remove-Item "_tmp" -Recurse -Force
+    @echo "  done."
 
-# =============================================================================
-# DEVELOPMENT WORKFLOW
-# =============================================================================
+# ---------------------------------------------------------------------------
+# Development
+# ---------------------------------------------------------------------------
 
-# 🚀 Full dev mode: build CSS + start Zola server in new window
+[doc("Build CSS then start Zola dev server (blocking)")]
 [group('dev')]
-dev: build-css
-    @echo "🌐 Starting dev server in new window..."
-    @Start-Process pwsh -ArgumentList "-NoExit", "-Command", "cd '{{justfile_directory()}}'; zola serve"
-    @Start-Sleep -Seconds 2
-    @Write-Host "✓ Server running at http://127.0.0.1:1111" -ForegroundColor Green
+dev: css
+    zola serve
 
-# 👀 Watch CSS for changes in new window
+[doc("Watch CSS for changes (blocking)")]
 [group('dev')]
 watch:
-    @echo "👀 Starting CSS watch in new window..."
-    @Start-Process pwsh -ArgumentList "-NoExit", "-Command", "cd '{{justfile_directory()}}'; {{tailwind}} -i {{css_in}} -o {{css_out}} --watch"
-    @Write-Host "✓ CSS watcher running" -ForegroundColor Green
+    {{ tailwind }} -i {{ css_in }} -o {{ css_out }} --watch
 
-# 🌐 Open dev server in browser
-[group('dev')]
-open:
-    @Start-Process "http://127.0.0.1:1111"
+# ---------------------------------------------------------------------------
+# Build
+# ---------------------------------------------------------------------------
 
-# =============================================================================
-# BUILD & DEPLOY
-# =============================================================================
-
-# 🏗️ Build CSS (production-ready, minified)
+[doc("Compile and minify CSS")]
 [group('build')]
-build-css:
-    @{{tailwind}} -i {{css_in}} -o {{css_out}} --minify
+css:
+    @{{ tailwind }} -i {{ css_in }} -o {{ css_out }} --minify
 
-# 🧹 Clean all build artifacts
+[unix]
+[doc("Remove all build artifacts")]
 [group('build')]
 clean:
-    @if (Test-Path "public") { Remove-Item -Recurse -Force public }
-    @if (Test-Path {{css_out}}) { Remove-Item {{css_out}} }
+    rm -rf public
+    rm -f {{ css_out }}
 
-# 📦 Full production build
+[windows]
+[doc("Remove all build artifacts")]
 [group('build')]
-build: clean build-css
-    @echo "📦 Building site..."
-    @zola build
-    @echo "✓ Build complete"
+clean:
+    @if (Test-Path "public") { Remove-Item "public" -Recurse -Force }
+    @if (Test-Path "{{ css_out }}") { Remove-Item "{{ css_out }}" -Force }
 
-# 📊 Build and show statistics
+[doc("Full production build (clean + css + zola)")]
 [group('build')]
-stats: build
-    @echo ""
-    @echo "=================================="
-    @echo "BUILD STATISTICS"
-    @echo "=================================="
-    @$count = (Get-ChildItem -Recurse public | Measure-Object).Count; Write-Host "Files:    $count" -ForegroundColor Cyan
-    @$size = (Get-ChildItem -Recurse public | Measure-Object -Property Length -Sum).Sum / 1MB; Write-Host ("Size:     {0:N2} MB" -f $size) -ForegroundColor Cyan
+build: clean css
+    zola build
 
-# =============================================================================
-# MAINTENANCE
-# =============================================================================
+# ---------------------------------------------------------------------------
+# Info
+# ---------------------------------------------------------------------------
 
-# 🔄 Update all dependencies
-[group('update')]
-update:
-    @echo "🔄 Updating dependencies..."
-    @just _update-tailwind
-    @just _update-daisyui
-    @just _update-fontawesome
-    @just _update-katex
-    @echo "✨ All dependencies updated!"
-
-# Update Tailwind CSS
-[private]
-_update-tailwind:
-    @echo "Updating Tailwind CSS..."
-    @Invoke-WebRequest -Uri "https://github.com/tailwindlabs/tailwindcss/releases/latest/download/tailwindcss-windows-x64.exe" -OutFile "{{tailwind}}"
-    @echo "✓ Tailwind CSS updated"
-
-# Update DaisyUI
-[private]
-_update-daisyui:
-    @echo "Updating DaisyUI..."
-    @Invoke-WebRequest -Uri "https://github.com/saadeghi/daisyui/releases/latest/download/daisyui.js" -OutFile "src/daisyui.js"
-    @Invoke-WebRequest -Uri "https://github.com/saadeghi/daisyui/releases/latest/download/daisyui-theme.js" -OutFile "src/daisyui-theme.js"
-    @echo "✓ DaisyUI updated"
-
-# Update Font Awesome
-[private]
-_update-fontawesome:
-    @echo "Updating Font Awesome..."
-    @Invoke-WebRequest -Uri "https://use.fontawesome.com/releases/v6.7.2/fontawesome-free-6.7.2-web.zip" -OutFile "fontawesome.zip"
-    @Expand-Archive -Path "fontawesome.zip" -DestinationPath "temp" -Force
-    @Copy-Item "temp/fontawesome-free-6.7.2-web/css/all.min.css" -Destination "static/css/font-awesome.min.css" -Force
-    @if (Test-Path "static/webfonts") { Remove-Item "static/webfonts" -Recurse -Force }
-    @Copy-Item "temp/fontawesome-free-6.7.2-web/webfonts" -Destination "static/webfonts" -Recurse -Force
-    @Remove-Item "fontawesome.zip" -Force
-    @Remove-Item "temp" -Recurse -Force
-    @echo "✓ Font Awesome updated"
-
-# Update KaTeX
-[private]
-_update-katex:
-    @echo "Updating KaTeX..."
-    @Invoke-WebRequest -Uri "https://github.com/KaTeX/KaTeX/releases/download/v0.16.11/katex.zip" -OutFile "katex.zip"
-    @Expand-Archive -Path "katex.zip" -DestinationPath "temp" -Force
-    @Copy-Item "temp/katex/katex.min.css" -Destination "static/css/katex.min.css" -Force
-    @(Get-Content "static/css/katex.min.css" -Raw) -replace 'url\(fonts/', 'url(../fonts/katex/' | Set-Content "static/css/katex.min.css"
-    @Copy-Item "temp/katex/katex.min.js" -Destination "static/js/katex.min.js" -Force
-    @if (Test-Path "static/fonts/katex") { Remove-Item "static/fonts/katex" -Recurse -Force }
-    @Copy-Item "temp/katex/fonts" -Destination "static/fonts/katex" -Recurse -Force
-    @Remove-Item "katex.zip" -Force
-    @Remove-Item "temp" -Recurse -Force
-    @echo "✓ KaTeX updated"
-
-# =============================================================================
-# DIAGNOSTICS
-# =============================================================================
-
-# 📋 Show all tool versions
-[group('info')]
-versions:
-    @echo "=================================="
-    @echo "TOOL VERSIONS"
-    @echo "=================================="
-    @echo ""
-    @Write-Host "Platform: " -NoNewline -ForegroundColor Gray; Write-Host "Windows" -ForegroundColor Cyan
-    @Write-Host "Zola:     " -NoNewline -ForegroundColor Gray; zola --version
-    @Write-Host "Tailwind: " -NoNewline -ForegroundColor Gray; $output = & {{tailwind}} --help 2>&1 | Select-Object -First 1; $output -replace '.*tailwindcss\s+', ''
-    @Write-Host "DaisyUI:  " -NoNewline -ForegroundColor Gray; $content = Get-Content "src/daisyui.js" -Raw; if ($content -match 'var version = "([^"]+)"') { "v$($matches[1])" } else { "(unknown)" }
-    @echo ""
-
-# 🏥 Health check - verify all tools are working
+[unix]
+[doc("Verify all required tools and assets are present")]
 [group('info')]
 doctor:
-    @echo "🏥 Running health checks..."
-    @echo ""
-    @if (Get-Command zola -ErrorAction SilentlyContinue) { Write-Host "✓ Zola installed" -ForegroundColor Green } else { Write-Host "✗ Zola not found" -ForegroundColor Red; Write-Host "  Install: https://www.getzola.org/documentation/getting-started/installation/" -ForegroundColor Yellow }
-    @if (Test-Path {{tailwind}}) { Write-Host "✓ Tailwind CSS found" -ForegroundColor Green } else { Write-Host "✗ Tailwind CSS not found" -ForegroundColor Red; Write-Host "  Run: just setup" -ForegroundColor Yellow }
-    @if (Test-Path "src/daisyui.js") { Write-Host "✓ DaisyUI found" -ForegroundColor Green } else { Write-Host "✗ DaisyUI not found" -ForegroundColor Red; Write-Host "  Run: just setup" -ForegroundColor Yellow }
-    @if (Test-Path "static/css/font-awesome.min.css") { Write-Host "✓ Font Awesome found" -ForegroundColor Green } else { Write-Host "✗ Font Awesome not found" -ForegroundColor Red; Write-Host "  Run: just setup" -ForegroundColor Yellow }
-    @if (Test-Path "static/css/katex.min.css") { Write-Host "✓ KaTeX found" -ForegroundColor Green } else { Write-Host "✗ KaTeX not found" -ForegroundColor Red; Write-Host "  Run: just setup" -ForegroundColor Yellow }
-    @if (Test-Path {{css_out}}) { Write-Host "✓ CSS built" -ForegroundColor Green } else { Write-Host "⚠ CSS not built yet" -ForegroundColor Yellow; Write-Host "  Run: just build-css" -ForegroundColor Yellow }
-    @echo ""
+    #!/usr/bin/env bash
+    set -euo pipefail
+    ok=0; fail=0
+    check() { if [ "$1" = "true" ]; then echo "  [ok]  $2"; ((ok++)); else echo "  [!!]  $2 — $3"; ((fail++)); fi; }
+    echo "Health check"
+    echo "---"
+    check "$(command -v zola >/dev/null 2>&1 && echo true || echo false)" \
+        "zola" "https://www.getzola.org/documentation/getting-started/installation/"
+    check "$(test -f '{{ tailwind }}' && echo true || echo false)" \
+        "tailwind cli" "run: just setup"
+    check "$(test -f src/daisyui.js && echo true || echo false)" \
+        "daisyui" "run: just setup"
+    check "$(test -f static/css/font-awesome.min.css && echo true || echo false)" \
+        "font awesome" "run: just setup"
+    check "$(test -f static/css/katex.min.css && echo true || echo false)" \
+        "katex" "run: just setup"
+    check "$(test -f '{{ css_out }}' && echo true || echo false)" \
+        "compiled css" "run: just css"
+    echo "---"
+    echo "  $ok passed, $fail failed"
+    [ "$fail" -eq 0 ]
+
+[windows]
+[doc("Verify all required tools and assets are present")]
+[group('info')]
+doctor:
+    @echo "Health check"
+    @echo "---"
+    @if (Get-Command zola -ErrorAction SilentlyContinue) { echo "  [ok]  zola" } else { echo "  [!!]  zola -- https://www.getzola.org/documentation/getting-started/installation/" }
+    @if (Test-Path "{{ tailwind }}") { echo "  [ok]  tailwind cli" } else { echo "  [!!]  tailwind cli -- run: just setup" }
+    @if (Test-Path "src/daisyui.js") { echo "  [ok]  daisyui" } else { echo "  [!!]  daisyui -- run: just setup" }
+    @if (Test-Path "static/css/font-awesome.min.css") { echo "  [ok]  font awesome" } else { echo "  [!!]  font awesome -- run: just setup" }
+    @if (Test-Path "static/css/katex.min.css") { echo "  [ok]  katex" } else { echo "  [!!]  katex -- run: just setup" }
+    @if (Test-Path "{{ css_out }}") { echo "  [ok]  compiled css" } else { echo "  [!!]  compiled css -- run: just css" }
+
+[unix]
+[doc("Print versions of key tools")]
+[group('info')]
+versions:
+    @echo "zola:     $(zola --version 2>/dev/null || echo 'not found')"
+    @echo "tailwind: $({{ tailwind }} --help 2>&1 | head -1 | sed 's/.*tailwindcss //' || echo 'not found')"
+    @echo "os:       {{ os }}"
+
+[windows]
+[doc("Print versions of key tools")]
+[group('info')]
+versions:
+    @$z = try { zola --version 2>&1 } catch { "not found" }; echo "zola:     $z"
+    @$t = try { (& {{ tailwind }} --help 2>&1 | Select-Object -First 1) -replace '.*tailwindcss\s+','' } catch { "not found" }; echo "tailwind: $t"
+    @echo "os:       {{ os }}"
+
+

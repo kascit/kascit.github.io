@@ -1,6 +1,6 @@
 // Service Worker with smart caching strategy
 // Cache versioning: Update CACHE_VERSION when assets change
-const CACHE_VERSION = "v2";
+const CACHE_VERSION = "v3";
 const CACHE_NAME = `kascit-${CACHE_VERSION}`;
 
 // Critical assets that must be cached on install
@@ -12,6 +12,15 @@ const CRITICAL_ASSETS = [
   "/blog/",
   "/projects/",
   "/privacy/",
+  "/offline/",
+  // Assets needed for offline page to render properly
+  "/css/main.css",
+  "/css/font-awesome.min.css",
+  "/goyo.js",
+  "/js/theme-init.js",
+  "/fonts/Pretendard-Regular.woff",
+  "/webfonts/fa-solid-900.woff2",
+  "/webfonts/fa-brands-400.woff2",
 ];
 
 // Asset patterns to cache (will be cached on-demand)
@@ -38,13 +47,16 @@ self.addEventListener("install", (event) => {
     caches
       .open(CACHE_NAME)
       .then((cache) => {
-        return cache.addAll(CRITICAL_ASSETS).catch((err) => {
-          console.warn("Failed to cache critical assets:", err);
-          // Don't fail the install if critical assets are missing
-          return Promise.resolve();
-        });
+        // Cache each asset individually so one failure doesn't kill the rest
+        return Promise.all(
+          CRITICAL_ASSETS.map((url) =>
+            cache.add(url).catch(() => {
+              // Silently skip assets that can't be fetched (e.g. during dev)
+            }),
+          ),
+        );
       })
-      .then(() => self.skipWaiting())
+      .then(() => self.skipWaiting()),
   );
 });
 
@@ -60,10 +72,10 @@ self.addEventListener("activate", (event) => {
             if (cacheName !== CACHE_NAME) {
               return caches.delete(cacheName);
             }
-          })
+          }),
         );
       })
-      .then(() => self.clients.claim())
+      .then(() => self.clients.claim()),
   );
 });
 
@@ -89,7 +101,7 @@ async function setStoredLatest(info) {
       "/__meta/latest_post",
       new Response(JSON.stringify(info), {
         headers: { "Content-Type": "application/json" },
-      })
+      }),
     );
   } catch (e) {
     // ignore
@@ -191,7 +203,7 @@ self.addEventListener("fetch", (event) => {
 
   // Determine if this asset should be cached
   const shouldCache = CACHEABLE_PATTERNS.some((pattern) =>
-    pattern.test(url.pathname)
+    pattern.test(url.pathname),
   );
 
   if (shouldCache) {
@@ -225,7 +237,7 @@ self.addEventListener("fetch", (event) => {
             // Return cached response if fetch fails
             return caches.match(request);
           });
-      })
+      }),
     );
   } else {
     // Network-first strategy for documents (HTML, etc.)
@@ -244,16 +256,17 @@ self.addEventListener("fetch", (event) => {
         .catch(() => {
           // Return cached response if network fails
           return caches.match(request).then((cachedResponse) => {
-            // If no cached response and offline, return a fallback
-            return (
-              cachedResponse ||
-              new Response(
-                "Offline - Content not available. Check your connection.",
-                { status: 503, statusText: "Service Unavailable" }
-              )
-            );
+            if (cachedResponse) return cachedResponse;
+            // Serve the offline page for document requests
+            if (request.destination === "document") {
+              return caches.match("/offline/");
+            }
+            return new Response("Offline", {
+              status: 503,
+              statusText: "Service Unavailable",
+            });
           });
-        })
+        }),
     );
   }
 });
@@ -290,7 +303,7 @@ self.addEventListener("notificationclick", (event) => {
           }
         }
         return clients.openWindow(url);
-      })()
+      })(),
     );
   }
 });

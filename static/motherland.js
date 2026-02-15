@@ -1,7 +1,7 @@
 /**
- * Motherland Badge - Premium site badge for dhanur.me
+ * Motherland Badge - site badge for dhanur.me
  *
- * Minimal, fast, and sleek badge for your website.
+ * Minimal, fast, and sleek badge.
  */
 
 (function (window) {
@@ -16,9 +16,13 @@
       mode: "long",
       theme: "auto",
       position: "bottom-right",
+      positionType: "absolute", // 'fixed' | 'absolute'
+      container: null, // selector string
       size: 60,
       gap: 20,
+      zIndex: 999999,
       animate: true,
+      favicon: true, // true | string (url for favicon) | false
     },
 
     URLS: {
@@ -32,6 +36,33 @@
 
     merge(userConfig = {}) {
       return { ...this.DEFAULTS, ...userConfig };
+    },
+  };
+
+  // ============================================================================
+  // FAVICON MODULE
+  // ============================================================================
+
+  const Favicon = {
+    inject(config) {
+      if (!config.favicon) return;
+
+      // Check if favicon already exists
+      const existing =
+        document.querySelector("link[rel*='icon']") ||
+        document.querySelector("link[rel='shortcut icon']");
+
+      if (existing) return;
+
+      const link = document.createElement("link");
+      link.type = "image/x-icon";
+      link.rel = "shortcut icon";
+      link.href =
+        typeof config.favicon === "string"
+          ? config.favicon
+          : `${Config.URLS.base}/favicon.ico`;
+
+      document.head.appendChild(link);
     },
   };
 
@@ -78,8 +109,8 @@
 
     CSS: `
       .motherland-badge {
-        position: fixed;
-        z-index: 999999;
+        position: var(--m-position, fixed);
+        z-index: var(--m-z-index, 999999);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -187,6 +218,10 @@
       const padding = Config.PADDING[config.mode];
       if (padding) el.style.setProperty("--padding", padding);
 
+      // Set CSS variables for position and z-index
+      el.style.setProperty("--m-position", config.positionType);
+      el.style.setProperty("--m-z-index", config.zIndex);
+
       const sizeValue = this.normalizeSizeValue(config.size);
       const dims =
         config.mode === "small"
@@ -203,7 +238,12 @@
     },
 
     applyPosition(el, config) {
-      const { position, gap } = config;
+      const { position, gap, container } = config;
+
+      // If attached to a container, we might want different logic,
+      // but typically absolute positioning relative to container is handled via CSS + top/left/etc.
+      // If positionType is absolute (and no container), it scrolls with the page.
+
       const gapValue = typeof gap === "number" ? `${gap}px` : gap;
 
       if (typeof position === "object") {
@@ -274,6 +314,7 @@
       el.appendChild(img);
 
       ThemeListener.setup(el, img, config);
+      Favicon.inject(config);
 
       return el;
     },
@@ -284,10 +325,28 @@
   // ============================================================================
 
   const DOM = {
-    append(el) {
+    append(el, config) {
       const doAppend = () => {
-        if (document.body && !el.parentNode) {
-          document.body.appendChild(el);
+        let parent = document.body;
+
+        if (config.container) {
+          const containerEl = document.querySelector(config.container);
+          if (containerEl) {
+            parent = containerEl;
+            // Ensure container has non-static position so absolute child works
+            const style = window.getComputedStyle(containerEl);
+            if (style.position === "static") {
+              containerEl.style.position = "relative";
+            }
+          } else {
+            console.warn(
+              `Motherland: Container "${config.container}" not found. Fallback to body.`
+            );
+          }
+        }
+
+        if (parent && !el.parentNode) {
+          parent.appendChild(el);
         }
       };
 
@@ -326,6 +385,12 @@
         config.gap = isNaN(gap) ? gap : parseInt(gap);
       }
       if (attrs.animate) config.animate = attrs.animate !== "false";
+      
+      // New attributes
+      if (attrs.favicon) config.favicon = attrs.favicon !== "false";
+      if (attrs.zIndex) config.zIndex = parseInt(attrs.zIndex);
+      if (attrs.positionType) config.positionType = attrs.positionType;
+      if (attrs.container) config.container = attrs.container;
 
       return config;
     },
@@ -350,21 +415,25 @@
     init(config) {
       if (badgeInstance) {
         console.warn("Motherland badge already initialized");
-        return { destroy: () => badgeInstance.remove() };
+        return { destroy: this.destroy };
       }
 
       Styles.inject();
       const badge = Badge.create(config);
       badgeInstance = badge;
 
-      DOM.append(badge);
+      DOM.append(badge, config);
 
       return {
-        destroy: () => {
-          badge.remove();
-          badgeInstance = null;
-        },
+        destroy: this.destroy,
       };
+    },
+
+    destroy() {
+      if (badgeInstance) {
+        badgeInstance.remove();
+        badgeInstance = null;
+      }
     },
   };
 

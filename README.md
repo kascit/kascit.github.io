@@ -4,14 +4,14 @@ Personal website built with **Zola** static site generator + **Tailwind CSS** + 
 
 ## Features
 
-- ⚡ Fast static site generation with Zola
-- 🎨 Tailwind CSS + DaisyUI components
-- 🔐 Security hardened (CSP, HSTS, CORS headers)
-- 📱 Fully responsive design
-- 🌙 Dark/Light theme toggle
-- 🔔 PWA with notifications support
-- 💬 Giscus comments integration
-- 🎯 SEO optimized
+- Fast static site generation with Zola
+- Tailwind CSS + DaisyUI components
+- Security hardened (CSP, HSTS, CORS headers)
+- Fully responsive design
+- Dark/Light theme toggle
+- PWA with notifications support
+- Giscus comments integration
+- SEO optimized
 
 ## Setup
 

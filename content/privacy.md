@@ -7,10 +7,6 @@ template = "page.html"
 enabled = false
 +++
 
-# Privacy Policy
-
-Plain-English summary of what this site collects, why, and how you can control it.
-
 > **Last updated: January 5, 2026**
 
 ## About This Website

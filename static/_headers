@@ -42,38 +42,54 @@ Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
 
 # =============================================================================
 
+# Cross-Origin headers: allow subdomains (auth.dhanur.me, etc.) to load
+
+# CSS, JS, and fonts from the main domain.
+
 # Images
 
 /images/\*
 Cache-Control: public, max-age=31536000, immutable
 
-# Fonts
+# Fonts (CORS required for cross-origin @font-face)
 
 /fonts/\*
 Cache-Control: public, max-age=31536000, immutable
+Access-Control-Allow-Origin: \*
 
 # CSS
 
 /css/\*
 Cache-Control: public, max-age=31536000, immutable
+Access-Control-Allow-Origin: \*
 
 # JavaScript
 
 /js/\*
 Cache-Control: public, max-age=31536000, immutable
+Access-Control-Allow-Origin: \*
 
 # Individual file types (catch-all)
 
 _.woff
 Cache-Control: public, max-age=31536000, immutable
+Access-Control-Allow-Origin: \*
 _.woff2
 Cache-Control: public, max-age=31536000, immutable
-_.ttf
+Access-Control-Allow-Origin: _
+\_.ttf
 Cache-Control: public, max-age=31536000, immutable
-_.webp
+Access-Control-Allow-Origin: _
+\_.webp
 Cache-Control: public, max-age=31536000, immutable
 \*.ico
 Cache-Control: public, max-age=31536000, immutable
+
+# Webfonts (Font Awesome — also needs CORS)
+
+/webfonts/\*
+Cache-Control: public, max-age=31536000, immutable
+Access-Control-Allow-Origin: \*
 
 # =============================================================================
 

@@ -20,11 +20,11 @@ function makeTeaser(body, terms) {
   var TEASER_MAX_WORDS = 30;
 
   var stemmedTerms = terms.map(function (w) {
-    return w.toLowerCase(); // Removed stemming for Fuse.js compatibility
+    return w.toLowerCase();
   });
   var termFound = false;
   var index = 0;
-  var weighted = []; // contains elements of ["word", weight, index_in_document]
+  var weighted = [];
 
   var sentences = body.toLowerCase().split(". ");
 
@@ -47,10 +47,10 @@ function makeTeaser(body, terms) {
       }
 
       index += word.length;
-      index += 1; // ' ' or '.' if last word in sentence
+      index += 1;
     }
 
-    index += 1; // because we split at a two-char boundary '. '
+    index += 1;
   }
 
   if (weighted.length === 0) {
@@ -101,7 +101,7 @@ function makeTeaser(body, terms) {
       teaser.push("</b>");
     }
   }
-  teaser.push("…");
+  teaser.push("\u2026");
   return teaser.join("");
 }
 
@@ -124,7 +124,7 @@ function formatSearchResultItem(item, terms) {
           }</div>
           <div class="search-result-excerpt text-xs text-base-content/60 line-clamp-2">${makeTeaser(
             item.item.body,
-            terms
+            terms,
           )}</div>
         </div>
         <div class="search-result-arrow flex-shrink-0 opacity-0 transition-opacity duration-150">
@@ -136,7 +136,6 @@ function formatSearchResultItem(item, terms) {
     </a>
   `;
 
-  // Add hover effect for the arrow
   var link = li.querySelector(".search-result-link");
   var arrow = li.querySelector(".search-result-arrow");
   link.addEventListener("mouseenter", function () {
@@ -150,7 +149,6 @@ function formatSearchResultItem(item, terms) {
 }
 
 function initSearch() {
-  // Only initialize if search dependencies are loaded
   if (typeof Fuse === "undefined" || !window.searchIndex) {
     return;
   }
@@ -161,7 +159,7 @@ function initSearch() {
   }
 
   var $searchResultsContainer = document.querySelector(
-    ".search-results-container"
+    ".search-results-container",
   );
   var $searchResultsHeader = document.querySelector(".search-results__header");
   var $searchResultsItems = document.querySelector(".search-results__items");
@@ -176,7 +174,7 @@ function initSearch() {
     ],
     includeScore: true,
     ignoreLocation: true,
-    threshold: 0.4, // Adjust as needed for search sensitivity
+    threshold: 0.4,
   };
   var currentTerm = "";
   var documents = Object.values(window.searchIndex.documentStore.docs);
@@ -193,7 +191,6 @@ function initSearch() {
       }
     });
 
-    // Scroll selected item into view
     if (selectedIndex >= 0 && items[selectedIndex]) {
       items[selectedIndex].scrollIntoView({
         block: "nearest",
@@ -238,13 +235,12 @@ function initSearch() {
           continue;
         }
         $searchResultsItems.appendChild(
-          formatSearchResultItem(results[i], term.split(" "))
+          formatSearchResultItem(results[i], term.split(" ")),
         );
       }
-    }, 150)
+    }, 150),
   );
 
-  // Focus search input when modal is opened
   var searchModal = document.getElementById("search-modal");
   var modalBackdrop = document.querySelector(".modal");
 
@@ -255,7 +251,6 @@ function initSearch() {
           $searchInput.focus();
         }, 100);
       } else {
-        // Clear search when modal is closed
         $searchInput.value = "";
         $searchResultsItems.innerHTML = "";
         $searchResultsHeader.innerHTML = "";
@@ -265,17 +260,14 @@ function initSearch() {
     });
   }
 
-  // Handle click outside modal to close it
   if (modalBackdrop) {
     modalBackdrop.addEventListener("click", function (e) {
-      // Close modal if clicking on the backdrop (not on modal-box)
       if (e.target === modalBackdrop && searchModal.checked) {
         searchModal.checked = false;
       }
     });
   }
 
-  // Handle keyboard navigation
   $searchInput.addEventListener("keydown", function (e) {
     var items = $searchResultsItems.querySelectorAll(".search-result-item");
 
@@ -312,80 +304,67 @@ function initTheme() {
     return;
   }
 
-  // Theme mapping - maps user-friendly names to actual DaisyUI theme names
   var themeMapping = {
-    "goyo-dark": "night",
-    "goyo-light": "lofi",
+    dark: "night",
+    light: "lofi",
   };
 
-  // Reverse mapping for checking current theme
   var reverseThemeMapping = {
-    night: "goyo-dark",
-    lofi: "goyo-light",
+    night: "dark",
+    lofi: "light",
   };
 
   var fallbackTheme =
-    window && window.fallbackTheme ? window.fallbackTheme : "goyo-dark";
-  var currentUserTheme = localStorage.getItem("theme") || fallbackTheme;
+    window && window.fallbackTheme ? window.fallbackTheme : "dark";
+  var currentUserTheme =
+    (window.__getThemeCookie ? window.__getThemeCookie() : null) ||
+    fallbackTheme;
 
-  // Map user theme to actual DaisyUI theme
   var actualTheme = themeMapping[currentUserTheme] || currentUserTheme;
   document.documentElement.setAttribute("data-theme", actualTheme);
 
-  // Set brightness based on current theme (per-theme brightness support)
   var darkBrightness = window.darkBrightness || "normal";
   var lightBrightness = window.lightBrightness || "normal";
   var currentBrightness =
-    currentUserTheme === "goyo-dark" ? darkBrightness : lightBrightness;
+    currentUserTheme === "dark" ? darkBrightness : lightBrightness;
   document.documentElement.setAttribute("data-brightness", currentBrightness);
 
-  // Set checkbox state based on current theme for all controllers
   themeControllers.forEach(function (controller) {
-    controller.checked = currentUserTheme === "goyo-dark";
+    controller.checked = currentUserTheme === "dark";
   });
 
-  // Update logo visibility based on current theme
   updateLogoForTheme(currentUserTheme);
 
-  // Add change listener to all theme controllers
   themeControllers.forEach(function (controller) {
     controller.addEventListener("change", function (e) {
-      var userTheme = e.target.checked ? "goyo-dark" : "goyo-light";
+      var userTheme = e.target.checked ? "dark" : "light";
       var actualTheme = themeMapping[userTheme];
 
       document.documentElement.setAttribute("data-theme", actualTheme);
-      localStorage.setItem("theme", userTheme); // Store user-friendly name
+      if (window.__setThemeCookie) window.__setThemeCookie(userTheme);
 
-      // Update brightness based on the new theme (per-theme brightness support)
       var newBrightness =
-        userTheme === "goyo-dark" ? darkBrightness : lightBrightness;
+        userTheme === "dark" ? darkBrightness : lightBrightness;
       document.documentElement.setAttribute("data-brightness", newBrightness);
 
-      // Sync all other theme controllers
       themeControllers.forEach(function (otherController) {
         if (otherController !== e.target) {
           otherController.checked = e.target.checked;
         }
       });
 
-      // Update logo when theme changes
       updateLogoForTheme(userTheme);
-
-      // Update giscus comments theme
       updateGiscusTheme(userTheme);
     });
   });
 }
 
-// Function to update logo visibility based on current theme
 function updateLogoForTheme(userTheme) {
-  var isDarkTheme = userTheme === "goyo-dark";
+  var isDarkTheme = userTheme === "dark";
 
-  // Only query for logo elements once and cache the reference
   var logoDark = updateLogoForTheme._logoDark;
   var logoLight = updateLogoForTheme._logoLight;
 
-  // Cache elements on first call
   if (logoDark === undefined || logoLight === undefined) {
     logoDark = updateLogoForTheme._logoDark =
       document.querySelector(".logo-dark");
@@ -393,7 +372,6 @@ function updateLogoForTheme(userTheme) {
       document.querySelector(".logo-light");
   }
 
-  // If no theme-specific logos exist, nothing to do
   if (!logoDark && !logoLight) {
     return;
   }
@@ -406,9 +384,7 @@ function updateLogoForTheme(userTheme) {
   }
 }
 
-// Function to update giscus comments theme
 function updateGiscusTheme(userTheme) {
-  var giscusTheme = userTheme === "goyo-dark" ? "dark" : "light";
   var iframe = document.querySelector("iframe.giscus-frame");
 
   if (iframe) {
@@ -416,50 +392,44 @@ function updateGiscusTheme(userTheme) {
       {
         giscus: {
           setConfig: {
-            theme: giscusTheme,
+            theme: userTheme,
           },
         },
       },
-      "https://giscus.app"
+      "https://giscus.app",
     );
   }
 }
 
 function initToc() {
   const headings = document.querySelectorAll(
-    ".prose h1[id], .prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id], .prose h6[id]"
+    ".prose h1[id], .prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id], .prose h6[id]",
   );
   const tocLinks = document.querySelectorAll(".toc-link");
   const tocDetails = document.querySelectorAll(".toc-details");
 
   if (headings.length === 0 || tocLinks.length === 0) {
-    return; // No ToC or headings on this page
+    return;
   }
 
-  // Check if TOC should always be expanded
   const tocContainer = document.querySelector(".hidden.lg\\:block");
   const tocExpand =
     tocContainer && tocContainer.getAttribute("data-toc-expand") === "true";
 
   let activeId = null;
 
-  // Track user's manual open/close actions
   const userClosedSections = new Set();
 
-  // Add listeners for user interactions with details
   tocDetails.forEach((detail) => {
     detail.addEventListener("toggle", (e) => {
-      // Only track if user manually closed it
       if (!detail.open) {
         const summary = detail.querySelector("summary");
         let id = null;
 
-        // Try to get id from data-toc-href attribute on summary
         if (summary && summary.hasAttribute("data-toc-href")) {
           const href = summary.getAttribute("data-toc-href");
           id = href.includes("#") ? href.split("#")[1] : null;
         } else {
-          // Fallback: try to get id from first toc-link anchor child
           const link = detail.querySelector(".toc-link[href]");
           if (link) {
             const href = link.getAttribute("href");
@@ -475,34 +445,28 @@ function initToc() {
   });
 
   const activateLink = (id) => {
-    if (activeId === id) return; // Already active, no need to update
+    if (activeId === id) return;
 
     activeId = id;
 
-    // Remove active class from all links
     tocLinks.forEach((link) => link.classList.remove("active"));
 
-    // Match links with href ending in #id (handles both relative and absolute URLs)
     const correspondingLink = document.querySelector(
-      `.toc-link[href$="#${id}"]`
+      `.toc-link[href$="#${id}"]`,
     );
 
-    // Add active class to the current link
     if (correspondingLink) {
       correspondingLink.classList.add("active");
 
-      // Open parent details only if user hasn't manually closed them
       let parentDetails = correspondingLink.closest("details");
       while (parentDetails) {
         const summary = parentDetails.querySelector("summary");
         let parentId = null;
 
-        // Try to get id from data-toc-href on summary
         if (summary && summary.hasAttribute("data-toc-href")) {
           const href = summary.getAttribute("data-toc-href");
           parentId = href.includes("#") ? href.split("#")[1] : null;
         } else {
-          // Fallback: try to get id from first toc-link anchor
           const parentLink = parentDetails.querySelector(".toc-link[href]");
           if (parentLink) {
             const href = parentLink.getAttribute("href");
@@ -519,8 +483,8 @@ function initToc() {
   };
 
   const observerOptions = {
-    root: null, // viewport
-    rootMargin: "-20% 0px -35% 0px", // Trigger when heading enters the top 20-65% of viewport
+    root: null,
+    rootMargin: "-20% 0px -35% 0px",
     threshold: 0,
   };
 
@@ -539,23 +503,17 @@ function initToc() {
     observer.observe(heading);
   });
 
-  // Handle initial state on load
-  // Prefer URL hash if present
   const hashId = location.hash ? location.hash.slice(1) : null;
   if (hashId && document.getElementById(hashId)) {
     activateLink(hashId);
   }
-  // Note: Intersection observer will handle finding the first visible heading
-  // without forcing a reflow by querying getBoundingClientRect()
 }
 
 function initMath() {
-  // Only render if KaTeX is loaded
   if (typeof katex === "undefined") {
     return;
   }
 
-  // Render all inline math elements
   var mathElements = document.querySelectorAll(".katex-inline");
   mathElements.forEach(function (element) {
     var formula = element.textContent;
@@ -569,7 +527,6 @@ function initMath() {
     }
   });
 
-  // Render all block math elements
   var blockMathElements = document.querySelectorAll(".katex-block");
   blockMathElements.forEach(function (element) {
     var formula = element.textContent;

@@ -120,7 +120,7 @@
     </div>
 
     {% block js_body %}
-        <script defer src="{{ get_url(path='goyo.js') | safe }}"></script>
+        <script defer src="{{ get_url(path='js/app.js') | safe }}"></script>
         {% if config.build_search_index %}
         <script defer src="{{ get_url(path='js/search-loader.js') | safe }}"
                 data-lang="{{ lang | default(value='en') }}"

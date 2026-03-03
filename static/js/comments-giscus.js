@@ -7,8 +7,8 @@
   var mount = document.getElementById(targetId);
   if (!mount) return;
 
-  var userTheme = localStorage.getItem("theme") || "goyo-dark";
-  var giscusTheme = userTheme === "goyo-dark" ? "dark" : "light";
+  var giscusTheme =
+    (window.__getThemeCookie ? window.__getThemeCookie() : null) || "dark";
 
   var script = document.createElement("script");
   script.src = "https://giscus.app/client.js";

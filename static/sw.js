@@ -1,6 +1,6 @@
 // Service Worker with smart caching strategy
 // Cache versioning: Update CACHE_VERSION when assets change
-const CACHE_VERSION = "v5";
+const CACHE_VERSION = "v7";
 const CACHE_NAME = `kascit-${CACHE_VERSION}`;
 const META_CACHE = `kascit-meta-${CACHE_VERSION}`;
 
@@ -17,7 +17,7 @@ const CRITICAL_ASSETS = [
   // Assets needed for offline page to render properly
   "/css/main.css",
   "/css/font-awesome.min.css",
-  "/goyo.js",
+  "/js/app.js",
   "/js/theme-init.js",
   "/fonts/Pretendard-Regular.woff",
   "/webfonts/fa-solid-900.woff2",

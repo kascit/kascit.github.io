@@ -18,3 +18,4 @@ src/tailwindcss.exe
 src/daisyui.js
 src/daisyui-theme.js
 static/css/main.css
+tmp*

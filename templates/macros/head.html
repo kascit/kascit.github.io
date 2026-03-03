@@ -76,11 +76,21 @@
         {% set light_brightness = common_brightness %}
     {% endif %}
     <!-- Inline critical theme init to prevent FOUC, but kept minimal -->
+    {%- set cookie_domain = config.base_url | replace(from="https://", to="") | replace(from="http://", to="") -%}
     <script>
         (function() {
-            var colorset = localStorage.getItem('colorset') || '{{ theme_colorset }}';
-            var darkBrightness = localStorage.getItem('darkBrightness') || '{{ dark_brightness }}';
-            var lightBrightness = localStorage.getItem('lightBrightness') || '{{ light_brightness }}';
+            // Cookie helpers — shared with all theme scripts via window globals
+            // Scoped to .{{ cookie_domain }} so all subdomains share the theme
+            window.__getThemeCookie = function() {
+                var m = document.cookie.match(/(?:^|; )theme=([^;]*)/);
+                return m ? m[1] : null;
+            };
+            window.__setThemeCookie = function(val) {
+                document.cookie = 'theme=' + val + '; path=/; domain=.{{ cookie_domain }}; max-age=31536000; SameSite=Lax';
+            };
+
+            var colorset = window.__getThemeCookie() || '{{ theme_colorset }}';
+
             if (colorset === 'dark') {
                 document.documentElement.classList.add('dark');
                 document.documentElement.style.colorScheme = 'dark';
@@ -153,13 +163,13 @@
 
     <title>
       {%- if page and page.title -%}
-        {{ page.title }} | {{ config.title | default(value="Goyo") }}
+        {{ page.title }} | {{ config.title | default(value="Dhanur") }}
       {%- elif section and section.title -%}
-        {{ section.title }} | {{ config.title | default(value="Goyo") }}
+        {{ section.title }} | {{ config.title | default(value="Dhanur") }}
       {%- elif config.title -%}
         {{ config.title }}
       {%- else -%}
-        Goyo
+        Dhanur
       {%- endif -%}
     </title>
 
@@ -173,13 +183,13 @@
       <!-- SEO: Open Graph / Twitter Card -->
       <meta property="og:title" content="
         {%- if page and page.title -%}
-          {{ page.title }} | {{ config.title | default(value='Goyo') }}
+          {{ page.title }} | {{ config.title | default(value='Dhanur') }}
         {%- elif section and section.title -%}
-          {{ section.title }} | {{ config.title | default(value='Goyo') }}
+          {{ section.title }} | {{ config.title | default(value='Dhanur') }}
         {%- elif config.title -%}
           {{ config.title }}
         {%- else -%}
-          Goyo
+          Dhanur
         {%- endif -%}
       " />
       <meta property="og:description" content="

@@ -13,7 +13,7 @@ default_language = "en"
 # =============================================================================
 # BUILD & OUTPUT
 # =============================================================================
-compile_sass = true                 # Required by Goyo
+compile_sass = true                 # Required by Zola theme
 minify_html = true                  # Always enable in production
 
 build_search_index = true           # Required for site search
@@ -75,7 +75,7 @@ include_description = true
 include_content = true
 
 # =============================================================================
-# THEME CONFIGURATION (GOYO)
+# THEME CONFIGURATION
 # =============================================================================
 [extra]
 default_thumbnail = "images/default_thumbnail.jpg"
@@ -92,9 +92,9 @@ Dhanur · Built with
 """
 
 # =============================================================================
-# NAVIGATION (GOYO)
+# NAVIGATION
 # =============================================================================
-# Goyo requires an icon (FontAwesome class) per item.
+# Each nav item requires an icon (FontAwesome class).
 nav = [
   { name = "About",    url = "/about/",    type = "url", icon = "fa-solid fa-user" },
   { name = "Projects", url = "/projects/", type = "url", icon = "fa-solid fa-code" },

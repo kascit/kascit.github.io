@@ -19,7 +19,7 @@ enabled = false
 
 {{ project_card(title="Listly", icon="fa-solid fa-music", description="Terminal-based music playlist manager built from scratch using custom doubly linked lists. DSA concepts with persistent file storage and ANSI-colored CLI.", lang="Java", status="academic", techs="Linked Lists, File I/O, CLI, OOP", github_url="https://github.com/kascit/listly") }}
 
-{{ project_card(title="dhanur.me", icon="fa-solid fa-globe", description="This website! Built with Zola static site generator, heavily customized Goyo theme, and way too much time tweaking CSS at 2 AM.", lang="Zola", status="live", techs="Zola, TailwindCSS, DaisyUI, GitHub Pages", github_url="https://github.com/kascit/kascit.github.io", url="/", url_label="Visit") }}
+{{ project_card(title="dhanur.me", icon="fa-solid fa-globe", description="This website! Built with Zola static site generator, TailwindCSS + DaisyUI, and way too much time tweaking CSS at 2 AM.", lang="Zola", status="live", techs="Zola, TailwindCSS, DaisyUI, GitHub Pages", github_url="https://github.com/kascit/kascit.github.io", url="/", url_label="Visit") }}
 
 </div>
 

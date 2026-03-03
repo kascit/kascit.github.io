@@ -197,9 +197,23 @@ Command Section - Tabbed Code Blocks #} {% if section.extra.easy_command_section
           ><i class="fa-solid fa-arrow-up-right-from-square text-xs mr-1"></i>{{
           tab.name }}</a
         >
-        {% else %} <input type="radio" name="easy_command_tabs"
-        id="easy-command-tab-{{ loop.index0 }}" class="tab" aria-label="{{
-        tab.name }}" {% if loop.index0 == 0 %}checked="checked"{% endif %} />
+        {% else %}
+        <input
+          type="radio"
+          name="easy_command_tabs"
+          id="easy-command-tab-{{ loop.index0 }}"
+          class="tab"
+          aria-label="{{
+        tab.name }}"
+          {%
+          if
+          loop.index0=""
+          ="0"
+          %}checked="checked"
+          {%
+          endif
+          %}
+        />
         <div
           class="tab-content install-tab-content bg-base-100 border-base-300 p-6 rounded-b-lg"
           role="tabpanel"
@@ -238,10 +252,21 @@ Section - Tabbed Content #} {% if section.extra.showcase_section %}
     {% if section.extra.showcase_section.tabs %}
     <div class="w-full">
       <div class="tabs tabs-lift tabs-lg justify-center mb-0">
-        {% for tab in section.extra.showcase_section.tabs %} <input type="radio"
-        name="showcase_tabs" id="tab-{{ loop.index0 }}" class="tab text-lg
-        font-semibold" aria-label="{{ tab.name }}" {% if loop.index0 == 0
-        %}checked{% endif %} />
+        {% for tab in section.extra.showcase_section.tabs %}
+        <input
+          type="radio"
+          name="showcase_tabs"
+          id="tab-{{ loop.index0 }}"
+          class="tab text-lg font-semibold"
+          aria-label="{{ tab.name }}"
+          {%
+          if
+          loop.index0=""
+          ="0"
+          %}checked{%
+          endif
+          %}
+        />
         <div
           class="tab-content rounded-box p-8 md:p-12"
           role="tabpanel"
@@ -438,14 +463,6 @@ endfor %} {# Footer for landing page #}
       rel="noopener noreferrer"
       class="font-bold text-base-content/70 hover:text-base-content transition-colors duration-200"
       >Zola</a
-    >
-    &
-    <a
-      href="https://github.com/hahwul/goyo"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="font-bold text-base-content/70 hover:text-base-content transition-colors duration-200"
-      >Goyo</a
     >
   </p>
 </footer>

@@ -11,9 +11,12 @@ version = "v1.0"
 # -----------------------------------------------------------------------------
 [extra.hero]
 title = "Hey, I'm Dhanur"
-badge = "Code Wrangler & Infrastructure Tinkerer"
+# badge = "Tinkerer"
 description = "This is where I dump my brain on the internet. By day, I wrangle backend services and convince servers to behave. By night, I break my Arch setup and frantically Google how to fix it (again). Sometimes I write code that works. Sometimes I write blog posts about why it didn't."
-image = "/images/whood.png" 
+image = "/images/whood.png"
+# Optional: use different hero images per theme
+image_dark = "/images/whood.png"
+image_light = "/images/whood-light.jpg"
 
 cta_buttons = [
     { text = "View Projects", url = "/projects", style = "primary" },

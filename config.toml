@@ -86,10 +86,7 @@ gtag = "G-BY8SPYYYYR"
 # GitHub edit link (used by theme templates)
 edit_url = "https://github.com/kascit/kascit.github.io/edit/main"
 
-footer_html = """
-Dhanur · Built with
-<a href="https://www.getzola.org/" target="_blank" rel="noopener noreferrer">Zola</a>
-"""
+footer_html = """Dhanur Relhan"""
 
 # =============================================================================
 # NAVIGATION

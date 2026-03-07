@@ -902,3 +902,71 @@ footer.footer .social-icon:hover {
   border: 1px solid rgba(96, 165, 250, 0.25);
   color: rgb(96, 165, 250);
 }
+
+/* ─── Design Showcase Reset ───
+ * Neutralizes base typography styles (gradient headings, ::after underlines,
+ * custom list bullets, large margins) so the design system page shows
+ * pure DaisyUI components without interference.
+ */
+.design-showcase h1 {
+  background-image: none !important;
+  -webkit-text-fill-color: unset;
+  color: inherit;
+  @apply text-base-content;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.design-showcase h2 {
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.design-showcase h2::after {
+  display: none !important;
+}
+
+.design-showcase h3 {
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.design-showcase h4 {
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.design-showcase p {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+main .design-showcase ul {
+  @apply list-none mb-4;
+  padding-left: 0;
+}
+
+main .design-showcase ul li {
+  @apply relative pl-0 mb-2;
+  line-height: 1.6;
+}
+
+main .design-showcase ul li::before {
+  content: none !important;
+}
+
+main .design-showcase ol {
+  @apply list-none mb-4;
+  padding-left: 0;
+  counter-reset: none;
+}
+
+main .design-showcase ol li {
+  @apply relative pl-0 mb-2;
+  line-height: 1.6;
+}
+
+main .design-showcase ol li::before {
+  content: none !important;
+  display: none !important;
+}

@@ -334,6 +334,7 @@ function initTheme() {
   });
 
   updateLogoForTheme(currentUserTheme);
+  updateHeroForTheme(currentUserTheme);
 
   themeControllers.forEach(function (controller) {
     controller.addEventListener("change", function (e) {
@@ -354,6 +355,7 @@ function initTheme() {
       });
 
       updateLogoForTheme(userTheme);
+      updateHeroForTheme(userTheme);
       updateGiscusTheme(userTheme);
     });
   });
@@ -377,11 +379,30 @@ function updateLogoForTheme(userTheme) {
   }
 
   if (logoDark) {
-    logoDark.classList.toggle("hidden", !isDarkTheme);
+    logoDark.classList.toggle("invisible", !isDarkTheme);
   }
   if (logoLight) {
-    logoLight.classList.toggle("hidden", isDarkTheme);
+    logoLight.classList.toggle("invisible", isDarkTheme);
   }
+}
+
+function updateHeroForTheme(userTheme) {
+  var isDark = userTheme === "dark";
+
+  var heroDark = updateHeroForTheme._heroDark;
+  var heroLight = updateHeroForTheme._heroLight;
+
+  if (heroDark === undefined || heroLight === undefined) {
+    heroDark = updateHeroForTheme._heroDark =
+      document.querySelector(".hero-dark");
+    heroLight = updateHeroForTheme._heroLight =
+      document.querySelector(".hero-light");
+  }
+
+  if (!heroDark && !heroLight) return;
+
+  if (heroDark) heroDark.classList.toggle("hidden", !isDark);
+  if (heroLight) heroLight.classList.toggle("hidden", isDark);
 }
 
 function updateGiscusTheme(userTheme) {
@@ -541,11 +562,37 @@ function initMath() {
   });
 }
 
+function initAppsDropdown() {
+  var wrapper = document.querySelector('[data-nav-chrome="apps"] .dropdown');
+  if (!wrapper) return;
+  var content = wrapper.querySelector('.dropdown-content');
+  if (!content) return;
+
+  function position() {
+    var rect = wrapper.getBoundingClientRect();
+    var w = content.offsetWidth || 224;
+    // Center the panel under the button
+    var idealLeft = (rect.width - w) / 2;
+    // Clamp so right edge stays 8px from viewport right
+    var rightOverflow = (rect.left + idealLeft + w) - (window.innerWidth - 8);
+    if (rightOverflow > 0) idealLeft -= rightOverflow;
+    // Clamp so left edge stays 8px from viewport left
+    if (rect.left + idealLeft < 8) idealLeft = 8 - rect.left;
+    content.style.left = idealLeft + 'px';
+    content.style.right = 'auto';
+  }
+
+  wrapper.addEventListener('focusin', position);
+  wrapper.addEventListener('mouseenter', position);
+  window.addEventListener('resize', debounce(position, 100));
+}
+
 document.addEventListener("DOMContentLoaded", function () {
   initSearch();
   initTheme();
   initToc();
   initMath();
+  initAppsDropdown();
 
   document.addEventListener("keydown", function (event) {
     if ((event.metaKey || event.ctrlKey) && event.key === "k") {

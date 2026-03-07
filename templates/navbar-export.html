@@ -1,0 +1,28 @@
+{%- import "macros/header.html" as macros_header -%}
+{%- import "macros/sidebar.html" as macros_sidebar -%}
+
+{%- if config.extra.theme is defined -%}
+    {%- set theme_colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value="dark")) -%}
+    {%- set common_brightness = config.extra.theme.brightness | default(value=config.extra.brightness | default(value="normal")) -%}
+    {%- set dark_brightness = config.extra.theme.dark_brightness | default(value=common_brightness) -%}
+    {%- set light_brightness = config.extra.theme.light_brightness | default(value=common_brightness) -%}
+{%- else -%}
+    {%- set theme_colorset = config.extra.default_colorset | default(value="dark") -%}
+    {%- set common_brightness = config.extra.brightness | default(value="normal") -%}
+    {%- set dark_brightness = common_brightness -%}
+    {%- set light_brightness = common_brightness -%}
+{%- endif -%}
+
+<div class="drawer lg:drawer-open"
+     data-default-colorset="{{ theme_colorset }}"
+     data-dark-brightness="{{ dark_brightness }}"
+     data-light-brightness="{{ light_brightness }}">
+    <input id="my-drawer-2" type="checkbox" class="drawer-toggle" autocomplete="off" />
+    <div class="drawer-content flex flex-col pt-16">
+        {{ macros_header::header(config=config, lang=lang) }}
+        <div class="site-nav-slot"></div>
+    </div>
+    <div id="sidebar" class="drawer-side pt-16 border-e border-gray-500/15 overflow-hidden">
+        {{ macros_sidebar::sidebar(config=config, lang=lang, current_path="/", section=false) }}
+    </div>
+</div>

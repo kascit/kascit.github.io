@@ -214,41 +214,6 @@
   border-radius: 8px;
 }
 
-/* Scrollbar Utilities */
-.no-scrollbar::-webkit-scrollbar {
-  display: none;
-}
-
-.no-scrollbar {
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-}
-
-.thin-scrollbar {
-  -ms-overflow-style: auto; /* IE and Edge (legacy) */
-  scrollbar-width: thin; /* Firefox */
-  scrollbar-color: rgba(156, 163, 175, 0.3) transparent; /* thumb track */
-  scrollbar-gutter: stable; /* Reserve space for scrollbar */
-}
-
-.thin-scrollbar::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-.thin-scrollbar::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.thin-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(156, 163, 175, 0.8);
-  border-radius: 3px;
-}
-
-.thin-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(156, 163, 175, 0.5);
-}
-
 /* Landing Page Theme-Specific Styles */
 
 /* Hero background */

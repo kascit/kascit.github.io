@@ -93,9 +93,9 @@
   // =========================================================================
   function resolveBase(override) {
     if (override) return override.replace(/\/+$/, "");
-    var h = location.hostname;
-    if (h === "dhanur.me" || h.endsWith(".dhanur.me")) return MAIN_SITE;
-    return location.origin;
+    // Always resolve to main site. External consumers (localhost, other domains)
+    // need to fetch assets from dhanur.me. Use data-base-url to override.
+    return MAIN_SITE;
   }
 
   var BASE = resolveBase(SCRIPT_CFG.baseUrl);
@@ -204,19 +204,33 @@
     // --- @font-face overrides: font-display: swap for FA + Pretendard ---
     var fontStyle = document.createElement("style");
     fontStyle.textContent =
-      "@font-face{font-family:\"Font Awesome 6 Brands\";font-style:normal;font-weight:400;font-display:swap;" +
-      "src:url(" + cssBase + "/webfonts/fa-brands-400.woff2) format(\"woff2\")," +
-      "url(" + cssBase + "/webfonts/fa-brands-400.ttf) format(\"truetype\")}" +
-      "@font-face{font-family:\"Font Awesome 6 Free\";font-style:normal;font-weight:400;font-display:swap;" +
-      "src:url(" + cssBase + "/webfonts/fa-regular-400.woff2) format(\"woff2\")," +
-      "url(" + cssBase + "/webfonts/fa-regular-400.ttf) format(\"truetype\")}" +
-      "@font-face{font-family:\"Font Awesome 6 Free\";font-style:normal;font-weight:900;font-display:swap;" +
-      "src:url(" + cssBase + "/webfonts/fa-solid-900.woff2) format(\"woff2\")," +
-      "url(" + cssBase + "/webfonts/fa-solid-900.ttf) format(\"truetype\")}" +
-      "@font-face{font-family:\"Pretendard-Regular\";" +
-      "src:url('" + cssBase + "/fonts/Pretendard-Regular.woff') format(\"woff\");" +
+      '@font-face{font-family:"Font Awesome 6 Brands";font-style:normal;font-weight:400;font-display:swap;' +
+      "src:url(" +
+      cssBase +
+      '/webfonts/fa-brands-400.woff2) format("woff2"),' +
+      "url(" +
+      cssBase +
+      '/webfonts/fa-brands-400.ttf) format("truetype")}' +
+      '@font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:400;font-display:swap;' +
+      "src:url(" +
+      cssBase +
+      '/webfonts/fa-regular-400.woff2) format("woff2"),' +
+      "url(" +
+      cssBase +
+      '/webfonts/fa-regular-400.ttf) format("truetype")}' +
+      '@font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:900;font-display:swap;' +
+      "src:url(" +
+      cssBase +
+      '/webfonts/fa-solid-900.woff2) format("woff2"),' +
+      "url(" +
+      cssBase +
+      '/webfonts/fa-solid-900.ttf) format("truetype")}' +
+      '@font-face{font-family:"Pretendard-Regular";' +
+      "src:url('" +
+      cssBase +
+      '/fonts/Pretendard-Regular.woff\') format("woff");' +
       "font-weight:400;font-style:normal;font-display:swap}" +
-      "body{font-family:\"Pretendard-Regular\",sans-serif}";
+      'body{font-family:"Pretendard-Regular",sans-serif}';
     document.head.appendChild(fontStyle);
   }
 
@@ -364,8 +378,7 @@
     var li = document.createElement("li");
     li.setAttribute("data-config-nav", "");
     var isActive = normSlash(activePath) === normSlash(item.url);
-    var isAncestor =
-      item.url !== "/" && activePath.indexOf(item.url) === 0;
+    var isAncestor = item.url !== "/" && activePath.indexOf(item.url) === 0;
 
     if (item.children && item.children.length > 0) {
       var details = document.createElement("details");
@@ -495,8 +508,7 @@
       var rect = wrapper.getBoundingClientRect();
       var w = content.offsetWidth || 224;
       var idealLeft = (rect.width - w) / 2;
-      var rightOverflow =
-        rect.left + idealLeft + w - (window.innerWidth - 8);
+      var rightOverflow = rect.left + idealLeft + w - (window.innerWidth - 8);
       if (rightOverflow > 0) idealLeft -= rightOverflow;
       if (rect.left + idealLeft < 8) idealLeft = 8 - rect.left;
       content.style.left = idealLeft + "px";
@@ -562,7 +574,7 @@
       if (searchModal) searchModal.style.display = "none";
       // Also hide the search modal label overlay
       var searchOverlay = document.querySelector(
-        '.modal-toggle#search-modal + .modal',
+        ".modal-toggle#search-modal + .modal",
       );
       if (searchOverlay) searchOverlay.style.display = "none";
     }

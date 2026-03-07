@@ -22,21 +22,21 @@ Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=()
 /images/\*
 Cache-Control: public, max-age=31536000, immutable
 
-/fonts/_
+/fonts/\*
 Cache-Control: public, max-age=31536000, immutable
-Access-Control-Allow-Origin: _
+Access-Control-Allow-Origin: \*
 
-/css/_
+/css/\*
 Cache-Control: public, max-age=31536000, immutable
-Access-Control-Allow-Origin: _
+Access-Control-Allow-Origin: \*
 
-/js/_
+/js/\*
 Cache-Control: public, max-age=31536000, immutable
-Access-Control-Allow-Origin: _
+Access-Control-Allow-Origin: \*
 
-/webfonts/_
+/webfonts/\*
 Cache-Control: public, max-age=31536000, immutable
-Access-Control-Allow-Origin: _
+Access-Control-Allow-Origin: \*
 
 /icons/\*
 Cache-Control: public, max-age=31536000, immutable

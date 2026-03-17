@@ -1,0 +1,6 @@
+{# Single step — used inside steps() Args: text (required), color (optional:
+primary/secondary/accent/success/warning/error) Usage: {{ step(text="Register")
+}} #}
+<li class="step {% if color is defined %}step-{{ color }}{% endif %}">
+  {{ text | default(value="") }}
+</li>

@@ -1,0 +1,18 @@
+{% import "macros/icons.html" as macros_icons %}
+
+{% macro render_button(url, title, subtitle, direction="next") %}
+<a class="nav-button nav-button-{{ direction }} group" href="{{ url | safe }}">
+    <div class="nav-button-content">
+        <div class="nav-button-direction">
+            {% if direction == "prev" %}
+                {{ macros_icons::svg_arrow_left(class="w-5 h-5 transition-transform group-hover:-translate-x-1") }}
+                <span class="nav-button-label">{{ subtitle }}</span>
+            {% else %}
+                <span class="nav-button-label">{{ subtitle }}</span>
+                {{ macros_icons::svg_arrow_right(class="w-5 h-5 transition-transform group-hover:translate-x-1") }}
+            {% endif %}
+        </div>
+        <div class="nav-button-title">{{ title }}</div>
+    </div>
+</a>
+{% endmacro %}

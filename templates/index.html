@@ -41,7 +41,7 @@
 
                     {{ macros_comments::comments(config=config, page=page|default(value=false), section=section|default(value=false)) }}
 
-                    <nav class="mt-12 pt-8 border-t border-gray-500/15">
+                    <nav class="mt-12 pt-8 border-t border-base-content/10">
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="prev-nav-item">
                                 {% block prev_link %}{% endblock prev_link %}
@@ -55,13 +55,13 @@
             </div>
             {% else %}
             <div class="p-8 w-full flex justify-center">
-                <div class="w-full max-w-7xl lg:grid lg:grid-cols-[1fr_250px] lg:gap-8">
+                <div class="w-full max-w-7xl lg:grid lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-12">
                     <main class="prose w-full">
                         {% block content %}{% endblock content %}
 
                         {{ macros_comments::comments(config=config, page=page|default(value=false), section=section|default(value=false)) }}
 
-                        <nav class="mt-12 pt-8 border-t border-gray-500/15">
+                        <nav class="mt-12 pt-8 border-t border-base-content/10">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div class="prev-nav-item">
                                     {% block prev_link %}{% endblock prev_link %}
@@ -87,19 +87,11 @@
 
                         {% if config.extra.theme is defined %}
                                 {% set js_theme_colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) %}
-                                {% set js_common_brightness = config.extra.theme.brightness | default(value=config.extra.brightness | default(value='normal')) %}
-                                {% set js_dark_brightness = config.extra.theme.dark_brightness | default(value=js_common_brightness) %}
-                                {% set js_light_brightness = config.extra.theme.light_brightness | default(value=js_common_brightness) %}
                         {% else %}
                                 {% set js_theme_colorset = config.extra.default_colorset | default(value='dark') %}
-                                {% set js_common_brightness = config.extra.brightness | default(value='normal') %}
-                                {% set js_dark_brightness = js_common_brightness %}
-                                {% set js_light_brightness = js_common_brightness %}
                         {% endif %}
                         <script defer src="{{ get_url(path='js/page-init.js') | safe }}"
-                                        data-default-colorset="{{ js_theme_colorset }}"
-                                        data-dark-brightness="{{ js_dark_brightness }}"
-                                        data-light-brightness="{{ js_light_brightness }}"></script>
+                                        data-default-colorset="{{ js_theme_colorset }}"></script>
 
         </div>
 
@@ -107,9 +99,9 @@
         {# Sidebar configuration with backward compatibility (reuse the value from above) #}
         {% if section is defined and (section.path == "/" or section.path == lang_root_path) and not disable_root_sidebar_hide %}
         {# On landing page: hide sidebar on desktop, keep drawer available on mobile #}
-        <div id="sidebar" class="drawer-side pt-16 border-e border-gray-500/15 overflow-hidden lg:hidden">
+        <div id="sidebar" class="drawer-side pt-16 border-e border-base-content/10 overflow-hidden lg:hidden">
         {% else %}
-        <div id="sidebar" class="drawer-side pt-16 border-e border-gray-500/15 overflow-hidden">
+        <div id="sidebar" class="drawer-side pt-16 border-e border-base-content/10 overflow-hidden">
         {% endif %}
             {% if section is defined %}
                 {{ macros_sidebar::sidebar(config=config, lang=lang, current_path=current_path, section=section) }}
@@ -120,6 +112,7 @@
     </div>
 
     {% block js_body %}
+        <script defer src="{{ get_url(path='js/shell.js') | safe }}"></script>
         <script defer src="{{ get_url(path='js/app.js') | safe }}"></script>
         {% if config.build_search_index %}
         <script defer src="{{ get_url(path='js/search-loader.js') | safe }}"

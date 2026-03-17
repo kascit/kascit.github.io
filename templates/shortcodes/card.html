@@ -1,0 +1,28 @@
+{# Card shortcode — generic DaisyUI card Args: title (optional), img (optional
+image URL), badge (optional badge text), badge_color (optional) Usage: {%
+card(title="My Card") %}Card content here{% end %} #}
+<div class="card bg-base-200/40 border border-base-300/30 my-6">
+  {% if img is defined %}
+  <figure class="px-4 pt-4">
+    <img
+      src="{{ img }}"
+      alt="{{ title | default(value='Card image') }}"
+      class="rounded-lg"
+      loading="lazy"
+    />
+  </figure>
+  {% endif %}
+  <div class="card-body">
+    {% if title is defined %}
+    <h3 class="card-title text-lg">
+      {{ title }} {% if badge is defined %}
+      <span
+        class="badge badge-{{ badge_color | default(value='primary') }} badge-sm"
+        >{{ badge }}</span
+      >
+      {% endif %}
+    </h3>
+    {% endif %}
+    <div class="text-base-content/80 text-sm">{{ body | markdown | safe }}</div>
+  </div>
+</div>

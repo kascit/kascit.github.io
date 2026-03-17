@@ -1,0 +1,18 @@
+{# Mockup code — DaisyUI code mockup with line decorations Args: prefix
+(optional, like "$" or ">"), color (optional:
+primary/secondary/accent/success/warning/error/neutral) Usage: {% mockup_code()
+%}npm install daisyui{% end %} #}
+<div class="mockup-code my-6">
+  <pre
+    data-prefix="{{ prefix | default(value='$') }}"
+    {%
+    if
+    color
+    is
+    defined
+    %}class="text-{{ color }}-content bg-{{ color }}"
+    {%
+    endif
+    %}
+  ><code>{{ body | safe }}</code></pre>
+</div>

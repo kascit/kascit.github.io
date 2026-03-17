@@ -3,12 +3,8 @@
   var el = document.currentScript;
   var data = (el && el.dataset) || {};
   var defaultColorset = data.defaultColorset || "dark";
-  var darkBrightness = data.darkBrightness || "normal";
-  var lightBrightness = data.lightBrightness || "normal";
 
   window.defaultColorset = defaultColorset;
-  window.darkBrightness = window.darkBrightness || darkBrightness;
-  window.lightBrightness = window.lightBrightness || lightBrightness;
   window.fallbackTheme = defaultColorset || "dark";
 
   var themeMapping = { dark: "night", light: "lofi" };

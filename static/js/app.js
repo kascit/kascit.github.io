@@ -298,66 +298,18 @@ function initSearch() {
   });
 }
 
-function initTheme() {
-  var themeControllers = document.querySelectorAll(".theme-controller");
-  if (!themeControllers.length) {
-    return;
-  }
-
-  var themeMapping = {
-    dark: "night",
-    light: "lofi",
-  };
-
-  var reverseThemeMapping = {
-    night: "dark",
-    lofi: "light",
-  };
-
-  var fallbackTheme =
-    window && window.fallbackTheme ? window.fallbackTheme : "dark";
-  var currentUserTheme =
-    (window.__getThemeCookie ? window.__getThemeCookie() : null) ||
-    fallbackTheme;
-
-  var actualTheme = themeMapping[currentUserTheme] || currentUserTheme;
-  document.documentElement.setAttribute("data-theme", actualTheme);
-
-  var darkBrightness = window.darkBrightness || "normal";
-  var lightBrightness = window.lightBrightness || "normal";
-  var currentBrightness =
-    currentUserTheme === "dark" ? darkBrightness : lightBrightness;
-  document.documentElement.setAttribute("data-brightness", currentBrightness);
-
-  themeControllers.forEach(function (controller) {
-    controller.checked = currentUserTheme === "dark";
-  });
+function initThemeListeners() {
+  var fallbackTheme = window && window.fallbackTheme ? window.fallbackTheme : "dark";
+  var currentUserTheme = (window.__getThemeCookie ? window.__getThemeCookie() : null) || fallbackTheme;
 
   updateLogoForTheme(currentUserTheme);
   updateHeroForTheme(currentUserTheme);
 
-  themeControllers.forEach(function (controller) {
-    controller.addEventListener("change", function (e) {
-      var userTheme = e.target.checked ? "dark" : "light";
-      var actualTheme = themeMapping[userTheme];
-
-      document.documentElement.setAttribute("data-theme", actualTheme);
-      if (window.__setThemeCookie) window.__setThemeCookie(userTheme);
-
-      var newBrightness =
-        userTheme === "dark" ? darkBrightness : lightBrightness;
-      document.documentElement.setAttribute("data-brightness", newBrightness);
-
-      themeControllers.forEach(function (otherController) {
-        if (otherController !== e.target) {
-          otherController.checked = e.target.checked;
-        }
-      });
-
-      updateLogoForTheme(userTheme);
-      updateHeroForTheme(userTheme);
-      updateGiscusTheme(userTheme);
-    });
+  document.addEventListener("themeChanged", function (e) {
+    var userTheme = e.detail;
+    updateLogoForTheme(userTheme);
+    updateHeroForTheme(userTheme);
+    updateGiscusTheme(userTheme);
   });
 }
 
@@ -562,37 +514,13 @@ function initMath() {
   });
 }
 
-function initAppsDropdown() {
-  var wrapper = document.querySelector('[data-nav-chrome="apps"] .dropdown');
-  if (!wrapper) return;
-  var content = wrapper.querySelector('.dropdown-content');
-  if (!content) return;
 
-  function position() {
-    var rect = wrapper.getBoundingClientRect();
-    var w = content.offsetWidth || 224;
-    // Center the panel under the button
-    var idealLeft = (rect.width - w) / 2;
-    // Clamp so right edge stays 8px from viewport right
-    var rightOverflow = (rect.left + idealLeft + w) - (window.innerWidth - 8);
-    if (rightOverflow > 0) idealLeft -= rightOverflow;
-    // Clamp so left edge stays 8px from viewport left
-    if (rect.left + idealLeft < 8) idealLeft = 8 - rect.left;
-    content.style.left = idealLeft + 'px';
-    content.style.right = 'auto';
-  }
-
-  wrapper.addEventListener('focusin', position);
-  wrapper.addEventListener('mouseenter', position);
-  window.addEventListener('resize', debounce(position, 100));
-}
 
 document.addEventListener("DOMContentLoaded", function () {
   initSearch();
-  initTheme();
+  initThemeListeners();
   initToc();
   initMath();
-  initAppsDropdown();
 
   document.addEventListener("keydown", function (event) {
     if ((event.metaKey || event.ctrlKey) && event.key === "k") {

@@ -1,0 +1,11 @@
+{# Tooltip shortcode — inline tooltip Args: text (required — visible text), tip
+(required — tooltip content), position (optional: top/bottom/left/right), color
+(optional) Usage: This has a {{ tooltip(text="hover me", tip="Extra info here")
+}} word. #}
+<span
+  class="tooltip {% if position is defined %}tooltip-{{ position }}{% endif %} {% if color is defined %}tooltip-{{ color }}{% endif %}"
+  data-tip="{{ tip | default(value='') }}"
+  ><span class="border-b border-dotted border-base-content/40 cursor-help"
+    >{{ text | default(value="") }}</span
+  ></span
+>

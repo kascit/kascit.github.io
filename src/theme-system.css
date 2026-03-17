@@ -4,19 +4,16 @@
   --primary: 156 163 175;
   --primary-focus: 107 114 128;
   --primary-content: 17 24 39;
-  --secondary: 75 85 99;
-  --secondary-focus: 55 65 81;
-  --secondary-content: 248 250 252;
-  --accent: 148 163 184;
-  --accent-focus: 100 116 139;
-  --accent-content: 15 23 42;
-  --neutral: 30 41 59;
-  --neutral-focus: 15 23 42;
-  --neutral-content: 241 245 249;
-  --base-100: 15 23 42;
-  --base-200: 30 41 59;
-  --base-300: 51 65 85;
-  --base-content: 226 232 240;
+  
+  --neutral: 24 24 27; /* Zinc 900 */
+  --neutral-focus: 9 9 11; /* Zinc 950 */
+  --neutral-content: 250 250 250; /* Zinc 50 */
+  
+  --base-100: 9 9 11; /* Zinc 950 / Deepest sleek dark */
+  --base-200: 24 24 27; /* Zinc 900 */
+  --base-300: 39 39 42; /* Zinc 800 */
+  --base-content: 228 228 231; /* Zinc 200 */
+  
   --info: 100 116 139;
   --success: 107 114 128;
   --warning: 161 161 170;
@@ -34,59 +31,22 @@
   --tab-radius: 0.375rem;
 }
 
-[data-theme="night"][data-brightness="darker"] {
-  --base-100: 0 0 0;
-  --base-200: 10 10 15;
-  --base-300: 20 25 30;
-  --neutral: 10 10 15;
-  --neutral-focus: 0 0 0;
-  --primary-content: 10 10 15;
-  --accent-content: 5 8 12;
-}
-
-[data-theme="night"][data-brightness="lighter"] {
-  --base-100: 30 41 59;
-  --base-200: 45 55 72;
-  --base-300: 71 85 105;
-  --neutral: 51 65 85;
-  --neutral-focus: 30 41 59;
-}
-
 [data-theme="lofi"] {
-  --primary: 37 99 235;
-  --primary-focus: 29 78 216;
-  --primary-content: 255 255 255;
-  --secondary: 75 85 99;
-  --secondary-focus: 55 65 81;
-  --secondary-content: 255 255 255;
-  --accent: 79 70 229;
-  --accent-focus: 67 56 202;
-  --accent-content: 255 255 255;
-  --neutral: 243 244 246;
-  --neutral-focus: 229 231 235;
-  --neutral-content: 17 24 39;
-  --base-100: 255 255 255;
-  --base-200: 249 250 251;
-  --base-300: 243 244 246;
-  --base-content: 17 24 39;
-  --info: 59 130 246;
-  --success: 34 197 94;
-  --warning: 245 158 11;
-  --error: 239 68 68;
-}
-
-[data-theme="lofi"][data-brightness="darker"] {
-  --base-100: 226 232 240;
-  --base-200: 203 213 225;
-  --base-300: 186 198 215;
-  --base-content: 15 23 42;
-  --neutral: 203 213 225;
-  --neutral-focus: 186 198 215;
-  --neutral-content: 10 15 30;
-}
-
-[data-theme="lofi"][data-brightness="lighter"] {
-  --base-100: 255 255 255;
-  --base-200: 252 253 254;
-  --base-300: 249 250 251;
+  --primary: 9 9 11; /* Zinc 950 */
+  --primary-focus: 24 24 27; /* Zinc 900 */
+  --primary-content: 255 255 255; /* White */
+  
+  --neutral: 244 244 245; /* Zinc 100 */
+  --neutral-focus: 228 228 231; /* Zinc 200 */
+  --neutral-content: 9 9 11; /* Zinc 950 */
+  
+  --base-100: 255 255 255; /* Pure White */
+  --base-200: 250 250 250; /* Zinc 50 */
+  --base-300: 244 244 245; /* Zinc 100 */
+  --base-content: 24 24 27; /* Zinc 900 */
+  
+  --info: 113 113 122; /* Zinc 500 */
+  --success: 63 63 70; /* Zinc 700 */
+  --warning: 39 39 42; /* Zinc 800 */
+  --error: 9 9 11; /* Zinc 950 */
 }

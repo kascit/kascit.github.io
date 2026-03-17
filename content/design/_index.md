@@ -448,7 +448,7 @@ document.cookie =
 <h3 class="text-lg font-semibold mb-3">Minimal setup (just the script)</h3>
 
 ```html
-<script src="https://dhanur.me/js/components.js" defer></script>
+<script src="https://dhanur.me/js/shell.js" defer></script>
 ```
 
 <p class="mb-4">This auto-injects <code>main.css</code> + <code>font-awesome.min.css</code>, fetches the layout shell, wraps your page content in the drawer, and handles theming.</p>
@@ -594,7 +594,7 @@ window.SiteNavConfig = {
     favicon: "/admin-icon.png",
   };
 </script>
-<script src="https://dhanur.me/js/components.js" defer></script>
+<script src="https://dhanur.me/js/shell.js" defer></script>
 ```
 
 <h3 class="text-lg font-semibold mb-3">React SPA (navbar only)</h3>
@@ -612,7 +612,7 @@ window.SiteNavConfig = {
     showAppsGrid: false,
   };
 </script>
-<script src="https://dhanur.me/js/components.js" defer></script>
+<script src="https://dhanur.me/js/shell.js" defer></script>
 ```
 
 <h3 class="text-lg font-semibold mb-3">Documentation site with nested sidebar</h3>
@@ -647,14 +647,14 @@ window.SiteNavConfig = {
     badge: { text: "DOCS", class: "badge-info" },
   };
 </script>
-<script src="https://dhanur.me/js/components.js" defer></script>
+<script src="https://dhanur.me/js/shell.js" defer></script>
 ```
 
 <h3 class="text-lg font-semibold mb-3">No config (uses dhanur.me's nav)</h3>
 
 ```html
 <!-- Simplest possible usage — zero config -->
-<script src="https://dhanur.me/js/components.js" defer></script>
+<script src="https://dhanur.me/js/shell.js" defer></script>
 ```
 
 <div class="divider"></div>

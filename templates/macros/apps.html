@@ -1,0 +1,41 @@
+{% macro apps_grid(context="desktop") %}
+{% set is_desktop = context == "desktop" %}
+<div class="grid grid-cols-3 gap-1"{% if is_desktop %} data-apps-grid{% else %} data-apps-grid-sidebar{% endif %}>
+    <a href="https://auth.dhanur.me" class="flex flex-col items-center gap-1 {% if is_desktop %}p-2{% else %}p-2.5{% endif %} rounded-lg hover:bg-base-200 transition-colors no-underline hover:no-underline text-base-content">
+        <i class="fa-solid fa-key text-base"></i>
+        <span class="text-[10px] leading-tight">Auth</span>
+    </a>
+    <a href="https://tasks.dhanur.me" class="flex flex-col items-center gap-1 {% if is_desktop %}p-2{% else %}p-2.5{% endif %} rounded-lg hover:bg-base-200 transition-colors no-underline hover:no-underline text-base-content">
+        <i class="fa-solid fa-list-check text-base"></i>
+        <span class="text-[10px] leading-tight">Tasks</span>
+    </a>
+    <a href="https://docs.dhanur.me" class="flex flex-col items-center gap-1 {% if is_desktop %}p-2{% else %}p-2.5{% endif %} rounded-lg hover:bg-base-200 transition-colors no-underline hover:no-underline text-base-content">
+        <i class="fa-solid fa-book text-base"></i>
+        <span class="text-[10px] leading-tight">Docs</span>
+    </a>
+    <a href="https://code.dhanur.me" class="flex flex-col items-center gap-1 {% if is_desktop %}p-2{% else %}p-2.5{% endif %} rounded-lg hover:bg-base-200 transition-colors no-underline hover:no-underline text-base-content">
+        <i class="fa-solid fa-code text-base"></i>
+        <span class="text-[10px] leading-tight">Code</span>
+    </a>
+    <a href="/links/" class="flex flex-col items-center gap-1 {% if is_desktop %}p-2{% else %}p-2.5{% endif %} rounded-lg hover:bg-base-200 transition-colors no-underline hover:no-underline text-base-content">
+        <i class="fa-solid fa-link text-base"></i>
+        <span class="text-[10px] leading-tight">Links</span>
+    </a>
+    <a href="/blog/" class="flex flex-col items-center gap-1 {% if is_desktop %}p-2{% else %}p-2.5{% endif %} rounded-lg hover:bg-base-200 transition-colors no-underline hover:no-underline text-base-content">
+        <i class="fa-solid fa-pen-nib text-base"></i>
+        <span class="text-[10px] leading-tight">Blog</span>
+    </a>
+    <a href="/design/" class="flex flex-col items-center gap-1 {% if is_desktop %}p-2{% else %}p-2.5{% endif %} rounded-lg hover:bg-base-200 transition-colors no-underline hover:no-underline text-base-content">
+        <i class="fa-solid fa-palette text-base"></i>
+        <span class="text-[10px] leading-tight">Design</span>
+    </a>
+    <a href="/about/" class="flex flex-col items-center gap-1 {% if is_desktop %}p-2{% else %}p-2.5{% endif %} rounded-lg hover:bg-base-200 transition-colors no-underline hover:no-underline text-base-content">
+        <i class="fa-solid fa-user text-base"></i>
+        <span class="text-[10px] leading-tight">About</span>
+    </a>
+    <a href="https://dhanur.me" class="flex flex-col items-center gap-1 {% if is_desktop %}p-2{% else %}p-2.5{% endif %} rounded-lg hover:bg-base-200 transition-colors no-underline hover:no-underline text-base-content">
+        <i class="fa-solid fa-globe text-base"></i>
+        <span class="text-[10px] leading-tight">Main</span>
+    </a>
+</div>
+{% endmacro %}

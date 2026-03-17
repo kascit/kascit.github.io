@@ -2,7 +2,7 @@
 @source "../templates/**/*.{html,md}";
 @source "../content/**/*.{html,md}";
 
-/* Cross-project safelist: all utility classes subdomains may use via components.js */
+/* Cross-project safelist: all utility classes subdomains may use via shell.js */
 @source "./safelist.html";
 
 /*

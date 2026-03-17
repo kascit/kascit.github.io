@@ -1,5 +1,7 @@
+{% import "macros/apps.html" as macros_apps %}
+{% import "macros/icons.html" as macros_icons %}
 {% import "macros/footer.html" as macros_footer %}
-{% macro sidebar(config, lang, current_path, section) %}
+{% macro sidebar(config, lang, current_path, section, is_export=false) %}
 {# Sidebar configuration with backward compatibility #}
 {# Priority: sidebar.* (new) > sidebar_expand_depth (legacy) #}
 {% if config.extra.sidebar is defined %}
@@ -15,14 +17,12 @@
 {% endif %}
 <label for="my-drawer-2" class="drawer-overlay"></label>
 <div class="pt-4 w-68 h-[calc(100vh-4rem)] bg-base-100 text-base-content flex flex-col overflow-auto thin-scrollbar" style="scrollbar-gutter: stable;">
-    {% if config.build_search_index %}
+    {% if config.build_search_index and not is_export %}
     <div class="px-2 pt-4 pb-0 flex flex-col items-center gap-2">
         <div class="w-full flex items-center gap-2">
-            <label for="search-modal" class="input w-full flex items-center justify-between text-left bg-base-100 cursor-pointer border-gray-500/15 hover:border-gray-500/55 hover:border-1 transition" aria-label="Search">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-                <span class="text-gray-400 shortcut-hint" data-shortcut="primary+k" data-desktop-only="true" style="display: none;"></span>
+            <label for="search-modal" class="input w-full flex items-center justify-between text-left bg-base-100 cursor-pointer border-base-content/20 hover:border-base-content/40 hover:border-1 transition" aria-label="Search">
+                {{ macros_icons::svg_search() }}
+                <span class="text-base-content/50 shortcut-hint" data-shortcut="primary+k" data-desktop-only="true" style="display: none;"></span>
             </label>
         </div>
     </div>
@@ -44,77 +44,77 @@
                     <details {% if is_active1 %}open{% endif %}>
                         <summary>{{ s1.title }}</summary>
                         <ul>
-                            <li {% if normalized_current_path == s1.path %}class="rounded bg-gray-500/15"{% endif %}>
+                            <li {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
                                 <a class="hover:no-underline" href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.extra.link_title | default(value=s1.title) }}</a>
                             </li>
                             {# Level 2 #}
                             {% for page in s1.pages %}
-                                <li {% if normalized_current_path == page.path %}class="rounded bg-gray-500/15"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
+                                <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
                             {% endfor %}
                             {% for s2_path in s1.subsections %}
                                 {% set s2 = get_section(path=s2_path) %}{% set is_active2 = normalized_current_path is starting_with(s2.path) %}
                                 <li>
                                     {% if s2.subsections or s2.pages %}
                                         <details {% if is_active2 %}open{% endif %}>
-                                            <summary {% if normalized_current_path == s2.path %}class="rounded bg-gray-500/15"{% endif %}>{{ s2.title }}</summary>
+                                            <summary {% if normalized_current_path == s2.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>{{ s2.title }}</summary>
                                             <ul>
-                                                <li {% if normalized_current_path == s2.path %}class="rounded bg-gray-500/15"{% endif %}>
+                                                <li {% if normalized_current_path == s2.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
                                                     <a class="hover:no-underline" href="{{ get_url(path=s2.path, lang=lang) | safe }}">{{ s2.title }}</a>
                                                 </li>
                                                 {# Level 3 #}
                                                 {% for page in s2.pages %}
-                                                    <li {% if normalized_current_path == page.path %}class="rounded bg-gray-500/15"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
+                                                    <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
                                                 {% endfor %}
                                                 {% for s3_path in s2.subsections %}
                                                     {% set s3 = get_section(path=s3_path) %}{% set is_active3 = normalized_current_path is starting_with(s3.path) %}
                                                     <li>
                                                         {% if s3.subsections or s3.pages %}
                                                             <details {% if is_active3 %}open{% endif %}>
-                                                                <summary {% if normalized_current_path == s3.path %}class="rounded bg-gray-500/15"{% endif %}>{{ s3.title }}</summary>
+                                                                <summary {% if normalized_current_path == s3.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>{{ s3.title }}</summary>
                                                                 <ul>
-                                                                    <li {% if normalized_current_path == s3.path %}class="rounded bg-gray-500/15"{% endif %}>
+                                                                    <li {% if normalized_current_path == s3.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
                                                                         <a class="hover:no-underline" href="{{ get_url(path=s3.path, lang=lang) | safe }}">{{ s3.title }}</a>
                                                                     </li>
                                                                     {# Level 4 #}
                                                                     {% for page in s3.pages %}
-                                                                        <li {% if normalized_current_path == page.path %}class="rounded bg-gray-500/15"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
+                                                                        <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
                                                                     {% endfor %}
                                                                     {% for s4_path in s3.subsections %}
                                                                         {% set s4 = get_section(path=s4_path) %}{% set is_active4 = normalized_current_path is starting_with(s4.path) %}
                                                                         <li>
                                                                             {% if s4.subsections or s4.pages %}
                                                                                 <details {% if is_active4 %}open{% endif %}>
-                                                                                    <summary {% if normalized_current_path == s4.path %}class="rounded bg-gray-500/15"{% endif %}>{{ s4.title }}</summary>
+                                                                                    <summary {% if normalized_current_path == s4.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>{{ s4.title }}</summary>
                                                                                     <ul>
-                                                                                        <li {% if normalized_current_path == s4.path %}class="rounded bg-gray-500/15"{% endif %}>
+                                                                                        <li {% if normalized_current_path == s4.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
                                                                                             <a class="hover:no-underline" href="{{ get_url(path=s4.path, lang=lang) | safe }}">{{ s4.title }}</a>
                                                                                         </li>
                                                                                         {# Level 5 #}
                                                                                         {% for page in s4.pages %}
-                                                                                            <li {% if normalized_current_path == page.path %}class="rounded bg-gray-500/15"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
+                                                                                            <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
                                                                                         {% endfor %}
                                                                                         {% for s5_path in s4.subsections %}
                                                                                             {% set s5 = get_section(path=s5_path) %}
-                                                                                            <li><a {% if normalized_current_path == s5.path %}class="rounded bg-gray-500/15"{% endif %} href="{{ get_url(path=s5.path, lang=lang) | safe }}">{{ s5.title }}</a></li>
+                                                                                            <li><a {% if normalized_current_path == s5.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %} href="{{ get_url(path=s5.path, lang=lang) | safe }}">{{ s5.title }}</a></li>
                                                                                         {% endfor %}
                                                                                     </ul>
                                                                                 </details>
-                                                                            {% else %}<a {% if normalized_current_path == s4.path %}class="rounded bg-gray-500/15"{% endif %} href="{{ get_url(path=s4.path, lang=lang) | safe }}">{{ s4.title }}</a>{% endif %}
+                                                                            {% else %}<a {% if normalized_current_path == s4.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %} href="{{ get_url(path=s4.path, lang=lang) | safe }}">{{ s4.title }}</a>{% endif %}
                                                                         </li>
                                                                     {% endfor %}
                                                                 </ul>
                                                             </details>
-                                                        {% else %}<a {% if normalized_current_path == s3.path %}class="rounded bg-gray-500/15"{% endif %} href="{{ get_url(path=s3.path, lang=lang) | safe }}">{{ s3.title }}</a>{% endif %}
+                                                        {% else %}<a {% if normalized_current_path == s3.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %} href="{{ get_url(path=s3.path, lang=lang) | safe }}">{{ s3.title }}</a>{% endif %}
                                                     </li>
                                                 {% endfor %}
                                             </ul>
                                         </details>
-                                    {% else %}<a {% if normalized_current_path == s2.path %}class="rounded bg-gray-500/15"{% endif %} href="{{ get_url(path=s2.path, lang=lang) | safe }}">{{ s2.title }}</a>{% endif %}
+                                    {% else %}<a {% if normalized_current_path == s2.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %} href="{{ get_url(path=s2.path, lang=lang) | safe }}">{{ s2.title }}</a>{% endif %}
                                 </li>
                             {% endfor %}
                         </ul>
                     </details>
-                {% else %}<a {% if normalized_current_path == s1.path %}class="rounded bg-gray-500/15"{% endif %} href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.title }}</a>{% endif %}
+                {% else %}<a {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %} href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.title }}</a>{% endif %}
             </li>
                         {% endif %}
                     {% endif %}
@@ -129,81 +129,64 @@
                 <li>
                     {% if s1.subsections or s1.pages %}
                         <details {% if is_active1 %}open{% endif %}>
-                            <summary {% if normalized_current_path == s1.path %}class="rounded bg-gray-500/15"{% endif %}>{{ s1.title }}</summary>
+                            <summary {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>{{ s1.title }}</summary>
                             <ul>
-                                <li {% if normalized_current_path == s1.path %}class="rounded bg-gray-500/15"{% endif %}>
+                                <li {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
                                     <a class="hover:no-underline" href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.title }}</a>
                                 </li>
                                 {# Level 2 #}
                                 {% for page in s1.pages %}
-                                    <li {% if normalized_current_path == page.path %}class="rounded bg-gray-500/15"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
+                                    <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
                                 {% endfor %}
                             </ul>
                         </details>
-                    {% else %}<a {% if normalized_current_path == s1.path %}class="rounded bg-gray-500/15"{% endif %} href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.title }}</a>{% endif %}
+                    {% else %}<a {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %} href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.title }}</a>{% endif %}
                 </li>
             {% endfor %}
         {% endif %}
     </ul>
 
     {# Apps grid — visible in sidebar for mobile, hidden on desktop (navbar has its own) #}
-    <div class="px-4 py-3 border-t border-gray-500/15 lg:hidden" data-apps-grid-sidebar>
-        <div class="grid grid-cols-3 gap-1">
-            <a href="https://auth.dhanur.me" class="flex flex-col items-center gap-1 p-2.5 rounded-lg hover:bg-base-200 transition-colors no-underline hover:no-underline text-base-content">
-                <i class="fa-solid fa-key text-base"></i>
-                <span class="text-[10px] leading-tight">Auth</span>
-            </a>
-            <a href="https://tasks.dhanur.me" class="flex flex-col items-center gap-1 p-2.5 rounded-lg hover:bg-base-200 transition-colors no-underline hover:no-underline text-base-content">
-                <i class="fa-solid fa-list-check text-base"></i>
-                <span class="text-[10px] leading-tight">Tasks</span>
-            </a>
-            <a href="https://docs.dhanur.me" class="flex flex-col items-center gap-1 p-2.5 rounded-lg hover:bg-base-200 transition-colors no-underline hover:no-underline text-base-content">
-                <i class="fa-solid fa-book text-base"></i>
-                <span class="text-[10px] leading-tight">Docs</span>
-            </a>
-            <a href="https://code.dhanur.me" class="flex flex-col items-center gap-1 p-2.5 rounded-lg hover:bg-base-200 transition-colors no-underline hover:no-underline text-base-content">
-                <i class="fa-solid fa-code text-base"></i>
-                <span class="text-[10px] leading-tight">Code</span>
-            </a>
-            <a href="/links/" class="flex flex-col items-center gap-1 p-2.5 rounded-lg hover:bg-base-200 transition-colors no-underline hover:no-underline text-base-content">
-                <i class="fa-solid fa-link text-base"></i>
-                <span class="text-[10px] leading-tight">Links</span>
-            </a>
-            <a href="/blog/" class="flex flex-col items-center gap-1 p-2.5 rounded-lg hover:bg-base-200 transition-colors no-underline hover:no-underline text-base-content">
-                <i class="fa-solid fa-pen-nib text-base"></i>
-                <span class="text-[10px] leading-tight">Blog</span>
-            </a>
-            <a href="/design/" class="flex flex-col items-center gap-1 p-2.5 rounded-lg hover:bg-base-200 transition-colors no-underline hover:no-underline text-base-content">
-                <i class="fa-solid fa-palette text-base"></i>
-                <span class="text-[10px] leading-tight">Design</span>
-            </a>
-            <a href="/about/" class="flex flex-col items-center gap-1 p-2.5 rounded-lg hover:bg-base-200 transition-colors no-underline hover:no-underline text-base-content">
-                <i class="fa-solid fa-user text-base"></i>
-                <span class="text-[10px] leading-tight">About</span>
-            </a>
-            <a href="https://dhanur.me" class="flex flex-col items-center gap-1 p-2.5 rounded-lg hover:bg-base-200 transition-colors no-underline hover:no-underline text-base-content">
-                <i class="fa-solid fa-globe text-base"></i>
-                <span class="text-[10px] leading-tight">Main</span>
-            </a>
-        </div>
+    <div class="px-4 py-3 border-t border-base-content/10 lg:hidden" data-apps-grid-sidebar>
+        {{ macros_apps::apps_grid(context="mobile") }}
     </div>
 
-    {# Theme toggle for mobile #}
-    {% if config.extra.theme is defined %}
-        {% set disable_theme_toggle = config.extra.theme.disable_toggle | default(value=config.extra.disable_theme_toggle | default(value=false)) %}
-    {% else %}
-        {% set disable_theme_toggle = config.extra.disable_theme_toggle | default(value=false) %}
-    {% endif %}
-    {% if not disable_theme_toggle %}
-    <div class="px-4 py-3 border-t border-gray-500/15 lg:hidden">
-        <label class="swap swap-rotate btn btn-ghost w-full" for="theme-toggle-mobile">
-            <input id="theme-toggle-mobile" name="theme-toggle" type="checkbox" class="theme-controller" value="night" aria-labelledby="theme-toggle-mobile-label"/>
-            <span id="theme-toggle-mobile-label" class="sr-only">Toggle theme</span>
-            <svg class="swap-off h-5 w-5 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M5.64,17l-.71.71a1,1,0,0,0,0,1.41,1,1,0,0,0,1.41,0l.71-.71A1,1,0,0,0,5.64,17ZM5,12a1,1,0,0,0-1-1H3a1,1,0,0,0,0,2H4A1,1,0,0,0,5,12Zm7-7a1,1,0,0,0,1-1V3a1,1,0,0,0-2,0V4A1,1,0,0,0,12,5ZM5.64,7.05a1,1,0,0,0,.7.29,1,1,0,0,0,.71-.29,1,1,0,0,0,0-1.41l-.71-.71A1,1,0,0,0,4.93,6.34Zm12,.29a1,1,0,0,0,.7-.29l.71-.71a1,1,0,1,0-1.41-1.41L17,5.64a1,1,0,0,0,0,1.41A1,1,0,0,0,17.66,7.34ZM21,11H20a1,1,0,0,0,0,2h1a1,1,0,0,0,0-2Zm-9,8a1,1,0,0,0-1,1v1a1,1,0,0,0,2,0V20A1,1,0,0,0,12,19ZM18.36,17A1,1,0,0,0,17,18.36l.71.71a1,1,0,0,0,1.41,0,1,1,0,0,0,0-1.41ZM12,6.5A5.5,5.5,0,1,0,17.5,12,5.51,5.51,0,0,0,12,6.5Zm0,9A3.5,3.5,0,1,1,15.5,12,3.5,3.5,0,0,1,12,15.5Z" /></svg>
-            <svg class="swap-on h-5 w-5 fill-current" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M21.64,13a1,1,0,0,0-1.05-.14,8.05,8.05,0,0,1-3.37.73A8.15,8.15,0,0,1,9.08,5.49a8.59,8.59,0,0,1,.25-2A1,1,0,0,0,8,2.36,10.14,10.14,0,1,0,22,14.05,1,1,0,0,0,21.64,13Zm-9.5,6.69A8.14,8.14,0,0,1,7.08,5.22v.27A10.15,10.15,0,0,0,17.22,15.63a9.79,9.79,0,0,0,2.1-.22A8.11,8.11,0,0,1,12.14,19.73Z" /></svg>
-        </label>
+    {# Account section for mobile #}
+    <div class="px-4 py-3 border-t border-base-content/10 lg:hidden" data-sidebar-account>
+        <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-full bg-base-300 flex items-center justify-center shrink-0">
+                <i class="fa-solid fa-user text-base-content/50 text-sm"></i>
+            </div>
+            
+            <div class="hidden w-9 h-9 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-1 overflow-hidden shrink-0">
+                <img src="" alt="Profile" class="w-full h-full object-cover">
+            </div>
+
+            <div class="flex-1 min-w-0">
+                <div class="font-semibold text-sm truncate" data-auth="name">Guest</div>
+                <div class="text-xs opacity-60 truncate" data-auth="email">Not signed in</div>
+            </div>
+
+            {% if config.extra.theme is defined %}
+                {% set disable_theme_toggle = config.extra.theme.disable_toggle | default(value=config.extra.disable_theme_toggle | default(value=false)) %}
+            {% else %}
+                {% set disable_theme_toggle = config.extra.disable_theme_toggle | default(value=false) %}
+            {% endif %}
+            {% if not disable_theme_toggle %}
+            <label class="swap swap-rotate" for="theme-toggle-mobile">
+                <input id="theme-toggle-mobile" name="theme-toggle" type="checkbox" class="theme-controller hidden" value="night" aria-label="Toggle theme"/>
+                {{ macros_icons::svg_moon() }}
+                {{ macros_icons::svg_sun() }}
+            </label>
+            {% endif %}
+        </div>
+        
+        <div class="mt-2 flex gap-2">
+            <a href="https://auth.dhanur.me" class="btn btn-primary btn-sm flex-1 hover:no-underline" data-auth="sidebar-login-btn">Sign In</a>
+            <a href="#" class="btn btn-ghost btn-sm flex-1 text-error hidden hover:no-underline" data-auth="sidebar-logout-btn">Sign Out</a>
+            <a href="https://auth.dhanur.me" class="btn btn-ghost btn-sm flex-1 hidden hover:no-underline" data-auth="sidebar-account-btn">Account</a>
+        </div>
     </div>
-    {% endif %}
 
     {{ macros_footer::footer(config=config) }}
 </div>

@@ -1,0 +1,9 @@
+{# Mockup browser — DaisyUI browser frame Args: url (required), bg (optional CSS
+class) Usage: {% mockup_browser(url="https://dhanur.me") %}Page content{% end %}
+#}
+<div class="mockup-browser bg-base-300 border border-base-300/30 my-6">
+  <div class="mockup-browser-toolbar">
+    <div class="input">{{ url | default(value="https://dhanur.me") }}</div>
+  </div>
+  <div class="bg-base-200 px-4 py-8">{{ body | markdown | safe }}</div>
+</div>

@@ -1,0 +1,18 @@
+{# Diff component — show text additions/removals Args: add (text to show as
+added), remove (text to show as removed) Usage: {{ diff(remove="Old code here",
+add="New code here") }} #}
+<div
+  class="diff aspect-auto my-6 rounded-lg overflow-hidden border border-base-300/30"
+>
+  <div class="diff-item-1">
+    <div class="bg-error/10 p-4 font-mono text-sm">
+      {{ remove | default(value="") }}
+    </div>
+  </div>
+  <div class="diff-item-2">
+    <div class="bg-success/10 p-4 font-mono text-sm">
+      {{ add | default(value="") }}
+    </div>
+  </div>
+  <div class="diff-resizer"></div>
+</div>

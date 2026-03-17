@@ -1,0 +1,3 @@
+{# Keyboard key shortcode Args: key (required) Usage: Press {{ kbd(key="Ctrl")
+}} + {{ kbd(key="C") }} to copy #}
+<kbd class="kbd kbd-sm">{{ key | default(value="") }}</kbd>

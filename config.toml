@@ -122,8 +122,6 @@ light_image_path = "images/logo-dark.png"
 # =============================================================================
 [extra.theme]
 colorset = "dark"
-brightness = "normal"
-dark_brightness = "darker"
 disable_toggle = false
 
 # =============================================================================

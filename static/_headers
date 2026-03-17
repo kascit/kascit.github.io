@@ -34,12 +34,19 @@ Access-Control-Allow-Origin: \*
 Cache-Control: public, max-age=31536000, immutable
 Access-Control-Allow-Origin: \*
 
+# shell.js changes more often — short cache so subdomains pick up fixes
+
+/js/shell.js
+Cache-Control: public, max-age=3600
+Access-Control-Allow-Origin: \*
+
 /webfonts/\*
 Cache-Control: public, max-age=31536000, immutable
 Access-Control-Allow-Origin: \*
 
 /icons/\*
 Cache-Control: public, max-age=31536000, immutable
+Access-Control-Allow-Origin: \*
 
 # =============================================================================
 

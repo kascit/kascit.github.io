@@ -3,28 +3,13 @@
 {# Priority: theme.dark_brightness/light_brightness (new per-theme) > theme.brightness (common) > brightness (legacy) #}
 {% if config.extra.theme is defined %}
     {%- set colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) -%}
-    {%- set common_brightness = config.extra.theme.brightness | default(value=config.extra.brightness | default(value='normal')) -%}
-    {%- set dark_brightness = config.extra.theme.dark_brightness | default(value=common_brightness) -%}
-    {%- set light_brightness = config.extra.theme.light_brightness | default(value=common_brightness) -%}
 {% else %}
     {%- set colorset = config.extra.default_colorset | default(value='dark') -%}
-    {%- set dark_brightness = config.extra.brightness | default(value='normal') -%}
-    {%- set light_brightness = config.extra.brightness | default(value='normal') -%}
 {% endif %}
-{%- if colorset == "dark" and dark_brightness == "darker" -%}
-#000000
-{%- elif colorset == "dark" and dark_brightness == "lighter" -%}
-#1e293b
-{%- elif colorset == "dark" -%}
-#0f172a
-{%- elif colorset == "light" and light_brightness == "darker" -%}
-#e2e8f0
-{%- elif colorset == "light" and light_brightness == "lighter" -%}
-#ffffff
-{%- elif colorset == "light" -%}
-#ffffff
+{%- if colorset == "dark" -%}
+#0a0a0f
 {%- else -%}
-#0f172a
+#f8fafc
 {%- endif -%}
 {% endmacro get_theme_color %}
 
@@ -66,14 +51,8 @@
 
     {% if config.extra.theme is defined %}
         {% set theme_colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) %}
-        {% set common_brightness = config.extra.theme.brightness | default(value=config.extra.brightness | default(value='normal')) %}
-        {% set dark_brightness = config.extra.theme.dark_brightness | default(value=common_brightness) %}
-        {% set light_brightness = config.extra.theme.light_brightness | default(value=common_brightness) %}
     {% else %}
         {% set theme_colorset = config.extra.default_colorset | default(value='dark') %}
-        {% set common_brightness = config.extra.brightness | default(value='normal') %}
-        {% set dark_brightness = common_brightness %}
-        {% set light_brightness = common_brightness %}
     {% endif %}
     <!-- Inline critical theme init to prevent FOUC, but kept minimal -->
     {%- set cookie_domain = config.base_url | replace(from="https://", to="") | replace(from="http://", to="") -%}
@@ -92,21 +71,26 @@
             };
 
             var colorset = window.__getThemeCookie() || '{{ theme_colorset }}';
+            var themeMap = { dark: 'night', light: 'lofi' };
+            var themeName = themeMap[colorset] || colorset;
+
+            // Set data-theme SYNCHRONOUSLY so DaisyUI applies correct colors before first paint
+            document.documentElement.setAttribute('data-theme', themeName);
 
             if (colorset === 'dark') {
                 document.documentElement.classList.add('dark');
                 document.documentElement.style.colorScheme = 'dark';
+                document.documentElement.style.backgroundColor = '#09090b';
             } else {
                 document.documentElement.classList.add('light');
                 document.documentElement.style.colorScheme = 'light';
+                document.documentElement.style.backgroundColor = '#ffffff';
             }
         })();
     </script>
     <!-- Defer full theme initialization for performance -->
     <script src="{{ get_url(path="js/theme-init.js") | safe }}" defer
-            data-default-colorset="{{ theme_colorset }}"
-            data-dark-brightness="{{ dark_brightness }}"
-            data-light-brightness="{{ light_brightness }}"></script>
+            data-default-colorset="{{ theme_colorset }}"></script>
 
     <style>
         {# Font configuration with backward compatibility #}
@@ -361,9 +345,7 @@
             data-katex-js="{{ get_url(path="js/katex.min.js") | safe }}"
             data-mermaid-js="{{ get_url(path="js/mermaid.min.js") | safe }}"></script>
     <script defer src="{{ get_url(path="js/page-init.js") | safe }}"
-            data-default-colorset="{{ theme_colorset }}"
-            data-dark-brightness="{{ dark_brightness }}"
-            data-light-brightness="{{ light_brightness }}"></script>
+            data-default-colorset="{{ theme_colorset }}"></script>
     <script defer src="{{ get_url(path="js/sw-register.js") | safe }}"
             data-sw-path="{{ get_url(path="sw.js") | safe }}"></script>
 {% endmacro head %}

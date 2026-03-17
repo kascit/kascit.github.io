@@ -1,0 +1,35 @@
+{# Timeline item — used inside timeline() Args: title (required), date
+(optional), icon (optional fa class), color (optional:
+primary/secondary/accent/success/warning/error) Usage: {{
+timeline_item(title="Event", date="2024") }}Description{{ end }} #}
+<li>
+  <hr {% if color is defined %}class="bg-{{ color }}" {% endif %} />
+  <div class="timeline-start text-sm opacity-60">
+    {{ date | default(value="") }}
+  </div>
+  <div class="timeline-middle">
+    {% if icon is defined %}
+    <i class="{{ icon }} text-sm"></i>
+    {% else %}
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 20 20"
+      fill="currentColor"
+      class="w-5 h-5 {% if color is defined %}text-{{ color }}{% endif %}"
+    >
+      <path
+        fill-rule="evenodd"
+        d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
+        clip-rule="evenodd"
+      />
+    </svg>
+    {% endif %}
+  </div>
+  <div class="timeline-end timeline-box">
+    <div class="font-semibold">{{ title | default(value="") }}</div>
+    {% if body %}
+    <div class="text-sm opacity-75 mt-1">{{ body | markdown | safe }}</div>
+    {% endif %}
+  </div>
+  <hr {% if color is defined %}class="bg-{{ color }}" {% endif %} />
+</li>

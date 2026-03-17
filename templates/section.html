@@ -1,5 +1,6 @@
-{% extends "index.html" %} {% import "macros/content-footer.html" as
-macros_content_footer %} {% block header %} {{
+{% extends "index.html" %}
+{% import "macros/content-footer.html" as macros_content_footer %}
+{% import "macros/nav.html" as macros_nav %} {% block header %} {{
 macros_header::header(config=config, lang=lang, section=section) }} {% endblock
 header %} {% block content %}
 <div class="mb-12 pb-4 border-b border-gray-500/15">
@@ -16,212 +17,29 @@ header %} {% block content %}
 {{ section.content | safe }} {{
 macros_content_footer::content_footer(config=config, item=section) }} {%
 endblock content %} {% block prev_link %} {# Navigation order: home -> about ->
-projects -> links -> blog #} {% if section.path is starting_with("/about/") %}
-{# About is first, link to home #} {% set index = get_section(path="_index.md")
-%}
-<a class="nav-button nav-button-prev group" href="{{ index.permalink | safe }}">
-  <div class="nav-button-content">
-    <div class="nav-button-direction">
-      <svg
-        class="w-5 h-5 transition-transform group-hover:-translate-x-1"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M15 19l-7-7 7-7"
-        ></path>
-      </svg>
-      <span class="nav-button-label">Back to</span>
-    </div>
-    <div class="nav-button-title">Home</div>
-  </div>
-</a>
+projects -> links -> blog #} {% if section.path is starting_with("/about/") %} {# About is first, link to home #}
+{% set index = get_section(path="_index.md") %}
+{{ macros_nav::render_button(url=index.permalink, title="Home", subtitle="Back to", direction="prev") }}
 {% elif section.path is starting_with("/projects/") %} {# Projects -> About #}
 {% set prev_section = get_section(path="about/_index.md") %}
-<a
-  class="nav-button nav-button-prev group"
-  href="{{ prev_section.permalink | safe }}"
->
-  <div class="nav-button-content">
-    <div class="nav-button-direction">
-      <svg
-        class="w-5 h-5 transition-transform group-hover:-translate-x-1"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M15 19l-7-7 7-7"
-        ></path>
-      </svg>
-      <span class="nav-button-label">Previous</span>
-    </div>
-    <div class="nav-button-title">{{ prev_section.title }}</div>
-  </div>
-</a>
-{% elif section.path is starting_with("/links/") %} {# Links -> Projects #} {%
-set prev_section = get_section(path="projects/_index.md") %}
-<a
-  class="nav-button nav-button-prev group"
-  href="{{ prev_section.permalink | safe }}"
->
-  <div class="nav-button-content">
-    <div class="nav-button-direction">
-      <svg
-        class="w-5 h-5 transition-transform group-hover:-translate-x-1"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M15 19l-7-7 7-7"
-        ></path>
-      </svg>
-      <span class="nav-button-label">Previous</span>
-    </div>
-    <div class="nav-button-title">{{ prev_section.title }}</div>
-  </div>
-</a>
-{% elif section.path is starting_with("/blog/") %} {# Blog -> Links #} {% set
-prev_section = get_section(path="links/_index.md") %}
-<a
-  class="nav-button nav-button-prev group"
-  href="{{ prev_section.permalink | safe }}"
->
-  <div class="nav-button-content">
-    <div class="nav-button-direction">
-      <svg
-        class="w-5 h-5 transition-transform group-hover:-translate-x-1"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M15 19l-7-7 7-7"
-        ></path>
-      </svg>
-      <span class="nav-button-label">Previous</span>
-    </div>
-    <div class="nav-button-title">{{ prev_section.title }}</div>
-  </div>
-</a>
-{% endif %} {% endblock prev_link %} {% block next_link %} {# Navigation order:
-home -> about -> projects -> links -> blog -> blog posts #} {% if section.path
-is starting_with("/about/") %} {# About -> Projects #} {% set next_section =
-get_section(path="projects/_index.md") %}
-<a
-  class="nav-button nav-button-next group"
-  href="{{ next_section.permalink | safe }}"
->
-  <div class="nav-button-content">
-    <div class="nav-button-direction">
-      <span class="nav-button-label">Next</span>
-      <svg
-        class="w-5 h-5 transition-transform group-hover:translate-x-1"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M9 5l7 7-7 7"
-        ></path>
-      </svg>
-    </div>
-    <div class="nav-button-title">{{ next_section.title }}</div>
-  </div>
-</a>
+{{ macros_nav::render_button(url=prev_section.permalink, title=prev_section.title, subtitle="Previous", direction="prev") }}
+{% elif section.path is starting_with("/links/") %} {# Links -> Projects #} {% set prev_section = get_section(path="projects/_index.md") %}
+{{ macros_nav::render_button(url=prev_section.permalink, title=prev_section.title, subtitle="Previous", direction="prev") }}
+{% elif section.path is starting_with("/blog/") %} {# Blog -> Links #} {% set prev_section = get_section(path="links/_index.md") %}
+{{ macros_nav::render_button(url=prev_section.permalink, title=prev_section.title, subtitle="Previous", direction="prev") }}
+{% endif %} {% endblock prev_link %} 
+
+{% block next_link %} {# Navigation order: home -> about -> projects -> links -> blog -> blog posts #} 
+{% if section.path is starting_with("/about/") %} {# About -> Projects #}
+{% set next_section = get_section(path="projects/_index.md") %}
+{{ macros_nav::render_button(url=next_section.permalink, title=next_section.title, subtitle="Next", direction="next") }}
 {% elif section.path is starting_with("/projects/") %} {# Projects -> Links #}
 {% set next_section = get_section(path="links/_index.md") %}
-<a
-  class="nav-button nav-button-next group"
-  href="{{ next_section.permalink | safe }}"
->
-  <div class="nav-button-content">
-    <div class="nav-button-direction">
-      <span class="nav-button-label">Next</span>
-      <svg
-        class="w-5 h-5 transition-transform group-hover:translate-x-1"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M9 5l7 7-7 7"
-        ></path>
-      </svg>
-    </div>
-    <div class="nav-button-title">{{ next_section.title }}</div>
-  </div>
-</a>
-{% elif section.path is starting_with("/links/") %} {# Links -> Blog #} {% set
-next_section = get_section(path="blog/_index.md") %}
-<a
-  class="nav-button nav-button-next group"
-  href="{{ next_section.permalink | safe }}"
->
-  <div class="nav-button-content">
-    <div class="nav-button-direction">
-      <span class="nav-button-label">Next</span>
-      <svg
-        class="w-5 h-5 transition-transform group-hover:translate-x-1"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M9 5l7 7-7 7"
-        ></path>
-      </svg>
-    </div>
-    <div class="nav-button-title">{{ next_section.title }}</div>
-  </div>
-</a>
+{{ macros_nav::render_button(url=next_section.permalink, title=next_section.title, subtitle="Next", direction="next") }}
+{% elif section.path is starting_with("/links/") %} {# Links -> Blog #} {% set next_section = get_section(path="blog/_index.md") %}
+{{ macros_nav::render_button(url=next_section.permalink, title=next_section.title, subtitle="Next", direction="next") }}
 {% elif section.path is starting_with("/blog/") and section.pages %} {# Blog ->
-First (latest) blog post #} {% set next_page = section.pages | first %}
-<a
-  class="nav-button nav-button-next group"
-  href="{{ next_page.permalink | safe }}"
->
-  <div class="nav-button-content">
-    <div class="nav-button-direction">
-      <span class="nav-button-label">Next</span>
-      <svg
-        class="w-5 h-5 transition-transform group-hover:translate-x-1"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M9 5l7 7-7 7"
-        ></path>
-      </svg>
-    </div>
-    <div class="nav-button-title">{{ next_page.title }}</div>
-  </div>
-</a>
+First (latest) blog post #}
+{% set next_page = section.pages | first %}
+{{ macros_nav::render_button(url=next_page.permalink, title=next_page.title, subtitle="Next", direction="next") }}
 {% endif %} {% endblock next_link %}

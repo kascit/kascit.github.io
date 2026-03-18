@@ -7,8 +7,11 @@
   var mount = document.getElementById(targetId);
   if (!mount) return;
 
-  var giscusTheme =
-    (window.__getThemeCookie ? window.__getThemeCookie() : null) || "dark";
+  var rawTheme =
+    (window.__getThemeCookie ? window.__getThemeCookie() : null) || "auto";
+  var giscusTheme = (rawTheme === "auto")
+    ? (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+    : rawTheme;
 
   var script = document.createElement("script");
   script.src = "https://giscus.app/client.js";

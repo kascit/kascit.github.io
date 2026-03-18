@@ -70,7 +70,16 @@
                 document.cookie = 'theme=' + val + '; path=/' + d + '; max-age=31536000; SameSite=Lax';
             };
 
-            var colorset = window.__getThemeCookie() || '{{ theme_colorset }}';
+            // Resolve "auto" to "dark" or "light" based on OS preference
+            window.__resolveColorset = function(val) {
+                if (val === 'auto') {
+                    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
+                }
+                return val;
+            };
+
+            var rawColorset = window.__getThemeCookie() || '{{ theme_colorset }}';
+            var colorset = window.__resolveColorset(rawColorset);
             var themeMap = { dark: 'night', light: 'lofi' };
             var themeName = themeMap[colorset] || colorset;
 

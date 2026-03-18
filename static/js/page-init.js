@@ -12,8 +12,13 @@
     (window.__getThemeCookie ? window.__getThemeCookie() : null) ||
     window.fallbackTheme;
 
+  // Resolve "auto" to actual OS preference
+  var resolvedTheme = (currentUserTheme === "auto")
+    ? (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+    : currentUserTheme;
+
   window.initMermaid = function () {
-    var mermaidTheme = currentUserTheme === "light" ? "light" : "dark";
+    var mermaidTheme = resolvedTheme === "light" ? "light" : "dark";
     if (typeof mermaid !== "undefined") {
       mermaid.initialize({ startOnLoad: false, theme: mermaidTheme });
       var renderMermaid = async function () {

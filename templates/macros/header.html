@@ -221,11 +221,20 @@
                             {% endif %}
                             {% if not disable_theme_toggle %}
                             <li data-nav-chrome="theme">
-                                <label class="flex items-center gap-3 cursor-pointer hover:no-underline" for="theme-toggle">
-                                    <i class="fa-solid fa-circle-half-stroke w-4 text-center"></i>
-                                    <span class="flex-1">Dark Mode</span>
-                                    <input id="theme-toggle" name="theme-toggle" type="checkbox" class="theme-controller toggle toggle-sm" value="night" aria-label="Toggle dark mode"/>
-                                </label>
+                                <div class="flex items-center gap-3 px-2 py-1.5">
+                                    <i class="fa-solid fa-circle-half-stroke w-4 text-center opacity-60"></i>
+                                    <div id="theme-toggle" class="theme-switcher flex rounded-lg bg-base-300/60 p-0.5 text-xs font-medium flex-1">
+                                        <button data-theme-mode="light" class="theme-switcher-btn flex-1 rounded-md px-2.5 py-1 transition-all duration-200 cursor-pointer" aria-label="Light theme">
+                                            <i class="fa-solid fa-sun mr-1"></i>Light
+                                        </button>
+                                        <button data-theme-mode="dark" class="theme-switcher-btn flex-1 rounded-md px-2.5 py-1 transition-all duration-200 cursor-pointer" aria-label="Dark theme">
+                                            <i class="fa-solid fa-moon mr-1"></i>Dark
+                                        </button>
+                                        <button data-theme-mode="auto" class="theme-switcher-btn flex-1 rounded-md px-2.5 py-1 transition-all duration-200 cursor-pointer" aria-label="Auto theme">
+                                            <i class="fa-solid fa-circle-half-stroke mr-1"></i>Auto
+                                        </button>
+                                    </div>
+                                </div>
                             </li>
                             {% endif %}
                             

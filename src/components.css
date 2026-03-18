@@ -1,14 +1,30 @@
 /* Code block styling */
 pre {
   @apply overflow-x-auto p-6 rounded-lg my-6 bg-base-300/50 border border-base-content/8 shadow-sm relative;
-  word-break: break-all;
   white-space: pre;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
 }
 
+pre::-webkit-scrollbar {
+  height: 6px;
+}
 
+pre::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+pre::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.3);
+  border-radius: 3px;
+}
+
+pre::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5);
+}
 
 pre code {
-  @apply text-sm whitespace-pre-wrap text-base-content/90;
+  @apply text-sm whitespace-pre text-base-content/90;
 }
 
 :not(pre) > code {
@@ -17,15 +33,22 @@ pre code {
 
 /* Copy code button */
 .copy-code-button {
-  @apply invisible absolute top-4 right-4 bg-base-content/10 text-base-content border border-base-content/20 px-4 py-2 rounded-md cursor-pointer text-xs font-semibold opacity-90 transition-all duration-300 shadow-sm;
+  @apply absolute top-3 right-3 flex items-center justify-center w-8 h-8 rounded-md cursor-pointer transition-all duration-200;
+  @apply bg-base-content/8 border border-base-content/10 text-base-content/40;
+  @apply opacity-0 backdrop-blur-sm;
+  font-size: 0.875rem;
 }
 
 .copy-code-button:hover {
-  @apply opacity-100 transform -translate-y-[1px] shadow-md bg-base-content/20;
+  @apply bg-base-content/15 text-base-content/70 border-base-content/20 shadow-sm;
 }
 
 pre:hover .copy-code-button {
-  @apply visible;
+  @apply opacity-100;
+}
+
+.copy-code-button.copied {
+  @apply text-emerald-400 border-emerald-400/30 bg-emerald-400/10;
 }
 
 /* Copy heading link button */

@@ -121,7 +121,7 @@ light_image_path = "images/logo-dark.png"
 # THEME COLORS & TOGGLE
 # =============================================================================
 [extra.theme]
-colorset = "dark"
+colorset = "auto"
 disable_toggle = false
 
 # =============================================================================

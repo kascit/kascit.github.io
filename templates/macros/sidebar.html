@@ -173,11 +173,17 @@
                 {% set disable_theme_toggle = config.extra.disable_theme_toggle | default(value=false) %}
             {% endif %}
             {% if not disable_theme_toggle %}
-            <label class="swap swap-rotate" for="theme-toggle-mobile">
-                <input id="theme-toggle-mobile" name="theme-toggle" type="checkbox" class="theme-controller hidden" value="night" aria-label="Toggle theme"/>
-                {{ macros_icons::svg_moon() }}
-                {{ macros_icons::svg_sun() }}
-            </label>
+            <div id="theme-toggle-mobile" class="theme-switcher flex rounded-lg bg-base-300/60 p-0.5 text-xs font-medium">
+                <button data-theme-mode="light" class="theme-switcher-btn rounded-md px-2 py-1 transition-all duration-200 cursor-pointer" aria-label="Light theme">
+                    <i class="fa-solid fa-sun"></i>
+                </button>
+                <button data-theme-mode="dark" class="theme-switcher-btn rounded-md px-2 py-1 transition-all duration-200 cursor-pointer" aria-label="Dark theme">
+                    <i class="fa-solid fa-moon"></i>
+                </button>
+                <button data-theme-mode="auto" class="theme-switcher-btn rounded-md px-2 py-1 transition-all duration-200 cursor-pointer" aria-label="Auto theme">
+                    <i class="fa-solid fa-circle-half-stroke"></i>
+                </button>
+            </div>
             {% endif %}
         </div>
         

@@ -168,11 +168,21 @@
     document.cookie = "theme=" + val + "; path=/" + d + "; max-age=31536000; SameSite=Lax";
   }
 
+  // Resolve "auto" to "dark" or "light" based on OS preference
+  function resolveColorset(val) {
+    if (window.__resolveColorset) return window.__resolveColorset(val);
+    if (val === "auto") {
+      return (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+    }
+    return val;
+  }
+
   // =========================================================================
   // 6. FOUC prevention — apply theme immediately (synchronous)
   // =========================================================================
   (function () {
-    var theme = getCookie() || "dark";
+    var raw = getCookie() || "auto";
+    var theme = resolveColorset(raw);
     var daisyTheme = THEME_MAP[theme] || theme;
     document.documentElement.setAttribute("data-theme", daisyTheme);
     document.documentElement.classList.add(theme === "dark" ? "dark" : "light");
@@ -278,16 +288,24 @@
   }
 
   // =========================================================================
-  // 9. Theme engine
+  // 9. Theme engine (3-mode: auto / light / dark)
   // =========================================================================
-  var _themeControllers = [];
   var _logoDark = null;
   var _logoLight = null;
+  var _currentMode = "auto"; // raw cookie value: "auto", "dark", "light"
+  var _mediaQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
 
-  function applyTheme(theme) {
-    var daisyTheme = THEME_MAP[theme] || theme;
+  // Mode cycling order (kept for validation)
+  var MODE_CYCLE = ["auto", "light", "dark"];
+
+  // Active segment style classes
+  var ACTIVE_CLASS = "bg-base-content/15 shadow-sm opacity-100";
+  var INACTIVE_CLASS = "opacity-50 hover:opacity-80";
+
+  function applyTheme(resolvedTheme) {
+    var daisyTheme = THEME_MAP[resolvedTheme] || resolvedTheme;
     document.documentElement.setAttribute("data-theme", daisyTheme);
-    if (theme === "dark") {
+    if (resolvedTheme === "dark") {
       document.documentElement.classList.add("dark");
       document.documentElement.classList.remove("light");
       document.documentElement.style.colorScheme = "dark";
@@ -296,30 +314,79 @@
       document.documentElement.classList.remove("dark");
       document.documentElement.style.colorScheme = "light";
     }
-    // Remove inline background-color to let CSS class background handle it, preventing scrollbar gutter issues
     document.documentElement.style.backgroundColor = "";
-    
-    // Switch logo images
-    if (_logoDark) _logoDark.classList.toggle("invisible", theme !== "dark");
-    if (_logoLight) _logoLight.classList.toggle("invisible", theme !== "light");
+    if (_logoDark) _logoDark.classList.toggle("invisible", resolvedTheme !== "dark");
+    if (_logoLight) _logoLight.classList.toggle("invisible", resolvedTheme !== "light");
+  }
+
+  function updateToggleUI() {
+    // Find all switcher containers (desktop + mobile)
+    var switchers = document.querySelectorAll(".theme-switcher");
+    switchers.forEach(function (sw) {
+      var btns = sw.querySelectorAll("[data-theme-mode]");
+      btns.forEach(function (btn) {
+        var mode = btn.getAttribute("data-theme-mode");
+        // Remove all dynamic classes first
+        ACTIVE_CLASS.split(" ").forEach(function (c) { btn.classList.remove(c); });
+        INACTIVE_CLASS.split(" ").forEach(function (c) { btn.classList.remove(c); });
+        // Apply correct state
+        if (mode === _currentMode) {
+          ACTIVE_CLASS.split(" ").forEach(function (c) { btn.classList.add(c); });
+        } else {
+          INACTIVE_CLASS.split(" ").forEach(function (c) { btn.classList.add(c); });
+        }
+      });
+    });
+  }
+
+  function setMode(mode) {
+    _currentMode = mode;
+    setCookie(mode);
+    var resolved = resolveColorset(mode);
+    applyTheme(resolved);
+    updateToggleUI();
+    document.dispatchEvent(new CustomEvent("themeChanged", { detail: resolved }));
   }
 
   function wireTheme() {
-    var current = getCookie() || "dark";
-    applyTheme(current);
-    document.dispatchEvent(new CustomEvent("themeChanged", { detail: current }));
-    _themeControllers.forEach(function (ctrl) {
-      ctrl.checked = current === "dark";
-      ctrl.addEventListener("change", function (e) {
-        var theme = e.target.checked ? "dark" : "light";
-        setCookie(theme);
-        applyTheme(theme);
-        document.dispatchEvent(new CustomEvent("themeChanged", { detail: theme }));
-        _themeControllers.forEach(function (other) {
-          if (other !== e.target) other.checked = e.target.checked;
-        });
+    _currentMode = getCookie() || "auto";
+    // Ensure valid mode
+    if (MODE_CYCLE.indexOf(_currentMode) === -1) _currentMode = "auto";
+
+    var resolved = resolveColorset(_currentMode);
+    applyTheme(resolved);
+    updateToggleUI();
+    document.dispatchEvent(new CustomEvent("themeChanged", { detail: resolved }));
+
+    // Wire click handlers on all segment buttons
+    var allBtns = document.querySelectorAll(".theme-switcher [data-theme-mode]");
+    allBtns.forEach(function (btn) {
+      btn.addEventListener("click", function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        var mode = btn.getAttribute("data-theme-mode");
+        if (mode && mode !== _currentMode) {
+          setMode(mode);
+        }
       });
     });
+
+    // Listen for OS preference changes — only affects "auto" mode
+    if (_mediaQuery) {
+      var osChangeHandler = function () {
+        if (_currentMode === "auto") {
+          var resolved = resolveColorset("auto");
+          applyTheme(resolved);
+          updateToggleUI();
+          document.dispatchEvent(new CustomEvent("themeChanged", { detail: resolved }));
+        }
+      };
+      if (_mediaQuery.addEventListener) {
+        _mediaQuery.addEventListener("change", osChangeHandler);
+      } else if (_mediaQuery.addListener) {
+        _mediaQuery.addListener(osChangeHandler);
+      }
+    }
   }
 
   // =========================================================================
@@ -539,7 +606,7 @@
       var themeEl = drawer.querySelector('[data-nav-chrome="theme"]');
       if (themeEl) themeEl.style.display = 'none';
       var themeSidebarEl = drawer.querySelector('#theme-toggle-mobile');
-      if (themeSidebarEl) themeSidebarEl.closest('label').style.display = 'none';
+      if (themeSidebarEl) themeSidebarEl.style.display = 'none';
     }
     if (CFG.showAccount === false) {
       var accountEl = drawer.querySelector('[data-nav-chrome="account"]');
@@ -684,8 +751,6 @@
   function hydrate(drawer) {
     customizeDOM(drawer);
     
-    // Find theme controllers
-    _themeControllers = Array.from(drawer.querySelectorAll(".theme-controller"));
     // Find dynamic logos
     _logoDark = drawer.querySelector(".logo-dark");
     _logoLight = drawer.querySelector(".logo-light");

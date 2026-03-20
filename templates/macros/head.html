@@ -54,49 +54,11 @@
     {% else %}
         {% set theme_colorset = config.extra.default_colorset | default(value='dark') %}
     {% endif %}
-    <!-- Inline critical theme init to prevent FOUC, but kept minimal -->
+    <!-- Critical theme init to prevent FOUC — must run synchronously (no defer) -->
     {%- set cookie_domain = config.base_url | replace(from="https://", to="") | replace(from="http://", to="") -%}
-    <script>
-        (function() {
-            // Cookie helpers — shared with all theme scripts via window globals
-            // Scoped to .{{ cookie_domain }} so all subdomains share the theme
-            window.__getThemeCookie = function() {
-                var m = document.cookie.match(/(?:^|; )theme=([^;]*)/);
-                return m ? m[1] : null;
-            };
-            window.__setThemeCookie = function(val) {
-                var h = location.hostname;
-                var d = (h === 'localhost' || h === '127.0.0.1') ? '' : '; domain=.{{ cookie_domain }}';
-                document.cookie = 'theme=' + val + '; path=/' + d + '; max-age=31536000; SameSite=Lax';
-            };
-
-            // Resolve "auto" to "dark" or "light" based on OS preference
-            window.__resolveColorset = function(val) {
-                if (val === 'auto') {
-                    return (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) ? 'dark' : 'light';
-                }
-                return val;
-            };
-
-            var rawColorset = window.__getThemeCookie() || '{{ theme_colorset }}';
-            var colorset = window.__resolveColorset(rawColorset);
-            var themeMap = { dark: 'night', light: 'lofi' };
-            var themeName = themeMap[colorset] || colorset;
-
-            // Set data-theme SYNCHRONOUSLY so DaisyUI applies correct colors before first paint
-            document.documentElement.setAttribute('data-theme', themeName);
-
-            if (colorset === 'dark') {
-                document.documentElement.classList.add('dark');
-                document.documentElement.style.colorScheme = 'dark';
-                document.documentElement.style.backgroundColor = '#09090b';
-            } else {
-                document.documentElement.classList.add('light');
-                document.documentElement.style.colorScheme = 'light';
-                document.documentElement.style.backgroundColor = '#ffffff';
-            }
-        })();
-    </script>
+    <script src="{{ get_url(path="js/theme-cookie-init.js") | safe }}"
+            data-cookie-domain="{{ cookie_domain }}"
+            data-default-colorset="{{ theme_colorset }}"></script>
     <!-- Defer full theme initialization for performance -->
     <script src="{{ get_url(path="js/theme-init.js") | safe }}" defer
             data-default-colorset="{{ theme_colorset }}"></script>
@@ -331,16 +293,7 @@
         </style>
 
     <!-- Critical: Fix drawer state on back navigation (must NOT be deferred) -->
-    <script>
-        (function() {
-            window.addEventListener('pageshow', function(e) {
-                if (e.persisted) {
-                    var d = document.getElementById('my-drawer-2');
-                    if (d) d.checked = false;
-                }
-            });
-        })();
-    </script>
+    <script src="{{ get_url(path="js/drawer-fix.js") | safe }}"></script>
 
     <!-- Defer non-critical scripts -->
     <script defer src="{{ get_url(path="js/responsive-helpers.js") | safe }}"></script>

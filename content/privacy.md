@@ -57,7 +57,7 @@ This policy may change; the “Last updated” date will be refreshed when it do
 
 ## Contact
 
-Questions? Reach out at [contact@dhanur.me](mailto:contact@dhanur.me) or [github.com/kascit](https://github.com/kascit).
+Questions? Reach out at <!--email_off-->[contact@dhanur.me](mailto:contact@dhanur.me)<!--/email_off--> or [github.com/kascit](https://github.com/kascit).
 
 ## Open Source
 
@@ -70,9 +70,7 @@ This website is open source. You can view the code and how it works:
 - Site content (posts, pages) © <span id="copyright-year">2026</span> Dhanur Relhan, all rights reserved unless otherwise noted.
 - Site source code follows its repo license (e.g., MIT). Code snippets in posts may be reused with attribution.
 
-<script>
-document.getElementById('copyright-year').textContent = new Date().getFullYear();
-</script>
+<script defer src="/js/copyright-year.js"></script>
 
 ---
 

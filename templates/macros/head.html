@@ -260,9 +260,9 @@
     <!-- Preload critical stylesheets for faster rendering -->
     <link rel="preload" href="{{ get_url(path="css/main.css") | safe }}" as="style">
     <link rel="stylesheet" href="{{ get_url(path="css/main.css") | safe }}">
-    <!-- Load Font Awesome asynchronously without preload to reduce critical chain -->
-    <link rel="stylesheet" href="{{ get_url(path="css/font-awesome.min.css") | safe }}" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="{{ get_url(path="css/font-awesome.min.css") | safe }}"></noscript>
+    <!-- Load Font Awesome normally (prevent inline onload CSP violation) -->
+    <link rel="preload" href="{{ get_url(path="css/font-awesome.min.css") | safe }}" as="style">
+    <link rel="stylesheet" href="{{ get_url(path="css/font-awesome.min.css") | safe }}">
         <!-- Override Font Awesome font-display to swap to reduce FOIT/CLS -->
         <style>
             /* Inline override to avoid an extra render-blocking request */

@@ -13,7 +13,7 @@ enabled = false
 
 {{ link_card(url="https://www.linkedin.com/in/dhanur-relhan/", external=true, icon="fa-brands fa-linkedin", title="LinkedIn", description="Professional profile and network") }}
 
-{{ link_card(url="mailto:contact@dhanur.me", external=false, icon="fa-solid fa-envelope", title="Email", description="Reach out directly") }}
+<!--email_off-->{{ link_card(url="mailto:contact@dhanur.me", external=false, icon="fa-solid fa-envelope", title="Email", description="Reach out directly") }}<!--/email_off-->
 
 {{ link_card(url="https://dev.to/kascit", external=true, icon="fa-brands fa-dev", title="DEV Community", description="Technical articles and notes") }}
 

@@ -79,7 +79,7 @@ Started coding in college, fell in love with backend development and Linux. Spen
 
 I'm always open to interesting conversations, collaboration opportunities, or just geeking out about tech.
 
-- 📧 Email: [contact@dhanur.me](mailto:contact@dhanur.me)
+- 📧 Email: <!--email_off-->[contact@dhanur.me](mailto:contact@dhanur.me)<!--/email_off-->
 - 💼 LinkedIn: [linkedin.com/in/dhanur-relhan](https://linkedin.com/in/dhanur-relhan)
 - 🐙 GitHub: [github.com/kascit](https://github.com/kascit)
 - 🔗 All Links: [/links](/links)

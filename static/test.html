@@ -5,60 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Component Test</title>
     <!-- That's it. Just the config + script. CSS is auto-injected. -->
-    <script>
-      window.SiteNavConfig = {
-        // Navigation
-        nav: [
-          { name: "Home", url: "/test.html", icon: "fa-solid fa-house" },
-          { name: "Components", url: "/design/", icon: "fa-solid fa-palette" },
-          {
-            name: "Links",
-            type: "dropdown",
-            icon: "fa-solid fa-link",
-            members: [
-              {
-                name: "GitHub",
-                url: "https://github.com/kascit",
-                icon: "fa-brands fa-github",
-              },
-              {
-                name: "Main Site",
-                url: "https://dhanur.me",
-                icon: "fa-solid fa-globe",
-              },
-            ],
-          },
-        ],
-        sidebarNav: [
-          {
-            name: "Getting Started",
-            url: "/test.html",
-            icon: "fa-solid fa-rocket",
-          },
-          {
-            name: "Components",
-            url: "/design/",
-            icon: "fa-solid fa-palette",
-            children: [
-              { name: "Buttons", url: "/design/#buttons" },
-              { name: "Cards", url: "/design/#cards" },
-              { name: "Forms", url: "/design/#forms" },
-            ],
-          },
-          {
-            name: "API Reference",
-            url: "/test.html#api",
-            icon: "fa-solid fa-code",
-          },
-        ],
-
-        // Chrome
-        showSearch: false,
-        showAppsGrid: true,
-        showThemeToggle: true,
-      
-      };
-    </script>
+    <script src="/js/shell-config.js"></script>
     <script src="/js/shell.js" defer></script>
   </head>
   <body>

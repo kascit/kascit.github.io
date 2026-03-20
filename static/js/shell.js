@@ -13,28 +13,22 @@
  *   <script src="https://dhanur.me/js/shell.js" defer></script>
  *
  * Configuration (set before this script loads):
- *   <script>
+ *   Create a file `js/shell-config.js`:
  *     window.SiteNavConfig = {
  *       nav: [
  *         { name: "Home", url: "/", icon: "fa-solid fa-house" },
  *         { name: "Docs", url: "/docs/", icon: "fa-solid fa-book" }
  *       ],
  *       activePath: "/docs/",
- *       logo: {
- *         href: "/",
- *         text: "~/myapp",                            // text logo (uses .logo-gradient)
- *         darkImage: "/images/logo-light.png",         // image shown in dark mode
- *         lightImage: "/images/logo-dark.png",         // image shown in light mode
- *         imagePadding: "15px"                         // optional padding on img
- *       },
- *       badge: { text: "BETA", class: "badge-warning" },
- *       favicon: true,           // true | false | "/custom/icons/"
+ *       logo: { href: "/", text: "~/myapp" },
  *       showAppsGrid: true,
  *       showThemeToggle: true,
  *       showAccount: true,
  *       noCSS: false
  *     };
- *   </script>
+ *
+ *   Then load it before shell.js:
+ *   <script src="/js/shell-config.js"></script>
  *   <script src="https://dhanur.me/js/shell.js" defer></script>
  *
  * Script tag attributes:
@@ -51,15 +45,9 @@
   var MAIN_SITE = "https://dhanur.me";
 
   var APPS = [
-    { name: "Auth", url: "https://auth.dhanur.me", icon: "fa-solid fa-key" },
+    { name: "Home", url: "https://dhanur.me", icon: "fa-solid fa-globe" },
+    { name: "Linkr", url: "https://linkr.dhanur.me", icon: "fa-solid fa-link" },
     { name: "Tasks", url: "https://tasks.dhanur.me", icon: "fa-solid fa-list-check" },
-    { name: "Docs", url: "https://docs.dhanur.me", icon: "fa-solid fa-book" },
-    { name: "Code", url: "https://code.dhanur.me", icon: "fa-solid fa-code" },
-    { name: "Links", url: MAIN_SITE + "/links/", icon: "fa-solid fa-link" },
-    { name: "Blog", url: MAIN_SITE + "/blog/", icon: "fa-solid fa-pen-nib" },
-    { name: "Design", url: MAIN_SITE + "/design/", icon: "fa-solid fa-palette" },
-    { name: "About", url: MAIN_SITE + "/about/", icon: "fa-solid fa-user" },
-    { name: "Main", url: "https://dhanur.me", icon: "fa-solid fa-globe" },
   ];
 
   var SVG_HAMBURGER =

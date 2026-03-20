@@ -7,7 +7,7 @@
     {%- set theme_colorset = config.extra.default_colorset | default(value="dark") -%}
 {%- endif -%}
 
-<div class="drawer lg:drawer-open"
+<div class="drawer"
      data-default-colorset="{{ theme_colorset }}">
     <input id="my-drawer-2" type="checkbox" class="drawer-toggle" autocomplete="off" />
     <div class="drawer-content flex flex-col pt-16">

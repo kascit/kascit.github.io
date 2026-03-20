@@ -14,7 +14,7 @@
 {% if page.taxonomies and (page.taxonomies.tags or page.taxonomies.categories) %}
 {% set_global headline = page.title | replace(from='"', to='\\"') | replace(from="'", to="\\'") %}
 {% set_global desc = page.description | default(value='') | replace(from='"', to='\\"') | replace(from="'", to="\\'") %}
-<script type="application/ld+json">
+<script type="application/json" class="schema-ld-raw">
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",

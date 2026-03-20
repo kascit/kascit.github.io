@@ -199,7 +199,7 @@
       {% endif %}
 
       <!-- Structured Data (Schema.org JSON-LD) -->
-      <script type="application/ld+json">
+      <script type="application/json" class="schema-ld-raw">
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
@@ -310,4 +310,5 @@
             data-default-colorset="{{ theme_colorset }}"></script>
     <script defer src="{{ get_url(path="js/sw-register.js") | safe }}"
             data-sw-path="{{ get_url(path="sw.js") | safe }}"></script>
+    <script defer src="{{ get_url(path="js/schema-loader.js") | safe }}"></script>
 {% endmacro head %}

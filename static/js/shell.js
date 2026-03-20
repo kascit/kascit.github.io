@@ -400,6 +400,13 @@
     function closeAll() {
       dropdowns.forEach(function (dd) {
         dd.removeAttribute("data-open");
+        
+        // Restore tooltip if it was suppressed
+        var btn = dd.querySelector('[role="button"]');
+        if (btn && btn.hasAttribute("data-tip")) {
+          btn.classList.add("tooltip");
+        }
+
         var panel = dd.querySelector(".dropdown-panel");
         if (panel) {
           panel.style.opacity = "0";
@@ -419,9 +426,12 @@
       var rect = dd.getBoundingClientRect();
       var pw = panel.offsetWidth || 224;
       var idealLeft = (rect.width - pw) / 2;
-      var rightOverflow = rect.left + idealLeft + pw - (window.innerWidth - 8);
+      
+      // Use window.innerWidth - 32 to safely clear any scrollbars (up to 20px) and leave padding
+      var rightOverflow = rect.left + idealLeft + pw - (window.innerWidth - 16);
       if (rightOverflow > 0) idealLeft -= rightOverflow;
       if (rect.left + idealLeft < 8) idealLeft = 8 - rect.left;
+      
       panel.style.left = idealLeft + "px";
       panel.style.right = "auto";
     }
@@ -429,6 +439,11 @@
     function openPanel(dd) {
       dd.setAttribute("data-open", "");
       openDropdown = dd;
+      
+      // Suppress tooltip while open
+      var btn = dd.querySelector('[role="button"]');
+      if (btn) btn.classList.remove("tooltip");
+
       var panel = dd.querySelector(".dropdown-panel");
       if (panel) {
         positionPanel(dd);
@@ -627,8 +642,78 @@
   }
 
   // =========================================================================
-  // 12. Auth integration
+  // 12. Auth integration + Credits display
   // =========================================================================
+
+  // Auto-inject auth-client.js from auth.dhanur.me
+  function injectAuthSDK(callback) {
+    if (window.AUTH) { callback(); return; }
+    var existing = document.querySelector('script[src*="auth-client.js"]');
+    if (existing) {
+      // Script tag exists but AUTH may not be ready yet
+      document.addEventListener("authReady", function () { callback(); }, { once: true });
+      return;
+    }
+    var script = document.createElement("script");
+    script.src = "https://auth.dhanur.me/auth-client.js";
+    script.defer = true;
+    script.onload = function () {
+      // AUTH.onReady will fire when status is fetched
+      if (window.AUTH && typeof AUTH.onReady === "function") {
+        AUTH.onReady(function () { callback(); });
+      } else {
+        callback();
+      }
+    };
+    script.onerror = function () {
+      console.warn("[shell.js] Could not load auth-client.js");
+    };
+    document.head.appendChild(script);
+  }
+
+  function formatCreditsReset(periodEnd) {
+    if (!periodEnd) return "";
+    try {
+      var d = new Date(periodEnd);
+      var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      return "resets " + months[d.getUTCMonth()] + " " + d.getUTCDate();
+    } catch (e) { return ""; }
+  }
+
+  function updateCreditsUI(drawer, credits) {
+    if (!credits) return;
+    var isUnlimited = credits.unlimited || credits.balance === -1;
+    var balanceText = isUnlimited ? "∞" : String(credits.balance);
+    var resetText = isUnlimited ? "" : formatCreditsReset(credits.periodEnd);
+
+    // Desktop dropdown
+    var creditsRow = drawer.querySelector('[data-auth="credits-row"]');
+    if (creditsRow) {
+      creditsRow.classList.remove("hidden");
+      var balanceEl = creditsRow.querySelector('[data-auth="credits-balance"]');
+      var resetEl = creditsRow.querySelector('[data-auth="credits-reset"]');
+      if (balanceEl) balanceEl.textContent = balanceText;
+      if (resetEl) resetEl.textContent = resetText;
+    }
+
+    // Mobile sidebar
+    var sidebarCreditsRow = drawer.querySelector('[data-auth="sidebar-credits-row"]');
+    if (sidebarCreditsRow) {
+      sidebarCreditsRow.classList.remove("hidden");
+      var sBalanceEl = sidebarCreditsRow.querySelector('[data-auth="sidebar-credits-balance"]');
+      var sResetEl = sidebarCreditsRow.querySelector('[data-auth="sidebar-credits-reset"]');
+      if (sBalanceEl) sBalanceEl.textContent = balanceText;
+      if (sResetEl) sResetEl.textContent = resetText;
+    }
+  }
+
+  function hideCreditsUI(drawer) {
+    var creditsRow = drawer.querySelector('[data-auth="credits-row"]');
+    if (creditsRow) creditsRow.classList.add("hidden");
+    var sidebarCreditsRow = drawer.querySelector('[data-auth="sidebar-credits-row"]');
+    if (sidebarCreditsRow) sidebarCreditsRow.classList.add("hidden");
+  }
+
   function initAuth(drawer) {
     if (!drawer || typeof AUTH === "undefined" || !window.AUTH) return;
 
@@ -665,6 +750,7 @@
       var avatarUrl = (user && user.avatar_url) || "";
       var userName = (user && user.name) || "User";
       var userEmail = (user && user.email) || "";
+      var credits = status.credits || null;
 
       if (authed && user) {
         if (r.navGuestAvatar) r.navGuestAvatar.classList.add("hidden");
@@ -693,6 +779,9 @@
         if (r.sidebarLoginBtn) r.sidebarLoginBtn.classList.add("hidden");
         if (r.sidebarLogoutBtn) r.sidebarLogoutBtn.classList.remove("hidden");
         if (r.sidebarAccountBtn) r.sidebarAccountBtn.classList.remove("hidden");
+
+        // Update credits display
+        updateCreditsUI(drawer, credits);
       } else {
         if (r.navGuestAvatar) r.navGuestAvatar.classList.remove("hidden");
         if (r.navAuthedAvatar) r.navAuthedAvatar.classList.add("hidden");
@@ -711,6 +800,9 @@
         if (r.sidebarLoginBtn) r.sidebarLoginBtn.classList.remove("hidden");
         if (r.sidebarLogoutBtn) r.sidebarLogoutBtn.classList.add("hidden");
         if (r.sidebarAccountBtn) r.sidebarAccountBtn.classList.add("hidden");
+
+        // Hide credits display
+        hideCreditsUI(drawer);
       }
     }
 
@@ -718,6 +810,7 @@
       AUTH.onReady(function (auth) { updateUI(auth.status || auth); });
     }
     document.addEventListener("authChanged", function (e) { updateUI(e.detail); });
+    document.addEventListener("creditsChanged", function (e) { updateCreditsUI(drawer, e.detail); });
 
     drawer.querySelectorAll('[data-auth="login-btn"], [data-auth="sidebar-login-btn"]').forEach(function (btn) {
       btn.addEventListener("click", function (e) {
@@ -757,8 +850,12 @@
 
     wireTheme();
     initDropdowns(drawer);
-    initAuth(drawer);
     injectFavicons();
+
+    // Auto-inject auth SDK and initialize auth integration
+    injectAuthSDK(function () {
+      initAuth(drawer);
+    });
   }
 
   function bootstrap() {

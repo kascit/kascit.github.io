@@ -189,7 +189,7 @@
                     <div class="dropdown-panel z-50 mt-2 bg-base-100 border border-gray-500/15 rounded-box shadow-lg w-56" style="visibility:hidden;opacity:0;pointer-events:none;position:absolute;top:100%">
                         
                         <!-- authed header -->
-                        <div class="hidden px-3 pt-3 pb-2 border-b border-gray-500/15">
+                        <div class="hidden px-3 pt-3 pb-2 border-b border-gray-500/15 cursor-default select-none">
                             <div class="flex items-center gap-2.5">
                                 <div class="w-8 h-8 rounded-full overflow-hidden shrink-0"><img class="w-full h-full object-cover" src="" alt="Profile" /></div>
                                 <div class="flex-1 min-w-0">
@@ -201,7 +201,7 @@
                         </div>
 
                         <!-- guest header -->
-                        <div class="px-3 pt-3 pb-2 border-b border-gray-500/15">
+                        <div class="px-3 pt-3 pb-2 border-b border-gray-500/15 cursor-default select-none">
                             <div class="flex items-center gap-2.5">
                                 <div class="w-8 h-8 rounded-full bg-base-300 flex items-center justify-center shrink-0">
                                     <i class="fa-solid fa-user text-base-content/40"></i>
@@ -210,6 +210,18 @@
                                     <div class="font-semibold text-sm">Guest</div>
                                     <div class="text-xs opacity-60">Not signed in</div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Credits display (hidden by default, shown by shell.js when authenticated) -->
+                        <div class="hidden px-3 py-1.5 border-b border-gray-500/15" data-auth="credits-row">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="flex items-center gap-1.5 opacity-70">
+                                    <span>🪙</span>
+                                    <span data-auth="credits-balance">—</span>
+                                    <span class="opacity-60">credits</span>
+                                </span>
+                                <span class="opacity-40 text-[10px]" data-auth="credits-reset"></span>
                             </div>
                         </div>
 

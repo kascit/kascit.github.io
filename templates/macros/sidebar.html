@@ -186,6 +186,16 @@
             </div>
             {% endif %}
         </div>
+
+        <!-- Credits display for mobile sidebar -->
+        <div class="hidden mt-2 flex items-center justify-between text-xs px-1" data-auth="sidebar-credits-row">
+            <span class="flex items-center gap-1.5 opacity-70">
+                <span>🪙</span>
+                <span data-auth="sidebar-credits-balance">—</span>
+                <span class="opacity-60">credits</span>
+            </span>
+            <span class="opacity-40 text-[10px]" data-auth="sidebar-credits-reset"></span>
+        </div>
         
         <div class="mt-2 flex gap-2">
             <a href="https://auth.dhanur.me" class="btn btn-primary btn-sm flex-1 hover:no-underline" data-auth="sidebar-login-btn">Sign In</a>

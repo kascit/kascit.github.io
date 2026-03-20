@@ -62,6 +62,13 @@ html {
   background: transparent !important;
 }
 
+/* Fix for DaisyUI Menu Active Flash: prevent non-link wrappers from flashing active colors when clicked inside */
+.menu li > div:active,
+.menu li > div:focus {
+  background-color: transparent !important;
+  color: inherit !important;
+}
+
 /* ToC Active Link Highlighting */
 .toc-link.active {
   @apply text-base-content font-semibold;
@@ -272,6 +279,14 @@ html {
 
 .pretty-link-card:hover .pretty-link-icon {
   @apply text-base-content/80;
+}
+
+/* Dropdown Menu Adjustments */
+.dropdown-panel {
+  @apply transition-colors duration-300;
+}
+.dropdown-content.bg-base-100 {
+  background-color: var(--color-base-100);
 }
 
 /* Navigation buttons */

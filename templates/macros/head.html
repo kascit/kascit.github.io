@@ -21,7 +21,7 @@
         {%- set is_rtl = true -%}
     {%- endif -%}
 {%- endif -%}
-<html lang="{{ lang | default(value='en') }}"{% if is_rtl %} dir="rtl"{% endif %} style="background-color: {{ theme_color }};">
+<html lang="{{ lang | default(value='en') }}"{% if is_rtl %} dir="rtl"{% endif %}>
 {% endmacro html_tag %}
 
 {% macro head(config, page, section, current_url) %}
@@ -56,16 +56,11 @@
     {% endif %}
     <!-- Critical theme init to prevent FOUC — must run synchronously (no defer) -->
     {%- set cookie_domain = config.base_url | replace(from="https://", to="") | replace(from="http://", to="") -%}
-    <script src="{{ get_url(path="js/theme-cookie-init.js") | safe }}"
+    <script src="{{ get_url(path="js/boot.js") | safe }}"
             data-cookie-domain="{{ cookie_domain }}"
             data-default-colorset="{{ theme_colorset }}"></script>
-    <!-- Defer full theme initialization for performance -->
-    <script src="{{ get_url(path="js/theme-init.js") | safe }}" defer
-            data-default-colorset="{{ theme_colorset }}"></script>
 
-    <style>
         {# Font configuration with backward compatibility #}
-        {# Priority: font.* (new) > custom_font_* (legacy) #}
         {% if config.extra.font is defined %}
             {% set font_enabled = config.extra.font.enabled | default(value=config.extra.custom_font_enabled | default(value=false)) %}
             {% set font_name = config.extra.font.name | default(value=config.extra.custom_font_name | default(value='CustomFont')) %}
@@ -76,12 +71,10 @@
             {% set font_path = config.extra.custom_font_path | default(value='') %}
         {% endif %}
         {% if font_enabled and font_path != '' %}
-            {# Custom font configuration #}
             {% if font_path is starting_with("http://") or font_path is starting_with("https://") %}
-                {# Remote font URL - use @import #}
-                @import url('{{ font_path | safe }}');
+                <link href="{{ font_path | safe }}" rel="stylesheet">
             {% else %}
-                {# Local font file - use @font-face #}
+                <style>
                 @font-face {
                     font-family: "{{ font_name }}";
                     src: url('{{ get_url(path=font_path) | safe }}') format("woff");
@@ -89,24 +82,12 @@
                     font-style: normal;
                     font-display: swap;
                 }
+                </style>
             {% endif %}
-            body {
-                font-family: "{{ font_name }}", sans-serif;
-            }
-        {% else %}
-            {# Default Pretendard font with font-display swap for better performance #}
-            @font-face {
-                font-family: "Pretendard-Regular";
-                src: url('{{ get_url(path="fonts/Pretendard-Regular.woff") | safe }}') format("woff");
-                font-weight: 400;
-                font-style: normal;
-                font-display: swap;
-            }
-            body {
-                font-family: "Pretendard-Regular", sans-serif;
-            }
+            <style>
+            body { font-family: "{{ font_name }}", sans-serif !important; }
+            </style>
         {% endif %}
-    </style>
 
     {% if page %}
         {% if page.description %}
@@ -198,8 +179,9 @@
       <meta name="twitter:image" content="{{ get_url(path=config.extra.default_thumbnail) | safe }}" />
       {% endif %}
 
-      <!-- Structured Data (Schema.org JSON-LD) - stored in data attribute to avoid CSP inline script violation -->
-      <meta name="schema-ld-website" data-schema='{
+      <!-- Structured Data (Schema.org JSON-LD) -->
+      <script type="application/ld+json">
+      {
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "{{ config.title | default(value='Dhanur') }}",
@@ -219,7 +201,8 @@
           "@type": "Person",
           "name": "{{ config.author | default(value='') }}"
         }
-      }' />
+      }
+      </script>
 
       <!-- Browser address bar color -->
       <meta name="theme-color" content="{{ self::get_theme_color(config=config) | trim }}">
@@ -261,52 +244,9 @@
     <!-- Load Font Awesome normally (prevent inline onload CSP violation) -->
     <link rel="preload" href="{{ get_url(path="css/font-awesome.min.css") | safe }}" as="style">
     <link rel="stylesheet" href="{{ get_url(path="css/font-awesome.min.css") | safe }}">
-        <!-- Override Font Awesome font-display to swap to reduce FOIT/CLS -->
-        <style>
-            /* Inline override to avoid an extra render-blocking request */
-            @font-face {
-                font-family: "Font Awesome 6 Brands";
-                font-style: normal;
-                font-weight: 400;
-                font-display: swap;
-                src: url({{ get_url(path="webfonts/fa-brands-400.woff2") | safe }}) format("woff2"),
-                         url({{ get_url(path="webfonts/fa-brands-400.ttf") | safe }}) format("truetype");
-            }
-            @font-face {
-                font-family: "Font Awesome 6 Free";
-                font-style: normal;
-                font-weight: 400;
-                font-display: swap;
-                src: url({{ get_url(path="webfonts/fa-regular-400.woff2") | safe }}) format("woff2"),
-                         url({{ get_url(path="webfonts/fa-regular-400.ttf") | safe }}) format("truetype");
-            }
-            @font-face {
-                font-family: "Font Awesome 6 Free";
-                font-style: normal;
-                font-weight: 900;
-                font-display: swap;
-                src: url({{ get_url(path="webfonts/fa-solid-900.woff2") | safe }}) format("woff2"),
-                         url({{ get_url(path="webfonts/fa-solid-900.ttf") | safe }}) format("truetype");
-            }
-        </style>
+    <!-- Loaded Font Awesome normally (prevent inline onload CSP violation) -->
 
-    <!-- Critical: Fix drawer state on back navigation (must NOT be deferred) -->
-    <script src="{{ get_url(path="js/drawer-fix.js") | safe }}"></script>
-
-    <!-- Defer non-critical scripts -->
-    <script defer src="{{ get_url(path="js/responsive-helpers.js") | safe }}"></script>
-    <script defer src="{{ get_url(path="js/copy_code.js") | safe }}"></script>
-    <script defer src="{{ get_url(path="js/copy_heading_link.js") | safe }}"></script>
-    <script defer src="{{ get_url(path="js/clipboard.js") | safe }}"></script>
-    <script defer src="{{ get_url(path="js/shortcut-hints.js") | safe }}"></script>
-    <script defer src="{{ get_url(path="js/scroll-to-top.js") | safe }}"></script>
-    <script defer src="{{ get_url(path="js/lazy-modules.js") | safe }}"
+    <meta name="js-modules"
             data-katex-css="{{ get_url(path="css/katex.min.css") | safe }}"
-            data-katex-js="{{ get_url(path="js/katex.min.js") | safe }}"
-            data-mermaid-js="{{ get_url(path="js/mermaid.min.js") | safe }}"></script>
-    <script defer src="{{ get_url(path="js/page-init.js") | safe }}"
-            data-default-colorset="{{ theme_colorset }}"></script>
-    <script defer src="{{ get_url(path="js/sw-register.js") | safe }}"
-            data-sw-path="{{ get_url(path="sw.js") | safe }}"></script>
-    <script defer src="{{ get_url(path="js/schema-loader.js") | safe }}"></script>
+            data-sw-path="{{ get_url(path="sw.js") | safe }}">
 {% endmacro head %}

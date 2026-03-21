@@ -1,9 +1,9 @@
 {% extends "index.html" %}
 
 {% block content %}
-<div class="mb-12 pb-4 border-b border-gray-500/15">
+<div class="mb-12 pb-4 border-b border-base-content/15">
   <h1>{{ section.title }}</h1>
-  <p class="text-gray-500">{{ section.description }}</p>
+  <p class="text-base-content/60">{{ section.description }}</p>
 </div>
 
 {% set_global blog_section = get_section(path="blog/_index.md") %}
@@ -30,7 +30,7 @@
         </div>
       {% endif %}
       <div class="year-section mb-8">
-        <h2 id="year-{{ post_year }}" class="text-4xl font-black mb-6 pb-3 border-b-2 border-gray-500/30">{{ post_year }}</h2>
+        <h2 id="year-{{ post_year }}" class="text-4xl font-black mb-6 pb-3 border-b-2 border-base-content/30">{{ post_year }}</h2>
       {% set_global current_year = post_year %}
       {% set_global current_month = "" %}
     {% endif %}
@@ -57,7 +57,7 @@
         {% if post.taxonomies.tags %}
         <div class="flex flex-wrap gap-2 mt-2">
           {% for tag in post.taxonomies.tags %}
-          <a href="{{ get_taxonomy_url(kind='tags', name=tag) }}" class="text-xs px-2 py-0.5 rounded border border-gray-500/30 hover:border-gray-500/70 transition-colors">
+          <a href="{{ get_taxonomy_url(kind='tags', name=tag) }}" class="text-xs px-2 py-0.5 rounded border border-base-content/30 hover:border-base-content/50 transition-colors">
             {{ tag }}
           </a>
           {% endfor %}
@@ -80,20 +80,27 @@
 <p class="text-base-content/60 italic">No posts yet. Check back soon!</p>
 {% endif %}
 
-<div class="mt-12 pt-8 border-t border-gray-500/15 text-center">
-  <a href="/blog" class="inline-flex items-center gap-2 text-base-content/70 hover:text-base-content transition-colors">
-    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-    </svg>
-    Back to Blog
-  </a>
+<div class="mt-12 pt-8 border-t border-base-content/15">
+  <div class="max-w-xs mx-auto text-center">
+    <a class="nav-button group" href="/blog">
+      <div class="nav-button-content items-center">
+        <div class="nav-button-direction flex flex-row items-center gap-1.5">
+          <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+          </svg>
+          <span class="nav-button-label">Return</span>
+        </div>
+        <div class="nav-button-title text-center block w-full mt-2">Back to Blog</div>
+      </div>
+    </a>
+  </div>
 </div>
 {% endblock content %}
 
 {% block toc_sidebar %}
 {# Custom TOC Sidebar for Archive - On This Page #}
 <div class="hidden lg:block">
-  <div class="sticky top-20 px-4 py-2 border-l border-gray-500/15">
+  <div class="sticky top-20 px-4 py-2 border-l border-base-content/15">
     <h4 class="text-lg font-bold mb-1">ON THIS PAGE</h4>
     <nav class="space-y-2">
       {% set_global blog_section = get_section(path="blog/_index.md") %}

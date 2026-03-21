@@ -27,7 +27,7 @@
 
   var rawColorset = window.__getThemeCookie() || defaultColorset;
   var colorset = window.__resolveColorset(rawColorset);
-  var themeMap = { dark: 'night', light: 'lofi' };
+  var themeMap = { dark: 'dark', light: 'light' };
   var themeName = themeMap[colorset] || colorset;
 
   // Set data-theme SYNCHRONOUSLY so DaisyUI applies correct colors before first paint
@@ -36,10 +36,8 @@
   if (colorset === 'dark') {
     document.documentElement.classList.add('dark');
     document.documentElement.style.colorScheme = 'dark';
-    document.documentElement.style.backgroundColor = '#09090b';
   } else {
     document.documentElement.classList.add('light');
     document.documentElement.style.colorScheme = 'light';
-    document.documentElement.style.backgroundColor = '#ffffff';
   }
 })();

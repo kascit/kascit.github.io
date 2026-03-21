@@ -35,6 +35,11 @@
                 {% set disable_root_sidebar_hide = config.extra.disable_root_sidebar_hide | default(value=false) %}
             {% endif %}
             {% if section is defined and (section.path == "/" or section.path == lang_root_path) and not disable_root_sidebar_hide %}
+            <style>
+                /* Hide scrollbar visually but preserve scrolling ability on landing page */
+                html { scrollbar-gutter: auto !important; scrollbar-width: none; }
+                html::-webkit-scrollbar { display: none; }
+            </style>
             <div class="w-full">
                 <main class="prose w-full mx-auto">
                     {% block content %}{% endblock content %}
@@ -85,13 +90,6 @@
             </div>
             {% endif %}
 
-                        {% if config.extra.theme is defined %}
-                                {% set js_theme_colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) %}
-                        {% else %}
-                                {% set js_theme_colorset = config.extra.default_colorset | default(value='dark') %}
-                        {% endif %}
-                        <script defer src="{{ get_url(path='js/page-init.js') | safe }}"
-                                        data-default-colorset="{{ js_theme_colorset }}"></script>
 
         </div>
 
@@ -112,8 +110,17 @@
     </div>
 
     {% block js_body %}
-        <script defer src="{{ get_url(path='js/shell.js') | safe }}"></script>
-        <script defer src="{{ get_url(path='js/app.js') | safe }}"></script>
+        {% if config.extra.theme is defined %}
+            {% set js_theme_colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) %}
+        {% else %}
+            {% set js_theme_colorset = config.extra.default_colorset | default(value='dark') %}
+        {% endif %}
+        <script defer src="{{ get_url(path='js/bundle.js') | safe }}"
+                data-default-colorset="{{ js_theme_colorset }}"
+                data-katex-css="{{ get_url(path='css/katex.min.css') | safe }}"
+                data-katex-js="{{ get_url(path='js/katex.min.js') | safe }}"
+                data-mermaid-js="{{ get_url(path='js/mermaid.min.js') | safe }}"
+                data-sw-path="{{ get_url(path='sw.js') | safe }}"></script>
         {% if config.build_search_index %}
         <script defer src="{{ get_url(path='js/search-loader.js') | safe }}"
                 data-lang="{{ lang | default(value='en') }}"

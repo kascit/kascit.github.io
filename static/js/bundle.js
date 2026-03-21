@@ -1,3 +1,692 @@
+/* --- drawer-fix.js --- */
+// Fix drawer state on back navigation (bfcache).
+// Must NOT be deferred — needs to run early to catch pageshow.
+(function () {
+  window.addEventListener('pageshow', function (e) {
+    if (e.persisted) {
+      var d = document.getElementById('my-drawer-2');
+      if (d) d.checked = false;
+    }
+  });
+})();
+
+
+/* --- responsive-helpers.js --- */
+/**
+ * Centralized responsive behavior management
+ * Provides consistent mobile/desktop detection and monitoring
+ * across the entire site for navbar, TOC, keyboard hints, buttons, etc.
+ */
+
+(function () {
+  "use strict";
+
+  /**
+   * BREAKPOINT CONSTANTS
+   * Matches Tailwind CSS breakpoints for consistency
+   */
+  const BREAKPOINTS = {
+    MOBILE: 0,
+    SM: 640,
+    MD: 768,
+    LG: 1024,
+    XL: 1280,
+    XXL: 1536,
+  };
+
+  /**
+   * Responsive state tracking
+   */
+  const state = {
+    isDesktop: false,
+    isMobile: false,
+    mediaQueries: {},
+    listeners: new Set(),
+  };
+
+  /**
+   * Initialize media queries and detect initial state
+   */
+  function initializeMediaQueries() {
+    // Primary responsive checks
+    state.mediaQueries.hoverCapable = window.matchMedia("(hover: hover)");
+    state.mediaQueries.finePointer = window.matchMedia("(pointer: fine)");
+    state.mediaQueries.largeScreen = window.matchMedia(
+      `(min-width: ${BREAKPOINTS.LG}px)`
+    );
+    state.mediaQueries.touchDevice = window.matchMedia("(pointer: coarse)");
+
+    updateResponsiveState();
+
+    // Listen for changes
+    Object.values(state.mediaQueries).forEach((mq) => {
+      mq.addListener(updateResponsiveState);
+    });
+  }
+
+  /**
+   * Update responsive state based on current media queries
+   */
+  function updateResponsiveState() {
+    const wasDesktop = state.isDesktop;
+
+    // Desktop: hover capable AND fine pointer (mouse)
+    state.isDesktop =
+      state.mediaQueries.hoverCapable.matches &&
+      state.mediaQueries.finePointer.matches;
+
+    // Mobile: everything else
+    state.isMobile = !state.isDesktop;
+
+    // Notify listeners if state changed
+    if (wasDesktop !== state.isDesktop) {
+      notifyListeners();
+    }
+  }
+
+  /**
+   * RESPONSIVE BEHAVIOR API
+   */
+
+  /**
+   * Check if device is desktop
+   */
+  function isDesktop() {
+    return state.isDesktop;
+  }
+
+  /**
+   * Check if device is mobile
+   */
+  function isMobile() {
+    return state.isMobile;
+  }
+
+  /**
+   * Check if screen is large (lg breakpoint and up)
+   */
+  function isLargeScreen() {
+    return state.mediaQueries.largeScreen.matches;
+  }
+
+  /**
+   * Check if device is touch-enabled
+   */
+  function isTouchDevice() {
+    return state.mediaQueries.touchDevice.matches;
+  }
+
+  /**
+   * Register callback for responsive state changes
+   */
+  function onResponsiveChange(callback) {
+    state.listeners.add(callback);
+    return () => state.listeners.delete(callback);
+  }
+
+  /**
+   * Notify all listeners of state change
+   */
+  function notifyListeners() {
+    state.listeners.forEach((callback) => {
+      try {
+        callback({
+          isDesktop: state.isDesktop,
+          isMobile: state.isMobile,
+          isLargeScreen: isLargeScreen(),
+          isTouchDevice: isTouchDevice(),
+        });
+      } catch (e) {
+        console.error("Error in responsive listener:", e);
+      }
+    });
+  }
+
+  /**
+   * HELPER FUNCTIONS FOR COMMON PATTERNS
+   */
+
+  /**
+   * Show/hide element based on responsive condition
+   * Usage: toggleDisplay(element, 'mobile') // shows on mobile, hides on desktop
+   */
+  function toggleDisplay(element, mode) {
+    if (!element) return;
+
+    const shouldShow =
+      (mode === "mobile" && state.isMobile) ||
+      (mode === "desktop" && state.isDesktop);
+
+    element.style.display = shouldShow ? "" : "none";
+  }
+
+  /**
+   * Add/remove class based on responsive condition
+   * Usage: toggleClass(element, 'hidden', 'desktop') // hidden on desktop
+   */
+  function toggleClass(element, className, mode) {
+    if (!element) return;
+
+    const shouldHave =
+      (mode === "mobile" && state.isMobile) ||
+      (mode === "desktop" && state.isDesktop);
+
+    if (shouldHave) {
+      element.classList.add(className);
+    } else {
+      element.classList.remove(className);
+    }
+  }
+
+  /**
+   * Execute callback only on specific devices
+   * Usage: onDevice('mobile', () => { ... }) // runs on mobile only
+   */
+  function onDevice(mode, callback) {
+    if (
+      (mode === "mobile" && state.isMobile) ||
+      (mode === "desktop" && state.isDesktop)
+    ) {
+      callback();
+    }
+
+    // Listen for changes
+    return onResponsiveChange((responsive) => {
+      const shouldRun =
+        (mode === "mobile" && responsive.isMobile) ||
+        (mode === "desktop" && responsive.isDesktop);
+
+      if (shouldRun) {
+        callback();
+      }
+    });
+  }
+
+  /**
+   * Get current device type string
+   */
+  function getDeviceType() {
+    if (state.isMobile) return "mobile";
+    if (state.isDesktop) return "desktop";
+    return "unknown";
+  }
+
+  /**
+   * INITIALIZATION
+   */
+
+  // Initialize when DOM is ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initializeMediaQueries);
+  } else {
+    initializeMediaQueries();
+  }
+
+  /**
+   * EXPORT TO GLOBAL SCOPE
+   */
+  window.ResponsiveHelpers = {
+    isDesktop,
+    isMobile,
+    isLargeScreen,
+    isTouchDevice,
+    onResponsiveChange,
+    toggleDisplay,
+    toggleClass,
+    onDevice,
+    getDeviceType,
+    BREAKPOINTS,
+  };
+
+  // Also expose state for debugging
+  if (
+    window.location.hostname === "localhost" ||
+    window.location.hostname === "127.0.0.1"
+  ) {
+    window.__ResponsiveState = () => state;
+  }
+})();
+
+
+/* --- clipboard-utils.js --- */
+/**
+ * Clipboard Utilities - Consolidated clipboard functionality
+ * Includes: copy URL buttons, copy code blocks, copy heading links
+ */
+
+// Copy URL buttons (data-copy-url)
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("[data-copy-url]").forEach((button) => {
+    button.addEventListener("click", () => {
+      navigator.clipboard
+        .writeText(window.location.href)
+        .then(() => {
+          const originalText = button.innerHTML;
+          button.innerHTML = button.getAttribute("data-copy-feedback") || "Copied!";
+          setTimeout(() => button.innerHTML = originalText, 2000);
+        })
+        .catch(console.error);
+    });
+  });
+});
+
+// Copy code blocks
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('pre > code').forEach((codeBlock) => {
+    const button = document.createElement('button');
+    button.className = 'copy-code-button';
+    button.type = 'button';
+    button.setAttribute('aria-label', 'Copy code');
+    button.innerHTML = '<i class="fa-regular fa-clipboard"></i>';
+
+    button.addEventListener('click', () => {
+      navigator.clipboard.writeText(codeBlock.innerText).then(() => {
+        button.innerHTML = '<i class="fa-solid fa-check"></i>';
+        button.classList.add('copied');
+        setTimeout(() => {
+          button.innerHTML = '<i class="fa-regular fa-clipboard"></i>';
+          button.classList.remove('copied');
+        }, 2000);
+      }).catch(console.error);
+    });
+
+    codeBlock.parentNode.appendChild(button);
+  });
+});
+
+// Copy heading links
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]").forEach((heading) => {
+    const originalContent = heading.innerHTML;
+    const link = document.createElement("a");
+    link.href = `#${heading.id}`;
+    link.className = "copy-heading-link-button";
+    link.setAttribute("aria-label", "Copy link to this heading");
+    link.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg>';
+
+    link.addEventListener("click", (event) => {
+      event.preventDefault();
+      navigator.clipboard.writeText(new URL(link.href, window.location.href).toString())
+        .then(() => {
+          link.style.transform = "scale(1.2)";
+          setTimeout(() => link.style.transform = "scale(1.05)", 200);
+        })
+        .catch(console.error);
+    });
+
+    const textSpan = document.createElement("span");
+    textSpan.innerHTML = originalContent;
+    heading.innerHTML = "";
+    heading.appendChild(textSpan);
+    heading.appendChild(link);
+  });
+});
+
+
+/* --- shortcut-hints.js --- */
+(function () {
+  "use strict";
+
+  /**
+   * Keyboard shortcut hints renderer
+   * Shows platform-specific keyboard shortcuts (Ctrl/⌘, etc.)
+   * Automatically hides on mobile devices using centralized responsive helpers
+   */
+
+  function renderShortcut(el) {
+    var spec = el.getAttribute("data-shortcut");
+    if (!spec) return;
+
+    var desktopOnly = el.getAttribute("data-desktop-only") === "true";
+
+    // Use centralized responsive helpers for consistent behavior
+    if (
+      desktopOnly &&
+      window.ResponsiveHelpers &&
+      window.ResponsiveHelpers.isMobile()
+    ) {
+      el.style.display = "none";
+      return;
+    }
+
+    var platform =
+      (navigator.userAgentData && navigator.userAgentData.platform) ||
+      navigator.platform ||
+      "";
+    var isMac = /mac/i.test(platform);
+    var primary = isMac ? "⌘" : "Ctrl";
+    var altLabel = isMac ? "Option" : "Alt";
+    var metaLabel = isMac ? "⌘" : "Win";
+
+    var parts = spec.split("+").map(function (key) {
+      var lower = key.trim().toLowerCase();
+      if (lower === "primary") return primary;
+      if (lower === "alt") return altLabel;
+      if (lower === "meta") return metaLabel;
+      if (lower === "shift") return "Shift";
+      if (lower === "cmd" || lower === "command") return "⌘";
+      return key.length === 1 ? key.toUpperCase() : key;
+    });
+
+    el.innerHTML = parts
+      .map(function (k) {
+        return '<kbd class="kbd">' + k + "</kbd>";
+      })
+      .join("");
+    el.style.display = "inline-flex";
+    el.style.gap = "2px";
+    el.classList.add("shortcut-hint-ready");
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    document.querySelectorAll("[data-shortcut]").forEach(renderShortcut);
+  });
+})();
+
+
+/* --- scroll-to-top.js --- */
+(function () {
+  "use strict";
+
+  /**
+   * Scroll-to-top button - Mobile only
+   * Uses centralized responsive helpers for consistent behavior
+   */
+
+  // Only initialize on mobile devices
+  if (!window.ResponsiveHelpers || !window.ResponsiveHelpers.isMobile()) {
+    return;
+  }
+
+  function init() {
+    var btn = document.createElement("button");
+    btn.id = "scroll-to-top";
+    btn.className = "btn btn-circle btn-primary btn-lg";
+    btn.setAttribute("aria-label", "Scroll to top");
+    btn.innerHTML =
+      '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>';
+
+    // Inline styles for positioning and animation
+    btn.style.cssText =
+      "position: fixed; bottom: 1rem; right: 1rem; z-index: 50; opacity: 0; pointer-events: none; transition: opacity 0.3s ease, transform 0.3s ease; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); transform: translateY(20px);";
+
+    document.body.appendChild(btn);
+
+    var lastScrollY = 0;
+    var scrollingUp = false;
+    var scrollThreshold = 300; // Show after scrolling down 300px
+    var ticking = false;
+
+    function updateButton() {
+      var currentScrollY = window.scrollY;
+      var isScrolledDown = currentScrollY > scrollThreshold;
+      var isGoingUp = currentScrollY < lastScrollY;
+
+      scrollingUp = isGoingUp;
+      lastScrollY = currentScrollY;
+
+      // Show: scrolled down past threshold AND scrolling up
+      // Hide: at top OR scrolling down
+      if (isScrolledDown && scrollingUp) {
+        btn.style.opacity = "1";
+        btn.style.pointerEvents = "auto";
+        btn.style.transform = "translateY(0)";
+      } else {
+        btn.style.opacity = "0";
+        btn.style.pointerEvents = "none";
+        btn.style.transform = "translateY(20px)";
+      }
+
+      ticking = false;
+    }
+
+    function onScroll() {
+      if (!ticking) {
+        window.requestAnimationFrame(updateButton);
+        ticking = true;
+      }
+    }
+
+    window.addEventListener("scroll", onScroll, { passive: true });
+
+    btn.addEventListener("click", function () {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    });
+  }
+
+  // Wait for DOM to be ready
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", init);
+  } else {
+    init();
+  }
+})();
+
+
+/* --- lazy-modules.js --- */
+(function () {
+  "use strict";
+  var el = document.currentScript;
+  if (!el) return;
+  var data = el.dataset || {};
+
+  window.addEventListener("DOMContentLoaded", function () {
+    var katexInlineElements = document.querySelectorAll(".katex-inline");
+    var katexBlockElements = document.querySelectorAll(".katex-block");
+    var hasKatex =
+      katexInlineElements.length > 0 || katexBlockElements.length > 0;
+    var hasMermaid = document.querySelector(".mermaid");
+
+    if (hasKatex && data.katexCss && data.katexJs) {
+      var katexCSS = document.createElement("link");
+      katexCSS.rel = "stylesheet";
+      katexCSS.href = data.katexCss;
+      document.head.appendChild(katexCSS);
+
+      var katexScript = document.createElement("script");
+      katexScript.src = data.katexJs;
+      katexScript.onload = function () {
+        katexInlineElements.forEach(function (elem) {
+          var texContent = elem.textContent || elem.innerText;
+          try {
+            katex.render(texContent, elem, {
+              throwOnError: false,
+              displayMode: false,
+            });
+          } catch (e) {
+            console.error("KaTeX render error:", e);
+          }
+        });
+
+        katexBlockElements.forEach(function (elem) {
+          var texContent = elem.textContent || elem.innerText;
+          try {
+            katex.render(texContent, elem, {
+              throwOnError: false,
+              displayMode: true,
+            });
+          } catch (e) {
+            console.error("KaTeX render error:", e);
+          }
+        });
+      };
+      document.head.appendChild(katexScript);
+    }
+
+    if (hasMermaid && data.mermaidJs) {
+      var mermaidScript = document.createElement("script");
+      mermaidScript.src = data.mermaidJs;
+      mermaidScript.onload = function () {
+        if (typeof window.initMermaid === "function") {
+          window.initMermaid();
+        }
+      };
+      document.head.appendChild(mermaidScript);
+    }
+  });
+})();
+
+
+/* --- page-init.js --- */
+(function () {
+  "use strict";
+  var el = document.currentScript;
+  var data = (el && el.dataset) || {};
+  var defaultColorset = data.defaultColorset || "dark";
+
+  window.defaultColorset = defaultColorset;
+  window.fallbackTheme = defaultColorset || "dark";
+
+  var themeMapping = { dark: "dark", light: "light" };
+  var currentUserTheme =
+    (window.__getThemeCookie ? window.__getThemeCookie() : null) ||
+    window.fallbackTheme;
+
+  // Resolve "auto" to actual OS preference
+  var resolvedTheme = (currentUserTheme === "auto")
+    ? (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+    : currentUserTheme;
+
+  window.initMermaid = function () {
+    var mermaidTheme = resolvedTheme === "light" ? "light" : "dark";
+    if (typeof mermaid !== "undefined") {
+      mermaid.initialize({ startOnLoad: false, theme: mermaidTheme });
+      var renderMermaid = async function () {
+        var mermaidElements = document.querySelectorAll(".mermaid");
+        if (mermaidElements.length > 0) {
+          await mermaid.run({ nodes: mermaidElements });
+        }
+      };
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", renderMermaid);
+      } else {
+        renderMermaid();
+      }
+    }
+  };
+
+  if (typeof mermaid !== "undefined") {
+    window.initMermaid();
+  }
+})();
+
+
+/* --- sw-register.js --- */
+(function () {
+  "use strict";
+  var el = document.currentScript;
+  if (!el || !("serviceWorker" in navigator)) return;
+  var swPath = (el.dataset && el.dataset.swPath) || "/sw.js";
+
+  window.addEventListener("load", function () {
+    navigator.serviceWorker.register(swPath).catch(function (error) {
+      console.error("Service Worker registration failed:", error);
+    });
+
+    navigator.serviceWorker.ready.then(function (reg) {
+      if ("periodicSync" in reg) {
+        reg.periodicSync
+          .register("content-sync", { minInterval: 24 * 60 * 60 * 1000 })
+          .catch(function () {});
+      }
+      if ("sync" in reg) {
+        reg.sync.register("sync-site-refresh").catch(function () {});
+      }
+
+      // Check for new posts on every page load (SW will de-dup via stored guid)
+      if (reg.active) {
+        reg.active.postMessage({ type: "CHECK_LATEST_POST" });
+      }
+
+      // Also check when a new SW takes over (e.g. after site deploy)
+      var refreshing = false;
+      navigator.serviceWorker.addEventListener("controllerchange", function () {
+        if (refreshing) return;
+        refreshing = true;
+        if (navigator.serviceWorker.controller) {
+          navigator.serviceWorker.controller.postMessage({
+            type: "CHECK_LATEST_POST",
+          });
+        }
+      });
+    });
+  });
+
+  // Request notification permission on PWA install
+  window.addEventListener("appinstalled", function () {
+    if (
+      typeof Notification !== "undefined" &&
+      Notification.permission === "default"
+    ) {
+      Notification.requestPermission().catch(function () {});
+    }
+  });
+
+  // Also allow requesting notification permission via a user gesture.
+  // Look for any element with [data-enable-notifications] on the page.
+  document.addEventListener("click", function (e) {
+    var btn =
+      e.target.closest && e.target.closest("[data-enable-notifications]");
+    if (!btn) return;
+    if (
+      typeof Notification !== "undefined" &&
+      Notification.permission === "default"
+    ) {
+      Notification.requestPermission()
+        .then(function (result) {
+          if (result === "granted" && navigator.serviceWorker.controller) {
+            navigator.serviceWorker.controller.postMessage({
+              type: "CHECK_LATEST_POST",
+            });
+          }
+        })
+        .catch(function () {});
+    }
+  });
+})();
+
+
+/* --- comments-giscus.js --- */
+(function () {
+  "use strict";
+  var el = document.currentScript;
+  if (!el) return;
+  var data = el.dataset || {};
+  var targetId = data.target || "comments";
+  var mount = document.getElementById(targetId);
+  if (!mount) return;
+
+  var rawTheme =
+    (window.__getThemeCookie ? window.__getThemeCookie() : null) || "auto";
+  var giscusTheme = (rawTheme === "auto")
+    ? (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+    : rawTheme;
+
+  var script = document.createElement("script");
+  script.src = "https://giscus.app/client.js";
+  script.setAttribute("data-repo", data.repo || "");
+  script.setAttribute("data-repo-id", data.repoId || "");
+  script.setAttribute("data-category", data.category || "");
+  script.setAttribute("data-category-id", data.categoryId || "");
+  script.setAttribute("data-mapping", data.mapping || "pathname");
+  script.setAttribute("data-strict", data.strict || "0");
+  script.setAttribute("data-reactions-enabled", data.reactionsEnabled || "1");
+  script.setAttribute("data-emit-metadata", data.emitMetadata || "1");
+  script.setAttribute("data-input-position", data.inputPosition || "top");
+  script.setAttribute("data-theme", giscusTheme);
+  script.setAttribute("data-lang", data.lang || "en");
+  script.setAttribute("data-loading", data.loading || "lazy");
+  script.crossOrigin = "anonymous";
+  script.async = true;
+
+  mount.appendChild(script);
+})();
+
+
+/* --- shell.js --- */
 /**
  * dhanur.me — Plug-and-play design system shell.
  *
@@ -901,3 +1590,565 @@
     bootstrap();
   }
 })();
+
+
+/* --- app.js --- */
+function debounce(func, wait) {
+  var timeout;
+
+  return function () {
+    var context = this;
+    var args = arguments;
+    clearTimeout(timeout);
+
+    timeout = setTimeout(function () {
+      timeout = null;
+      func.apply(context, args);
+    }, wait);
+  };
+}
+
+function makeTeaser(body, terms) {
+  var TERM_WEIGHT = 40;
+  var NORMAL_WORD_WEIGHT = 2;
+  var FIRST_WORD_WEIGHT = 8;
+  var TEASER_MAX_WORDS = 30;
+
+  var stemmedTerms = terms.map(function (w) {
+    return w.toLowerCase();
+  });
+  var termFound = false;
+  var index = 0;
+  var weighted = [];
+
+  var sentences = body.toLowerCase().split(". ");
+
+  for (var i in sentences) {
+    var words = sentences[i].split(" ");
+    var value = FIRST_WORD_WEIGHT;
+
+    for (var j in words) {
+      var word = words[j];
+
+      if (word.length > 0) {
+        for (var k in stemmedTerms) {
+          if (word.toLowerCase().startsWith(stemmedTerms[k])) {
+            value = TERM_WEIGHT;
+            termFound = true;
+          }
+        }
+        weighted.push([word, value, index]);
+        value = NORMAL_WORD_WEIGHT;
+      }
+
+      index += word.length;
+      index += 1;
+    }
+
+    index += 1;
+  }
+
+  if (weighted.length === 0) {
+    return body;
+  }
+
+  var windowWeights = [];
+  var windowSize = Math.min(weighted.length, TEASER_MAX_WORDS);
+  var curSum = 0;
+  for (var i = 0; i < windowSize; i++) {
+    curSum += weighted[i][1];
+  }
+  windowWeights.push(curSum);
+
+  for (var i = 0; i < weighted.length - windowSize; i++) {
+    curSum -= weighted[i][1];
+    curSum += weighted[i + windowSize][1];
+    windowWeights.push(curSum);
+  }
+
+  var maxSumIndex = 0;
+  if (termFound) {
+    var maxFound = 0;
+    for (var i = windowWeights.length - 1; i >= 0; i--) {
+      if (windowWeights[i] > maxFound) {
+        maxFound = windowWeights[i];
+        maxSumIndex = i;
+      }
+    }
+  }
+
+  var teaser = [];
+  var startIndex = weighted[maxSumIndex][2];
+  for (var i = maxSumIndex; i < maxSumIndex + windowSize; i++) {
+    var word = weighted[i];
+    if (startIndex < word[2]) {
+      teaser.push(body.substring(startIndex, word[2]));
+      startIndex = word[2];
+    }
+
+    if (word[1] === TERM_WEIGHT) {
+      teaser.push("<b>");
+    }
+    startIndex = word[2] + word[0].length;
+    teaser.push(body.substring(word[2], startIndex));
+
+    if (word[1] === TERM_WEIGHT) {
+      teaser.push("</b>");
+    }
+  }
+  teaser.push("\u2026");
+  return teaser.join("");
+}
+
+function formatSearchResultItem(item, terms) {
+  var li = document.createElement("li");
+  li.className = "search-result-item";
+  li.innerHTML = `
+    <a href="${
+      item.item.id
+    }" class="search-result-link block px-4 py-3 rounded-lg hover:bg-base-200/50 transition-colors duration-150 border-gray-500/15">
+      <div class="flex items-start gap-3">
+        <div class="search-result-icon flex-shrink-0 mt-1">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-base-content/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+          </svg>
+        </div>
+        <div class="flex-1 min-w-0">
+          <div class="search-result-title font-semibold text-sm text-base-content mb-1">${
+            item.item.title
+          }</div>
+          <div class="search-result-excerpt text-xs text-base-content/60 line-clamp-2">${makeTeaser(
+            item.item.body,
+            terms,
+          )}</div>
+        </div>
+        <div class="search-result-arrow flex-shrink-0 opacity-0 transition-opacity duration-150">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-base-content/40" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </div>
+      </div>
+    </a>
+  `;
+
+  var link = li.querySelector(".search-result-link");
+  var arrow = li.querySelector(".search-result-arrow");
+  link.addEventListener("mouseenter", function () {
+    arrow.style.opacity = "1";
+  });
+  link.addEventListener("mouseleave", function () {
+    arrow.style.opacity = "0";
+  });
+
+  return li;
+}
+
+function initSearch() {
+  if (typeof Fuse === "undefined" || !window.searchIndex) {
+    return;
+  }
+
+  var $searchInput = document.getElementById("search");
+  if (!$searchInput) {
+    return;
+  }
+
+  var $searchResultsContainer = document.querySelector(
+    ".search-results-container",
+  );
+  var $searchResultsHeader = document.querySelector(".search-results__header");
+  var $searchResultsItems = document.querySelector(".search-results__items");
+  var MAX_ITEMS = 10;
+  var selectedIndex = -1;
+
+  var options = {
+    keys: [
+      { name: "title", weight: 2 },
+      { name: "body", weight: 1 },
+      { name: "tags", weight: 1 },
+    ],
+    includeScore: true,
+    ignoreLocation: true,
+    threshold: 0.4,
+  };
+  var currentTerm = "";
+  var documents = Object.values(window.searchIndex.documentStore.docs);
+  var fuse = new Fuse(documents, options);
+
+  function updateSelectedResult() {
+    var items = $searchResultsItems.querySelectorAll(".search-result-item");
+    items.forEach(function (item, index) {
+      var link = item.querySelector(".search-result-link");
+      if (index === selectedIndex) {
+        link.classList.add("border");
+      } else {
+        link.classList.remove("border");
+      }
+    });
+
+    if (selectedIndex >= 0 && items[selectedIndex]) {
+      items[selectedIndex].scrollIntoView({
+        block: "nearest",
+        behavior: "smooth",
+      });
+    }
+  }
+
+  $searchInput.addEventListener(
+    "keyup",
+    debounce(function () {
+      var term = $searchInput.value.trim();
+      if (term === currentTerm || !fuse) {
+        return;
+      }
+      $searchResultsItems.innerHTML = "";
+      $searchResultsHeader.innerHTML = "";
+      selectedIndex = -1;
+
+      if (term === "") {
+        currentTerm = "";
+        return;
+      }
+
+      var results = fuse.search(term).filter(function (r) {
+        return r.item.body !== "";
+      });
+
+      if (results.length === 0) {
+        $searchResultsHeader.innerHTML = `<span class="text-base-content/60">No results found for <strong class="text-base-content">"${term}"</strong></span>`;
+        return;
+      }
+
+      currentTerm = term;
+      $searchResultsHeader.innerHTML = `<span class="text-base-content/60">${
+        results.length
+      } result${
+        results.length === 1 ? "" : "s"
+      } for <strong class="text-base-content">"${term}"</strong></span>`;
+      for (var i = 0; i < Math.min(results.length, MAX_ITEMS); i++) {
+        if (!results[i].item.body) {
+          continue;
+        }
+        $searchResultsItems.appendChild(
+          formatSearchResultItem(results[i], term.split(" ")),
+        );
+      }
+    }, 150),
+  );
+
+  var searchModal = document.getElementById("search-modal");
+  var modalBackdrop = document.querySelector(".modal");
+
+  if (searchModal) {
+    searchModal.addEventListener("change", function () {
+      if (this.checked) {
+        setTimeout(function () {
+          $searchInput.focus();
+        }, 100);
+      } else {
+        $searchInput.value = "";
+        $searchResultsItems.innerHTML = "";
+        $searchResultsHeader.innerHTML = "";
+        currentTerm = "";
+        selectedIndex = -1;
+      }
+    });
+  }
+
+  if (modalBackdrop) {
+    modalBackdrop.addEventListener("click", function (e) {
+      if (e.target === modalBackdrop && searchModal.checked) {
+        searchModal.checked = false;
+      }
+    });
+  }
+
+  $searchInput.addEventListener("keydown", function (e) {
+    var items = $searchResultsItems.querySelectorAll(".search-result-item");
+
+    if (e.key === "Escape") {
+      searchModal.checked = false;
+      return;
+    }
+
+    if (items.length === 0) {
+      return;
+    }
+
+    if (e.key === "ArrowDown") {
+      e.preventDefault();
+      selectedIndex = Math.min(selectedIndex + 1, items.length - 1);
+      updateSelectedResult();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      selectedIndex = Math.max(selectedIndex - 1, -1);
+      updateSelectedResult();
+    } else if (e.key === "Enter" && selectedIndex >= 0) {
+      e.preventDefault();
+      var link = items[selectedIndex].querySelector(".search-result-link");
+      if (link) {
+        window.location.href = link.getAttribute("href");
+      }
+    }
+  });
+}
+
+function initThemeListeners() {
+  var fallbackTheme = window && window.fallbackTheme ? window.fallbackTheme : "dark";
+  var currentUserTheme = (window.__getThemeCookie ? window.__getThemeCookie() : null) || fallbackTheme;
+
+  // Resolve 'auto' to the actual OS preference to prevent UI breaking
+  var resolvedTheme = window.__resolveColorset ? window.__resolveColorset(currentUserTheme) : currentUserTheme;
+
+  updateLogoForTheme(resolvedTheme);
+  updateHeroForTheme(resolvedTheme);
+
+  document.addEventListener("themeChanged", function (e) {
+    var userTheme = e.detail;
+    var resolvedUpdatedTheme = window.__resolveColorset ? window.__resolveColorset(userTheme) : userTheme;
+    
+    updateLogoForTheme(resolvedUpdatedTheme);
+    updateHeroForTheme(resolvedUpdatedTheme);
+    updateGiscusTheme(resolvedUpdatedTheme);
+  });
+}
+
+function updateLogoForTheme(userTheme) {
+  var isDarkTheme = userTheme === "dark";
+
+  var logoDark = updateLogoForTheme._logoDark;
+  var logoLight = updateLogoForTheme._logoLight;
+
+  if (logoDark === undefined || logoLight === undefined) {
+    logoDark = updateLogoForTheme._logoDark =
+      document.querySelector(".logo-dark");
+    logoLight = updateLogoForTheme._logoLight =
+      document.querySelector(".logo-light");
+  }
+
+  if (!logoDark && !logoLight) {
+    return;
+  }
+
+  if (logoDark) {
+    logoDark.classList.toggle("invisible", !isDarkTheme);
+  }
+  if (logoLight) {
+    logoLight.classList.toggle("invisible", isDarkTheme);
+  }
+}
+
+function updateHeroForTheme(userTheme) {
+  var isDark = userTheme === "dark";
+
+  var heroDark = updateHeroForTheme._heroDark;
+  var heroLight = updateHeroForTheme._heroLight;
+
+  if (heroDark === undefined || heroLight === undefined) {
+    heroDark = updateHeroForTheme._heroDark =
+      document.querySelector(".hero-dark");
+    heroLight = updateHeroForTheme._heroLight =
+      document.querySelector(".hero-light");
+  }
+
+  if (!heroDark && !heroLight) return;
+
+  if (heroDark) heroDark.classList.toggle("hidden", !isDark);
+  if (heroLight) heroLight.classList.toggle("hidden", isDark);
+}
+
+function updateGiscusTheme(userTheme) {
+  var iframe = document.querySelector("iframe.giscus-frame");
+
+  if (iframe) {
+    iframe.contentWindow.postMessage(
+      {
+        giscus: {
+          setConfig: {
+            theme: userTheme,
+          },
+        },
+      },
+      "https://giscus.app",
+    );
+  }
+}
+
+function initToc() {
+  const headings = document.querySelectorAll(
+    ".prose h1[id], .prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id], .prose h6[id]",
+  );
+  const tocLinks = document.querySelectorAll(".toc-link");
+  const tocDetails = document.querySelectorAll(".toc-details");
+
+  if (headings.length === 0 || tocLinks.length === 0) {
+    return;
+  }
+
+  const tocContainer = document.querySelector(".hidden.lg\\:block");
+  const tocExpand =
+    tocContainer && tocContainer.getAttribute("data-toc-expand") === "true";
+
+  let activeId = null;
+
+  const userClosedSections = new Set();
+
+  tocDetails.forEach((detail) => {
+    detail.addEventListener("toggle", (e) => {
+      if (!detail.open) {
+        const summary = detail.querySelector("summary");
+        let id = null;
+
+        if (summary && summary.hasAttribute("data-toc-href")) {
+          const href = summary.getAttribute("data-toc-href");
+          id = href.includes("#") ? href.split("#")[1] : null;
+        } else {
+          const link = detail.querySelector(".toc-link[href]");
+          if (link) {
+            const href = link.getAttribute("href");
+            id = href.includes("#") ? href.split("#")[1] : null;
+          }
+        }
+
+        if (id) {
+          userClosedSections.add(id);
+        }
+      }
+    });
+  });
+
+  const activateLink = (id) => {
+    if (activeId === id) return;
+
+    activeId = id;
+
+    tocLinks.forEach((link) => link.classList.remove("active"));
+
+    const correspondingLink = document.querySelector(
+      `.toc-link[href$="#${id}"]`,
+    );
+
+    if (correspondingLink) {
+      correspondingLink.classList.add("active");
+
+      let parentDetails = correspondingLink.closest("details");
+      while (parentDetails) {
+        const summary = parentDetails.querySelector("summary");
+        let parentId = null;
+
+        if (summary && summary.hasAttribute("data-toc-href")) {
+          const href = summary.getAttribute("data-toc-href");
+          parentId = href.includes("#") ? href.split("#")[1] : null;
+        } else {
+          const parentLink = parentDetails.querySelector(".toc-link[href]");
+          if (parentLink) {
+            const href = parentLink.getAttribute("href");
+            parentId = href.includes("#") ? href.split("#")[1] : null;
+          }
+        }
+
+        if (!parentId || !userClosedSections.has(parentId)) {
+          parentDetails.open = true;
+        }
+        parentDetails = parentDetails.parentElement.closest("details");
+      }
+    }
+  };
+
+  const observerOptions = {
+    root: null,
+    rootMargin: "-20% 0px -35% 0px",
+    threshold: 0,
+  };
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        const id = entry.target.getAttribute("id");
+        if (id) {
+          activateLink(id);
+        }
+      }
+    });
+  }, observerOptions);
+
+  headings.forEach((heading) => {
+    observer.observe(heading);
+  });
+
+  const hashId = location.hash ? location.hash.slice(1) : null;
+  if (hashId && document.getElementById(hashId)) {
+    activateLink(hashId);
+  }
+}
+
+function initMath() {
+  if (typeof katex === "undefined") {
+    return;
+  }
+
+  var mathElements = document.querySelectorAll(".katex-inline");
+  mathElements.forEach(function (element) {
+    var formula = element.textContent;
+    try {
+      katex.render(formula, element, {
+        throwOnError: false,
+        displayMode: false,
+      });
+    } catch (e) {
+      console.error("KaTeX rendering error:", e);
+    }
+  });
+
+  var blockMathElements = document.querySelectorAll(".katex-block");
+  blockMathElements.forEach(function (element) {
+    var formula = element.textContent;
+    try {
+      katex.render(formula, element, {
+        throwOnError: false,
+        displayMode: true,
+      });
+    } catch (e) {
+      console.error("KaTeX rendering error:", e);
+    }
+  });
+}
+
+
+
+document.addEventListener("DOMContentLoaded", function () {
+  initSearch();
+  initThemeListeners();
+  initToc();
+  initMath();
+
+  document.addEventListener("keydown", function (event) {
+    if ((event.metaKey || event.ctrlKey) && event.key === "k") {
+      event.preventDefault();
+      const searchModal = document.getElementById("search-modal");
+      if (searchModal) {
+        searchModal.checked = !searchModal.checked;
+        searchModal.dispatchEvent(new Event("change"));
+      }
+    }
+  });
+});
+
+
+
+/* --- toc-click.js --- */
+// TOC summary click handler — navigates to heading anchor.
+document
+  .querySelectorAll(".toc-menu summary[data-toc-href]")
+  .forEach(function (summary) {
+    summary.addEventListener("click", function (e) {
+      var href = this.getAttribute("data-toc-href");
+      if (href && href.includes("#")) {
+        var hash = href.split("#")[1];
+        if (hash) {
+          window.location.hash = hash;
+        }
+      }
+    });
+  });
+

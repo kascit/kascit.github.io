@@ -32,6 +32,15 @@ html {
   @apply text-base-content/80 hover:text-base-content hover:bg-base-content/10 transition-colors duration-200 no-underline;
 }
 
+/* Force Menu Focus/Active states to adhere to monochromatic theme */
+.menu :where(li) > :where(a, details > summary):focus,
+.menu :where(li) > :where(a, details > summary):focus-visible {
+  @apply bg-base-content/5 text-base-content outline-none;
+}
+.menu :where(li) > :where(a, details > summary):active {
+  @apply bg-base-content/10 text-base-content;
+}
+
 
 
 /* Sidebar search input */
@@ -118,7 +127,7 @@ html {
 
 /* Feature cards */
 .feature-card {
-  @apply bg-base-100 border border-base-200/50 shadow-sm hover:shadow-md hover:border-base-300 transition-all duration-300 rounded-xl;
+  @apply bg-base-200/40 border border-base-content/10 shadow-sm hover:shadow-md hover:border-base-content/25 transition-all duration-300 rounded-xl;
 }
 
 /* Feature icon background */
@@ -164,7 +173,7 @@ html {
 
 /* Testimonial cards */
 .testimonial-card {
-  @apply bg-base-100 border border-base-200/50 shadow-sm hover:shadow-md hover:border-base-300 transition-all duration-300 h-full min-h-[17.5rem] rounded-xl p-8 flex flex-col justify-between;
+  @apply bg-base-200/40 border border-base-content/10 shadow-sm hover:shadow-md hover:border-base-content/25 transition-all duration-300 h-full min-h-[17.5rem] rounded-xl p-8 flex flex-col justify-between;
 }
 
 /* Testimonial quote */
@@ -230,11 +239,11 @@ html {
 
 /* Pretty Link Card Styling */
 .pretty-link-card {
-  @apply w-full rounded-xl overflow-hidden bg-base-100 border border-base-200 shadow-sm transition-all duration-300;
+  @apply w-full rounded-xl overflow-hidden bg-base-200/40 border border-base-content/10 shadow-sm transition-all duration-300;
 }
 
 .pretty-link-card:hover {
-  @apply border-base-300 shadow-md transform -translate-y-0.5 bg-base-200/50;
+  @apply border-base-content/25 shadow-md transform -translate-y-0.5 bg-base-200/80;
 }
 
 .pretty-link-image-wrapper {

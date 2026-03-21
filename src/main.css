@@ -36,8 +36,8 @@
 
 @plugin "./daisyui.js" {
   themes:
-    night --default,
-    lofi;
+    light --default,
+    dark;
 }
 
 /* Optional for custom themes – Docs: https://daisyui.com/docs/themes/#how-to-add-a-new-custom-theme */

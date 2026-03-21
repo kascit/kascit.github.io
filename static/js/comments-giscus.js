@@ -1,34 +1,52 @@
-(function () {
-  "use strict";
-  var el = document.currentScript;
-  if (!el) return;
-  var data = el.dataset || {};
-  var targetId = data.target || "comments";
-  var mount = document.getElementById(targetId);
-  if (!mount) return;
+(function() {
+    const scriptTag = document.currentScript;
+    if (!scriptTag) return;
 
-  var rawTheme =
-    (window.__getThemeCookie ? window.__getThemeCookie() : null) || "auto";
-  var giscusTheme = (rawTheme === "auto")
-    ? (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
-    : rawTheme;
+    const targetId = scriptTag.getAttribute('data-target') || 'comments';
+    const targetEl = document.getElementById(targetId);
+    if (!targetEl) return;
 
-  var script = document.createElement("script");
-  script.src = "https://giscus.app/client.js";
-  script.setAttribute("data-repo", data.repo || "");
-  script.setAttribute("data-repo-id", data.repoId || "");
-  script.setAttribute("data-category", data.category || "");
-  script.setAttribute("data-category-id", data.categoryId || "");
-  script.setAttribute("data-mapping", data.mapping || "pathname");
-  script.setAttribute("data-strict", data.strict || "0");
-  script.setAttribute("data-reactions-enabled", data.reactionsEnabled || "1");
-  script.setAttribute("data-emit-metadata", data.emitMetadata || "1");
-  script.setAttribute("data-input-position", data.inputPosition || "top");
-  script.setAttribute("data-theme", giscusTheme);
-  script.setAttribute("data-lang", data.lang || "en");
-  script.setAttribute("data-loading", data.loading || "lazy");
-  script.crossOrigin = "anonymous";
-  script.async = true;
+    // Wait for the main thread to idle before injecting heavy iframe
+    setTimeout(() => {
+        const giscusScript = document.createElement('script');
+        giscusScript.src = "https://giscus.app/client.js";
+        giscusScript.async = true;
+        giscusScript.crossOrigin = "anonymous";
 
-  mount.appendChild(script);
+        // Map all Zola config attributes
+        const attributes = [
+            'data-repo', 'data-repo-id', 'data-category', 'data-category-id',
+            'data-mapping', 'data-strict', 'data-reactions-enabled',
+            'data-emit-metadata', 'data-input-position', 'data-lang', 'data-loading'
+        ];
+
+        attributes.forEach(attr => {
+            const val = scriptTag.getAttribute(attr);
+            if (val) giscusScript.setAttribute(attr, val);
+        });
+
+        // Determine initial theme based on our HTML data attribute
+        const currentTheme = document.documentElement.getAttribute("data-theme");
+        const giscusTheme = currentTheme === "dark" ? "transparent_dark" : "light";
+        giscusScript.setAttribute("data-theme", giscusTheme);
+
+        targetEl.appendChild(giscusScript);
+
+        // Bind to theme switch observer to hot-swap Giscus theme
+        const observer = new MutationObserver((mutations) => {
+            mutations.forEach((mutation) => {
+                if (mutation.attributeName === "data-theme") {
+                    const newTheme = document.documentElement.getAttribute("data-theme") === "dark" ? "transparent_dark" : "light";
+                    const iframe = document.querySelector('iframe.giscus-frame');
+                    if (!iframe) return;
+                    
+                    iframe.contentWindow.postMessage(
+                        { giscus: { setConfig: { theme: newTheme } } },
+                        'https://giscus.app'
+                    );
+                }
+            });
+        });
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+    }, 100);
 })();

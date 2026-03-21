@@ -10,12 +10,11 @@
 {% endblock header %}
 
 {% block extra_head %}
-<!-- Structured Data for Blog Post (Schema.org JSON-LD) -->
+<!-- Structured Data for Blog Post (Schema.org JSON-LD) - stored in data attribute to avoid CSP inline script violation -->
 {% if page.taxonomies and (page.taxonomies.tags or page.taxonomies.categories) %}
 {% set_global headline = page.title | replace(from='"', to='\\"') | replace(from="'", to="\\'") %}
 {% set_global desc = page.description | default(value='') | replace(from='"', to='\\"') | replace(from="'", to="\\'") %}
-<script type="application/json" class="schema-ld-raw">
-{
+<meta name="schema-ld-blogpost" data-schema='{
   "@context": "https://schema.org",
   "@type": "BlogPosting",
   "headline": "{{ headline | safe }}",
@@ -46,8 +45,7 @@
   "inLanguage": "{{ lang | default(value='en') }}",
   "wordCount": {{ page.word_count | default(value=0) }},{% if page.reading_time %}
   "timeRequired": "PT{{ page.reading_time }}M"{% endif %}
-}
-</script>
+}' />
 {% endif %}
 {% endblock extra_head %}
 

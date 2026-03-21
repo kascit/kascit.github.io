@@ -198,9 +198,8 @@
       <meta name="twitter:image" content="{{ get_url(path=config.extra.default_thumbnail) | safe }}" />
       {% endif %}
 
-      <!-- Structured Data (Schema.org JSON-LD) -->
-      <script type="application/json" class="schema-ld-raw">
-      {
+      <!-- Structured Data (Schema.org JSON-LD) - stored in data attribute to avoid CSP inline script violation -->
+      <meta name="schema-ld-website" data-schema='{
         "@context": "https://schema.org",
         "@type": "WebSite",
         "name": "{{ config.title | default(value='Dhanur') }}",
@@ -220,8 +219,7 @@
           "@type": "Person",
           "name": "{{ config.author | default(value='') }}"
         }
-      }
-      </script>
+      }' />
 
       <!-- Browser address bar color -->
       <meta name="theme-color" content="{{ self::get_theme_color(config=config) | trim }}">

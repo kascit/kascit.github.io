@@ -3,16 +3,16 @@
 {% import "macros/nav.html" as macros_nav %} {% block header %} {{
 macros_header::header(config=config, lang=lang, section=section) }} {% endblock
 header %} {% block content %}
-<div class="mb-12 pb-4 border-b border-gray-500/15">
+<div class="mb-12 pb-4 border-b border-base-content/10">
   <h1 class="flex items-center gap-3">
     {{ section.title }} {% if section.extra.badge %}
     <span
-      class="text-sm font-normal px-2 py-0.5 border border-gray-500/30 rounded"
+      class="text-sm font-normal px-2 py-0.5 border border-base-content/20 rounded-sm"
       >{{ section.extra.badge }}</span
     >
     {% endif %}
   </h1>
-  <p class="text-gray-500">{{ section.description }}</p>
+  <p class="text-base-content/70">{{ section.description }}</p>
 </div>
 {{ section.content | safe }} {{
 macros_content_footer::content_footer(config=config, item=section) }} {%

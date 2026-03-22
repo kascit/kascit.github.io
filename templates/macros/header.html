@@ -22,16 +22,16 @@
 
 {% set has_theme_specific_logos = logo_dark_image_path != "" or logo_light_image_path != "" %}
 
-<div class="navbar fixed top-0 left-0 right-0 z-50 h-16 border-b border-gray-500/15 bg-base-100/95 backdrop-blur-3xl">
-    <!-- Mobile hamburger -->
+<div class="navbar fixed top-0 left-0 right-0 z-50 h-16 border-b border-base-content/10 bg-base-200/95 backdrop-blur-md">
+    <!-- Mobile hamburger (always visible) -->
     <div class="flex-none lg:hidden">
         <label for="my-drawer-2" class="btn btn-square btn-ghost">
             {{ macros_icons::svg_hamburger() }}
         </label>
     </div>
-    <!-- Logo -->
-    <div class="flex-1">
-        <a href="/" class="btn btn-ghost hover:animate-pulse hover:bg-transparent hover:border-transparent normal-case text-xl" style="background: linear-gradient(135deg, #9ca3af, #6b7280); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; font-weight: bold; font-size: 1.5rem;">
+    <!-- Logo (centered on mobile) -->
+    <div class="flex-1 flex justify-center items-center lg:flex lg:justify-start">
+        <a href="/" class="btn btn-ghost hover:bg-transparent hover:border-transparent normal-case text-xl font-bold text-base-content logo-firefly">
             {% if has_theme_specific_logos %}
                 {# Theme-specific logos stacked in same space to prevent layout shift on switch #}
                 {% set dark_logo_src = logo_dark_image_path %}
@@ -99,7 +99,7 @@
                                     {{ item.name }}
                                     {{ macros_icons::svg_chevron_down() }}
                                 </div>
-                                <ul tabindex="0" class="dropdown-content menu bg-base-100 border border-gray-500/15 rounded-box z-1 p-2 shadow-sm">
+                                <ul tabindex="0" class="dropdown-content menu bg-base-100 border border-base-content/10 rounded-box z-1 p-2 shadow-sm">
                                     {% for member in item.members %}
                                         <li>
                                             <a class="btn btn-ghost hover:no-underline" href="{{ member.url | safe }}">
@@ -136,7 +136,7 @@
                     <div tabindex="0" role="button" class="btn btn-ghost px-2" aria-label="Languages">
                         {{ macros_icons::svg_language() }}
                     </div>
-                    <ul tabindex="0" class="dropdown-content menu bg-base-100 border border-gray-500/15 rounded-box z-1 p-2 shadow-lg min-w-max whitespace-nowrap">
+                    <ul tabindex="0" class="dropdown-content menu bg-base-100 border border-base-content/10 rounded-box z-1 p-2 shadow-lg min-w-max whitespace-nowrap">
                         {% for lang_code, lang_config in config.languages %}
                             {% if lang_code != lang %}
                                 {% if page is defined and page.translations %}
@@ -169,7 +169,7 @@
                     <div tabindex="0" role="button" class="btn btn-ghost btn-square tooltip tooltip-bottom" data-tip="Apps" aria-label="Apps">
                         {{ macros_icons::svg_apps_grid() }}
                     </div>
-                    <div class="dropdown-panel z-50 mt-2 p-4 bg-base-100 border border-base-content/15 rounded-2xl shadow-xl w-64 right-0 mr-2 md:mr-4" style="visibility:hidden;opacity:0;pointer-events:none;position:absolute;top:100%">
+                    <div class="dropdown-panel z-50 mt-2 p-4 bg-base-100 border border-base-content/10 rounded-box shadow-lg w-64 right-0 mr-2 md:mr-4" style="visibility:hidden;opacity:0;pointer-events:none;position:absolute;top:100%">
                         {{ macros_apps::apps_grid(context="desktop") }}
                     </div>
                 </div>
@@ -186,10 +186,10 @@
                             <img src="" alt="Profile" class="w-full h-full object-cover" />
                         </div>
                     </div>
-                    <div class="dropdown-panel z-50 mt-2 bg-base-100 border border-base-content/15 rounded-2xl shadow-xl w-64 right-0 mr-2 md:mr-4 overflow-hidden" style="visibility:hidden;opacity:0;pointer-events:none;position:absolute;top:100%">
+                    <div class="dropdown-panel z-50 mt-2 bg-base-100 border border-base-content/10 rounded-box shadow-lg w-64 right-0 mr-2 md:mr-4 overflow-hidden" style="visibility:hidden;opacity:0;pointer-events:none;position:absolute;top:100%">
                         
                         <!-- authed header -->
-                        <div class="hidden px-3 pt-3 pb-2 border-b border-gray-500/15 cursor-default select-none">
+                        <div class="hidden px-3 pt-3 pb-2 border-b border-base-content/10 cursor-default select-none">
                             <div class="flex items-center gap-2.5">
                                 <div class="w-8 h-8 rounded-full overflow-hidden shrink-0"><img class="w-full h-full object-cover" src="" alt="Profile" /></div>
                                 <div class="flex-1 min-w-0">
@@ -201,7 +201,7 @@
                         </div>
 
                         <!-- guest header -->
-                        <div class="px-3 pt-3 pb-2 border-b border-gray-500/15 cursor-default select-none">
+                        <div class="px-3 pt-3 pb-2 border-b border-base-content/10 cursor-default select-none">
                             <div class="flex items-center gap-2.5">
                                 <div class="w-8 h-8 rounded-full bg-base-300 flex items-center justify-center shrink-0">
                                     <i class="fa-solid fa-user text-base-content/40"></i>
@@ -214,7 +214,7 @@
                         </div>
 
                         <!-- Credits display (hidden by default, shown by shell.js when authenticated) -->
-                        <div class="hidden px-3 py-1.5 border-b border-gray-500/15" data-auth="credits-row">
+                        <div class="hidden px-3 py-1.5 border-b border-base-content/10" data-auth="credits-row">
                             <div class="flex items-center justify-between text-xs">
                                 <span class="flex items-center gap-1.5 opacity-70">
                                     <span>🪙</span>
@@ -239,10 +239,10 @@
                                         <button data-theme-mode="light" class="theme-switcher-btn flex-1 rounded-md px-2.5 py-1 transition-all duration-200 cursor-pointer" aria-label="Light theme">
                                             <i class="fa-solid fa-sun mr-1"></i>Light
                                         </button>
-                                        <button data-theme-mode="dark" class="theme-switcher-btn flex-1 rounded-md px-2.5 py-1 transition-all duration-200 cursor-pointer" aria-label="Dark theme">
+                                        <button data-theme-mode="dark" class="theme-switcher-btn flex-1 rounded-sm px-2.5 py-1 transition-colors duration-200 cursor-pointer" aria-label="Dark theme">
                                             <i class="fa-solid fa-moon mr-1"></i>Dark
                                         </button>
-                                        <button data-theme-mode="auto" class="theme-switcher-btn flex-1 rounded-md px-2.5 py-1 transition-all duration-200 cursor-pointer" aria-label="Auto theme">
+                                        <button data-theme-mode="auto" class="theme-switcher-btn flex-1 rounded-sm px-2.5 py-1 transition-colors duration-200 cursor-pointer" aria-label="Auto theme">
                                             <i class="fa-solid fa-circle-half-stroke mr-1"></i>Auto
                                         </button>
                                     </div>
@@ -268,7 +268,7 @@
                                 </a>
                             </li>
 
-                            <li class="hidden border-t border-gray-500/15 mt-1 pt-1" data-auth="logout-item">
+                            <li class="hidden border-t border-base-content/10 mt-1 pt-1" data-auth="logout-item">
                                 <a href="javascript:void(0)" class="flex items-center gap-3 hover:no-underline text-error" data-auth="logout-btn">
                                     <i class="fa-solid fa-right-from-bracket w-4 text-center"></i><span>Sign Out</span>
                                 </a>

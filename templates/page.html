@@ -3,6 +3,7 @@
 {% import "macros/content-footer.html" as macros_content_footer %}
 {% import "macros/notify-banner.html" as macros_notify_banner %}
 {% import "macros/icons.html" as macros_icons %}
+{% import "macros/article_meta.html" as macros_article_meta %}
 {% import "macros/nav.html" as macros_nav %}
 
 {% block header %}
@@ -56,7 +57,7 @@
         <h1 class="flex items-center gap-3">
             {{ page.title }}
             {% if page.extra.badge %}
-                <span class="text-sm font-normal px-2 py-0.5 border border-base-content/20 rounded">{{ page.extra.badge }}</span>
+                <span class="text-sm font-normal px-2 py-0.5 border border-base-content/20 rounded-sm">{{ page.extra.badge }}</span>
             {% endif %}
         </h1>
         <p class="text-base-content/75">{{ page.description }}</p>
@@ -86,38 +87,7 @@
     
     {{ page.content | safe }}
 
-    {# Taxonomies (tags / categories) #}
-    {% if page.taxonomies and (page.taxonomies.tags or page.taxonomies.categories) %}
-    <div class="mt-8 pt-6 border-t border-base-content/10 space-y-2 text-sm">
-        {% if page.taxonomies.categories %}
-        <div class="flex flex-wrap items-center gap-2">
-            <div class="tooltip" data-tip="Categories">
-                {{ macros_icons::svg_folder() }}
-            </div>
-            {% for cat in page.taxonomies.categories %}
-            <a href="{{ get_taxonomy_url(kind="categories", name=cat) }}"
-               class="inline-flex items-center badge badge-dash border-base-content/20 text-xs hover:border-base-content/40 transition-colors">
-                {{ cat }}
-            </a>
-            {% endfor %}
-        </div>
-        {% endif %}
-
-        {% if page.taxonomies.tags %}
-        <div class="flex flex-wrap items-center gap-2 mt-2">
-            <div class="tooltip" data-tip="Tags">
-                {{ macros_icons::svg_tag() }}
-            </div>
-            {% for tag in page.taxonomies.tags %}
-            <a href="{{ get_taxonomy_url(kind="tags", name=tag) }}"
-               class="inline-flex items-center badge badge-dash text-xs border-gray-500/30 hover:border-gray-500/70 transition-colors">
-                {{ tag }}
-            </a>
-            {% endfor %}
-        </div>
-        {% endif %}
-    </div>
-    {% endif %}
+    {{ macros_article_meta::taxonomy_footer(page=page) }}
 
     {{ macros_content_footer::content_footer(config=config, item=page) }}
 {% endblock content %}

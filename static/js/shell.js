@@ -491,7 +491,7 @@
       btn.innerHTML = btnHTML;
       li.appendChild(btn);
 
-      var dropUl = el("ul", "dropdown-content menu bg-base-100 border border-gray-500/15 rounded-box z-1 p-2 shadow-sm");
+      var dropUl = el("ul", "dropdown-content menu bg-base-100 border border-base-content/10 rounded-box z-1 p-2 shadow-sm");
       dropUl.setAttribute("tabindex", "0");
       item.members.forEach(function (m) {
         var mLi = document.createElement("li");

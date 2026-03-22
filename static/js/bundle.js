@@ -1,15 +1,37 @@
 /* --- drawer-fix.js --- */
-// Fix drawer state on back navigation (bfcache).
+// Fix drawer state on back navigation (bfcache) and sync a body class so
+// floating UI (e.g. scroll-to-top) stays below the mobile drawer panel.
 // Must NOT be deferred — needs to run early to catch pageshow.
 (function () {
-  window.addEventListener('pageshow', function (e) {
+  function isMobileDrawerViewport() {
+    return typeof window.matchMedia === "function"
+      ? window.matchMedia("(max-width: 1023px)").matches
+      : window.innerWidth < 1024;
+  }
+
+  function syncDrawerOpenClass() {
+    var d = document.getElementById("my-drawer-2");
+    if (!d) return;
+    var open = d.checked && isMobileDrawerViewport();
+    document.body.classList.toggle("drawer-mobile-open", open);
+  }
+
+  window.addEventListener("pageshow", function (e) {
     if (e.persisted) {
-      var d = document.getElementById('my-drawer-2');
+      var d = document.getElementById("my-drawer-2");
       if (d) d.checked = false;
     }
+    syncDrawerOpenClass();
+  });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    var d = document.getElementById("my-drawer-2");
+    if (!d) return;
+    d.addEventListener("change", syncDrawerOpenClass);
+    window.addEventListener("resize", syncDrawerOpenClass);
+    syncDrawerOpenClass();
   });
 })();
-
 
 /* --- responsive-helpers.js --- */
 /**
@@ -52,7 +74,7 @@
     state.mediaQueries.hoverCapable = window.matchMedia("(hover: hover)");
     state.mediaQueries.finePointer = window.matchMedia("(pointer: fine)");
     state.mediaQueries.largeScreen = window.matchMedia(
-      `(min-width: ${BREAKPOINTS.LG}px)`
+      `(min-width: ${BREAKPOINTS.LG}px)`,
     );
     state.mediaQueries.touchDevice = window.matchMedia("(pointer: coarse)");
 
@@ -247,7 +269,6 @@
   }
 })();
 
-
 /* --- clipboard-utils.js --- */
 /**
  * Clipboard Utilities - Consolidated clipboard functionality
@@ -262,8 +283,9 @@ document.addEventListener("DOMContentLoaded", () => {
         .writeText(window.location.href)
         .then(() => {
           const originalText = button.innerHTML;
-          button.innerHTML = button.getAttribute("data-copy-feedback") || "Copied!";
-          setTimeout(() => button.innerHTML = originalText, 2000);
+          button.innerHTML =
+            button.getAttribute("data-copy-feedback") || "Copied!";
+          setTimeout(() => (button.innerHTML = originalText), 2000);
         })
         .catch(console.error);
     });
@@ -271,23 +293,26 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // Copy code blocks
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('pre > code').forEach((codeBlock) => {
-    const button = document.createElement('button');
-    button.className = 'copy-code-button';
-    button.type = 'button';
-    button.setAttribute('aria-label', 'Copy code');
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("pre > code").forEach((codeBlock) => {
+    const button = document.createElement("button");
+    button.className = "copy-code-button";
+    button.type = "button";
+    button.setAttribute("aria-label", "Copy code");
     button.innerHTML = '<i class="fa-regular fa-clipboard"></i>';
 
-    button.addEventListener('click', () => {
-      navigator.clipboard.writeText(codeBlock.innerText).then(() => {
-        button.innerHTML = '<i class="fa-solid fa-check"></i>';
-        button.classList.add('copied');
-        setTimeout(() => {
-          button.innerHTML = '<i class="fa-regular fa-clipboard"></i>';
-          button.classList.remove('copied');
-        }, 2000);
-      }).catch(console.error);
+    button.addEventListener("click", () => {
+      navigator.clipboard
+        .writeText(codeBlock.innerText)
+        .then(() => {
+          button.innerHTML = '<i class="fa-solid fa-check"></i>';
+          button.classList.add("copied");
+          setTimeout(() => {
+            button.innerHTML = '<i class="fa-regular fa-clipboard"></i>';
+            button.classList.remove("copied");
+          }, 2000);
+        })
+        .catch(console.error);
     });
 
     codeBlock.parentNode.appendChild(button);
@@ -296,32 +321,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Copy heading links
 document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll("h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]").forEach((heading) => {
-    const originalContent = heading.innerHTML;
-    const link = document.createElement("a");
-    link.href = `#${heading.id}`;
-    link.className = "copy-heading-link-button";
-    link.setAttribute("aria-label", "Copy link to this heading");
-    link.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg>';
+  document
+    .querySelectorAll("h1[id], h2[id], h3[id], h4[id], h5[id], h6[id]")
+    .forEach((heading) => {
+      const originalContent = heading.innerHTML;
+      const link = document.createElement("a");
+      link.href = `#${heading.id}`;
+      link.className = "copy-heading-link-button";
+      link.setAttribute("aria-label", "Copy link to this heading");
+      link.innerHTML =
+        '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.19 8.688a4.5 4.5 0 011.242 7.244l-4.5 4.5a4.5 4.5 0 01-6.364-6.364l1.757-1.757m13.35-.622l1.757-1.757a4.5 4.5 0 00-6.364-6.364l-4.5 4.5a4.5 4.5 0 001.242 7.244" /></svg>';
 
-    link.addEventListener("click", (event) => {
-      event.preventDefault();
-      navigator.clipboard.writeText(new URL(link.href, window.location.href).toString())
-        .then(() => {
-          link.style.transform = "scale(1.2)";
-          setTimeout(() => link.style.transform = "scale(1.05)", 200);
-        })
-        .catch(console.error);
+      link.addEventListener("click", (event) => {
+        event.preventDefault();
+        navigator.clipboard
+          .writeText(new URL(link.href, window.location.href).toString())
+          .then(() => {
+            link.style.transform = "scale(1.2)";
+            setTimeout(() => (link.style.transform = "scale(1.05)"), 200);
+          })
+          .catch(console.error);
+      });
+
+      const textSpan = document.createElement("span");
+      textSpan.innerHTML = originalContent;
+      heading.innerHTML = "";
+      heading.appendChild(textSpan);
+      heading.appendChild(link);
     });
-
-    const textSpan = document.createElement("span");
-    textSpan.innerHTML = originalContent;
-    heading.innerHTML = "";
-    heading.appendChild(textSpan);
-    heading.appendChild(link);
-  });
 });
-
 
 /* --- shortcut-hints.js --- */
 (function () {
@@ -383,7 +411,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 })();
 
-
 /* --- scroll-to-top.js --- */
 (function () {
   "use strict";
@@ -408,7 +435,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Inline styles for positioning and animation
     btn.style.cssText =
-      "position: fixed; bottom: 1rem; right: 1rem; z-index: 50; opacity: 0; pointer-events: none; transition: opacity 0.3s ease, transform 0.3s ease; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); transform: translateY(20px);";
+      "position: fixed; bottom: 1rem; right: 1rem; z-index: 40; opacity: 0; pointer-events: none; transition: opacity 0.3s ease, transform 0.3s ease; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); transform: translateY(20px);";
 
     document.body.appendChild(btn);
 
@@ -464,7 +491,6 @@ document.addEventListener("DOMContentLoaded", () => {
     init();
   }
 })();
-
 
 /* --- lazy-modules.js --- */
 (function () {
@@ -529,7 +555,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 })();
 
-
 /* --- page-init.js --- */
 (function () {
   "use strict";
@@ -546,9 +571,13 @@ document.addEventListener("DOMContentLoaded", () => {
     window.fallbackTheme;
 
   // Resolve "auto" to actual OS preference
-  var resolvedTheme = (currentUserTheme === "auto")
-    ? (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
-    : currentUserTheme;
+  var resolvedTheme =
+    currentUserTheme === "auto"
+      ? window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light"
+      : currentUserTheme;
 
   window.initMermaid = function () {
     var mermaidTheme = resolvedTheme === "light" ? "light" : "dark";
@@ -572,7 +601,6 @@ document.addEventListener("DOMContentLoaded", () => {
     window.initMermaid();
   }
 })();
-
 
 /* --- sw-register.js --- */
 (function () {
@@ -648,7 +676,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 })();
 
-
 /* --- comments-giscus.js --- */
 (function () {
   "use strict";
@@ -661,9 +688,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
   var rawTheme =
     (window.__getThemeCookie ? window.__getThemeCookie() : null) || "auto";
-  var giscusTheme = (rawTheme === "auto")
-    ? (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
-    : rawTheme;
+  var giscusTheme =
+    rawTheme === "auto"
+      ? window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light"
+      : rawTheme;
 
   var script = document.createElement("script");
   script.src = "https://giscus.app/client.js";
@@ -684,7 +715,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   mount.appendChild(script);
 })();
-
 
 /* --- shell.js --- */
 /**
@@ -736,7 +766,11 @@ document.addEventListener("DOMContentLoaded", () => {
   var APPS = [
     { name: "Home", url: "https://dhanur.me", icon: "fa-solid fa-globe" },
     { name: "Linkr", url: "https://linkr.dhanur.me", icon: "fa-solid fa-link" },
-    { name: "Tasks", url: "https://tasks.dhanur.me", icon: "fa-solid fa-list-check" },
+    {
+      name: "Tasks",
+      url: "https://tasks.dhanur.me",
+      icon: "fa-solid fa-list-check",
+    },
   ];
 
   var SVG_HAMBURGER =
@@ -770,8 +804,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // 2. Script element + SiteNavConfig
   // =========================================================================
   var SCRIPT_EL =
-    document.currentScript ||
-    document.querySelector('script[src*="shell.js"]');
+    document.currentScript || document.querySelector('script[src*="shell.js"]');
 
   var SCRIPT_ATTR = {
     baseUrl: SCRIPT_EL ? SCRIPT_EL.getAttribute("data-base-url") : null,
@@ -800,14 +833,18 @@ document.addEventListener("DOMContentLoaded", () => {
       darkImageWebp: userLogo.darkImageWebp || DEFAULT_LOGO.darkImageWebp,
       lightImageWebp: userLogo.lightImageWebp || DEFAULT_LOGO.lightImageWebp,
       imagePadding: userLogo.imagePadding || DEFAULT_LOGO.imagePadding,
-      imageOnly: userLogo.darkImage !== undefined || userLogo.lightImage !== undefined || !CFG.logo,
+      imageOnly:
+        userLogo.darkImage !== undefined ||
+        userLogo.lightImage !== undefined ||
+        !CFG.logo,
     };
   })();
 
   // =========================================================================
   // 3. Base URL resolution
   // =========================================================================
-  var SCRIPT_ORIGIN = SCRIPT_EL && SCRIPT_EL.src ? new URL(SCRIPT_EL.src).origin : MAIN_SITE;
+  var SCRIPT_ORIGIN =
+    SCRIPT_EL && SCRIPT_EL.src ? new URL(SCRIPT_EL.src).origin : MAIN_SITE;
   var BASE = (SCRIPT_ATTR.baseUrl || SCRIPT_ORIGIN).replace(/\/+$/, "");
   var SAME_ORIGIN = location.origin === BASE;
 
@@ -817,9 +854,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function debounce(fn, ms) {
     var t;
     return function () {
-      var self = this, args = arguments;
+      var self = this,
+        args = arguments;
       clearTimeout(t);
-      t = setTimeout(function () { fn.apply(self, args); }, ms);
+      t = setTimeout(function () {
+        fn.apply(self, args);
+      }, ms);
     };
   }
 
@@ -840,16 +880,23 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function setCookie(val) {
-    if (window.__setThemeCookie) { window.__setThemeCookie(val); return; }
+    if (window.__setThemeCookie) {
+      window.__setThemeCookie(val);
+      return;
+    }
     var d = COOKIE_DOMAIN ? "; domain=" + COOKIE_DOMAIN : "";
-    document.cookie = "theme=" + val + "; path=/" + d + "; max-age=31536000; SameSite=Lax";
+    document.cookie =
+      "theme=" + val + "; path=/" + d + "; max-age=31536000; SameSite=Lax";
   }
 
   // Resolve "auto" to "dark" or "light" based on OS preference
   function resolveColorset(val) {
     if (window.__resolveColorset) return window.__resolveColorset(val);
     if (val === "auto") {
-      return (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+      return window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
     }
     return val;
   }
@@ -863,7 +910,8 @@ document.addEventListener("DOMContentLoaded", () => {
     var daisyTheme = THEME_MAP[theme] || theme;
     document.documentElement.setAttribute("data-theme", daisyTheme);
     document.documentElement.classList.add(theme === "dark" ? "dark" : "light");
-    document.documentElement.style.colorScheme = theme === "dark" ? "dark" : "light";
+    document.documentElement.style.colorScheme =
+      theme === "dark" ? "dark" : "light";
   })();
 
   // =========================================================================
@@ -873,7 +921,8 @@ document.addEventListener("DOMContentLoaded", () => {
     if (NO_CSS) return;
     var cssBase = SAME_ORIGIN ? "" : BASE;
 
-    var hasMain = false, hasFA = false;
+    var hasMain = false,
+      hasFA = false;
     var links = document.querySelectorAll('link[rel="stylesheet"]');
     for (var i = 0; i < links.length; i++) {
       var href = links[i].getAttribute("href") || "";
@@ -888,8 +937,11 @@ document.addEventListener("DOMContentLoaded", () => {
       { href: cssBase + "/fonts/Pretendard-Regular.woff", type: "font/woff" },
     ].forEach(function (p) {
       var pl = document.createElement("link");
-      pl.rel = "preload"; pl.as = "font"; pl.type = p.type;
-      pl.href = p.href; pl.crossOrigin = "anonymous";
+      pl.rel = "preload";
+      pl.as = "font";
+      pl.type = p.type;
+      pl.href = p.href;
+      pl.crossOrigin = "anonymous";
       document.head.appendChild(pl);
     });
 
@@ -906,29 +958,47 @@ document.addEventListener("DOMContentLoaded", () => {
       faLink.rel = "stylesheet";
       faLink.href = cssBase + "/css/font-awesome.min.css";
       faLink.media = "print";
-      faLink.onload = function () { this.media = "all"; };
+      faLink.onload = function () {
+        this.media = "all";
+      };
       if (!SAME_ORIGIN) faLink.crossOrigin = "anonymous";
       document.head.appendChild(faLink);
       var ns = document.createElement("noscript");
       var nsFa = document.createElement("link");
-      nsFa.rel = "stylesheet"; nsFa.href = cssBase + "/css/font-awesome.min.css";
-      ns.appendChild(nsFa); document.head.appendChild(ns);
+      nsFa.rel = "stylesheet";
+      nsFa.href = cssBase + "/css/font-awesome.min.css";
+      ns.appendChild(nsFa);
+      document.head.appendChild(ns);
     }
 
     var fontStyle = document.createElement("style");
     fontStyle.textContent =
       '@font-face{font-family:"Font Awesome 6 Brands";font-style:normal;font-weight:400;font-display:swap;' +
-        "src:url(" + cssBase + '/webfonts/fa-brands-400.woff2) format("woff2"),' +
-        "url(" + cssBase + '/webfonts/fa-brands-400.ttf) format("truetype")}' +
+      "src:url(" +
+      cssBase +
+      '/webfonts/fa-brands-400.woff2) format("woff2"),' +
+      "url(" +
+      cssBase +
+      '/webfonts/fa-brands-400.ttf) format("truetype")}' +
       '@font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:400;font-display:swap;' +
-        "src:url(" + cssBase + '/webfonts/fa-regular-400.woff2) format("woff2"),' +
-        "url(" + cssBase + '/webfonts/fa-regular-400.ttf) format("truetype")}' +
+      "src:url(" +
+      cssBase +
+      '/webfonts/fa-regular-400.woff2) format("woff2"),' +
+      "url(" +
+      cssBase +
+      '/webfonts/fa-regular-400.ttf) format("truetype")}' +
       '@font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:900;font-display:swap;' +
-        "src:url(" + cssBase + '/webfonts/fa-solid-900.woff2) format("woff2"),' +
-        "url(" + cssBase + '/webfonts/fa-solid-900.ttf) format("truetype")}' +
+      "src:url(" +
+      cssBase +
+      '/webfonts/fa-solid-900.woff2) format("woff2"),' +
+      "url(" +
+      cssBase +
+      '/webfonts/fa-solid-900.ttf) format("truetype")}' +
       '@font-face{font-family:"Pretendard-Regular";' +
-        "src:url('" + cssBase + '/fonts/Pretendard-Regular.woff\') format("woff");' +
-        "font-weight:400;font-style:normal;font-display:swap}" +
+      "src:url('" +
+      cssBase +
+      '/fonts/Pretendard-Regular.woff\') format("woff");' +
+      "font-weight:400;font-style:normal;font-display:swap}" +
       'body{font-family:"Pretendard-Regular",sans-serif}';
     document.head.appendChild(fontStyle);
   }
@@ -939,19 +1009,33 @@ document.addEventListener("DOMContentLoaded", () => {
   // =========================================================================
   function injectFavicons() {
     if (FAVICON_CFG === false) return;
-    var iconBase = (typeof FAVICON_CFG === "string")
-      ? FAVICON_CFG.replace(/\/+$/, "") + "/"
-      : BASE + "/icons/";
+    var iconBase =
+      typeof FAVICON_CFG === "string"
+        ? FAVICON_CFG.replace(/\/+$/, "") + "/"
+        : BASE + "/icons/";
 
-    document.querySelectorAll(
-      'link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"], link[rel="manifest"]'
-    ).forEach(function (el) { el.remove(); });
+    document
+      .querySelectorAll(
+        'link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"], link[rel="manifest"]',
+      )
+      .forEach(function (el) {
+        el.remove();
+      });
 
     [
-      { rel: "icon", type: "image/png", sizes: "96x96", href: iconBase + "favicon-96x96.png" },
+      {
+        rel: "icon",
+        type: "image/png",
+        sizes: "96x96",
+        href: iconBase + "favicon-96x96.png",
+      },
       { rel: "icon", type: "image/svg+xml", href: iconBase + "favicon.svg" },
       { rel: "shortcut icon", href: iconBase + "favicon.ico" },
-      { rel: "apple-touch-icon", sizes: "180x180", href: iconBase + "apple-touch-icon.png" },
+      {
+        rel: "apple-touch-icon",
+        sizes: "180x180",
+        href: iconBase + "apple-touch-icon.png",
+      },
       { rel: "manifest", href: iconBase + "site.webmanifest" },
     ].forEach(function (f) {
       var link = document.createElement("link");
@@ -970,7 +1054,9 @@ document.addEventListener("DOMContentLoaded", () => {
   var _logoDark = null;
   var _logoLight = null;
   var _currentMode = "auto"; // raw cookie value: "auto", "dark", "light"
-  var _mediaQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+  var _mediaQuery = window.matchMedia
+    ? window.matchMedia("(prefers-color-scheme: dark)")
+    : null;
 
   // Mode cycling order (kept for validation)
   var MODE_CYCLE = ["auto", "light", "dark"];
@@ -992,8 +1078,10 @@ document.addEventListener("DOMContentLoaded", () => {
       document.documentElement.style.colorScheme = "light";
     }
     document.documentElement.style.backgroundColor = "";
-    if (_logoDark) _logoDark.classList.toggle("invisible", resolvedTheme !== "dark");
-    if (_logoLight) _logoLight.classList.toggle("invisible", resolvedTheme !== "light");
+    if (_logoDark)
+      _logoDark.classList.toggle("invisible", resolvedTheme !== "dark");
+    if (_logoLight)
+      _logoLight.classList.toggle("invisible", resolvedTheme !== "light");
   }
 
   function updateToggleUI() {
@@ -1004,13 +1092,21 @@ document.addEventListener("DOMContentLoaded", () => {
       btns.forEach(function (btn) {
         var mode = btn.getAttribute("data-theme-mode");
         // Remove all dynamic classes first
-        ACTIVE_CLASS.split(" ").forEach(function (c) { btn.classList.remove(c); });
-        INACTIVE_CLASS.split(" ").forEach(function (c) { btn.classList.remove(c); });
+        ACTIVE_CLASS.split(" ").forEach(function (c) {
+          btn.classList.remove(c);
+        });
+        INACTIVE_CLASS.split(" ").forEach(function (c) {
+          btn.classList.remove(c);
+        });
         // Apply correct state
         if (mode === _currentMode) {
-          ACTIVE_CLASS.split(" ").forEach(function (c) { btn.classList.add(c); });
+          ACTIVE_CLASS.split(" ").forEach(function (c) {
+            btn.classList.add(c);
+          });
         } else {
-          INACTIVE_CLASS.split(" ").forEach(function (c) { btn.classList.add(c); });
+          INACTIVE_CLASS.split(" ").forEach(function (c) {
+            btn.classList.add(c);
+          });
         }
       });
     });
@@ -1022,7 +1118,9 @@ document.addEventListener("DOMContentLoaded", () => {
     var resolved = resolveColorset(mode);
     applyTheme(resolved);
     updateToggleUI();
-    document.dispatchEvent(new CustomEvent("themeChanged", { detail: resolved }));
+    document.dispatchEvent(
+      new CustomEvent("themeChanged", { detail: resolved }),
+    );
   }
 
   function wireTheme() {
@@ -1033,10 +1131,14 @@ document.addEventListener("DOMContentLoaded", () => {
     var resolved = resolveColorset(_currentMode);
     applyTheme(resolved);
     updateToggleUI();
-    document.dispatchEvent(new CustomEvent("themeChanged", { detail: resolved }));
+    document.dispatchEvent(
+      new CustomEvent("themeChanged", { detail: resolved }),
+    );
 
     // Wire click handlers on all segment buttons
-    var allBtns = document.querySelectorAll(".theme-switcher [data-theme-mode]");
+    var allBtns = document.querySelectorAll(
+      ".theme-switcher [data-theme-mode]",
+    );
     allBtns.forEach(function (btn) {
       btn.addEventListener("click", function (e) {
         e.preventDefault();
@@ -1055,7 +1157,9 @@ document.addEventListener("DOMContentLoaded", () => {
           var resolved = resolveColorset("auto");
           applyTheme(resolved);
           updateToggleUI();
-          document.dispatchEvent(new CustomEvent("themeChanged", { detail: resolved }));
+          document.dispatchEvent(
+            new CustomEvent("themeChanged", { detail: resolved }),
+          );
         }
       };
       if (_mediaQuery.addEventListener) {
@@ -1077,7 +1181,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function closeAll() {
       dropdowns.forEach(function (dd) {
         dd.removeAttribute("data-open");
-        
+
         // Restore tooltip if it was suppressed
         var btn = dd.querySelector('[role="button"]');
         if (btn && btn.hasAttribute("data-tip")) {
@@ -1090,7 +1194,8 @@ document.addEventListener("DOMContentLoaded", () => {
           panel.style.transform = "";
           panel.style.pointerEvents = "none";
           setTimeout(function () {
-            if (!dd.hasAttribute("data-open")) panel.style.visibility = "hidden";
+            if (!dd.hasAttribute("data-open"))
+              panel.style.visibility = "hidden";
           }, 150);
         }
       });
@@ -1103,12 +1208,12 @@ document.addEventListener("DOMContentLoaded", () => {
       var rect = dd.getBoundingClientRect();
       var pw = panel.offsetWidth || 224;
       var idealLeft = (rect.width - pw) / 2;
-      
+
       // Use window.innerWidth - 32 to safely clear any scrollbars (up to 20px) and leave padding
       var rightOverflow = rect.left + idealLeft + pw - (window.innerWidth - 16);
       if (rightOverflow > 0) idealLeft -= rightOverflow;
       if (rect.left + idealLeft < 8) idealLeft = 8 - rect.left;
-      
+
       panel.style.left = idealLeft + "px";
       panel.style.right = "auto";
     }
@@ -1116,7 +1221,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function openPanel(dd) {
       dd.setAttribute("data-open", "");
       openDropdown = dd;
-      
+
       // Suppress tooltip while open
       var btn = dd.querySelector('[role="button"]');
       if (btn) btn.classList.remove("tooltip");
@@ -1145,13 +1250,24 @@ document.addEventListener("DOMContentLoaded", () => {
       });
 
       if (panel) {
-        panel.addEventListener("click", function (e) { e.stopPropagation(); });
+        panel.addEventListener("click", function (e) {
+          e.stopPropagation();
+        });
       }
     });
 
-    document.addEventListener("click", function () { if (openDropdown) closeAll(); });
-    document.addEventListener("keydown", function (e) { if (e.key === "Escape" && openDropdown) closeAll(); });
-    window.addEventListener("resize", debounce(function () { if (openDropdown) positionPanel(openDropdown); }, 100));
+    document.addEventListener("click", function () {
+      if (openDropdown) closeAll();
+    });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && openDropdown) closeAll();
+    });
+    window.addEventListener(
+      "resize",
+      debounce(function () {
+        if (openDropdown) positionPanel(openDropdown);
+      }, 100),
+    );
   }
 
   // =========================================================================
@@ -1165,7 +1281,9 @@ document.addEventListener("DOMContentLoaded", () => {
     return e;
   }
 
-  function normSlash(p) { return (p || "").replace(/\/$/, "") || "/"; }
+  function normSlash(p) {
+    return (p || "").replace(/\/$/, "") || "/";
+  }
 
   function buildHeaderNavItem(item) {
     var li = document.createElement("li");
@@ -1180,7 +1298,10 @@ document.addEventListener("DOMContentLoaded", () => {
       btn.innerHTML = btnHTML;
       li.appendChild(btn);
 
-      var dropUl = el("ul", "dropdown-content menu bg-base-100 border border-gray-500/15 rounded-box z-1 p-2 shadow-sm");
+      var dropUl = el(
+        "ul",
+        "dropdown-content menu bg-base-100 border border-base-content/10 rounded-box z-1 p-2 shadow-sm",
+      );
       dropUl.setAttribute("tabindex", "0");
       item.members.forEach(function (m) {
         var mLi = document.createElement("li");
@@ -1230,16 +1351,16 @@ document.addEventListener("DOMContentLoaded", () => {
         // Remove all non-chrome <li> elements
         var items = Array.from(headerNavUl.children);
         var insertBeforeNode = null;
-        items.forEach(function(li) {
+        items.forEach(function (li) {
           if (!li.hasAttribute("data-nav-chrome")) {
             headerNavUl.removeChild(li);
           } else if (!insertBeforeNode) {
             insertBeforeNode = li;
           }
         });
-        
+
         // Insert custom nav items
-        CFG.nav.forEach(function(item) {
+        CFG.nav.forEach(function (item) {
           var li = buildHeaderNavItem(item);
           if (insertBeforeNode) headerNavUl.insertBefore(li, insertBeforeNode);
           else headerNavUl.appendChild(li);
@@ -1253,18 +1374,18 @@ document.addEventListener("DOMContentLoaded", () => {
       var sidebarUl = drawer.querySelector("#sidebar [data-sidebar-nav]");
       if (sidebarUl) {
         sidebarUl.innerHTML = ""; // Clear Zola links
-        sidebarNavItems.forEach(function(item) {
+        sidebarNavItems.forEach(function (item) {
           if (item.type === "dropdown" && item.members) {
-             item.members.forEach(function(m) {
-               sidebarUl.appendChild(buildSidebarNavItem(m));
-             });
+            item.members.forEach(function (m) {
+              sidebarUl.appendChild(buildSidebarNavItem(m));
+            });
           } else if (item.children) {
-             sidebarUl.appendChild(buildSidebarNavItem(item));
-             item.children.forEach(function(c) {
-               sidebarUl.appendChild(buildSidebarNavItem(c));
-             });
+            sidebarUl.appendChild(buildSidebarNavItem(item));
+            item.children.forEach(function (c) {
+              sidebarUl.appendChild(buildSidebarNavItem(c));
+            });
           } else {
-             sidebarUl.appendChild(buildSidebarNavItem(item));
+            sidebarUl.appendChild(buildSidebarNavItem(item));
           }
         });
       }
@@ -1272,46 +1393,53 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Apply active state (fallback for existing Zola DOM elements)
     var activePath = normSlash(ACTIVE_PATH);
-    drawer.querySelectorAll("#sidebar [data-sidebar-nav] a").forEach(function(a) {
-      try {
-        if (normSlash(new URL(a.href, location.origin).pathname) === activePath) {
-          a.parentElement.className = "rounded bg-gray-500/15 font-medium";
-        }
-      } catch (e) {}
-    });
+    drawer
+      .querySelectorAll("#sidebar [data-sidebar-nav] a")
+      .forEach(function (a) {
+        try {
+          if (
+            normSlash(new URL(a.href, location.origin).pathname) === activePath
+          ) {
+            a.parentElement.className = "rounded bg-gray-500/15 font-medium";
+          }
+        } catch (e) {}
+      });
 
     // Handle Chrome Visibility Overrides
     if (CFG.showSearch === false) {
       var searchEl = drawer.querySelector('.input[aria-label="Search"]');
       if (searchEl) {
-        var searchContainer = searchEl.closest('div.px-2.pt-4');
-        if (searchContainer) searchContainer.style.display = 'none';
+        var searchContainer = searchEl.closest("div.px-2.pt-4");
+        if (searchContainer) searchContainer.style.display = "none";
       }
     }
     if (CFG.showAppsGrid === false) {
       var appsEl = drawer.querySelector('[data-nav-chrome="apps"]');
-      if (appsEl) appsEl.style.display = 'none';
-      var appsSidebarEl = drawer.querySelector('[data-apps-grid-sidebar]');
-      if (appsSidebarEl) appsSidebarEl.style.display = 'none';
+      if (appsEl) appsEl.style.display = "none";
+      var appsSidebarEl = drawer.querySelector("[data-apps-grid-sidebar]");
+      if (appsSidebarEl) appsSidebarEl.style.display = "none";
     }
     if (CFG.showThemeToggle === false) {
       var themeEl = drawer.querySelector('[data-nav-chrome="theme"]');
-      if (themeEl) themeEl.style.display = 'none';
-      var themeSidebarEl = drawer.querySelector('#theme-toggle-mobile');
-      if (themeSidebarEl) themeSidebarEl.style.display = 'none';
+      if (themeEl) themeEl.style.display = "none";
+      var themeSidebarEl = drawer.querySelector("#theme-toggle-mobile");
+      if (themeSidebarEl) themeSidebarEl.style.display = "none";
     }
     if (CFG.showAccount === false) {
       var accountEl = drawer.querySelector('[data-nav-chrome="account"]');
-      if (accountEl) accountEl.style.display = 'none';
-      var accountSidebarEl = drawer.querySelector('[data-sidebar-account]');
-      if (accountSidebarEl) accountSidebarEl.style.display = 'none';
+      if (accountEl) accountEl.style.display = "none";
+      var accountSidebarEl = drawer.querySelector("[data-sidebar-account]");
+      if (accountSidebarEl) accountSidebarEl.style.display = "none";
     }
 
     // Apply logo badge if requested
     if (BADGE_CFG && BADGE_CFG.text) {
       var logoLink = drawer.querySelector(".navbar .btn-ghost.logo-gradient");
       if (logoLink) {
-        var badge = el("div", "badge " + (BADGE_CFG.class || "badge-neutral") + " badge-sm ml-2");
+        var badge = el(
+          "div",
+          "badge " + (BADGE_CFG.class || "badge-neutral") + " badge-sm ml-2",
+        );
         badge.textContent = BADGE_CFG.text;
         logoLink.parentElement.appendChild(badge);
       }
@@ -1324,11 +1452,20 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // Auto-inject auth-client.js from auth.dhanur.me
   function injectAuthSDK(callback) {
-    if (window.AUTH) { callback(); return; }
+    if (window.AUTH) {
+      callback();
+      return;
+    }
     var existing = document.querySelector('script[src*="auth-client.js"]');
     if (existing) {
       // Script tag exists but AUTH may not be ready yet
-      document.addEventListener("authReady", function () { callback(); }, { once: true });
+      document.addEventListener(
+        "authReady",
+        function () {
+          callback();
+        },
+        { once: true },
+      );
       return;
     }
     var script = document.createElement("script");
@@ -1337,7 +1474,9 @@ document.addEventListener("DOMContentLoaded", () => {
     script.onload = function () {
       // AUTH.onReady will fire when status is fetched
       if (window.AUTH && typeof AUTH.onReady === "function") {
-        AUTH.onReady(function () { callback(); });
+        AUTH.onReady(function () {
+          callback();
+        });
       } else {
         callback();
       }
@@ -1352,9 +1491,24 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!periodEnd) return "";
     try {
       var d = new Date(periodEnd);
-      var months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      var months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
       return "resets " + months[d.getUTCMonth()] + " " + d.getUTCDate();
-    } catch (e) { return ""; }
+    } catch (e) {
+      return "";
+    }
   }
 
   function updateCreditsUI(drawer, credits) {
@@ -1374,11 +1528,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     // Mobile sidebar
-    var sidebarCreditsRow = drawer.querySelector('[data-auth="sidebar-credits-row"]');
+    var sidebarCreditsRow = drawer.querySelector(
+      '[data-auth="sidebar-credits-row"]',
+    );
     if (sidebarCreditsRow) {
       sidebarCreditsRow.classList.remove("hidden");
-      var sBalanceEl = sidebarCreditsRow.querySelector('[data-auth="sidebar-credits-balance"]');
-      var sResetEl = sidebarCreditsRow.querySelector('[data-auth="sidebar-credits-reset"]');
+      var sBalanceEl = sidebarCreditsRow.querySelector(
+        '[data-auth="sidebar-credits-balance"]',
+      );
+      var sResetEl = sidebarCreditsRow.querySelector(
+        '[data-auth="sidebar-credits-reset"]',
+      );
       if (sBalanceEl) sBalanceEl.textContent = balanceText;
       if (sResetEl) sResetEl.textContent = resetText;
     }
@@ -1387,7 +1547,9 @@ document.addEventListener("DOMContentLoaded", () => {
   function hideCreditsUI(drawer) {
     var creditsRow = drawer.querySelector('[data-auth="credits-row"]');
     if (creditsRow) creditsRow.classList.add("hidden");
-    var sidebarCreditsRow = drawer.querySelector('[data-auth="sidebar-credits-row"]');
+    var sidebarCreditsRow = drawer.querySelector(
+      '[data-auth="sidebar-credits-row"]',
+    );
     if (sidebarCreditsRow) sidebarCreditsRow.classList.add("hidden");
   }
 
@@ -1396,27 +1558,57 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Dynamically query DOM instead of relying on build refs
     var r = {
-      navGuestAvatar: drawer.querySelector('.navbar [data-dropdown="account"] .bg-base-300'),
-      navAuthedAvatar: drawer.querySelector('.navbar [data-dropdown="account"] .ring-primary'),
-      navAvatarImg: drawer.querySelector('.navbar [data-dropdown="account"] .ring-primary img'),
-      navAuthedHeader: drawer.querySelector('.navbar .dropdown-panel [data-auth="name"]')?.closest('.border-b'),
-      navGuestHeader: drawer.querySelector('.navbar .dropdown-panel .fa-user')?.closest('.border-b'),
+      navGuestAvatar: drawer.querySelector(
+        '.navbar [data-dropdown="account"] .bg-base-300',
+      ),
+      navAuthedAvatar: drawer.querySelector(
+        '.navbar [data-dropdown="account"] .ring-primary',
+      ),
+      navAvatarImg: drawer.querySelector(
+        '.navbar [data-dropdown="account"] .ring-primary img',
+      ),
+      navAuthedHeader: drawer
+        .querySelector('.navbar .dropdown-panel [data-auth="name"]')
+        ?.closest(".border-b"),
+      navGuestHeader: drawer
+        .querySelector(".navbar .dropdown-panel .fa-user")
+        ?.closest(".border-b"),
       navName: drawer.querySelector('.navbar [data-auth="name"]'),
       navEmail: drawer.querySelector('.navbar [data-auth="email"]'),
       navRole: drawer.querySelector('.navbar [data-auth="role"]'),
       navLoginItem: drawer.querySelector('.navbar [data-auth="login-item"]'),
-      navAccountItem: drawer.querySelector('.navbar [data-auth="account-item"]'),
-      navUpgradeItem: drawer.querySelector('.navbar [data-auth="upgrade-item"]'),
+      navAccountItem: drawer.querySelector(
+        '.navbar [data-auth="account-item"]',
+      ),
+      navUpgradeItem: drawer.querySelector(
+        '.navbar [data-auth="upgrade-item"]',
+      ),
       navLogoutItem: drawer.querySelector('.navbar [data-auth="logout-item"]'),
-      
-      sidebarGuestAvatar: drawer.querySelector('#sidebar [data-sidebar-account] .bg-base-300'),
-      sidebarAuthedAvatar: drawer.querySelector('#sidebar [data-sidebar-account] .ring-primary'),
-      sidebarAvatarImg: drawer.querySelector('#sidebar [data-sidebar-account] .ring-primary img'),
-      sidebarName: drawer.querySelector('#sidebar [data-sidebar-account] .font-semibold'),
-      sidebarEmail: drawer.querySelector('#sidebar [data-sidebar-account] .text-xs.opacity-60'),
-      sidebarLoginBtn: drawer.querySelector('#sidebar [data-auth="sidebar-login-btn"]'),
-      sidebarLogoutBtn: drawer.querySelector('#sidebar [data-auth="sidebar-logout-btn"]'),
-      sidebarAccountBtn: drawer.querySelector('#sidebar [data-auth="sidebar-account-btn"]')
+
+      sidebarGuestAvatar: drawer.querySelector(
+        "#sidebar [data-sidebar-account] .bg-base-300",
+      ),
+      sidebarAuthedAvatar: drawer.querySelector(
+        "#sidebar [data-sidebar-account] .ring-primary",
+      ),
+      sidebarAvatarImg: drawer.querySelector(
+        "#sidebar [data-sidebar-account] .ring-primary img",
+      ),
+      sidebarName: drawer.querySelector(
+        "#sidebar [data-sidebar-account] .font-semibold",
+      ),
+      sidebarEmail: drawer.querySelector(
+        "#sidebar [data-sidebar-account] .text-xs.opacity-60",
+      ),
+      sidebarLoginBtn: drawer.querySelector(
+        '#sidebar [data-auth="sidebar-login-btn"]',
+      ),
+      sidebarLogoutBtn: drawer.querySelector(
+        '#sidebar [data-auth="sidebar-logout-btn"]',
+      ),
+      sidebarAccountBtn: drawer.querySelector(
+        '#sidebar [data-auth="sidebar-account-btn"]',
+      ),
     };
 
     function updateUI(status) {
@@ -1435,21 +1627,27 @@ document.addEventListener("DOMContentLoaded", () => {
         if (r.navAvatarImg) r.navAvatarImg.src = avatarUrl;
         if (r.navAuthedHeader) r.navAuthedHeader.classList.remove("hidden");
         if (r.navGuestHeader) r.navGuestHeader.classList.add("hidden");
-        if (r.navAuthedHeader && r.navAuthedHeader.querySelector('img')) r.navAuthedHeader.querySelector('img').src = avatarUrl;
+        if (r.navAuthedHeader && r.navAuthedHeader.querySelector("img"))
+          r.navAuthedHeader.querySelector("img").src = avatarUrl;
         if (r.navName) r.navName.textContent = userName;
         if (r.navEmail) r.navEmail.textContent = userEmail;
         if (r.navRole) {
           r.navRole.textContent = role.toUpperCase();
-          r.navRole.className = role === "admin" ? "badge badge-sm badge-error" : "badge badge-sm badge-success";
+          r.navRole.className =
+            role === "admin"
+              ? "badge badge-sm badge-error"
+              : "badge badge-sm badge-success";
           r.navRole.classList.remove("hidden");
         }
         if (r.navLoginItem) r.navLoginItem.classList.add("hidden");
         if (r.navAccountItem) r.navAccountItem.classList.remove("hidden");
         if (r.navLogoutItem) r.navLogoutItem.classList.remove("hidden");
-        if (r.navUpgradeItem) r.navUpgradeItem.classList.toggle("hidden", role === "admin");
+        if (r.navUpgradeItem)
+          r.navUpgradeItem.classList.toggle("hidden", role === "admin");
 
         if (r.sidebarGuestAvatar) r.sidebarGuestAvatar.classList.add("hidden");
-        if (r.sidebarAuthedAvatar) r.sidebarAuthedAvatar.classList.remove("hidden");
+        if (r.sidebarAuthedAvatar)
+          r.sidebarAuthedAvatar.classList.remove("hidden");
         if (r.sidebarAvatarImg) r.sidebarAvatarImg.src = avatarUrl;
         if (r.sidebarName) r.sidebarName.textContent = userName;
         if (r.sidebarEmail) r.sidebarEmail.textContent = userEmail;
@@ -1470,8 +1668,10 @@ document.addEventListener("DOMContentLoaded", () => {
         if (r.navLogoutItem) r.navLogoutItem.classList.add("hidden");
         if (r.navUpgradeItem) r.navUpgradeItem.classList.add("hidden");
 
-        if (r.sidebarGuestAvatar) r.sidebarGuestAvatar.classList.remove("hidden");
-        if (r.sidebarAuthedAvatar) r.sidebarAuthedAvatar.classList.add("hidden");
+        if (r.sidebarGuestAvatar)
+          r.sidebarGuestAvatar.classList.remove("hidden");
+        if (r.sidebarAuthedAvatar)
+          r.sidebarAuthedAvatar.classList.add("hidden");
         if (r.sidebarName) r.sidebarName.textContent = "Guest";
         if (r.sidebarEmail) r.sidebarEmail.textContent = "Not signed in";
         if (r.sidebarLoginBtn) r.sidebarLoginBtn.classList.remove("hidden");
@@ -1484,32 +1684,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (typeof AUTH.onReady === "function") {
-      AUTH.onReady(function (auth) { updateUI(auth.status || auth); });
+      AUTH.onReady(function (auth) {
+        updateUI(auth.status || auth);
+      });
     }
-    document.addEventListener("authChanged", function (e) { updateUI(e.detail); });
-    document.addEventListener("creditsChanged", function (e) { updateCreditsUI(drawer, e.detail); });
-
-    drawer.querySelectorAll('[data-auth="login-btn"], [data-auth="sidebar-login-btn"]').forEach(function (btn) {
-      btn.addEventListener("click", function (e) {
-        if (typeof AUTH.login === "function") { e.preventDefault(); AUTH.login(); }
-      });
+    document.addEventListener("authChanged", function (e) {
+      updateUI(e.detail);
+    });
+    document.addEventListener("creditsChanged", function (e) {
+      updateCreditsUI(drawer, e.detail);
     });
 
-    drawer.querySelectorAll('[data-auth="logout-btn"], [data-auth="sidebar-logout-btn"]').forEach(function (btn) {
-      btn.addEventListener("click", function (e) {
-        e.preventDefault();
-        if (typeof AUTH.logout === "function") {
-          AUTH.logout().then(function () { window.location.reload(); });
-        }
+    drawer
+      .querySelectorAll(
+        '[data-auth="login-btn"], [data-auth="sidebar-login-btn"]',
+      )
+      .forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+          if (typeof AUTH.login === "function") {
+            e.preventDefault();
+            AUTH.login();
+          }
+        });
       });
-    });
 
-    drawer.querySelectorAll('[data-auth="upgrade-btn"]').forEach(function (btn) {
-      btn.addEventListener("click", function (e) {
-        e.preventDefault();
-        if (typeof AUTH.upgrade === "function") AUTH.upgrade();
+    drawer
+      .querySelectorAll(
+        '[data-auth="logout-btn"], [data-auth="sidebar-logout-btn"]',
+      )
+      .forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
+          if (typeof AUTH.logout === "function") {
+            AUTH.logout().then(function () {
+              window.location.reload();
+            });
+          }
+        });
       });
-    });
+
+    drawer
+      .querySelectorAll('[data-auth="upgrade-btn"]')
+      .forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
+          if (typeof AUTH.upgrade === "function") AUTH.upgrade();
+        });
+      });
   }
 
   // =========================================================================
@@ -1520,7 +1741,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function hydrate(drawer) {
     customizeDOM(drawer);
-    
+
     // Find dynamic logos
     _logoDark = drawer.querySelector(".logo-dark");
     _logoLight = drawer.querySelector(".logo-light");
@@ -1540,7 +1761,7 @@ document.addEventListener("DOMContentLoaded", () => {
     _injected = true;
 
     var existingNavbar = document.querySelector(".navbar");
-    
+
     if (existingNavbar) {
       // Scenario A: Zola already built the HTML (e.g. main site)
       // Just hydrate the existing DOM.
@@ -1548,7 +1769,7 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
       // Scenario B: External Subdomain (e.g. auth.dhanur.me)
       // Fetch the navbar HTML shell and inject it.
-      
+
       // Save current page body content
       var children = [];
       while (document.body.firstChild) {
@@ -1556,11 +1777,11 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       fetch(BASE + "/navbar/")
-        .then(function(res) { 
+        .then(function (res) {
           if (!res.ok) throw new Error("Failed to fetch navbar");
-          return res.text(); 
+          return res.text();
         })
-        .then(function(html) {
+        .then(function (html) {
           // Parse HTML
           var parser = new DOMParser();
           var doc = parser.parseFromString(html, "text/html");
@@ -1569,17 +1790,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
           // Inject children into slot
           var slot = newDrawer.querySelector(".site-nav-slot");
-          if (!slot) throw new Error("site-nav-slot missing in fetched navbar shell");
-          
-          children.forEach(function (node) { slot.appendChild(node); });
-          
+          if (!slot)
+            throw new Error("site-nav-slot missing in fetched navbar shell");
+
+          children.forEach(function (node) {
+            slot.appendChild(node);
+          });
+
           document.body.appendChild(newDrawer);
           hydrate(newDrawer);
         })
-        .catch(function(err) {
+        .catch(function (err) {
           console.error("Shell.js Error: ", err);
           // Fallback: put original content back if fetch fails
-          children.forEach(function (node) { document.body.appendChild(node); });
+          children.forEach(function (node) {
+            document.body.appendChild(node);
+          });
         });
     }
   }
@@ -1590,7 +1816,6 @@ document.addEventListener("DOMContentLoaded", () => {
     bootstrap();
   }
 })();
-
 
 /* --- app.js --- */
 function debounce(func, wait) {
@@ -1706,7 +1931,7 @@ function formatSearchResultItem(item, terms) {
   li.innerHTML = `
     <a href="${
       item.item.id
-    }" class="search-result-link block px-4 py-3 rounded-lg hover:bg-base-200/50 transition-colors duration-150 border-gray-500/15">
+    }" class="search-result-link block px-4 py-3 rounded-md hover:bg-base-200/50 transition-colors duration-150">
       <div class="flex items-start gap-3">
         <div class="search-result-icon flex-shrink-0 mt-1">
           <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-base-content/50" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -1894,19 +2119,26 @@ function initSearch() {
 }
 
 function initThemeListeners() {
-  var fallbackTheme = window && window.fallbackTheme ? window.fallbackTheme : "dark";
-  var currentUserTheme = (window.__getThemeCookie ? window.__getThemeCookie() : null) || fallbackTheme;
+  var fallbackTheme =
+    window && window.fallbackTheme ? window.fallbackTheme : "dark";
+  var currentUserTheme =
+    (window.__getThemeCookie ? window.__getThemeCookie() : null) ||
+    fallbackTheme;
 
   // Resolve 'auto' to the actual OS preference to prevent UI breaking
-  var resolvedTheme = window.__resolveColorset ? window.__resolveColorset(currentUserTheme) : currentUserTheme;
+  var resolvedTheme = window.__resolveColorset
+    ? window.__resolveColorset(currentUserTheme)
+    : currentUserTheme;
 
   updateLogoForTheme(resolvedTheme);
   updateHeroForTheme(resolvedTheme);
 
   document.addEventListener("themeChanged", function (e) {
     var userTheme = e.detail;
-    var resolvedUpdatedTheme = window.__resolveColorset ? window.__resolveColorset(userTheme) : userTheme;
-    
+    var resolvedUpdatedTheme = window.__resolveColorset
+      ? window.__resolveColorset(userTheme)
+      : userTheme;
+
     updateLogoForTheme(resolvedUpdatedTheme);
     updateHeroForTheme(resolvedUpdatedTheme);
     updateGiscusTheme(resolvedUpdatedTheme);
@@ -2114,7 +2346,171 @@ function initMath() {
   });
 }
 
+/* --- sidebar-toggle.js --- */
+(function () {
+  "use strict";
 
+  const SIDEBAR_COOKIE_NAME = "sidebar_collapsed";
+  const APPS_COOKIE_NAME = "apps_collapsed";
+  const COOKIE_MAX_AGE = 31536000; // 1 year
+
+  function getSidebarCookie() {
+    var m = document.cookie.match(/(?:^|; )sidebar_collapsed=([^;]*)/);
+    return m ? m[1] === "true" : false;
+  }
+
+  function setSidebarCookie(collapsed) {
+    var d =
+      location.hostname !== "localhost" && location.hostname !== "127.0.0.1"
+        ? "; domain=." + location.hostname.split(".").slice(-2).join(".")
+        : "";
+    document.cookie =
+      SIDEBAR_COOKIE_NAME +
+      "=" +
+      collapsed +
+      "; path=/" +
+      d +
+      "; max-age=" +
+      COOKIE_MAX_AGE +
+      "; SameSite=Lax";
+  }
+
+  function getBoolCookie(name) {
+    var re = new RegExp("(?:^|; )" + name + "=([^;]*)");
+    var m = document.cookie.match(re);
+    return m ? m[1] === "true" : false;
+  }
+
+  function setBoolCookie(name, value) {
+    var d =
+      location.hostname !== "localhost" && location.hostname !== "127.0.0.1"
+        ? "; domain=." + location.hostname.split(".").slice(-2).join(".")
+        : "";
+    document.cookie =
+      name +
+      "=" +
+      value +
+      "; path=/" +
+      d +
+      "; max-age=" +
+      COOKIE_MAX_AGE +
+      "; SameSite=Lax";
+  }
+
+  function updateToggleButton(collapsed) {
+    var toggleBtn = document.getElementById("sidebar-toggle");
+    if (!toggleBtn) return;
+    
+    var iconCollapsed = toggleBtn.querySelector(".sidebar-toggle-icon-collapsed");
+    var iconExpanded = toggleBtn.querySelector(".sidebar-toggle-icon-expanded");
+    
+    if (iconCollapsed && iconExpanded) {
+      if (collapsed) {
+        iconCollapsed.classList.remove("hidden");
+        iconExpanded.classList.add("hidden");
+      } else {
+        iconCollapsed.classList.add("hidden");
+        iconExpanded.classList.remove("hidden");
+      }
+    }
+
+    toggleBtn.classList.toggle("sidebar-toggle--collapsed", collapsed);
+  }
+
+  function applySidebarState(collapsed) {
+    var drawer = document.querySelector(".drawer");
+    var sidebar = document.getElementById("sidebar");
+
+    if (!drawer || !sidebar) return;
+
+    // CSS handles all positioning and animations now
+    drawer.classList.toggle("sidebar-collapsed", collapsed);
+    
+    updateToggleButton(collapsed);
+  }
+
+  function toggleSidebar() {
+    var drawer = document.querySelector(".drawer");
+    if (!drawer) return;
+
+    var isCurrentlyCollapsed = drawer.classList.contains("sidebar-collapsed");
+    var newCollapsedState = !isCurrentlyCollapsed;
+    
+    setSidebarCookie(newCollapsedState);
+    applySidebarState(newCollapsedState);
+  }
+
+  function initSidebarToggle() {
+    var toggleBtn = document.getElementById("sidebar-toggle");
+    if (!toggleBtn) return;
+
+    var collapsed = getSidebarCookie();
+    if (collapsed) {
+      applySidebarState(true);
+    } else {
+      applySidebarState(false);
+    }
+
+    toggleBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleSidebar();
+    });
+  }
+
+  // TOC Toggle Logic
+  function applyTocState(collapsed) {
+    if (collapsed) {
+      document.body.classList.add("toc-collapsed");
+    } else {
+      document.body.classList.remove("toc-collapsed");
+    }
+  }
+
+  function toggleToc() {
+    var newCollapsedState = !document.body.classList.contains("toc-collapsed");
+    setBoolCookie("toc_collapsed", newCollapsedState);
+    applyTocState(newCollapsedState);
+  }
+
+  function initTocToggle() {
+    var toggleBtn = document.getElementById("toc-toggle");
+    if (!toggleBtn) return;
+
+    var collapsed = getBoolCookie("toc_collapsed");
+    applyTocState(collapsed);
+
+    toggleBtn.addEventListener("click", function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      toggleToc();
+    });
+  }
+
+  function initAppsGridCollapse() {
+    var details = document.querySelector("details[data-apps-grid-sidebar]");
+    if (!details) return;
+
+    var collapsed = getBoolCookie(APPS_COOKIE_NAME);
+    details.open = !collapsed;
+
+    details.addEventListener("toggle", function () {
+      setBoolCookie(APPS_COOKIE_NAME, !details.open);
+    });
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", function () {
+      initSidebarToggle();
+      initTocToggle();
+      initAppsGridCollapse();
+    });
+  } else {
+    initSidebarToggle();
+    initTocToggle();
+    initAppsGridCollapse();
+  }
+})();
 
 document.addEventListener("DOMContentLoaded", function () {
   initSearch();
@@ -2134,8 +2530,6 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-
-
 /* --- toc-click.js --- */
 // TOC summary click handler — navigates to heading anchor.
 document
@@ -2151,4 +2545,3 @@ document
       }
     });
   });
-

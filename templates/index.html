@@ -5,6 +5,7 @@
 {% import "macros/toc.html" as macros_toc %}
 {% import "macros/footer.html" as macros_footer %}
 {% import "macros/sidebar.html" as macros_sidebar %}
+{% import "macros/drawer.html" as macros_drawer %}
 
 <!DOCTYPE html>
 {{ macros_head::html_tag(config=config, lang=lang) }}
@@ -23,7 +24,7 @@
 
     <div class="drawer lg:drawer-open">
         <input id="my-drawer-2" type="checkbox" class="drawer-toggle" autocomplete="off" />
-        <div class="drawer-content flex flex-col pt-16">
+        <div class="drawer-content flex flex-col min-w-0 pt-16 bg-base-200">
             {{ macros_header::header(config=config, lang=lang) }}
 
             {% set lang_root_path = "/" ~ lang ~ "/" %}
@@ -39,6 +40,7 @@
                 /* Hide scrollbar visually but preserve scrolling ability on landing page */
                 html { scrollbar-gutter: auto !important; scrollbar-width: none; }
                 html::-webkit-scrollbar { display: none; }
+                .navbar label[for="my-drawer-2"] { display: none !important; }
             </style>
             <div class="w-full">
                 <main class="prose w-full mx-auto">
@@ -59,9 +61,9 @@
                 </main>
             </div>
             {% else %}
-            <div class="p-8 w-full flex justify-center">
-                <div class="w-full max-w-7xl lg:grid lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-12">
-                    <main class="prose w-full">
+            <div class="p-4 md:p-8 w-full min-w-0 flex justify-center min-h-[calc(100dvh-4rem)]">
+                <div class="w-full min-w-0 max-w-7xl lg:grid lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-10 rounded-box border border-base-content/5 bg-base-100 shadow-sm p-5 sm:p-6 md:p-8 lg:p-10">
+                    <main class="prose w-full min-w-0">
                         {% block content %}{% endblock content %}
 
                         {{ macros_comments::comments(config=config, page=page|default(value=false), section=section|default(value=false)) }}
@@ -78,14 +80,27 @@
                         </nav>
                     </main>
 
-                    {% block toc_sidebar %}
-                    {% if page is defined %}
-                        {{ macros_toc::toc(page=page) }}
-                    {% endif %}
-                    {% if section is defined %}
-                        {{ macros_toc::toc(page=section) }}
-                    {% endif %}
-                    {% endblock toc_sidebar %}
+                    <div class="hidden lg:flex h-full relative z-40">
+                        <div class="sticky top-24 self-start h-0 w-0">
+                            <div id="toc-toggle-wrapper" class="tooltip tooltip-left absolute -left-12 top-0" data-tip="Toggle table of contents">
+                                <button id="toc-toggle" class="btn btn-ghost btn-circle btn-sm bg-base-200 border border-base-content/10 shadow-sm transition-all duration-300 ease-out" aria-label="Toggle table of contents">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="w-full">
+                            {% block toc_sidebar %}
+                            {% if page is defined %}
+                                {{ macros_toc::toc(page=page) }}
+                            {% endif %}
+                            {% if section is defined %}
+                                {{ macros_toc::toc(page=section) }}
+                            {% endif %}
+                            {% endblock toc_sidebar %}
+                        </div>
+                    </div>
                 </div>
             </div>
             {% endif %}
@@ -96,17 +111,28 @@
         {% set lang_root_path = "/" ~ lang ~ "/" %}
         {# Sidebar configuration with backward compatibility (reuse the value from above) #}
         {% if section is defined and (section.path == "/" or section.path == lang_root_path) and not disable_root_sidebar_hide %}
-        {# On landing page: hide sidebar on desktop, keep drawer available on mobile #}
-        <div id="sidebar" class="drawer-side pt-16 border-e border-base-content/10 bg-[var(--color-sidebar)] overflow-hidden lg:hidden">
+        {# On landing page: remove sidebar entirely #}
         {% else %}
-        <div id="sidebar" class="drawer-side pt-16 border-e border-base-content/10 bg-[var(--color-sidebar)] overflow-hidden">
-        {% endif %}
+        <div id="sidebar" class="drawer-side pt-16 z-[60] lg:z-40">
+            {{ macros_drawer::drawer_overlay() }}
             {% if section is defined %}
                 {{ macros_sidebar::sidebar(config=config, lang=lang, current_path=current_path, section=section) }}
             {% else %}
                 {{ macros_sidebar::sidebar(config=config, lang=lang, current_path=current_path, section=false) }}
             {% endif %}
         </div>
+        
+        <div id="sidebar-toggle-wrapper" class="tooltip tooltip-right hidden lg:flex fixed top-1/2 -translate-y-1/2 z-50" data-tip="Toggle sidebar">
+            <button id="sidebar-toggle" class="btn btn-ghost btn-circle btn-sm bg-base-200 border border-base-content/10 shadow-sm transition-all duration-300 ease-out" aria-label="Toggle sidebar">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sidebar-toggle-icon-collapsed hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                </svg>
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sidebar-toggle-icon-expanded" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
+                </svg>
+            </button>
+        </div>
+        {% endif %}
     </div>
 
     {% block js_body %}
@@ -127,6 +153,7 @@
                 data-fuse="{{ get_url(path="fuse.min.js") | safe }}"
                 data-search-index="{{ get_url(path="search_index." ~ lang ~ ".js") | safe }}"></script>
         {% endif %}
+        
     {% endblock js_body %}
 </body>
 </html>

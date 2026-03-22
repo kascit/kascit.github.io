@@ -20,10 +20,29 @@ html {
   }
 }
 
+.navbar {
+  z-index: 70;
+}
+
+/* Sleek hover effect for logo */
+.logo-firefly {
+  position: relative;
+}
+
+.logo-firefly img {
+  transition: filter 300ms ease, opacity 300ms ease;
+  will-change: filter, opacity;
+}
+
+.logo-firefly:hover img {
+  opacity: 0.95;
+  filter: drop-shadow(0 0 4px rgba(var(--color-primary), 0.3));
+}
+
 /* Navigation Menu Styles - Neutral Colors */
 .nav-menu {
-  @apply text-base-content/80 hover:text-base-content transition-all duration-200 no-underline hover:no-underline;
-  @apply relative px-3 py-2 rounded;
+  @apply text-base-content/80 hover:text-base-content transition-colors duration-200 no-underline hover:no-underline;
+  @apply relative px-3 py-2 rounded-md;
   @apply hover:bg-base-content/5;
 }
 
@@ -48,11 +67,126 @@ html {
   @apply border-base-content/20 bg-base-200/50 text-base-content focus:border-base-content/40 focus:ring-0;
 }
 
+/* Drawer sidebar: column flex so inner shell can fill; full viewport paint on mobile */
+.drawer-side-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Mobile drawer: panel above navbar / FAB; overlay is sibling of drawer-side (see macros/drawer.html) */
+@media (max-width: 1023px) {
+  #sidebar.drawer-side.drawer-side-panel {
+    z-index: 65;
+    width: min(18rem, 92vw);
+    min-height: 100dvh;
+    background-color: var(--color-sidebar);
+    box-shadow: 4px 0 24px -6px color-mix(in oklab, var(--color-base-content) 14%, transparent);
+    /* Remove scrollbar spacing issues */
+    scrollbar-gutter: stable;
+  }
+
+  .drawer > label.drawer-overlay {
+    position: fixed;
+    inset: 0;
+  }
+
+  .drawer:has(#my-drawer-2:checked) > label.drawer-overlay {
+    z-index: 60;
+  }
+
+  /* Fix sidebar content scrolling on mobile */
+  #sidebar .drawer-content {
+    padding-right: 0;
+    margin-right: 0;
+  }
+
+  #sidebar .thin-scrollbar {
+    scrollbar-gutter: stable;
+  }
+}
+
+@media (min-width: 1024px) {
+  .drawer {
+    --sidebar-width: 17rem;
+    --toggle-width: 2.5rem;
+    --toggle-half-width: 1.25rem;
+  }
+
+  #sidebar {
+    transition: margin-left 300ms cubic-bezier(0.4, 0, 0.2, 1), 
+                opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: margin-left, opacity;
+  }
+
+  .drawer.sidebar-collapsed #sidebar {
+    margin-left: calc(-1 * var(--sidebar-width));
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Sidebar toggle positioning */
+  #sidebar-toggle {
+    left: calc(var(--sidebar-width) - var(--toggle-half-width));
+    right: auto;
+    transition: left 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                right 300ms cubic-bezier(0.4, 0, 0.2, 1),
+                transform 150ms ease;
+    will-change: left, right, transform;
+  }
+
+  /* When the sidebar is collapsed, keep the toggle near the right edge of
+     the content area with a small margin so it "hugs" the edge. When the
+     sidebar is expanded, position it so it's half-on / half-off the sidebar. */
+  .drawer.sidebar-collapsed #sidebar-toggle {
+    left: auto;
+    right: 0.5rem;
+  }
+
+  .drawer:not(.sidebar-collapsed) #sidebar-toggle {
+    /* half on / half off the sidebar edge */
+    left: calc(var(--sidebar-width) - var(--toggle-half-width));
+    right: auto;
+  }
+
+  #sidebar-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  #sidebar-toggle:active {
+    transform: scale(0.95);
+    transition-duration: 100ms;
+  }
+
+  #sidebar-toggle.sidebar-toggle--collapsed {
+    background-color: var(--color-base-300);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
+
 /* ToC Neutral Link Colors */
 .toc-link {
   @apply text-base-content/75 hover:text-base-content;
   @apply transition-colors duration-200 no-underline;
   font-size: 0.9em;
+}
+
+/* Ensure TOC can stick: avoid clipping by wrapper containers introduced for toggles */
+.hidden.lg\:flex {
+  overflow: visible !important;
+}
+.hidden.lg\:flex > .w-full {
+  overflow: visible !important;
+}
+
+/* Force sticky positioning explicitly for the ToC aside */
+#toc-sidebar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 5.25rem; /* accounts for navbar height */
+  z-index: 30;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* Ensure consistent font-size for ToC summary elements (items with sub-items) */
@@ -85,7 +219,7 @@ html {
 
 /* Gallery Styles */
 .gallery-box {
-  @apply mb-10 rounded-xl overflow-hidden shadow-sm border border-base-300 bg-base-200/30;
+  @apply mb-10 rounded-box overflow-hidden shadow-sm border border-base-content/10 bg-base-200/30;
 }
 
 .gallery {
@@ -100,7 +234,7 @@ html {
 .gallery img {
   width: 100%;
   height: auto;
-  border-radius: 8px;
+  border-radius: var(--radius-box, 0.25rem);
 }
 
 /* Landing Page Theme-Specific Styles */
@@ -127,7 +261,7 @@ html {
 
 /* Feature cards */
 .feature-card {
-  @apply bg-base-200/40 border border-base-content/10 shadow-sm hover:shadow-md hover:border-base-content/25 transition-all duration-300 rounded-xl;
+  @apply bg-base-200/40 border border-base-content/10 shadow-sm hover:shadow-md hover:border-base-content/20 transition-colors duration-200 rounded-box;
 }
 
 /* Feature icon background */
@@ -173,7 +307,7 @@ html {
 
 /* Testimonial cards */
 .testimonial-card {
-  @apply bg-base-200/40 border border-base-content/10 shadow-sm hover:shadow-md hover:border-base-content/25 transition-all duration-300 h-full min-h-[17.5rem] rounded-xl p-8 flex flex-col justify-between;
+  @apply bg-base-200/40 border border-base-content/10 shadow-sm hover:shadow-md hover:border-base-content/20 transition-colors duration-200 h-full min-h-[17.5rem] rounded-box p-8 flex flex-col justify-between;
 }
 
 /* Testimonial quote */
@@ -198,13 +332,11 @@ html {
 
 /* Hero CTA Buttons */
 .hero-cta-primary {
-  @apply bg-base-content text-base-100;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  @apply bg-base-content text-base-100 shadow-md;
 }
 
 .hero-cta-primary:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
-  @apply bg-base-content/90;
+  @apply bg-base-content/90 shadow-lg;
 }
 
 .hero-cta-secondary {
@@ -239,15 +371,15 @@ html {
 
 /* Pretty Link Card Styling */
 .pretty-link-card {
-  @apply w-full rounded-xl overflow-hidden bg-base-200/40 border border-base-content/10 shadow-sm transition-all duration-300;
+  @apply w-full rounded-box overflow-hidden bg-base-200/40 border border-base-content/10 shadow-sm transition-colors duration-200;
 }
 
 .pretty-link-card:hover {
-  @apply border-base-content/25 shadow-md transform -translate-y-0.5 bg-base-200/80;
+  @apply border-base-content/20 shadow-md bg-base-200/80;
 }
 
 .pretty-link-image-wrapper {
-  @apply relative w-20 h-20 rounded-xl overflow-hidden bg-base-300 border border-base-content/10;
+  @apply relative w-20 h-20 rounded-md overflow-hidden bg-base-300 border border-base-content/10;
 }
 
 .pretty-link-image {
@@ -255,7 +387,7 @@ html {
 }
 
 .pretty-link-card:hover .pretty-link-image {
-  @apply scale-105;
+  @apply scale-[1.02];
 }
 
 .pretty-link-title {
@@ -275,11 +407,11 @@ html {
 }
 
 .pretty-link-icon-wrapper {
-  @apply flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg bg-base-300/50 border border-base-content/10 transition-all duration-300;
+  @apply flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-md bg-base-300/50 border border-base-content/10 transition-colors duration-200;
 }
 
 .pretty-link-card:hover .pretty-link-icon-wrapper {
-  @apply transform translate-x-0.5 -translate-y-0.5 bg-base-300 border-base-content/20;
+  @apply bg-base-300 border-base-content/20;
 }
 
 .pretty-link-icon {
@@ -300,11 +432,11 @@ html {
 
 /* Navigation buttons */
 .nav-button {
-  @apply block w-full p-8 rounded-xl transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-base-content/30 no-underline text-base-content bg-base-200/50 border border-base-300 min-h-[6rem];
+  @apply block w-full p-8 rounded-box transition-colors duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-base-content/30 no-underline text-base-content bg-base-200/50 border border-base-content/10 min-h-[6rem];
 }
 
 .nav-button:hover {
-  @apply border-base-content/20 transform -translate-y-0.5 shadow-md bg-base-200;
+  @apply border-base-content/20 shadow-md bg-base-200;
 }
 
 .nav-button-content {
@@ -317,7 +449,7 @@ html {
 
 .nav-button-title {
   @apply text-xl font-bold leading-tight;
-  @apply text-base-content;
+  @apply text-base-content break-words;
 }
 
 /* Next button alignment */
@@ -388,4 +520,46 @@ html {
 .search-result-link {
   @apply cursor-pointer;
   text-decoration: none;
+}
+
+/* -------------------------------------
+ * TOC Toggle Styles
+ * ------------------------------------- */
+
+body.toc-collapsed #toc-sidebar {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(100%);
+  width: 0 !important;
+  padding-left: 0;
+  padding-right: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+body.toc-collapsed .w-full.min-w-0.max-w-7xl.lg\:grid {
+  grid-template-columns: minmax(0,1fr) 0px !important;
+  gap: 0 !important;
+}
+
+/* Floating TOC button positioned similarly to the original sidebar */
+#toc-toggle {
+  right: calc(220px + 2rem); /* approx distance given the 220px TOC width and spacing */
+  transition: right 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              transform 150ms ease;
+  will-change: right, transform;
+}
+
+body.toc-collapsed #toc-toggle {
+  right: 0.5rem; /* floating near the right edge when collapsed */
+}
+
+#toc-toggle:hover {
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+#toc-toggle:active {
+  transform: scale(0.95);
+  transition-duration: 100ms;
 }

@@ -1,0 +1,5 @@
+{# DaisyUI drawer: overlay must be a direct child of .drawer (sibling of .drawer-content
+   and .drawer-side). If it lives inside .drawer-side, it only dims the panel. #}
+{% macro drawer_overlay(toggle_id="my-drawer-2", aria_label="Close menu") %}
+<label for="{{ toggle_id }}" class="drawer-overlay" aria-label="{{ aria_label }}"></label>
+{% endmacro %}

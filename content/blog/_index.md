@@ -14,10 +14,10 @@ This is a dump of my brain onto the internet. Some posts are deep-dives into inf
 
 It's part technical sandbox, part digital notebook. Grab what's useful to you, ignore the rest.
 
-<div class="not-prose my-12 p-[3px] border border-base-content/10 rounded-xl bg-base-200/30 transition-all duration-300 hover:border-base-content/20 hover:shadow-sm">
-    <div class="flex flex-col sm:flex-row items-center justify-between gap-5 p-5 rounded-lg bg-base-100 border border-base-content/5">
+<div class="not-prose my-12 p-[3px] border border-base-content/10 rounded-box bg-base-200/30 transition-colors duration-200 hover:border-base-content/20 hover:shadow-sm">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-5 p-5 rounded-md bg-base-100 border border-base-content/5">
         <div class="flex items-center w-full gap-4">
-            <div class="flex items-center justify-center w-10 h-10 shrink-0 rounded-md bg-orange-500/10 border border-orange-500/20 text-orange-500 transition-transform duration-300 hover:scale-105">
+            <div class="flex items-center justify-center w-10 h-10 shrink-0 rounded-md bg-orange-500/10 border border-orange-500/20 text-orange-500 transition-colors duration-200">
                 <i class="fa-solid fa-rss text-sm"></i>
             </div>
             <div class="flex flex-col">

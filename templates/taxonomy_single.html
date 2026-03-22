@@ -1,16 +1,13 @@
 {% extends "index.html" %}
 {% import "macros/post_card.html" as post_macro %}
-  Template: taxonomy_single.html
-  Purpose: Render all pages that belong to a specific taxonomy term
-  Context: Zola provides `taxonomy` and `term` objects here.
-#}
+{# taxonomy_single: pages for one taxonomy term #}
 
 {% block content %}
-    <div class="mb-12 pb-6 border-b border-gray-500/15">
+    <div class="mb-12 pb-6 border-b border-base-content/10">
         <div class="flex items-center justify-between gap-4 mb-3">
             <h1 class="flex items-center gap-3">
                 {{ term.name }}
-                <span class="text-xs font-medium px-2.5 py-1 border border-gray-500/30 rounded uppercase tracking-wide">
+                <span class="text-xs font-medium px-2.5 py-1 border border-base-content/15 rounded-sm uppercase tracking-wide">
                     {{ taxonomy.name | capitalize }}
                 </span>
             </h1>

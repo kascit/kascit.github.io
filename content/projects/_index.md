@@ -46,11 +46,10 @@ enabled = false
 {{ project_card(title="WalloWords", icon="fa-solid fa-spell-check", description="A word-based experiment actively in development.", lang="Coming Soon", status="wip", github_url="https://github.com/kascit/wallowords") }}
 
 </div>
-
-<div class="not-prose text-center mt-16 py-12 border-t border-base-content/10">
-    <p class="text-xl md:text-3xl font-bold tracking-tight mb-8">Want to hack on something together?</p>
+    
+<div class="not-prose mt-16 py-12 border-t border-base-content/10">
+    <p class="text-xl text-center md:text-3xl font-bold tracking-tight mb-8">Want to hack on something together?</p>
     <div class="mt-4">
         {{ link_card(url="/links", external=false, icon="fa-solid fa-envelope", title="Get in touch", description="Let's build something awesome", contrast=true) }}
     </div>
-    <p class="text-xs text-base-content/40 mt-12 italic opacity-60">✨ Most projects are open source under the MIT license</p>
 </div>

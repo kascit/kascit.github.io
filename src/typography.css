@@ -34,7 +34,8 @@
   html {
     scroll-padding-top: 130px;
     scroll-behavior: smooth;
-    @apply bg-base-100 transition-colors duration-300;
+    /* Shell behind content pane (GitHub-style gray field) */
+    @apply bg-base-200 transition-colors duration-300;
     scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
     scrollbar-width: auto;
   }
@@ -52,7 +53,7 @@
 
   ::-webkit-scrollbar-thumb {
     background-color: rgba(156, 163, 175, 0.3);
-    border-radius: 10px;
+    border-radius: 6px;
     border: 4px solid transparent;
     background-clip: padding-box;
   }
@@ -96,33 +97,78 @@
     line-height: 1.8;
   }
 
-  main ul {
-    @apply list-none mb-8;
+  /* Prose lists: disc/decimal, comfortable leading (Medium/GitHub). Scoped so .card / .menu lists stay custom. */
+  main.prose > ul,
+  main .prose ul {
+    @apply list-disc mb-6 pl-6;
+    list-style-position: outside;
+  }
+
+  main.prose > ul li,
+  main .prose ul li {
+    @apply mb-2 pl-1 text-base text-base-content/90;
+    line-height: 1.65;
+  }
+
+  main.prose > ul li::marker,
+  main .prose ul li::marker {
+    @apply text-base-content/40;
+  }
+
+  main.prose > ul li::before,
+  main .prose ul li::before {
+    content: none;
+  }
+
+  main.prose > ol,
+  main .prose ol {
+    @apply list-decimal mb-6 pl-6;
+    list-style-position: outside;
+  }
+
+  main.prose > ol li,
+  main .prose ol li {
+    @apply mb-2 pl-1 text-base text-base-content/90;
+    line-height: 1.65;
+  }
+
+  main.prose > ol li::marker,
+  main .prose ol li::marker {
+    @apply text-base-content/45;
+  }
+
+  /* Custom / card lists: no decorative pseudo-bullets */
+  main .card ul,
+  main .card-body ul,
+  main .not-prose ul,
+  ul.menu,
+  ul.toc-menu {
+    list-style: none;
     padding-left: 0;
+    margin-bottom: 0;
   }
 
-  main ul li {
-    @apply relative pl-8 mb-3 text-base-content/85 text-lg;
-    line-height: 1.8;
+  main .card ul > li,
+  main .card-body ul > li,
+  main .not-prose ul > li {
+    position: relative;
+    padding-left: 0;
+    margin-bottom: 0;
   }
 
-  main ul li::before {
-    content: "—";
-    @apply absolute left-2 top-0 text-base-content/30 font-bold;
+  main .card ul > li::before,
+  main .card-body ul > li::before,
+  main .not-prose ul > li::before {
+    content: none !important;
   }
 
-  main ol {
-    @apply list-decimal mb-8 pl-6;
-  }
-
-  main ol li {
-    @apply mb-3 text-base-content/85 text-lg pl-2;
-    line-height: 1.8;
+  ul.menu li::before,
+  ul.toc-menu li::before {
+    content: none !important;
   }
 
   .footnotes {
-    @apply mt-16 pt-8;
-    border-top: 1px solid rgba(100, 116, 139, 0.15);
+    @apply mt-16 pt-8 border-t border-base-content/10;
     position: relative;
   }
 
@@ -192,12 +238,7 @@
   }
 
   img {
-    @apply w-full h-auto rounded-lg;
-    transition: transform 0.3s ease;
-  }
-
-  img:hover {
-    transform: translateY(-2px);
+    @apply w-full h-auto rounded-md;
   }
 
   .hero-background img {

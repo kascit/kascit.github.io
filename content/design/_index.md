@@ -17,35 +17,35 @@ hide_toc = false
 
 <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-8">
   <div class="flex flex-col items-center gap-1">
-    <div class="w-full h-16 rounded-lg bg-primary"></div>
+    <div class="w-full h-16 rounded-md bg-primary"></div>
     <span class="text-xs opacity-60">primary</span>
   </div>
   <div class="flex flex-col items-center gap-1">
-    <div class="w-full h-16 rounded-lg bg-secondary"></div>
+    <div class="w-full h-16 rounded-md bg-secondary"></div>
     <span class="text-xs opacity-60">secondary</span>
   </div>
   <div class="flex flex-col items-center gap-1">
-    <div class="w-full h-16 rounded-lg bg-accent"></div>
+    <div class="w-full h-16 rounded-md bg-accent"></div>
     <span class="text-xs opacity-60">accent</span>
   </div>
   <div class="flex flex-col items-center gap-1">
-    <div class="w-full h-16 rounded-lg bg-neutral"></div>
+    <div class="w-full h-16 rounded-md bg-neutral"></div>
     <span class="text-xs opacity-60">neutral</span>
   </div>
   <div class="flex flex-col items-center gap-1">
-    <div class="w-full h-16 rounded-lg bg-info"></div>
+    <div class="w-full h-16 rounded-md bg-info"></div>
     <span class="text-xs opacity-60">info</span>
   </div>
   <div class="flex flex-col items-center gap-1">
-    <div class="w-full h-16 rounded-lg bg-success"></div>
+    <div class="w-full h-16 rounded-md bg-success"></div>
     <span class="text-xs opacity-60">success</span>
   </div>
   <div class="flex flex-col items-center gap-1">
-    <div class="w-full h-16 rounded-lg bg-warning"></div>
+    <div class="w-full h-16 rounded-md bg-warning"></div>
     <span class="text-xs opacity-60">warning</span>
   </div>
   <div class="flex flex-col items-center gap-1">
-    <div class="w-full h-16 rounded-lg bg-error"></div>
+    <div class="w-full h-16 rounded-md bg-error"></div>
     <span class="text-xs opacity-60">error</span>
   </div>
 </div>
@@ -53,15 +53,15 @@ hide_toc = false
 <h3 class="text-lg font-semibold mb-3">Base colors</h3>
 <div class="grid grid-cols-3 gap-3 mb-8">
   <div class="flex flex-col items-center gap-1">
-    <div class="w-full h-16 rounded-lg bg-base-100 border border-gray-500/15"></div>
+    <div class="w-full h-16 rounded-md bg-base-100 border border-base-content/10"></div>
     <span class="text-xs opacity-60">base-100</span>
   </div>
   <div class="flex flex-col items-center gap-1">
-    <div class="w-full h-16 rounded-lg bg-base-200"></div>
+    <div class="w-full h-16 rounded-md bg-base-200"></div>
     <span class="text-xs opacity-60">base-200</span>
   </div>
   <div class="flex flex-col items-center gap-1">
-    <div class="w-full h-16 rounded-lg bg-base-300"></div>
+    <div class="w-full h-16 rounded-md bg-base-300"></div>
     <span class="text-xs opacity-60">base-300</span>
   </div>
 </div>
@@ -135,7 +135,7 @@ hide_toc = false
       </div>
     </div>
   </div>
-  <div class="card border border-gray-500/15">
+  <div class="card border border-base-content/10">
     <div class="card-body">
       <h3 class="card-title">Bordered Card</h3>
       <p>Card with border and no background fill.</p>

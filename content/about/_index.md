@@ -19,92 +19,92 @@ My journey into software wasn't a childhood prodigy story—I just wanted to bui
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
 
-<div class="card bg-base-200/50 border border-base-content/10">
-  <div class="card-body p-6">
-    <h2 class="card-title text-xl mb-4">
-      <i class="fa-solid fa-rocket text-primary"></i> Core Expertise
+<div class="card about-panel">
+  <div class="card-body">
+    <h2 class="card-title text-lg mb-5 border-b border-base-content/10 pb-3">
+      <i class="fa-solid fa-rocket text-primary" aria-hidden="true"></i> Core Expertise
     </h2>
-    <ul class="space-y-4">
-      <li class="flex gap-4">
-        <div class="bg-success/10 text-success p-2 rounded-lg h-fit"><i class="fa-solid fa-server"></i></div>
-        <div>
-          <span class="font-bold block">Backend Engineering</span>
-          <span class="text-sm opacity-80">Building high-performance APIs and microservices using Java, Spring Boot, and Go.</span>
+    <ul class="space-y-5 not-prose">
+      <li class="flex gap-3.5 items-start">
+        <div class="about-expertise-icon" aria-hidden="true"><i class="fa-solid fa-server text-sm"></i></div>
+        <div class="min-w-0 pt-0.5">
+          <span class="font-semibold text-base-content block mb-1">Backend Engineering</span>
+          <span class="text-sm text-base-content/65 leading-relaxed">Building high-performance APIs and microservices using Java, Spring Boot, and Go.</span>
         </div>
       </li>
-      <li class="flex gap-4">
-        <div class="bg-info/10 text-info p-2 rounded-lg h-fit"><i class="fa-solid fa-cloud"></i></div>
-        <div>
-          <span class="font-bold block">Cloud Infrastructure</span>
-          <span class="text-sm opacity-80">Designing serverless and containerized solutions on AWS and GCP with Kubernetes.</span>
+      <li class="flex gap-3.5 items-start">
+        <div class="about-expertise-icon" aria-hidden="true"><i class="fa-solid fa-cloud text-sm"></i></div>
+        <div class="min-w-0 pt-0.5">
+          <span class="font-semibold text-base-content block mb-1">Cloud Infrastructure</span>
+          <span class="text-sm text-base-content/65 leading-relaxed">Designing serverless and containerized solutions on AWS and GCP with Kubernetes.</span>
         </div>
       </li>
-      <li class="flex gap-4">
-        <div class="bg-warning/10 text-warning p-2 rounded-lg h-fit"><i class="fa-solid fa-terminal"></i></div>
-        <div>
-          <span class="font-bold block">System Programming</span>
-          <span class="text-sm opacity-80">Writing optimized code in C and C++ for competitive programming and low-level tools.</span>
+      <li class="flex gap-3.5 items-start">
+        <div class="about-expertise-icon" aria-hidden="true"><i class="fa-solid fa-terminal text-sm"></i></div>
+        <div class="min-w-0 pt-0.5">
+          <span class="font-semibold text-base-content block mb-1">System Programming</span>
+          <span class="text-sm text-base-content/65 leading-relaxed">Writing optimized code in C and C++ for competitive programming and low-level tools.</span>
         </div>
       </li>
-      <li class="flex gap-4">
-        <div class="bg-error/10 text-error p-2 rounded-lg h-fit"><i class="fa-solid fa-code-branch"></i></div>
-        <div>
-          <span class="font-bold block">Automation & DevOps</span>
-          <span class="text-sm opacity-80">Streamlining workflows with CI/CD pipelines, Docker, and infrastructure-as-code.</span>
+      <li class="flex gap-3.5 items-start">
+        <div class="about-expertise-icon" aria-hidden="true"><i class="fa-solid fa-code-branch text-sm"></i></div>
+        <div class="min-w-0 pt-0.5">
+          <span class="font-semibold text-base-content block mb-1">Automation & DevOps</span>
+          <span class="text-sm text-base-content/65 leading-relaxed">Streamlining workflows with CI/CD pipelines, Docker, and infrastructure-as-code.</span>
         </div>
       </li>
     </ul>
   </div>
 </div>
 
-<div class="card bg-base-200/50 border border-base-content/10">
-  <div class="card-body p-6">
-    <h2 class="card-title text-xl mb-4">
-      <i class="fa-solid fa-layer-group text-primary"></i> Technical Arsenal
+<div class="card about-panel">
+  <div class="card-body">
+    <h2 class="card-title text-lg mb-5 border-b border-base-content/10 pb-3">
+      <i class="fa-solid fa-layer-group text-primary" aria-hidden="true"></i> Technical Arsenal
     </h2>
-    <div class="space-y-4">
+    <div class="space-y-5 not-prose">
       <div>
-        <h3 class="font-semibold mb-2 text-sm uppercase tracking-wider opacity-60 flex items-center gap-2"><i class="fa-solid fa-code text-xs"></i> Languages</h3>
-        <div class="flex flex-wrap gap-1.5">
-          <span class="badge badge-neutral badge-outline">Java</span>
-          <span class="badge badge-neutral badge-outline">Python</span>
-          <span class="badge badge-neutral badge-outline">Go</span>
-          <span class="badge badge-neutral badge-outline">C / C++</span>
-          <span class="badge badge-neutral badge-outline">JavaScript</span>
-          <span class="badge badge-neutral badge-outline">TypeScript</span>
-          <span class="badge badge-neutral badge-outline">SQL</span>
-          <span class="badge badge-neutral badge-outline">Bash</span>
+        <h3 class="about-skill-heading"><i class="fa-solid fa-code text-[11px]" aria-hidden="true"></i> Languages</h3>
+        <div class="flex flex-wrap gap-2">
+          <span class="surface-chip">Java</span>
+          <span class="surface-chip">Python</span>
+          <span class="surface-chip">Go</span>
+          <span class="surface-chip">C / C++</span>
+          <span class="surface-chip">JavaScript</span>
+          <span class="surface-chip">TypeScript</span>
+          <span class="surface-chip">SQL</span>
+          <span class="surface-chip">Bash</span>
         </div>
       </div>
       <div>
-        <h3 class="font-semibold mb-2 text-sm uppercase tracking-wider opacity-60 flex items-center gap-2"><i class="fa-solid fa-cubes text-xs"></i> Frameworks & DBs</h3>
-        <div class="flex flex-wrap gap-1.5">
-          <span class="badge badge-neutral badge-outline">Spring Boot</span>
-          <span class="badge badge-neutral badge-outline">Node.js</span>
-          <span class="badge badge-neutral badge-outline">PostgreSQL</span>
-          <span class="badge badge-neutral badge-outline">MongoDB</span>
-          <span class="badge badge-neutral badge-outline">Redis</span>
-          <span class="badge badge-neutral badge-outline">DynamoDB</span>
+        <h3 class="about-skill-heading"><i class="fa-solid fa-cubes text-[11px]" aria-hidden="true"></i> Frameworks & DBs</h3>
+        <div class="flex flex-wrap gap-2">
+          <span class="surface-chip">Spring Boot</span>
+          <span class="surface-chip">Node.js</span>
+          <span class="surface-chip">PostgreSQL</span>
+          <span class="surface-chip">MongoDB</span>
+          <span class="surface-chip">Redis</span>
+          <span class="surface-chip">DynamoDB</span>
         </div>
       </div>
       <div>
-        <h3 class="font-semibold mb-2 text-sm uppercase tracking-wider opacity-60 flex items-center gap-2"><i class="fa-solid fa-cloud-arrow-up text-xs"></i> Cloud & DevOps</h3>
-        <div class="flex flex-wrap gap-1.5">
-          <span class="badge badge-neutral badge-outline">AWS</span>
-          <span class="badge badge-neutral badge-outline">GCP</span>
-          <span class="badge badge-neutral badge-outline">Docker</span>
-          <span class="badge badge-neutral badge-outline">Kubernetes</span>
-          <span class="badge badge-neutral badge-outline">CI/CD</span>
-          <span class="badge badge-neutral badge-outline">Git</span>
+        <h3 class="about-skill-heading"><i class="fa-solid fa-cloud-arrow-up text-[11px]" aria-hidden="true"></i> Cloud & DevOps</h3>
+        <div class="flex flex-wrap gap-2">
+          <span class="surface-chip">AWS</span>
+          <span class="surface-chip">GCP</span>
+          <span class="surface-chip">Docker</span>
+          <span class="surface-chip">Kubernetes</span>
+          <span class="surface-chip">CI/CD</span>
+          <span class="surface-chip">Git</span>
         </div>
       </div>
       <div>
-        <h3 class="font-semibold mb-2 text-sm uppercase tracking-wider opacity-60 flex items-center gap-2"><i class="fa-solid fa-wrench text-xs"></i> Tools</h3>
-        <div class="flex flex-wrap gap-1.5">
-          <span class="badge badge-neutral badge-outline">Neovim</span>
-          <span class="badge badge-neutral badge-outline">Arch Linux</span>
-          <span class="badge badge-neutral badge-outline">Terraform</span>
-          <span class="badge badge-neutral badge-outline">Postman</span>
+        <h3 class="about-skill-heading"><i class="fa-solid fa-wrench text-[11px]" aria-hidden="true"></i> Tools</h3>
+        <div class="flex flex-wrap gap-2">
+          <span class="surface-chip">Neovim</span>
+          <span class="surface-chip">Arch Linux</span>
+          <span class="surface-chip">Terraform</span>
+          <span class="surface-chip">Postman</span>
         </div>
       </div>
     </div>
@@ -130,23 +130,11 @@ When I'm not in front of a terminal, I'm usually playing strategy games, reading
 
 ## Let's Connect
 
-I'm always open to chatting about tech, ideas, or potential collaborations.
-
 <div class="not-prose mt-8">
     {{ link_card(url="/links", external=false, icon="fa-solid fa-link", title="Socials & Communities", description="Find me everywhere on the internet.", contrast=true) }}
 </div>
 
-- **Email**: <!--email_off-->[contact@dhanur.me](mailto:contact@dhanur.me)<!--/email_off-->
-- **GitHub**: [kascit](https://github.com/kascit)
-- **LinkedIn**: [dhanur-relhan](https://linkedin.com/in/dhanur-relhan)
 
-</div>
-
-<div class="not-prose mt-24 pt-12 border-t border-base-content/10 text-center">
-    <blockquote class="text-xl md:text-3xl font-bold tracking-tight mb-8 opacity-80">
-        "Code is like humor. When you have to explain it, it's bad."
-    </blockquote>
-    <p class="text-sm uppercase tracking-widest opacity-40 mb-12">— Cory House</p>
     
 <div class="flex justify-center flex-wrap gap-12 text-base text-base-content/80 mt-8 mb-4">
 <div class="flex flex-col items-center">

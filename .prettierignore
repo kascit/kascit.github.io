@@ -1,0 +1,3 @@
+# Ignore Tera/Zola templates - formatter breaks the syntax
+templates/
+*.html

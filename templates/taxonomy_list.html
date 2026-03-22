@@ -1,8 +1,10 @@
-{% extends "index.html" %} {# taxonomy_list.html - Renders the list of terms for
-a single taxonomy (e.g., /tags/) - Context provided by Zola: - taxonomy:
-information about the taxonomy (name, slug, config, etc.) - terms: list of all
-terms for this taxonomy #} {% block title %} {{ taxonomy.name | capitalize }} -
-{{ config.title }} {% endblock title %} {% block content %}
+{% extends "index.html" %}
+{% import "macros/ui.html" as macros_ui %}
+{% import "macros/catalog.html" as macros_catalog %}
+{% import "macros/nav.html" as macros_nav %}
+{% import "macros/icons.html" as macros_icons %}
+{# taxonomy_list.html - List of terms for one taxonomy (e.g. /tags/, /categories/). #}
+{% block title %} {{ taxonomy.name | capitalize }} - {{ config.title }} {% endblock title %} {% block content %}
 <div class="mb-12 pb-6 border-b border-gray-500/15">
   <div class="flex items-center justify-between gap-4 mb-3">
       <h1 class="flex items-center gap-3">

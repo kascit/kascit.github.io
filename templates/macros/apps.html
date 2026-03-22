@@ -1,20 +1,20 @@
 {% macro apps_grid(context="desktop") %}
 {% set is_desktop = context == "desktop" %}
 <div class="grid grid-cols-3 gap-2"{% if is_desktop %} data-apps-grid{% else %} data-apps-grid-sidebar{% endif %}>
-    <a href="https://dhanur.me" class="group flex flex-col items-center gap-1.5 {% if is_desktop %}p-3{% else %}p-2.5{% endif %} rounded-xl hover:bg-base-200 transition-all duration-200 no-underline hover:no-underline text-base-content hover:scale-110">
-        <div class="w-10 h-10 rounded-lg bg-base-300/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+    <a href="https://dhanur.me" class="group flex flex-col items-center gap-1.5 {% if is_desktop %}p-3{% else %}p-2.5{% endif %} rounded-md hover:bg-base-200 transition-colors duration-200 no-underline hover:no-underline text-base-content">
+        <div class="w-10 h-10 rounded-md bg-base-300/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors">
             <i class="fa-solid fa-home text-lg"></i>
         </div>
         <span class="text-[10px] font-medium opacity-70 group-hover:opacity-100">Home</span>
     </a>
-    <a href="https://linkr.dhanur.me" class="group flex flex-col items-center gap-1.5 {% if is_desktop %}p-3{% else %}p-2.5{% endif %} rounded-xl hover:bg-base-200 transition-all duration-200 no-underline hover:no-underline text-base-content hover:scale-110">
-        <div class="w-10 h-10 rounded-lg bg-base-300/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+    <a href="https://linkr.dhanur.me" class="group flex flex-col items-center gap-1.5 {% if is_desktop %}p-3{% else %}p-2.5{% endif %} rounded-md hover:bg-base-200 transition-colors duration-200 no-underline hover:no-underline text-base-content">
+        <div class="w-10 h-10 rounded-md bg-base-300/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors">
             <i class="fa-solid fa-link text-lg"></i>
         </div>
         <span class="text-[10px] font-medium opacity-70 group-hover:opacity-100">Linkr</span>
     </a>
-    <a href="https://tasks.dhanur.me" class="group flex flex-col items-center gap-1.5 {% if is_desktop %}p-3{% else %}p-2.5{% endif %} rounded-xl hover:bg-base-200 transition-all duration-200 no-underline hover:no-underline text-base-content hover:scale-110">
-        <div class="w-10 h-10 rounded-lg bg-base-300/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+    <a href="https://tasks.dhanur.me" class="group flex flex-col items-center gap-1.5 {% if is_desktop %}p-3{% else %}p-2.5{% endif %} rounded-md hover:bg-base-200 transition-colors duration-200 no-underline hover:no-underline text-base-content">
+        <div class="w-10 h-10 rounded-md bg-base-300/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors">
             <i class="fa-solid fa-list-check text-lg"></i>
         </div>
         <span class="text-[10px] font-medium opacity-70 group-hover:opacity-100">Tasks</span>

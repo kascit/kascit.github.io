@@ -1,5 +1,6 @@
 {%- import "macros/header.html" as macros_header -%}
 {%- import "macros/sidebar.html" as macros_sidebar -%}
+{%- import "macros/drawer.html" as macros_drawer -%}
 
 {%- if config.extra.theme is defined -%}
     {%- set theme_colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value="dark")) -%}
@@ -10,11 +11,12 @@
 <div class="drawer"
      data-default-colorset="{{ theme_colorset }}">
     <input id="my-drawer-2" type="checkbox" class="drawer-toggle" autocomplete="off" />
-    <div class="drawer-content flex flex-col pt-16">
+    <div class="drawer-content flex flex-col min-w-0 pt-16">
         {{ macros_header::header(config=config, lang=lang, is_export=true) }}
         <div class="site-nav-slot"></div>
     </div>
-    <div id="sidebar" class="drawer-side pt-16 border-e border-base-content/10 overflow-hidden">
+    <div id="sidebar" class="drawer-side drawer-side-panel pt-16 border-e border-base-content/10 bg-[var(--color-sidebar)] overflow-hidden">
         {{ macros_sidebar::sidebar(config=config, lang=lang, current_path="/", section=false, is_export=true) }}
     </div>
+    {{ macros_drawer::drawer_overlay() }}
 </div>

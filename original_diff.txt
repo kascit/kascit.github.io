@@ -1,0 +1,359 @@
+diff --git a/src/layout.css b/src/layout.css
+index b3f604c..0d589a5 100644
+--- a/src/layout.css
++++ b/src/layout.css
+@@ -20,10 +20,39 @@ html {
+   }
+ }
+ 
++.navbar {
++  z-index: 70;
++}
++
++/* Sleek hover effect for logo */
++.logo-firefly {
++  position: relative;
++}
++
++.logo-firefly img {
++  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94), filter 0.4s ease, opacity 0.4s ease;
++}
++
++.logo-firefly:hover img {
++  transform: translateY(-2px);
++  animation: sleek-glow 2.5s ease-in-out infinite;
++}
++
++@keyframes sleek-glow {
++  0%, 100% {
++    opacity: 1;
++    filter: drop-shadow(0 0 2px var(--color-primary)) brightness(1);
++  }
++  50% {
++    opacity: 0.9;
++    filter: drop-shadow(0 0 8px var(--color-primary)) brightness(1.15);
++  }
++}
++
+ /* Navigation Menu Styles - Neutral Colors */
+ .nav-menu {
+-  @apply text-base-content/80 hover:text-base-content transition-all duration-200 no-underline hover:no-underline;
+-  @apply relative px-3 py-2 rounded;
++  @apply text-base-content/80 hover:text-base-content transition-colors duration-200 no-underline hover:no-underline;
++  @apply relative px-3 py-2 rounded-md;
+   @apply hover:bg-base-content/5;
+ }
+ 
+@@ -48,6 +77,110 @@ html {
+   @apply border-base-content/20 bg-base-200/50 text-base-content focus:border-base-content/40 focus:ring-0;
+ }
+ 
++/* Drawer sidebar: column flex so inner shell can fill; full viewport paint on mobile */
++.drawer-side-panel {
++  display: flex;
++  flex-direction: column;
++  min-height: 0;
++}
++
++/* Mobile drawer: panel above navbar / FAB; overlay is sibling of drawer-side (see macros/drawer.html) */
++@media (max-width: 1023px) {
++  #sidebar.drawer-side.drawer-side-panel {
++    z-index: 65;
++    width: min(18rem, 92vw);
++    min-height: 100dvh;
++    background-color: var(--color-sidebar);
++    box-shadow: 4px 0 24px -6px color-mix(in oklab, var(--color-base-content) 14%, transparent);
++    /* Remove scrollbar spacing issues */
++    scrollbar-gutter: stable;
++  }
++
++  .drawer > label.drawer-overlay {
++    position: fixed;
++    inset: 0;
++  }
++
++  .drawer:has(#my-drawer-2:checked) > label.drawer-overlay {
++    z-index: 60;
++  }
++
++  /* Fix sidebar content scrolling on mobile */
++  #sidebar .drawer-content {
++    padding-right: 0;
++    margin-right: 0;
++  }
++
++  #sidebar .thin-scrollbar {
++    scrollbar-gutter: stable;
++  }
++}
++
++@media (min-width: 1024px) {
++  .drawer {
++    --sidebar-width: 17rem;
++    --toggle-width: 2.5rem;
++    --toggle-half-width: 1.25rem;
++  }
++
++  #sidebar {
++    transition: transform 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94), 
++                opacity 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
++    will-change: transform, opacity;
++  }
++
++  .drawer.sidebar-collapsed #sidebar {
++    transform: translateX(-100%);
++    opacity: 0;
++    pointer-events: none;
++  }
++
++  .drawer.sidebar-collapsed .drawer-content {
++    grid-column-start: 1; /* Shift content to fill left space */
++  }
++
++  .drawer-content {
++    transition: grid-column-start 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94), margin-left 250ms;
++  }
++
++  /* Pure CSS sidebar toggle positioning */
++  #sidebar-toggle {
++    left: calc(var(--sidebar-width) - var(--toggle-half-width));
++    transition: left 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
++                transform 150ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
++                background-color 150ms ease,
++                box-shadow 150ms ease;
++    will-change: left, transform;
++  }
++
++  .drawer.sidebar-collapsed #sidebar-toggle {
++    left: 0; /* Fully visible and usable */
++    border-radius: 0 var(--radius-box, 0.5rem) var(--radius-box, 0.5rem) 0;
++  }
++
++  /* Handle SVG icon toggling natively in CSS */
++  .sidebar-toggle-icon-collapsed { display: none; }
++  .sidebar-toggle-icon-expanded { display: block; }
++  
++  .drawer.sidebar-collapsed .sidebar-toggle-icon-collapsed { display: block; }
++  .drawer.sidebar-collapsed .sidebar-toggle-icon-expanded { display: none; }
++
++  #sidebar-toggle:hover {
++    transform: scale(1.1);
++    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
++  }
++
++  #sidebar-toggle:active {
++    transform: scale(0.95);
++    transition-duration: 100ms;
++  }
++
++  #sidebar-toggle.sidebar-toggle--collapsed {
++    background-color: var(--color-base-300);
++    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
++  }
++}
++
+ /* ToC Neutral Link Colors */
+ .toc-link {
+   @apply text-base-content/75 hover:text-base-content;
+@@ -85,7 +218,7 @@ html {
+ 
+ /* Gallery Styles */
+ .gallery-box {
+-  @apply mb-10 rounded-xl overflow-hidden shadow-sm border border-base-300 bg-base-200/30;
++  @apply mb-10 rounded-box overflow-hidden shadow-sm border border-base-content/10 bg-base-200/30;
+ }
+ 
+ .gallery {
+@@ -100,7 +233,7 @@ html {
+ .gallery img {
+   width: 100%;
+   height: auto;
+-  border-radius: 8px;
++  border-radius: var(--radius-box, 0.25rem);
+ }
+ 
+ /* Landing Page Theme-Specific Styles */
+@@ -127,7 +260,7 @@ html {
+ 
+ /* Feature cards */
+ .feature-card {
+-  @apply bg-base-200/40 border border-base-content/10 shadow-sm hover:shadow-md hover:border-base-content/25 transition-all duration-300 rounded-xl;
++  @apply bg-base-200/40 border border-base-content/10 shadow-sm hover:shadow-md hover:border-base-content/20 transition-colors duration-200 rounded-box;
+ }
+ 
+ /* Feature icon background */
+@@ -173,7 +306,7 @@ html {
+ 
+ /* Testimonial cards */
+ .testimonial-card {
+-  @apply bg-base-200/40 border border-base-content/10 shadow-sm hover:shadow-md hover:border-base-content/25 transition-all duration-300 h-full min-h-[17.5rem] rounded-xl p-8 flex flex-col justify-between;
++  @apply bg-base-200/40 border border-base-content/10 shadow-sm hover:shadow-md hover:border-base-content/20 transition-colors duration-200 h-full min-h-[17.5rem] rounded-box p-8 flex flex-col justify-between;
+ }
+ 
+ /* Testimonial quote */
+@@ -198,13 +331,11 @@ html {
+ 
+ /* Hero CTA Buttons */
+ .hero-cta-primary {
+-  @apply bg-base-content text-base-100;
+-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
++  @apply bg-base-content text-base-100 shadow-md;
+ }
+ 
+ .hero-cta-primary:hover {
+-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+-  @apply bg-base-content/90;
++  @apply bg-base-content/90 shadow-lg;
+ }
+ 
+ .hero-cta-secondary {
+@@ -239,15 +370,15 @@ html {
+ 
+ /* Pretty Link Card Styling */
+ .pretty-link-card {
+-  @apply w-full rounded-xl overflow-hidden bg-base-200/40 border border-base-content/10 shadow-sm transition-all duration-300;
++  @apply w-full rounded-box overflow-hidden bg-base-200/40 border border-base-content/10 shadow-sm transition-colors duration-200;
+ }
+ 
+ .pretty-link-card:hover {
+-  @apply border-base-content/25 shadow-md transform -translate-y-0.5 bg-base-200/80;
++  @apply border-base-content/20 shadow-md bg-base-200/80;
+ }
+ 
+ .pretty-link-image-wrapper {
+-  @apply relative w-20 h-20 rounded-xl overflow-hidden bg-base-300 border border-base-content/10;
++  @apply relative w-20 h-20 rounded-md overflow-hidden bg-base-300 border border-base-content/10;
+ }
+ 
+ .pretty-link-image {
+@@ -255,7 +386,7 @@ html {
+ }
+ 
+ .pretty-link-card:hover .pretty-link-image {
+-  @apply scale-105;
++  @apply scale-[1.02];
+ }
+ 
+ .pretty-link-title {
+@@ -275,11 +406,11 @@ html {
+ }
+ 
+ .pretty-link-icon-wrapper {
+-  @apply flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-lg bg-base-300/50 border border-base-content/10 transition-all duration-300;
++  @apply flex items-center justify-center flex-shrink-0 w-8 h-8 rounded-md bg-base-300/50 border border-base-content/10 transition-colors duration-200;
+ }
+ 
+ .pretty-link-card:hover .pretty-link-icon-wrapper {
+-  @apply transform translate-x-0.5 -translate-y-0.5 bg-base-300 border-base-content/20;
++  @apply bg-base-300 border-base-content/20;
+ }
+ 
+ .pretty-link-icon {
+@@ -300,11 +431,11 @@ html {
+ 
+ /* Navigation buttons */
+ .nav-button {
+-  @apply block w-full p-8 rounded-xl transition-all duration-300 ease-out focus:outline-none focus:ring-2 focus:ring-base-content/30 no-underline text-base-content bg-base-200/50 border border-base-300 min-h-[6rem];
++  @apply block w-full p-8 rounded-box transition-colors duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-base-content/30 no-underline text-base-content bg-base-200/50 border border-base-content/10 min-h-[6rem];
+ }
+ 
+ .nav-button:hover {
+-  @apply border-base-content/20 transform -translate-y-0.5 shadow-md bg-base-200;
++  @apply border-base-content/20 shadow-md bg-base-200;
+ }
+ 
+ .nav-button-content {
+@@ -317,7 +448,7 @@ html {
+ 
+ .nav-button-title {
+   @apply text-xl font-bold leading-tight;
+-  @apply text-base-content;
++  @apply text-base-content break-words;
+ }
+ 
+ /* Next button alignment */
+diff --git a/templates/index.html b/templates/index.html
+index 5094ae7..874643e 100644
+--- a/templates/index.html
++++ b/templates/index.html
+@@ -5,6 +5,7 @@
+ {% import "macros/toc.html" as macros_toc %}
+ {% import "macros/footer.html" as macros_footer %}
+ {% import "macros/sidebar.html" as macros_sidebar %}
++{% import "macros/drawer.html" as macros_drawer %}
+ 
+ <!DOCTYPE html>
+ {{ macros_head::html_tag(config=config, lang=lang) }}
+@@ -23,7 +24,7 @@
+ 
+     <div class="drawer lg:drawer-open">
+         <input id="my-drawer-2" type="checkbox" class="drawer-toggle" autocomplete="off" />
+-        <div class="drawer-content flex flex-col pt-16">
++        <div class="drawer-content flex flex-col min-w-0 pt-16 bg-base-200">
+             {{ macros_header::header(config=config, lang=lang) }}
+ 
+             {% set lang_root_path = "/" ~ lang ~ "/" %}
+@@ -39,6 +40,7 @@
+                 /* Hide scrollbar visually but preserve scrolling ability on landing page */
+                 html { scrollbar-gutter: auto !important; scrollbar-width: none; }
+                 html::-webkit-scrollbar { display: none; }
++                .navbar label[for="my-drawer-2"] { display: none !important; }
+             </style>
+             <div class="w-full">
+                 <main class="prose w-full mx-auto">
+@@ -59,9 +61,9 @@
+                 </main>
+             </div>
+             {% else %}
+-            <div class="p-8 w-full flex justify-center">
+-                <div class="w-full max-w-7xl lg:grid lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-12">
+-                    <main class="prose w-full">
++            <div class="p-4 md:p-8 w-full min-w-0 flex justify-center min-h-[calc(100dvh-4rem)]">
++                <div class="w-full min-w-0 max-w-7xl lg:grid lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-10 rounded-box border border-base-content/5 bg-base-100 shadow-sm p-5 sm:p-6 md:p-8 lg:p-10">
++                    <main class="prose w-full min-w-0">
+                         {% block content %}{% endblock content %}
+ 
+                         {{ macros_comments::comments(config=config, page=page|default(value=false), section=section|default(value=false)) }}
+@@ -96,17 +98,25 @@
+         {% set lang_root_path = "/" ~ lang ~ "/" %}
+         {# Sidebar configuration with backward compatibility (reuse the value from above) #}
+         {% if section is defined and (section.path == "/" or section.path == lang_root_path) and not disable_root_sidebar_hide %}
+-        {# On landing page: hide sidebar on desktop, keep drawer available on mobile #}
+-        <div id="sidebar" class="drawer-side pt-16 border-e border-base-content/10 bg-[var(--color-sidebar)] overflow-hidden lg:hidden">
++        {# On landing page: remove sidebar entirely #}
+         {% else %}
+-        <div id="sidebar" class="drawer-side pt-16 border-e border-base-content/10 bg-[var(--color-sidebar)] overflow-hidden">
+-        {% endif %}
++        <div id="sidebar" class="drawer-side drawer-side-panel pt-16 border-e border-base-content/10 bg-[var(--color-sidebar)] overflow-hidden">
+             {% if section is defined %}
+                 {{ macros_sidebar::sidebar(config=config, lang=lang, current_path=current_path, section=section) }}
+             {% else %}
+                 {{ macros_sidebar::sidebar(config=config, lang=lang, current_path=current_path, section=false) }}
+             {% endif %}
+         </div>
++        <button id="sidebar-toggle" class="hidden lg:flex btn btn-ghost btn-circle btn-sm fixed top-1/2 -translate-y-1/2 z-50 bg-base-200 border border-base-content/10 shadow-sm transition-all duration-300 ease-out sidebar-toggle" aria-label="Toggle sidebar">
++            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sidebar-toggle-icon-collapsed hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
++                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
++            </svg>
++            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sidebar-toggle-icon-expanded" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
++                <path stroke-linecap="round" stroke-linejoin="round" d="M15 19l-7-7 7-7" />
++            </svg>
++        </button>
++        {{ macros_drawer::drawer_overlay() }}
++        {% endif %}
+     </div>
+ 
+     {% block js_body %}
+@@ -127,6 +137,12 @@
+                 data-fuse="{{ get_url(path="fuse.min.js") | safe }}"
+                 data-search-index="{{ get_url(path="search_index." ~ lang ~ ".js") | safe }}"></script>
+         {% endif %}
++        
++        <script>
++            document.getElementById("sidebar-toggle")?.addEventListener("click", () => {
++                document.querySelector(".drawer")?.classList.toggle("sidebar-collapsed");
++            });
++        </script>
+     {% endblock js_body %}
+ </body>
+ </html>

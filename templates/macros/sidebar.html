@@ -15,8 +15,7 @@
 {% else %}
     {% set normalized_current_path = current_path %}
 {% endif %}
-<label for="my-drawer-2" class="drawer-overlay"></label>
-<div class="pt-4 w-68 h-[calc(100vh-4rem)] bg-base-100 text-base-content flex flex-col overflow-auto thin-scrollbar" style="scrollbar-gutter: stable;">
+<div class="pt-4 w-68 h-[calc(100vh-4rem)] bg-[var(--color-sidebar)] border-e border-base-content/10 text-base-content flex flex-col overflow-x-hidden overflow-y-auto thin-scrollbar" style="scrollbar-gutter: stable;">
     {% if config.build_search_index and not is_export %}
     <div class="px-2 pt-4 pb-0 flex flex-col items-center gap-2">
         <div class="w-full flex items-center gap-2">
@@ -146,10 +145,18 @@
         {% endif %}
     </ul>
 
-    {# Apps grid — visible in sidebar for mobile, hidden on desktop (navbar has its own) #}
-    <div class="px-4 py-3 border-t border-base-content/10 lg:hidden" data-apps-grid-sidebar>
-        {{ macros_apps::apps_grid(context="mobile") }}
-    </div>
+    {# Apps grid — visible in sidebar for mobile, collapsible #}
+    <details class="lg:hidden border-t border-base-content/10" data-apps-grid-sidebar>
+        <summary class="px-4 py-2 text-sm font-medium cursor-pointer hover:bg-base-200/50 transition-colors flex items-center justify-between">
+            <span>Apps</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+            </svg>
+        </summary>
+        <div class="px-4 py-3">
+            {{ macros_apps::apps_grid(context="mobile") }}
+        </div>
+    </details>
 
     {# Account section for mobile #}
     <div class="px-4 py-3 border-t border-base-content/10 lg:hidden" data-sidebar-account>

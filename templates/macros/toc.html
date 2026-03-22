@@ -1,13 +1,14 @@
 {% macro toc(page) %} {% if page.toc %}
 <!-- Table of Contents - Desktop only (lg breakpoint and up) -->
 <aside
-  class="hidden lg:block"
+  id="toc-sidebar"
+  class="hidden lg:block transition-all duration-300 ease-out origin-right"
   data-toc-expand="false"
   role="navigation"
   aria-label="Table of contents"
 >
   <div class="sticky top-20 px-4 py-2 border-l border-base-content/10">
-    <h2 class="text-lg font-bold mb-1">ON THIS PAGE</h2>
+    <h2 class="text-[11px] font-semibold uppercase tracking-wider text-base-content/50 mb-3">On this page</h2>
     <ul class="menu menu-sm toc-menu">
       {% for h1 in page.toc %}
       <li>

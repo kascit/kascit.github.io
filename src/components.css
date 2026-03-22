@@ -1,12 +1,22 @@
 /* Code block styling */
 :not(.mockup-code) > pre {
-  @apply rounded-lg my-6 bg-base-300/50 border border-base-content/10 shadow-sm relative;
+  @apply rounded-box my-6 bg-base-300 border border-base-content/10 shadow-sm relative overflow-hidden;
 }
 
 :not(.mockup-code) > pre code {
-  @apply text-sm whitespace-pre text-base-content/90 block overflow-x-auto p-5 pb-6;
+  @apply text-sm whitespace-pre block overflow-x-auto p-5 pb-6;
   scrollbar-width: thin;
   scrollbar-color: rgba(156, 163, 175, 0.4) transparent;
+  background-color: transparent !important;
+  border: none;
+}
+
+/* Reset DaisyUI prose pre background */
+.prose pre {
+  @apply bg-base-300 text-base-content/90;
+}
+.prose pre code {
+  background-color: transparent !important;
 }
 
 :not(.mockup-code) > pre code::-webkit-scrollbar {
@@ -21,7 +31,7 @@
 
 :not(.mockup-code) > pre code::-webkit-scrollbar-thumb {
   background: rgba(156, 163, 175, 0.4);
-  border-radius: 4px;
+  border-radius: 2px;
 }
 
 :not(.mockup-code) > pre code::-webkit-scrollbar-thumb:hover {
@@ -29,12 +39,13 @@
 }
 
 :not(pre) > code {
-  @apply px-2 py-1 rounded text-sm font-mono bg-base-300 text-base-content border border-base-content/10;
+  @apply px-1.5 py-0.5 rounded-md text-[0.875em] font-mono bg-base-content/10 text-base-content;
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent);
 }
 
 /* Copy code button */
 .copy-code-button {
-  @apply absolute top-3 right-3 flex items-center justify-center w-8 h-8 rounded-md cursor-pointer transition-all duration-200;
+  @apply absolute top-3 right-3 flex items-center justify-center w-8 h-8 rounded-sm cursor-pointer transition-colors duration-200;
   @apply bg-base-content/8 border border-base-content/10 text-base-content/40;
   @apply opacity-0 backdrop-blur-sm;
   font-size: 0.875rem;
@@ -63,12 +74,12 @@ h6 {
 }
 
 .copy-heading-link-button {
-  @apply inline-flex items-center justify-center w-7 h-7 opacity-0 invisible transition-all duration-300 cursor-pointer rounded-md no-underline ml-2 align-middle;
+  @apply inline-flex items-center justify-center w-7 h-7 opacity-0 invisible transition-colors duration-200 cursor-pointer rounded-sm no-underline ml-2 align-middle;
   @apply bg-base-content/10 border border-base-content/20 text-base-content/60;
 }
 
 .copy-heading-link-button:hover {
-  @apply bg-base-content/20 border-base-content/30 text-base-content scale-105;
+  @apply bg-base-content/20 border-base-content/30 text-base-content;
 }
 
 h1:hover .copy-heading-link-button,
@@ -156,8 +167,7 @@ h6:hover .copy-heading-link-button {
 
 /* Modal & Dropdowns */
 .modal-box {
-  @apply backdrop-blur-sm;
-  border: 1px solid rgba(100, 116, 139, 0.2);
+  @apply backdrop-blur-sm border border-base-content/15;
 }
 
 .modal.modal-open .modal-box {
@@ -167,11 +177,11 @@ h6:hover .copy-heading-link-button {
 @keyframes searchModalSlideIn {
   from {
     opacity: 0;
-    transform: scale(0.95) translateY(-20px);
+    transform: translateY(-8px);
   }
   to {
     opacity: 1;
-    transform: scale(1) translateY(0);
+    transform: translateY(0);
   }
 }
 
@@ -199,7 +209,7 @@ footer.footer a {
 }
 
 footer.footer .social-icon {
-  @apply transition-transform duration-300 hover:-translate-y-0.5;
+  @apply transition-opacity duration-200 hover:opacity-80;
 }
 
 /* Installation Code Block */
@@ -255,25 +265,34 @@ footer.footer .social-icon {
 
 /* ─── Link Card ─── */
 .link-card {
-  @apply block p-5 mb-4 border border-base-content/12 rounded-lg transition-all duration-300 no-underline bg-base-200/40 text-base-content shadow-sm;
+  @apply block p-5 mb-4 border border-base-content/10 rounded-box transition-colors duration-200 no-underline bg-base-200/40 text-base-content shadow-sm;
 }
 
 .link-card:hover {
-  @apply transform -translate-y-0.5 border-base-content/25 shadow-lg bg-base-200/70;
+  @apply border-base-content/20 shadow-md bg-base-200/70;
 }
 
+/* Soft "featured" strip — readable in both themes, not a full inverse block */
 .link-card-contrast {
-  @apply bg-base-content text-base-100 border-transparent shadow-lg rounded-lg;
+  @apply rounded-box border shadow-sm transition-colors duration-200;
+  background: color-mix(in oklab, var(--color-base-content) 10%, var(--color-base-100));
+  border-color: color-mix(in oklab, var(--color-base-content) 14%, transparent);
+  color: var(--color-base-content);
 }
 
 .link-card-contrast:hover {
-  @apply bg-base-content/90 border-transparent shadow-xl scale-[1.01];
+  background: color-mix(in oklab, var(--color-base-content) 14%, var(--color-base-100));
+  border-color: color-mix(in oklab, var(--color-base-content) 22%, transparent);
+  @apply shadow-md;
 }
 
 .link-card-contrast .link-title,
-.link-card-contrast .link-desc,
 .link-card-contrast .link-icon {
-  @apply text-base-100;
+  color: var(--color-base-content);
+}
+
+.link-card-contrast .link-desc {
+  @apply text-base-content/70;
 }
 
 .link-title {
@@ -296,11 +315,11 @@ footer.footer .social-icon {
 
 /* ─── Project Card ─── */
 .project-card {
-  @apply relative flex flex-col p-6 border border-base-content/8 rounded-xl transition-all duration-300 bg-base-100 text-base-content overflow-hidden;
+  @apply relative flex flex-col p-6 border border-base-content/10 rounded-box transition-colors duration-200 bg-base-100 text-base-content overflow-hidden;
 }
 
 .project-card:hover {
-  @apply transform -translate-y-[2px] border-base-content/20 shadow-md bg-base-200/30;
+  @apply border-base-content/20 shadow-md bg-base-200/30;
 }
 
 .project-card-header {
@@ -324,17 +343,16 @@ footer.footer .social-icon {
   justify-content: center;
   width: 2.25rem;
   height: 2.25rem;
-  border-radius: 0.5rem;
+  border-radius: var(--radius-box, 0.25rem);
   background: color-mix(in oklab, var(--color-primary) 12%, transparent);
   border: 1px solid color-mix(in oklab, var(--color-primary) 15%, transparent);
   flex-shrink: 0;
-  transition: all 0.25s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
 }
 
 .project-card:hover .project-card-icon-wrap {
   background: color-mix(in oklab, var(--color-primary) 20%, transparent);
   border-color: color-mix(in oklab, var(--color-primary) 30%, transparent);
-  transform: scale(1.08);
 }
 
 .project-card-icon-wrap i {
@@ -378,10 +396,10 @@ footer.footer .social-icon {
   font-size: 0.65rem;
   padding: 0.15rem 0.5rem;
   border: 1px solid color-mix(in oklab, var(--color-accent) 20%, transparent);
-  border-radius: var(--rounded-badge, 1rem);
+  border-radius: var(--radius-field, 0.25rem);
   color: color-mix(in oklab, var(--color-base-content) 55%, transparent);
   background: color-mix(in oklab, var(--color-accent) 5%, transparent);
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, color 0.2s ease;
 }
 
 .project-card:hover .project-card-tech {
@@ -404,9 +422,9 @@ footer.footer .social-icon {
   font-size: 0.75rem;
   font-weight: 500;
   padding: 0.35rem 0.75rem;
-  border-radius: var(--rounded-btn, 0.375rem);
+  border-radius: var(--radius-field, 0.25rem);
   text-decoration: none;
-  transition: all 0.2s ease;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
   border: 1px solid color-mix(in oklab, var(--color-base-content) 15%, transparent);
   color: color-mix(in oklab, var(--color-base-content) 70%, transparent);
   background: transparent;
@@ -416,7 +434,6 @@ footer.footer .social-icon {
   border-color: color-mix(in oklab, var(--color-primary) 50%, transparent);
   color: var(--color-base-content);
   background: color-mix(in oklab, var(--color-primary) 10%, transparent);
-  transform: translateY(-1px);
 }
 
 .project-card-btn.btn-live {
@@ -438,7 +455,7 @@ footer.footer .social-icon {
   font-size: 0.65rem;
   font-weight: 600;
   padding: 0.15rem 0.55rem;
-  border-radius: var(--rounded-badge, 1rem);
+  border-radius: var(--radius-field, 0.25rem);
   white-space: nowrap;
   letter-spacing: 0.02em;
   flex-shrink: 0;
@@ -500,6 +517,127 @@ main .design-showcase ol {
 main .design-showcase ul li,
 main .design-showcase ol li {
   @apply pl-0 mb-2 leading-relaxed before:hidden;
+}
+
+/* ─── Shared surface chips (About skills + blog taxonomy links) ─── */
+.surface-chip {
+  @apply inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium leading-tight;
+  background: color-mix(in oklab, var(--color-base-content) 6%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 88%, transparent);
+}
+
+.surface-chip-link {
+  @apply inline-flex items-center rounded-md px-2 py-0.5 text-xs font-medium leading-tight no-underline transition-colors duration-150;
+  background: color-mix(in oklab, var(--color-base-content) 6%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 88%, transparent);
+}
+
+.surface-chip-link:hover {
+  background: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+  border-color: color-mix(in oklab, var(--color-base-content) 22%, transparent);
+  color: var(--color-base-content);
+  @apply no-underline;
+}
+
+.taxonomy-chip--category {
+  font-size: 0.625rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.taxonomy-chip--tag {
+  font-size: 0.6875rem;
+  font-weight: 500;
+}
+
+/* Section / page kind label (taxonomy header, etc.) */
+.ui-kind-pill {
+  @apply inline-flex items-center shrink-0 text-xs font-medium px-2.5 py-1 rounded-md uppercase tracking-wide;
+  color: color-mix(in oklab, var(--color-base-content) 65%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 14%, transparent);
+  background: color-mix(in oklab, var(--color-base-content) 4%, transparent);
+}
+
+/* Taxonomy / archive term tiles — responsive text, no nav-button min-height */
+.catalog-card {
+  @apply border border-base-content/10 rounded-box overflow-hidden bg-base-100 transition-shadow duration-200;
+}
+
+.catalog-card:hover {
+  @apply border-base-content/20 shadow-md;
+}
+
+.catalog-card__link {
+  @apply flex flex-col gap-3 p-5 sm:p-6 min-w-0 no-underline hover:no-underline text-base-content;
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-base-content/20 focus-visible:ring-inset;
+}
+
+.catalog-card__row {
+  @apply flex items-center justify-between gap-2 w-full min-w-0;
+}
+
+.catalog-card__action {
+  @apply text-xs font-semibold uppercase tracking-wide;
+  color: color-mix(in oklab, var(--color-base-content) 52%, transparent);
+}
+
+.catalog-card__chevron {
+  @apply shrink-0 transition-transform duration-200;
+  color: color-mix(in oklab, var(--color-base-content) 40%, transparent);
+}
+
+.catalog-card__title {
+  @apply text-lg sm:text-xl font-bold leading-snug m-0 text-left;
+  word-break: break-word;
+}
+
+.catalog-card__meta {
+  @apply text-xs m-0;
+  color: color-mix(in oklab, var(--color-base-content) 62%, transparent);
+}
+
+/* Blog post footer: categories + tags (GitHub-style rows) */
+.article-taxonomies__row {
+  display: grid;
+  grid-template-columns: 2rem 1fr;
+  gap: 0.5rem 0.75rem;
+  align-items: start;
+}
+
+.article-taxonomies__label {
+  @apply flex items-start justify-center shrink-0 pt-1;
+  color: color-mix(in oklab, var(--color-base-content) 45%, transparent);
+}
+
+.article-taxonomies__label :where(svg) {
+  @apply w-4 h-4;
+}
+
+.article-taxonomies__chips {
+  @apply flex flex-wrap gap-2;
+}
+
+/* About page: neutral icon wells (avoid loud pastel blocks) */
+.about-expertise-icon {
+  @apply flex items-center justify-center w-9 h-9 rounded-md shrink-0;
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  background: color-mix(in oklab, var(--color-base-content) 5%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 50%, transparent);
+}
+
+.about-panel {
+  @apply rounded-box border border-base-content/10 bg-base-100 shadow-sm;
+}
+
+.about-panel .card-body {
+  @apply p-6 md:p-7;
+}
+
+.about-skill-heading {
+  @apply font-semibold mb-2 text-xs uppercase tracking-wider text-base-content/55 flex items-center gap-2;
 }
 
 /* ─── Landing Page Resets ─── */

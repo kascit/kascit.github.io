@@ -1,0 +1,18 @@
+{% import "macros/icons.html" as macros_icons %}
+
+{# Compact grid card for taxonomy terms, archives, etc. (avoids nav-button min-height/title alignment issues on narrow viewports). #}
+{% macro term_card(term) %}
+<article class="catalog-card group">
+  <a href="{{ term.permalink | safe }}" class="catalog-card__link">
+    <div class="catalog-card__row">
+      <span class="catalog-card__action">View</span>
+      {{ macros_icons::svg_arrow_right(class="catalog-card__chevron group-hover:translate-x-0.5") }}
+    </div>
+    <h2 class="catalog-card__title">{{ term.name }}</h2>
+    <p class="catalog-card__meta">
+      {{ term.pages | length }}
+      {% if term.pages | length == 1 %} document{% else %} documents{% endif %}
+    </p>
+  </a>
+</article>
+{% endmacro %}

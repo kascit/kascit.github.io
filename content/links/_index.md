@@ -50,7 +50,3 @@ enabled = false
 {{ link_card(url="/rss.xml", external=false, icon="fa-solid fa-rss", title="RSS Feed", description="Subscribe via RSS") }}
 
 {{ link_card(url="https://whatsapp.com/channel/0029Vb7NBaYEwEjrmzg6ZS1B", external=true, icon="fa-brands fa-whatsapp", title="Wall o Words", description="WhatsApp Channel") }}
-
-<div class="not-prose text-center mt-16 py-12 border-t border-base-content/10">
-    <p class="text-xl md:text-2xl font-medium tracking-tight opacity-80 italic">✨ Feel free to reach out anywhere!</p>
-</div>

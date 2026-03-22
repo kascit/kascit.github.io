@@ -2,6 +2,7 @@
 {% import "macros/header.html" as macros_header %}
 {% import "macros/footer.html" as macros_footer %}
 {% import "macros/sidebar.html" as macros_sidebar %}
+{% import "macros/drawer.html" as macros_drawer %}
 
 {% set not_found_title = "404" %}
 {% set not_found_desc = "Page not found" %}
@@ -25,18 +26,19 @@
 <body>
     <div class="drawer lg:drawer-open">
         <input id="my-drawer-2" type="checkbox" class="drawer-toggle" autocomplete="off" />
-        <div class="drawer-content flex flex-col pt-16">
+        <div class="drawer-content flex flex-col min-w-0 pt-16 bg-base-200">
             {{ macros_header::header(config=config, lang=config.default_language) }}
             <div class="p-8 w-full max-w-3xl mx-auto flex flex-col justify-center items-center min-h-[60vh]">
                 <main class="flex flex-auto flex-col items-center justify-center px-4 text-center sm:flex-row">
-                    <h1 class="text-2xl font-extrabold tracking-tight text-gray-900 sm:mr-6 sm:border-r sm:border-gray-900/10 sm:pr-6 sm:text-3xl dark:text-gray-200 sm:dark:border-gray-300/10">{{ not_found_title }}</h1>
-                    <h2 class="mt-2 text-gray-700 sm:mt-0 dark:text-gray-400">{{ not_found_desc }}</h2>
+                    <h1 class="text-2xl font-extrabold tracking-tight text-base-content sm:mr-6 sm:border-r sm:border-base-content/15 sm:pr-6 sm:text-3xl">{{ not_found_title }}</h1>
+                    <h2 class="mt-2 text-base-content/70 sm:mt-0">{{ not_found_desc }}</h2>
                 </main>
             </div>
         </div>
-        <div id="sidebar" class="drawer-side fixed top-0 pt-12 bottom-0 z-40 border-r border-gray-500/15">
+        <div id="sidebar" class="drawer-side drawer-side-panel pt-16 border-e border-base-content/10 bg-[var(--color-sidebar)] overflow-hidden">
             {{ macros_sidebar::sidebar(config=config, lang=config.default_language, current_path='/', section=false) }}
         </div>
+        {{ macros_drawer::drawer_overlay() }}
     </div>
 
     <!-- Theme toggle script - critical for functionality -->

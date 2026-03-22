@@ -1,7 +1,7 @@
 {# Stat card shortcode Args: title (required), value (required), desc
 (optional), icon (optional fa class) Usage: {{ stat(title="Total Users",
 value="25.6K", desc="21% more than last month") }} #}
-<div class="stat bg-base-200/30 rounded-xl border border-base-300/30">
+<div class="stat bg-base-200/30 rounded-box border border-base-content/10">
   {% if icon is defined %}
   <div class="stat-figure text-base-content/40">
     <i class="{{ icon }} text-2xl"></i>

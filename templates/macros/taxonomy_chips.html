@@ -1,0 +1,8 @@
+{# Category/tag links: same surface as blog post footer + listing cards. #}
+{% macro category_link(name) %}
+<a href="{{ get_taxonomy_url(kind='categories', name=name) }}" class="surface-chip-link taxonomy-chip taxonomy-chip--category">{{ name }}</a>
+{% endmacro %}
+
+{% macro tag_link(name) %}
+<a href="{{ get_taxonomy_url(kind='tags', name=name) }}" class="surface-chip-link taxonomy-chip taxonomy-chip--tag"><span class="opacity-50 mr-0.5" aria-hidden="true">#</span>{{ name }}</a>
+{% endmacro %}

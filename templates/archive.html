@@ -1,9 +1,9 @@
 {% extends "index.html" %}
-
+{% import "macros/post_card.html" as post_macro %}
 {% block content %}
 <div class="mb-12 pb-4 border-b border-base-content/15">
   <h1>{{ section.title }}</h1>
-  <p class="text-base-content/60">{{ section.description }}</p>
+  <p class="text-base-content/75">{{ section.description }}</p>
 </div>
 
 {% set_global blog_section = get_section(path="blog/_index.md") %}
@@ -29,8 +29,8 @@
       {% if current_year != "" %}
         </div>
       {% endif %}
-      <div class="year-section mb-8">
-        <h2 id="year-{{ post_year }}" class="text-4xl font-black mb-6 pb-3 border-b-2 border-base-content/30">{{ post_year }}</h2>
+      <div class="year-section mb-6">
+        <h2 id="year-{{ post_year }}" class="text-2xl font-bold mb-4 mt-8 pb-2 border-b border-base-content/15 text-base-content/90">{{ post_year }}</h2>
       {% set_global current_year = post_year %}
       {% set_global current_month = "" %}
     {% endif %}
@@ -38,33 +38,12 @@
     {# New month header #}
     {% if post_month != current_month %}
       <div class="month-section mb-6">
-        <h3 id="month-{{ post_year }}-{{ post_month_num }}" class="text-2xl font-bold mb-4 text-base-content/80">{{ post_month }}</h3>
-        <div class="space-y-2">
+        <h3 id="month-{{ post_year }}-{{ post_month_num }}" class="text-lg font-semibold mb-3 mt-6 text-base-content/75">{{ post_month }}</h3>
+        <div class="grid grid-cols-1 gap-6">
       {% set_global current_month = post_month %}
     {% endif %}
     
-    <article class="group flex flex-col sm:flex-row sm:items-baseline gap-2 sm:gap-4 py-2 hover:bg-base-200/50 rounded px-2 transition-colors">
-      <time datetime="{{ post.date }}" class="text-sm text-base-content/60 font-mono flex-shrink-0 w-16">
-        {{ post.date | date(format="%d") }}
-      </time>
-      <div class="flex-grow">
-        <a href="{{ post.permalink }}" class="text-lg font-medium hover:underline group-hover:text-primary">
-          {{ post.title }}
-        </a>
-        {% if post.description %}
-        <p class="text-sm text-base-content/60 mt-1">{{ post.description }}</p>
-        {% endif %}
-        {% if post.taxonomies.tags %}
-        <div class="flex flex-wrap gap-2 mt-2">
-          {% for tag in post.taxonomies.tags %}
-          <a href="{{ get_taxonomy_url(kind='tags', name=tag) }}" class="text-xs px-2 py-0.5 rounded border border-base-content/30 hover:border-base-content/50 transition-colors">
-            {{ tag }}
-          </a>
-          {% endfor %}
-        </div>
-        {% endif %}
-      </div>
-    </article>
+    {{ post_macro::render(post=post) }}
   {% endfor %}
   
   {# Close last month and year #}
@@ -77,11 +56,11 @@
 </div>
 
 {% else %}
-<p class="text-base-content/60 italic">No posts yet. Check back soon!</p>
+<p class="text-base-content/75 italic">No posts yet. Check back soon!</p>
 {% endif %}
 
 <div class="mt-12 pt-8 border-t border-base-content/15">
-  <div class="max-w-xs mx-auto text-center">
+  <div class="w-full">
     <a class="nav-button group" href="/blog">
       <div class="nav-button-content items-center">
         <div class="nav-button-direction flex flex-row items-center gap-1.5">
@@ -101,7 +80,7 @@
 {# Custom TOC Sidebar for Archive - On This Page #}
 <div class="hidden lg:block">
   <div class="sticky top-20 px-4 py-2 border-l border-base-content/15">
-    <h4 class="text-lg font-bold mb-1">ON THIS PAGE</h4>
+    <h2 class="text-lg font-bold mb-1">ON THIS PAGE</h2>
     <nav class="space-y-2">
       {% set_global blog_section = get_section(path="blog/_index.md") %}
       {% if blog_section.pages %}
@@ -125,7 +104,7 @@
           {% set post_month = post.date | date(format="%B") %}
           {% set post_month_num = post.date | date(format="%m") %}
           {% if post_month != last_month %}
-                <a href="#month-{{ post_year }}-{{ post_month_num }}" class="block py-0.5 text-xs text-base-content/60 hover:text-primary transition-colors">
+                <a href="#month-{{ post_year }}-{{ post_month_num }}" class="block py-0.5 text-xs text-base-content/75 hover:text-primary transition-colors">
                   {{ post_month }}
                 </a>
             {% set_global last_month = post_month %}

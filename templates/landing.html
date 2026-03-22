@@ -450,7 +450,7 @@ self::render_social_proof(section=section) }} {% elif section_name ==
 "final_cta" %} {{ self::render_final_cta(section=section) }} {% endif %} {%
 endfor %} {# Footer for landing page #}
 <footer class="py-2 px-4 text-center">
-  <p class="text-sm text-base-content/60 leading-relaxed">
+  <p class="text-sm text-base-content/75 leading-relaxed">
     © {{ now() | date(format="%Y") }}
     <a
       href="https://github.com/kascit"
@@ -464,6 +464,12 @@ endfor %} {# Footer for landing page #}
       href="/privacy"
       class="font-bold text-base-content/70 hover:text-base-content transition-colors duration-200"
       >Privacy</a
+    >
+    •
+    <a
+      href="/tos"
+      class="font-bold text-base-content/70 hover:text-base-content transition-colors duration-200"
+      >Terms of Service</a
     >
     •
     <a

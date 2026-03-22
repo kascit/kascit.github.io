@@ -1,6 +1,6 @@
 +++
 title = "Blog"
-description = "Thoughts, tutorials, and insights"
+description = "Notes on software, debugging, and things I learn along the way."
 template = "section.html"
 sort_by = "date"
 transparent = true
@@ -10,10 +10,27 @@ link_title = "Welcome"
 
 +++
 
-This is where I document my journey through the chaos of modern software development. Some posts are meticulously researched deep-dives into infrastructure and code patterns. Others are just me venting about why Docker decided to stop working on a random Tuesday. Consider it part technical guide, part digital therapy session. Either way, you might learn something useful—or at least feel better knowing you're not alone in your struggles with technology.
+This is a dump of my brain onto the internet. Some posts are deep-dives into infrastructure, routing, or code patterns. Others are just me documenting why a certain tool broke so I don't have to keep searching for the fix next time. 
 
+It's part technical sandbox, part digital notebook. Grab what's useful to you, ignore the rest.
 
+<div class="not-prose my-12 p-[3px] border border-base-content/10 rounded-xl bg-base-200/30 transition-all duration-300 hover:border-base-content/20 hover:shadow-sm">
+    <div class="flex flex-col sm:flex-row items-center justify-between gap-5 p-5 rounded-lg bg-base-100 border border-base-content/5">
+        <div class="flex items-center w-full gap-4">
+            <div class="flex items-center justify-center w-10 h-10 shrink-0 rounded-md bg-orange-500/10 border border-orange-500/20 text-orange-500 transition-transform duration-300 hover:scale-105">
+                <i class="fa-solid fa-rss text-sm"></i>
+            </div>
+            <div class="flex flex-col">
+                <h3 class="text-sm font-semibold text-base-content m-0">RSS Feed</h3>
+                <p class="text-xs text-base-content/60 m-0 mt-0.5">Subscribe to get notified when new articles drop.</p>
+            </div>
+        </div>
+        <a href="/rss.xml" class="inline-flex w-full sm:w-auto items-center justify-center gap-2 text-xs font-medium px-4 py-2 shrink-0 rounded-md border border-base-content/15 text-base-content/70 hover:border-orange-500/40 hover:text-orange-500 hover:bg-orange-500/5 transition-all duration-200 no-underline whitespace-nowrap">
+            Subscribe <i class="fa-solid fa-arrow-right text-[10px] opacity-70"></i>
+        </a>
+    </div>
+</div>
 
 ## Latest Posts
 
-Check out the posts in the navbar, sorted by most recent or hop right into em using the below next button. Everything's also available via [RSS feed](/rss.xml) if you're into that.
+Feel free to click through the posts in the navbar, or just casually scroll through below. Note: if you want them all on one page chronologically, visit the [Archive](/archive).

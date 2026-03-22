@@ -294,8 +294,8 @@ html {
 .dropdown-panel {
   @apply transition-colors duration-300;
 }
-.dropdown-content.bg-base-100 {
-  background-color: var(--color-base-100);
+.dropdown-content.bg-base-100, .dropdown-panel.bg-base-100 {
+  background-color: var(--color-base-100, hsl(var(--b1)));
 }
 
 /* Navigation buttons */
@@ -312,7 +312,7 @@ html {
 }
 
 .nav-button-direction {
-  @apply flex items-center gap-3 text-sm font-semibold text-base-content/50;
+  @apply flex items-center gap-3 text-sm font-semibold text-base-content/75;
 }
 
 .nav-button-title {

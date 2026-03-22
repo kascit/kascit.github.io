@@ -1,14 +1,16 @@
-{% macro content_footer(config, item) %} {% if config.extra.edit_url %}
-<div class="mt-8 pt-6 border-t border-gray-500/15">
-  <div class="flex flex-wrap items-center gap-4">
+{% macro content_footer(config, item) %} 
+<div class="mt-8 pt-6 border-t border-base-content/10">
+  <div class="flex flex-wrap items-center gap-3">
+    {% if config.extra.edit_url and item.path is starting_with("/blog/") %}
     <a
       href="{{ config.extra.edit_url }}/content/{{ item.relative_path }}"
       target="_blank"
       rel="noopener noreferrer"
-      class="inline-flex items-center gap-2 text-sm text-base-content/60 hover:text-base-content transition-colors"
+      class="inline-flex items-center gap-2 text-xs font-medium px-3.5 py-2 rounded-md border border-base-content/15 text-base-content/70 hover:border-base-content/30 hover:text-base-content hover:bg-base-200/50 transition-all duration-200 shadow-sm no-underline tooltip tooltip-top"
+      data-tip="Fork & PR"
     >
       <svg
-        class="w-4 h-4"
+        class="w-3.5 h-3.5"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -20,22 +22,25 @@
           d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
         ></path>
       </svg>
-      <span>Edit this page</span>
+      <span>Edit</span>
     </a>
+    {% endif %}
 
-    {% if config.extra.share is defined %} {% set enable_copy_url =
-    config.extra.share.copy_url | default(value=config.extra.enable_copy_url |
-    default(value=false)) %} {% set enable_share_x = config.extra.share.x |
-    default(value=config.extra.enable_share_x | default(value=false)) %} {% else
-    %} {% set enable_copy_url = config.extra.enable_copy_url |
-    default(value=false) %} {% set enable_share_x = config.extra.enable_share_x
-    | default(value=false) %} {% endif %} {% if enable_copy_url %}
+    {% if config.extra.share is defined %} 
+      {% set enable_copy_url = config.extra.share.copy_url | default(value=config.extra.enable_copy_url | default(value=false)) %} 
+      {% set enable_share_x = config.extra.share.x | default(value=config.extra.enable_share_x | default(value=false)) %} 
+    {% else %} 
+      {% set enable_copy_url = config.extra.enable_copy_url | default(value=false) %} 
+      {% set enable_share_x = config.extra.enable_share_x | default(value=false) %} 
+    {% endif %} 
+    
+    {% if enable_copy_url %}
     <button
       data-copy-url
-      class="inline-flex items-center gap-2 text-sm text-base-content/60 hover:text-base-content transition-colors cursor-pointer"
+      class="inline-flex items-center gap-2 text-xs font-medium px-3.5 py-2 rounded-md border border-base-content/15 text-base-content/70 hover:border-success/40 hover:text-success hover:bg-success/5 transition-all duration-200 shadow-sm cursor-pointer"
     >
       <svg
-        class="w-4 h-4"
+        class="w-3.5 h-3.5"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -49,21 +54,23 @@
       </svg>
       <span>Copy URL</span>
     </button>
-    {% endif %} {% if enable_share_x and item.permalink and item.title %}
+    {% endif %} 
+    
+    {% if enable_share_x and item.permalink and item.title %}
     <a
       href="https://twitter.com/intent/tweet?url={{ item.permalink | urlencode }}&text={{ item.title | urlencode }}"
       target="_blank"
       rel="noopener noreferrer"
-      class="inline-flex items-center gap-2 text-sm text-base-content/60 hover:text-base-content transition-colors"
+      class="inline-flex items-center gap-2 text-xs font-medium px-3.5 py-2 rounded-md border border-base-content/15 text-base-content/70 hover:border-blue-500/40 hover:text-blue-500 hover:bg-blue-500/5 transition-all duration-200 shadow-sm no-underline"
     >
-      <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
+      <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
         <path
           d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"
         ></path>
       </svg>
-      <span>Share on X</span>
+      <span>Share</span>
     </a>
     {% endif %}
   </div>
 </div>
-{% endif %} {% endmacro content_footer %}
+{% endmacro content_footer %}

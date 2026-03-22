@@ -1,30 +1,31 @@
 /* Code block styling */
 :not(.mockup-code) > pre {
-  @apply overflow-x-auto p-6 rounded-lg my-6 bg-base-300/50 border border-base-content/8 shadow-sm relative;
-  white-space: pre;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
-}
-
-:not(.mockup-code) > pre::-webkit-scrollbar {
-  height: 6px;
-}
-
-:not(.mockup-code) > pre::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-:not(.mockup-code) > pre::-webkit-scrollbar-thumb {
-  background: rgba(156, 163, 175, 0.3);
-  border-radius: 3px;
-}
-
-:not(.mockup-code) > pre::-webkit-scrollbar-thumb:hover {
-  background: rgba(156, 163, 175, 0.5);
+  @apply rounded-lg my-6 bg-base-300/50 border border-base-content/10 shadow-sm relative;
 }
 
 :not(.mockup-code) > pre code {
-  @apply text-sm whitespace-pre text-base-content/90;
+  @apply text-sm whitespace-pre text-base-content/90 block overflow-x-auto p-5 pb-6;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(156, 163, 175, 0.4) transparent;
+}
+
+:not(.mockup-code) > pre code::-webkit-scrollbar {
+  height: 8px;
+}
+
+:not(.mockup-code) > pre code::-webkit-scrollbar-track {
+  background: transparent;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+:not(.mockup-code) > pre code::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.4);
+  border-radius: 4px;
+}
+
+:not(.mockup-code) > pre code::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.6);
 }
 
 :not(pre) > code {
@@ -175,15 +176,12 @@ h6:hover .copy-heading-link-button {
 }
 
 .line-clamp-2 {
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
+  @apply line-clamp-2;
 }
 
 /* Dropdown Menu Adjustments */
 .dropdown-content.bg-base-100 {
-  background-color: var(--color-base-100);
+  @apply bg-base-100;
 }
 
 /* Collapse Component Adjustments */
@@ -257,42 +255,43 @@ footer.footer .social-icon {
 
 /* ─── Link Card ─── */
 .link-card {
-  display: block;
-  padding: 1.25rem;
-  margin-bottom: 1rem;
-  border: 1px solid color-mix(in oklab, var(--color-base-content) 12%, transparent);
-  border-radius: var(--rounded-box, 0.5rem);
-  transition: all 0.2s ease;
-  text-decoration: none;
-  background: color-mix(in oklab, var(--color-base-200) 40%, transparent);
-  color: var(--color-base-content);
+  @apply block p-5 mb-4 border border-base-content/12 rounded-lg transition-all duration-300 no-underline bg-base-200/40 text-base-content shadow-sm;
 }
 
 .link-card:hover {
-  transform: translateY(-2px);
-  border-color: color-mix(in oklab, var(--color-base-content) 25%, transparent);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
-  background: color-mix(in oklab, var(--color-base-200) 70%, transparent);
+  @apply transform -translate-y-0.5 border-base-content/25 shadow-lg bg-base-200/70;
+}
+
+.link-card-contrast {
+  @apply bg-base-content text-base-100 border-transparent shadow-lg rounded-lg;
+}
+
+.link-card-contrast:hover {
+  @apply bg-base-content/90 border-transparent shadow-xl scale-[1.01];
+}
+
+.link-card-contrast .link-title,
+.link-card-contrast .link-desc,
+.link-card-contrast .link-icon {
+  @apply text-base-100;
 }
 
 .link-title {
-  font-size: 1.125rem;
+  font-size: 1.05rem;
   font-weight: 600;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.125rem;
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.625rem;
   color: var(--color-base-content);
 }
 
 .link-desc {
-  font-size: 0.875rem;
-  color: color-mix(in oklab, var(--color-base-content) 70%, transparent);
+  @apply text-sm text-base-content/70;
 }
 
 .link-icon {
-  font-size: 1.5rem;
-  color: color-mix(in oklab, var(--color-base-content) 70%, transparent);
+  @apply text-2xl text-base-content/70;
 }
 
 /* ─── Project Card ─── */

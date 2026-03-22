@@ -183,11 +183,11 @@
     @apply text-base-content font-medium transition-colors duration-200 no-underline hover:text-base-content/70;
   }
 
-  main a {
+  main :is(p, li, h1, h2, h3, h4, h5, h6, blockquote) a:not([class*="btn"]):not([class*="nav-button"]):not(.no-underline) {
     @apply text-base-content font-medium border-b border-base-content/30 transition-all duration-200 pb-[1px];
   }
 
-  main a:hover {
+  main :is(p, li, h1, h2, h3, h4, h5, h6, blockquote) a:not([class*="btn"]):not([class*="nav-button"]):not(.no-underline):hover {
     @apply border-base-content/60 text-base-content;
   }
 

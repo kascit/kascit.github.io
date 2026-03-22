@@ -22,7 +22,7 @@
 
 {% set has_theme_specific_logos = logo_dark_image_path != "" or logo_light_image_path != "" %}
 
-<div class="navbar opacity-95 fixed top-0 left-0 right-0 z-50 h-16 border-b border-gray-500/15 backdrop-blur-3xl">
+<div class="navbar fixed top-0 left-0 right-0 z-50 h-16 border-b border-gray-500/15 bg-base-100/95 backdrop-blur-3xl">
     <!-- Mobile hamburger -->
     <div class="flex-none lg:hidden">
         <label for="my-drawer-2" class="btn btn-square btn-ghost">
@@ -169,7 +169,7 @@
                     <div tabindex="0" role="button" class="btn btn-ghost btn-square tooltip tooltip-bottom" data-tip="Apps" aria-label="Apps">
                         {{ macros_icons::svg_apps_grid() }}
                     </div>
-                    <div class="dropdown-panel z-50 mt-2 p-4 bg-base-100 border border-base-content/15 rounded-box shadow-lg w-56 right-0" style="visibility:hidden;opacity:0;pointer-events:none;position:absolute;top:100%">
+                    <div class="dropdown-panel z-50 mt-2 p-4 bg-base-100 border border-base-content/15 rounded-2xl shadow-xl w-64 right-0 mr-2 md:mr-4" style="visibility:hidden;opacity:0;pointer-events:none;position:absolute;top:100%">
                         {{ macros_apps::apps_grid(context="desktop") }}
                     </div>
                 </div>
@@ -186,7 +186,7 @@
                             <img src="" alt="Profile" class="w-full h-full object-cover" />
                         </div>
                     </div>
-                    <div class="dropdown-panel z-50 mt-2 bg-base-100 border border-base-content/15 rounded-box shadow-lg w-56 right-0" style="visibility:hidden;opacity:0;pointer-events:none;position:absolute;top:100%">
+                    <div class="dropdown-panel z-50 mt-2 bg-base-100 border border-base-content/15 rounded-2xl shadow-xl w-64 right-0 mr-2 md:mr-4 overflow-hidden" style="visibility:hidden;opacity:0;pointer-events:none;position:absolute;top:100%">
                         
                         <!-- authed header -->
                         <div class="hidden px-3 pt-3 pb-2 border-b border-gray-500/15 cursor-default select-none">
@@ -235,7 +235,7 @@
                             <li data-nav-chrome="theme">
                                 <div class="flex items-center gap-3 px-2 py-1.5">
                                     <i class="fa-solid fa-circle-half-stroke w-4 text-center opacity-60"></i>
-                                    <div id="theme-toggle" class="theme-switcher flex rounded-lg bg-base-300/60 p-0.5 text-xs font-medium flex-1">
+                                    <div id="theme-toggle" class="theme-switcher flex rounded-lg bg-base-300/75 p-0.5 text-xs font-medium flex-1">
                                         <button data-theme-mode="light" class="theme-switcher-btn flex-1 rounded-md px-2.5 py-1 transition-all duration-200 cursor-pointer" aria-label="Light theme">
                                             <i class="fa-solid fa-sun mr-1"></i>Light
                                         </button>
@@ -263,13 +263,13 @@
                             </li>
 
                             <li class="hidden" data-auth="upgrade-item">
-                                <a class="flex items-center gap-3 hover:no-underline" data-auth="upgrade-btn">
+                                <a href="javascript:void(0)" class="flex items-center gap-3 hover:no-underline" data-auth="upgrade-btn">
                                     <i class="fa-solid fa-shield-halved w-4 text-center"></i><span>Admin Verify</span>
                                 </a>
                             </li>
 
                             <li class="hidden border-t border-gray-500/15 mt-1 pt-1" data-auth="logout-item">
-                                <a class="flex items-center gap-3 hover:no-underline text-error" data-auth="logout-btn">
+                                <a href="javascript:void(0)" class="flex items-center gap-3 hover:no-underline text-error" data-auth="logout-btn">
                                     <i class="fa-solid fa-right-from-bracket w-4 text-center"></i><span>Sign Out</span>
                                 </a>
                             </li>

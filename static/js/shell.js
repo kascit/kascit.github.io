@@ -287,7 +287,7 @@
   var MODE_CYCLE = ["auto", "light", "dark"];
 
   // Active segment style classes
-  var ACTIVE_CLASS = "bg-base-content/15 shadow-sm opacity-100";
+  var ACTIVE_CLASS = "bg-base-content/25 shadow-sm opacity-100 ring-1 ring-base-content/10";
   var INACTIVE_CLASS = "opacity-50 hover:opacity-80";
 
   function applyTheme(resolvedTheme) {

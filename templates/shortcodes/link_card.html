@@ -1,20 +1,14 @@
-{% set is_external = external | default(value=false) %} {% set link_icon = icon
-| default(value="") %}
+{% set is_external = external | default(value=false) %} 
+{% set link_icon = icon | default(value="") %}
+{% set is_contrast = contrast | default(value=false) %}
 <a
   href="{{ url }}"
-  {%
-  if
-  is_external
-  %}target="_blank"
-  rel="noopener noreferrer"
-  {%
-  endif
-  %}
-  class="link-card"
+  {% if is_external %}target="_blank" rel="noopener noreferrer"{% endif %}
+  class="link-card {% if is_contrast %}link-card-contrast{% endif %}"
 >
-  <div class="link-title">
-    {% if link_icon %}<i class="{{ link_icon }} link-icon"></i>{% endif %} {{
-    title }}
+  <div class="link-title text-lg font-bold">
+    {% if link_icon %}<i class="{{ link_icon }} link-icon"></i>{% endif %} 
+    {{ title }}
   </div>
-  <div class="link-desc">{{ description }}</div>
+  <div class="link-desc text-sm">{{ description }}</div>
 </a>

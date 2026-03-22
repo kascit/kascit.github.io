@@ -7,57 +7,58 @@ template = "page.html"
 enabled = false
 +++
 
-> **Last updated: January 5, 2026**
+> **Last updated: March 22, 2026**
 
 ## About This Website
 
-**dhanur.me** is a personal site owned and operated by Dhanur. It is not part of any company. Data collection is minimal and only for comments, security, and analytics. No personal data is sold.
+**dhanur.me** (and its subdomains) is a personal platform owned and operated by Dhanur. It is not part of any company. Data collection is minimal and focused entirely on providing site functionality, security, and basic analytics. No personal data is sold.
 
-## Cookies
+## Cookies & Local Storage
 
+- **Theme Preferences**: We use a single local cookie (`theme`) to remember if you prefer light, dark, or system-default mode. It stores no identifying information.
+- **Authentication**: Our ecosystem (`*.dhanur.me`) utilizes a centralized authentication service at `auth.dhanur.me`. When you log in (e.g., via Google Auth), authentication tokens and account data are securely managed by this service.
 - **Giscus** (comments) uses cookies/session storage when you opt to comment via GitHub.
-- **GitHub** may set auth cookies when you log in to comment.
-- **Google Analytics (GA4)** is enabled via `gtag` to measure usage; it sets analytics cookies unless you block them.
 
-## Hosting
+## Hosting & Architecture
 
-The site is hosted on **GitHub Pages**. GitHub may process server logs (e.g., IP address, user agent) for security and abuse prevention. See [GitHub's Privacy Statement](https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement).
+The site is statically hosted on **GitHub Pages**, and dynamic backend services are hosted securely. Providers may process server logs (e.g., IP address, user agent) for security, DDoS mitigation, and abuse prevention. See [GitHub's Privacy Statement](https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement).
+
+## User Accounts & Authentication
+
+- Services on subdomains may require an account (managed via `auth.dhanur.me`).
+- We collect only the information necessary to provide the service: your display name, email address (via OAuth), and an avatar image.
+- We maintain a basic "credits" ledger for your usage across our apps.
 
 ## Comments
 
 - Comments run through **[Giscus](https://giscus.app)**, backed by GitHub Discussions.
 - If you comment, you authenticate with GitHub; your GitHub username/avatar become public with your comment.
-- Comment content is stored on GitHub. GitHub’s privacy terms apply.
-- More info: [GitHub Privacy](https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement), [Giscus Privacy](https://github.com/giscus/giscus/blob/main/PRIVACY-POLICY.md)
+- Comment content is stored on GitHub.
 
 ## Analytics
 
-- **Google Analytics (GA4)**: enabled via `gtag` to measure aggregate usage (page views, device type, referrers, coarse location). Data is processed by Google per their policies. You can block GA cookies, use a browser blocker, or the GA opt-out add-on.
+- We may use basic, privacy-respecting analytics (such as Google Analytics or Plausible) to measure aggregate usage (page views, device type, referrers). Data is processed per their respective policies. No user-level profiling is performed by this site.
 
-## External Links
+## What We Collect (summary)
 
-Links out of this site (e.g., GitHub, Giscus, newsletters) are covered by their own policies. Please review those before using them.
-
-## What We Collect (minimal)
-
-- **Server logs** (via GitHub Pages): IP, user agent, timestamps for security/ops.
-- **Comments (optional)**: Your GitHub handle/avatar and comment text if you choose to post via Giscus.
-- **Analytics**: GA4 metrics as described above; no user-level profiling by this site.
+- **Server logs**: IP, user agent, timestamps for security/ops.
+- **Accounts**: Email, name, and avatar if you explicitly sign in via our authentication service.
+- **Comments (optional)**: Your GitHub handle/avatar and comment text.
+- **Analytics**: Aggregate, anonymized usage metrics.
 
 ## Your Choices & Rights
 
-- Don’t comment if you prefer not to share your GitHub handle.
-- Clear/block cookies to limit third-party storage.
-- For GitHub/Giscus data (comments, logs), contact GitHub per their policy or delete your GitHub account/content.
-- Block analytics cookies, use a blocker, or the GA opt-out add-on to stop analytics capture.
+- You are not required to create an account to view the main site.
+- Clear/block cookies to limit storage, though this may sign you out or reset your theme.
+- For account data deletion, please contact me directly.
 
 ## Changes
 
-This policy may change; the “Last updated” date will be refreshed when it does.
+This policy may change; the "Last updated" date will be refreshed when it does.
 
 ## Contact
 
-Questions? Reach out at <!--email_off-->[contact@dhanur.me](mailto:contact@dhanur.me)<!--/email_off--> or [github.com/kascit](https://github.com/kascit).
+Questions? Reach out at [contact@dhanur.me](mailto:contact@dhanur.me) or [github.com/kascit](https://github.com/kascit).
 
 ## Open Source
 

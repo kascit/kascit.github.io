@@ -97,9 +97,9 @@
         {# Sidebar configuration with backward compatibility (reuse the value from above) #}
         {% if section is defined and (section.path == "/" or section.path == lang_root_path) and not disable_root_sidebar_hide %}
         {# On landing page: hide sidebar on desktop, keep drawer available on mobile #}
-        <div id="sidebar" class="drawer-side pt-16 border-e border-base-content/10 overflow-hidden lg:hidden">
+        <div id="sidebar" class="drawer-side pt-16 border-e border-base-content/10 bg-[var(--color-sidebar)] overflow-hidden lg:hidden">
         {% else %}
-        <div id="sidebar" class="drawer-side pt-16 border-e border-base-content/10 overflow-hidden">
+        <div id="sidebar" class="drawer-side pt-16 border-e border-base-content/10 bg-[var(--color-sidebar)] overflow-hidden">
         {% endif %}
             {% if section is defined %}
                 {{ macros_sidebar::sidebar(config=config, lang=lang, current_path=current_path, section=section) }}

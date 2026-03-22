@@ -59,23 +59,23 @@
                 <span class="text-sm font-normal px-2 py-0.5 border border-base-content/20 rounded">{{ page.extra.badge }}</span>
             {% endif %}
         </h1>
-        <p class="text-base-content/60">{{ page.description }}</p>
-        <div class="flex flex-wrap items-center gap-4 mt-3 text-sm text-base-content/60">
+        <p class="text-base-content/75">{{ page.description }}</p>
+        <div class="flex flex-wrap items-center gap-3 mt-4 text-sm">
             {% if page.date %}
-            <div class="flex items-center gap-1.5">
-                {{ macros_icons::svg_calendar() }}
+            <div class="badge badge-neutral gap-1.5 p-3 rounded-md border-base-content/10 bg-base-200/50">
+                {{ macros_icons::svg_calendar(class="w-3.5 h-3.5") }}
                 <time datetime="{{ page.date | date(format='%Y-%m-%d') }}">{{ page.date | date(format="%B %d, %Y") }}</time>
             </div>
             {% endif %}
             {% if page.reading_time %}
-            <div class="flex items-center gap-1.5">
-                {{ macros_icons::svg_clock() }}
+            <div class="badge badge-neutral gap-1.5 p-3 rounded-md border-base-content/10 bg-base-200/50">
+                {{ macros_icons::svg_clock(class="w-3.5 h-3.5") }}
                 <span>{{ page.reading_time }} min read</span>
             </div>
             {% endif %}
             {% if page.word_count %}
-            <div class="flex items-center gap-1.5">
-                {{ macros_icons::svg_book_open() }}
+            <div class="badge badge-neutral gap-1.5 p-3 rounded-md border-base-content/10 bg-base-200/50">
+                {{ macros_icons::svg_book_open(class="w-3.5 h-3.5") }}
                 <span>{{ page.word_count }} words</span>
             </div>
             {% endif %}

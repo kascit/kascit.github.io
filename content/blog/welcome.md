@@ -37,8 +37,8 @@ I'll post when I have something worth saying. Could be weekly, could be once eve
 
 Anyway, thanks for stopping by. Stick around if you want to see a developer figure things out in public.
 
-\- Dhanur
-
-Feel free to reach out if you have questions, feedback, or just want to chat about technology!
+Feel free to reach out if you have questions, feedback, or just want to chat about technology! 
 
 Happy coding! 💻
+
+\- Dhanur

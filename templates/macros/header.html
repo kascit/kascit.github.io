@@ -25,7 +25,7 @@
 <div class="navbar fixed top-0 left-0 right-0 z-50 h-16 border-b border-base-content/10 bg-base-200/95 backdrop-blur-md">
     <!-- Mobile hamburger (always visible) -->
     <div class="flex-none lg:hidden">
-        <label for="my-drawer-2" class="btn btn-square btn-ghost">
+        <label id="hamburger-toggle" for="my-drawer-2" aria-label="Open menu" class="btn btn-ghost btn-circle btn-sm bg-base-200 border border-base-content/10 shadow-sm transition-all duration-200 hover:shadow-md hover:bg-base-200/70 active:scale-95">
             {{ macros_icons::svg_hamburger() }}
         </label>
     </div>
@@ -72,6 +72,10 @@
                 {{ logo_text }}
             {% endif %}
         </a>
+    </div>
+    <!-- Mobile right-side spacer to keep title optically centered -->
+    <div class="flex-none lg:hidden" aria-hidden="true">
+        <div class="btn btn-circle btn-sm invisible"></div>
     </div>
     <!-- Desktop Menu -->
     <div class="flex-none hidden lg:flex">
@@ -169,7 +173,7 @@
                     <div tabindex="0" role="button" class="btn btn-ghost btn-square tooltip tooltip-bottom" data-tip="Apps" aria-label="Apps">
                         {{ macros_icons::svg_apps_grid() }}
                     </div>
-                    <div class="dropdown-panel z-50 mt-2 p-4 bg-base-100 border border-base-content/10 rounded-box shadow-lg w-64 right-0 mr-2 md:mr-4" style="visibility:hidden;opacity:0;pointer-events:none;position:absolute;top:100%">
+                    <div class="dropdown-panel z-50 mt-2 p-4 bg-base-100 border border-base-content/10 rounded-box shadow-lg w-64 right-0 mr-2 md:mr-4">
                         {{ macros_apps::apps_grid(context="desktop") }}
                     </div>
                 </div>
@@ -186,7 +190,7 @@
                             <img src="" alt="Profile" class="w-full h-full object-cover" />
                         </div>
                     </div>
-                    <div class="dropdown-panel z-50 mt-2 bg-base-100 border border-base-content/10 rounded-box shadow-lg w-64 right-0 mr-2 md:mr-4 overflow-hidden" style="visibility:hidden;opacity:0;pointer-events:none;position:absolute;top:100%">
+                    <div class="dropdown-panel z-50 mt-2 bg-base-100 border border-base-content/10 rounded-box shadow-lg w-64 right-0 mr-2 md:mr-4 overflow-hidden">
                         
                         <!-- authed header -->
                         <div class="hidden px-3 pt-3 pb-2 border-b border-base-content/10 cursor-default select-none">

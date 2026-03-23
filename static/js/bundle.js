@@ -401,6 +401,7 @@ document.addEventListener("DOMContentLoaded", () => {
         return '<kbd class="kbd">' + k + "</kbd>";
       })
       .join("");
+    if (el.classList) el.classList.remove("hidden");
     el.style.display = "inline-flex";
     el.style.gap = "2px";
     el.classList.add("shortcut-hint-ready");
@@ -1188,16 +1189,6 @@ document.addEventListener("DOMContentLoaded", () => {
           btn.classList.add("tooltip");
         }
 
-        var panel = dd.querySelector(".dropdown-panel");
-        if (panel) {
-          panel.style.opacity = "0";
-          panel.style.transform = "";
-          panel.style.pointerEvents = "none";
-          setTimeout(function () {
-            if (!dd.hasAttribute("data-open"))
-              panel.style.visibility = "hidden";
-          }, 150);
-        }
       });
       openDropdown = null;
     }
@@ -1227,14 +1218,7 @@ document.addEventListener("DOMContentLoaded", () => {
       if (btn) btn.classList.remove("tooltip");
 
       var panel = dd.querySelector(".dropdown-panel");
-      if (panel) {
-        positionPanel(dd);
-        panel.style.visibility = "visible";
-        panel.style.pointerEvents = "auto";
-        void panel.offsetHeight;
-        panel.style.opacity = "1";
-        panel.style.transform = "translateY(0) scale(1)";
-      }
+      if (panel) positionPanel(dd);
     }
 
     dropdowns.forEach(function (dd) {
@@ -2459,12 +2443,43 @@ function initMath() {
   }
 
   // TOC Toggle Logic
+  function positionTocToggle() {
+    var wrap = document.getElementById("toc-toggle-wrapper");
+    if (!wrap) return;
+    var baseTop = wrap.getAttribute("data-base-top");
+    if (!baseTop) {
+      baseTop = String(Math.round(wrap.getBoundingClientRect().top));
+      wrap.setAttribute("data-base-top", baseTop);
+    }
+    if (!document.body.classList.contains("toc-collapsed")) {
+      wrap.style.position = "";
+      wrap.style.left = "";
+      wrap.style.right = "";
+      wrap.style.top = "";
+      return;
+    }
+    var container = document.querySelector(".w-full.min-w-0.max-w-7xl");
+    if (!container) {
+      wrap.style.position = "fixed";
+      wrap.style.left = "auto";
+      wrap.style.right = "8px";
+      wrap.style.top = baseTop + "px";
+      return;
+    }
+    var rect = container.getBoundingClientRect();
+    var spaceRight = Math.max(8, window.innerWidth - rect.right - 28);
+    wrap.style.position = "fixed";
+    wrap.style.left = "auto";
+    wrap.style.right = spaceRight + "px";
+    wrap.style.top = baseTop + "px";
+  }
   function applyTocState(collapsed) {
     if (collapsed) {
       document.body.classList.add("toc-collapsed");
     } else {
       document.body.classList.remove("toc-collapsed");
     }
+    positionTocToggle();
   }
 
   function toggleToc() {
@@ -2479,6 +2494,8 @@ function initMath() {
 
     var collapsed = getBoolCookie("toc_collapsed");
     applyTocState(collapsed);
+    positionTocToggle();
+    window.addEventListener("resize", positionTocToggle);
 
     toggleBtn.addEventListener("click", function (e) {
       e.preventDefault();

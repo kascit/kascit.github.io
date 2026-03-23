@@ -394,16 +394,6 @@
         if (btn && btn.hasAttribute("data-tip")) {
           btn.classList.add("tooltip");
         }
-
-        var panel = dd.querySelector(".dropdown-panel");
-        if (panel) {
-          panel.style.opacity = "0";
-          panel.style.transform = "";
-          panel.style.pointerEvents = "none";
-          setTimeout(function () {
-            if (!dd.hasAttribute("data-open")) panel.style.visibility = "hidden";
-          }, 150);
-        }
       });
       openDropdown = null;
     }
@@ -433,14 +423,7 @@
       if (btn) btn.classList.remove("tooltip");
 
       var panel = dd.querySelector(".dropdown-panel");
-      if (panel) {
-        positionPanel(dd);
-        panel.style.visibility = "visible";
-        panel.style.pointerEvents = "auto";
-        void panel.offsetHeight;
-        panel.style.opacity = "1";
-        panel.style.transform = "translateY(0) scale(1)";
-      }
+      if (panel) positionPanel(dd);
     }
 
     dropdowns.forEach(function (dd) {

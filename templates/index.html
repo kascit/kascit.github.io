@@ -7,6 +7,14 @@
 {% import "macros/sidebar.html" as macros_sidebar %}
 {% import "macros/drawer.html" as macros_drawer %}
 
+{% set lang_root_path = "/" ~ lang ~ "/" %}
+{% if config.extra.sidebar is defined %}
+    {% set disable_root_sidebar_hide = config.extra.sidebar.disable_root_hide | default(value=config.extra.disable_root_sidebar_hide | default(value=false)) %}
+{% else %}
+    {% set disable_root_sidebar_hide = config.extra.disable_root_sidebar_hide | default(value=false) %}
+{% endif %}
+{% set is_landing = section is defined and (section.path == "/" or section.path == lang_root_path) and not disable_root_sidebar_hide %}
+
 <!DOCTYPE html>
 {{ macros_head::html_tag(config=config, lang=lang) }}
 <head>
@@ -19,7 +27,7 @@
     {% endif %}
     {% block extra_head %}{% endblock extra_head %}
 </head>
-<body>
+<body class="{% if is_landing %}is-landing no-scrollbar{% endif %}">
     {{ macros_search::search(config=config) }}
 
     <div class="drawer lg:drawer-open">
@@ -27,21 +35,7 @@
         <div class="drawer-content flex flex-col min-w-0 pt-16 bg-base-200">
             {{ macros_header::header(config=config, lang=lang) }}
 
-            {% set lang_root_path = "/" ~ lang ~ "/" %}
-            {# Sidebar configuration with backward compatibility #}
-            {# Priority: sidebar.disable_root_hide (new) > disable_root_sidebar_hide (legacy) #}
-            {% if config.extra.sidebar is defined %}
-                {% set disable_root_sidebar_hide = config.extra.sidebar.disable_root_hide | default(value=config.extra.disable_root_sidebar_hide | default(value=false)) %}
-            {% else %}
-                {% set disable_root_sidebar_hide = config.extra.disable_root_sidebar_hide | default(value=false) %}
-            {% endif %}
-            {% if section is defined and (section.path == "/" or section.path == lang_root_path) and not disable_root_sidebar_hide %}
-            <style>
-                /* Hide scrollbar visually but preserve scrolling ability on landing page */
-                html { scrollbar-gutter: auto !important; scrollbar-width: none; }
-                html::-webkit-scrollbar { display: none; }
-                .navbar label[for="my-drawer-2"] { display: none !important; }
-            </style>
+            {% if is_landing %}
             <div class="w-full">
                 <main class="prose w-full mx-auto">
                     {% block content %}{% endblock content %}
@@ -108,12 +102,7 @@
 
         </div>
 
-        {% set lang_root_path = "/" ~ lang ~ "/" %}
-        {# Sidebar configuration with backward compatibility (reuse the value from above) #}
-        {% if section is defined and (section.path == "/" or section.path == lang_root_path) and not disable_root_sidebar_hide %}
-        {# On landing page: remove sidebar entirely #}
-        {% else %}
-        <div id="sidebar" class="drawer-side pt-16 z-[60] lg:z-40">
+        <div id="sidebar" class="drawer-side pt-16 z-[60] lg:z-40 {% if is_landing %}lg:hidden{% endif %}">
             {{ macros_drawer::drawer_overlay() }}
             {% if section is defined %}
                 {{ macros_sidebar::sidebar(config=config, lang=lang, current_path=current_path, section=section) }}
@@ -122,6 +111,7 @@
             {% endif %}
         </div>
         
+        {% if not is_landing %}
         <div id="sidebar-toggle-wrapper" class="tooltip tooltip-right hidden lg:flex fixed top-1/2 -translate-y-1/2 z-50" data-tip="Toggle sidebar">
             <button id="sidebar-toggle" class="btn btn-ghost btn-circle btn-sm bg-base-200 border border-base-content/10 shadow-sm transition-all duration-300 ease-out" aria-label="Toggle sidebar">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sidebar-toggle-icon-collapsed hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

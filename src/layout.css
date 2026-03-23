@@ -6,6 +6,29 @@ html {
   scrollbar-gutter: stable;
 }
 
+/* Landing page: hide prev/next navigation block */
+body.is-landing nav.mt-12 {
+  display: none !important;
+}
+
+/* Dropdown panels: CSS-only hidden state, toggled via [data-open] */
+[data-dropdown] .dropdown-panel {
+  position: absolute;
+  top: 100%;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(0.25rem) scale(0.98);
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+[data-dropdown][data-open] .dropdown-panel {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
 /* PWA Window Controls Overlay - position navbar intelligently
  * On Windows: controls on right, overlay uses titlebar-area-width
  * On macOS: controls on left, overlay uses titlebar-area-x
@@ -49,6 +72,20 @@ html {
 /* Sidebar Menu Neutral Styling */
 .menu a {
   @apply text-base-content/80 hover:text-base-content hover:bg-base-content/10 transition-colors duration-200 no-underline;
+}
+
+/* Tight TOC spacing — keep it sleek */
+.toc-menu a,
+.toc-menu details > summary {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  line-height: 1.25;
+  min-height: 0;
+}
+
+/* Sidebar-only comfortable hit area */
+#sidebar .menu a {
+  @apply py-2.5 leading-6 min-h-0;
 }
 
 /* Force Menu Focus/Active states to adhere to monochromatic theme */
@@ -125,8 +162,8 @@ html {
     pointer-events: none;
   }
 
-  /* Sidebar toggle positioning */
-  #sidebar-toggle {
+  /* Sidebar toggle positioning (apply to wrapper, since button is static inside it) */
+  #sidebar-toggle-wrapper {
     left: calc(var(--sidebar-width) - var(--toggle-half-width));
     right: auto;
     transition: left 300ms cubic-bezier(0.4, 0, 0.2, 1),
@@ -135,17 +172,19 @@ html {
     will-change: left, right, transform;
   }
 
-  /* When the sidebar is collapsed, keep the toggle near the right edge of
-     the content area with a small margin so it "hugs" the edge. When the
-     sidebar is expanded, position it so it's half-on / half-off the sidebar. */
-  .drawer.sidebar-collapsed #sidebar-toggle {
-    left: auto;
-    right: 0.5rem;
+  .drawer.sidebar-collapsed #sidebar-toggle-wrapper {
+    left: calc(-0.6 * var(--toggle-half-width));;
+    right: auto;
   }
 
-  .drawer:not(.sidebar-collapsed) #sidebar-toggle {
-    /* half on / half off the sidebar edge */
+  .drawer:not(.sidebar-collapsed) #sidebar-toggle-wrapper {
     left: calc(var(--sidebar-width) - var(--toggle-half-width));
+    right: auto;
+  }
+
+  /* Keep direct button rules no-op fallback */
+  #sidebar-toggle {
+    left: auto;
     right: auto;
   }
 
@@ -187,6 +226,11 @@ html {
   top: 5.25rem; /* accounts for navbar height */
   z-index: 30;
   -webkit-overflow-scrolling: touch;
+  overflow: clip;
+  transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              padding 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              margin 300ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* Ensure consistent font-size for ToC summary elements (items with sub-items) */
@@ -542,16 +586,31 @@ body.toc-collapsed .w-full.min-w-0.max-w-7xl.lg\:grid {
   gap: 0 !important;
 }
 
-/* Floating TOC button positioned similarly to the original sidebar */
-#toc-toggle {
-  right: calc(220px + 2rem); /* approx distance given the 220px TOC width and spacing */
-  transition: right 300ms cubic-bezier(0.4, 0, 0.2, 1),
-              transform 150ms ease;
-  will-change: right, transform;
+body.toc-collapsed #toc-sidebar > div {
+  border-left: 0 !important;
 }
 
-body.toc-collapsed #toc-toggle {
-  right: 0.5rem; /* floating near the right edge when collapsed */
+/* TOC toggle wrapper positioning and smooth transitions */
+#toc-toggle-wrapper {
+  left: 0; /* sit to the left of the TOC column by default */
+  transition: left 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              right 300ms cubic-bezier(0.4, 0, 0.2, 1),
+              transform 150ms ease, opacity 200ms ease;
+  will-change: left, right, transform, opacity;
+  z-index: 9;
+}
+
+/* When TOC is collapsed, dock the toggle to the content container edge.
+ * 7xl container is 80rem; clamp so on smaller viewports it hugs the viewport edge.
+ * Slight negative offset to sit half outside the container.
+ */
+@media (min-width: 1024px) {
+  body.toc-collapsed #toc-toggle-wrapper {
+    position: fixed;
+    left: auto;
+    right: max(0.5rem, calc((100vw - 80rem) / 2 - 0.75rem));
+    top: 6.25rem;
+  }
 }
 
 #toc-toggle:hover {
@@ -562,4 +621,13 @@ body.toc-collapsed #toc-toggle {
 #toc-toggle:active {
   transform: scale(0.95);
   transition-duration: 100ms;
+}
+
+/* Mobile drawer polish */
+@media (max-width: 1023px) {
+  #sidebar.drawer-side.drawer-side-panel {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
 }

@@ -641,7 +641,16 @@ main .design-showcase ol li {
 }
 
 /* ─── Landing Page Resets ─── */
-.landing-page nav { display: none; }
 .landing-page .drawer-side { @apply lg:hidden; }
-.landing-page .drawer-toggle { display: none; }
 .landing-page .drawer-content { @apply lg:w-full; }
+
+/* Theme switcher alignment inside dropdown panels */
+.theme-switcher {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: 0.125rem;
+}
+.theme-switcher-btn {
+  white-space: nowrap;
+}

@@ -21,10 +21,10 @@
         ? "alert-error"
         : "alert-info");
     toastMsg.textContent = message;
-    toast.style.display = "block";
+    toast.classList.remove("hidden");
 
     setTimeout(function () {
-      toast.style.display = "none";
+      toast.classList.add("hidden");
     }, 3500);
   }
 
@@ -47,11 +47,11 @@
   }
 
   // Show banner
-  banner.style.display = "flex";
+  banner.classList.remove("hidden");
 
   // Dismiss handler
   dismissBtn.addEventListener("click", function () {
-    banner.style.display = "none";
+    banner.classList.add("hidden");
     localStorage.setItem("notify-banner-dismissed", Date.now());
     showToast("No worries! We will ask again later", "info");
   });
@@ -64,7 +64,7 @@
     }
 
     if (Notification.permission === "granted") {
-      banner.style.display = "none";
+      banner.classList.add("hidden");
       showToast("You are already subscribed!", "success");
       return;
     }
@@ -80,7 +80,7 @@
     // Request permission
     Notification.requestPermission().then(function (permission) {
       if (permission === "granted") {
-        banner.style.display = "none";
+        banner.classList.add("hidden");
         localStorage.setItem("notify-banner-dismissed", Date.now());
         showToast(
           "Awesome! You will get notified about new posts",

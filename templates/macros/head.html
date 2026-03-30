@@ -60,6 +60,20 @@
             data-cookie-domain="{{ cookie_domain }}"
             data-default-colorset="{{ theme_colorset }}"></script>
 
+    <!-- Sentry error monitoring -->
+    <script src="https://js-de.sentry-cdn.com/76f095eb3818528a530b2347e1735e14.min.js" crossorigin="anonymous"></script>
+    <script>
+      Sentry.onLoad(function() {
+        Sentry.init({
+          // Tracing
+          tracesSampleRate: 1.0, // Capture 100% of the transactions
+          // Session Replay
+          replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
+          replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+        });
+      });
+    </script>
+
         {# Font configuration with backward compatibility #}
         {% if config.extra.font is defined %}
             {% set font_enabled = config.extra.font.enabled | default(value=config.extra.custom_font_enabled | default(value=false)) %}

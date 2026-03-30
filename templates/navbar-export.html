@@ -15,8 +15,8 @@
         {{ macros_header::header(config=config, lang=lang, is_export=true) }}
         <div class="site-nav-slot"></div>
     </div>
-    <div id="sidebar" class="drawer-side drawer-side-panel pt-16 border-e border-base-content/10 bg-[var(--color-sidebar)] overflow-hidden">
+    <div id="sidebar" class="drawer-side pt-16 z-[60] lg:z-40">
+        {{ macros_drawer::drawer_overlay() }}
         {{ macros_sidebar::sidebar(config=config, lang=lang, current_path="/", section=false, is_export=true) }}
     </div>
-    {{ macros_drawer::drawer_overlay() }}
 </div>

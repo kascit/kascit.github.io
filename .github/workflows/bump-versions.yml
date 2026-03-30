@@ -1,0 +1,100 @@
+name: Bump Tool Versions
+
+on:
+  schedule:
+    - cron: "17 3 * * 1" # weekly (Mon) UTC
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  bump:
+    name: Bump versions.env
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6.0.2
+
+      - name: Compute latest versions
+        id: latest
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+
+          python - <<'PY'
+          import json
+          import os
+          import urllib.request
+
+          token = os.environ["GH_TOKEN"]
+
+          def latest_tag(repo: str) -> str:
+            req = urllib.request.Request(
+              f"https://api.github.com/repos/{repo}/releases/latest",
+              headers={
+                "Authorization": f"Bearer {token}",
+                "X-GitHub-Api-Version": "2022-11-28",
+                "Accept": "application/vnd.github+json",
+                "User-Agent": "bump-versions-workflow",
+              },
+            )
+            with urllib.request.urlopen(req) as resp:
+              data = json.load(resp)
+            return data["tag_name"]
+
+          versions = {
+            "zola": latest_tag("getzola/zola").lstrip("v"),
+            "tailwind": latest_tag("tailwindlabs/tailwindcss").lstrip("v"),
+            "daisyui": latest_tag("saadeghi/daisyui").lstrip("v"),
+            "katex": latest_tag("KaTeX/KaTeX").lstrip("v"),
+            "fa": latest_tag("FortAwesome/Font-Awesome").lstrip("v"),
+          }
+
+          out_path = os.environ["GITHUB_OUTPUT"]
+          with open(out_path, "a", encoding="utf-8") as f:
+            for k, v in versions.items():
+              f.write(f"{k}={v}\n")
+          PY
+
+      - name: Update versions.env
+        run: |
+          set -euo pipefail
+
+          file="versions.env"
+
+          sed -i -E "s/^ZOLA_VERSION=.*/ZOLA_VERSION=${{ steps.latest.outputs.zola }}/" "$file"
+          sed -i -E "s/^TAILWIND_VERSION=.*/TAILWIND_VERSION=${{ steps.latest.outputs.tailwind }}/" "$file"
+          sed -i -E "s/^DAISYUI_VERSION=.*/DAISYUI_VERSION=${{ steps.latest.outputs.daisyui }}/" "$file"
+          sed -i -E "s/^FA_VERSION=.*/FA_VERSION=${{ steps.latest.outputs.fa }}/" "$file"
+          sed -i -E "s/^KATEX_VERSION=.*/KATEX_VERSION=${{ steps.latest.outputs.katex }}/" "$file"
+
+          echo "Updated versions.env:" 
+          cat "$file"
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          commit-message: "chore: bump tool versions"
+          title: "chore: bump tool versions"
+          body: |
+            Automated weekly bump of tool versions in `versions.env`.
+
+            - Zola: ${{ steps.latest.outputs.zola }}
+            - Tailwind: ${{ steps.latest.outputs.tailwind }}
+            - DaisyUI: ${{ steps.latest.outputs.daisyui }}
+            - Font Awesome: ${{ steps.latest.outputs.fa }}
+            - KaTeX: ${{ steps.latest.outputs.katex }}
+          branch: chore/bump-tool-versions
+          delete-branch: true
+          labels: |
+            dependencies
+            automation

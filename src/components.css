@@ -11,6 +11,14 @@
   border: none;
 }
 
+/* Zola's ayu theme applies background-color to markdown-context tokens (z-markup.*,
+ * z-variable.z-language.z-fenced). These bleed through as line-span backgrounds
+ * in rendered code blocks. Reset them all to transparent. */
+:not(.mockup-code) > pre code span {
+  background-color: transparent !important;
+}
+
+
 /* Reset DaisyUI prose pre background */
 .prose pre {
   @apply bg-base-300 text-base-content/90;
@@ -185,14 +193,9 @@ h6:hover .copy-heading-link-button {
   }
 }
 
-.line-clamp-2 {
-  @apply line-clamp-2;
-}
 
-/* Dropdown Menu Adjustments */
-.dropdown-content.bg-base-100 {
-  @apply bg-base-100;
-}
+
+
 
 /* Collapse Component Adjustments */
 .collapse {
@@ -640,9 +643,7 @@ main .design-showcase ol li {
   @apply font-semibold mb-2 text-xs uppercase tracking-wider text-base-content/55 flex items-center gap-2;
 }
 
-/* ─── Landing Page Resets ─── */
-.landing-page .drawer-side { @apply lg:hidden; }
-.landing-page .drawer-content { @apply lg:w-full; }
+
 
 /* Theme switcher alignment inside dropdown panels */
 .theme-switcher {

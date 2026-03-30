@@ -3,17 +3,19 @@
 {% import "macros/catalog.html" as macros_catalog %}
 {% import "macros/nav.html" as macros_nav %}
 {% import "macros/icons.html" as macros_icons %}
+
 {# taxonomy_list.html - List of terms for one taxonomy (e.g. /tags/, /categories/). #}
-{% block title %} {{ taxonomy.name | capitalize }} - {{ config.title }} {% endblock title %} {% block content %}
-<div class="mb-12 pb-6 border-b border-gray-500/15">
+
+{% block title %}
+    {{ taxonomy.name | capitalize }} - {{ config.title }}
+{% endblock title %}
+
+{% block content %}
+<div class="mb-12 pb-6 border-b border-base-content/15">
   <div class="flex items-center justify-between gap-4 mb-3">
       <h1 class="flex items-center gap-3">
         {{ taxonomy.config.title | default(value=taxonomy.name | capitalize) }}
-        <span
-          class="text-xs font-medium px-2.5 py-1 border border-gray-500/30 rounded uppercase tracking-wide"
-        >
-          Taxonomy
-        </span>
+        {{ macros_ui::kind_pill(text="Taxonomy") }}
       </h1>
   </div>
 
@@ -52,58 +54,12 @@
 {% else %}
 <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
   {% for term in terms %}
-  <article class="border border-gray-500/15 rounded-lg">
-    <a
-      href="{{ term.permalink | safe }}"
-      class="nav-button nav-button-next group block p-5"
-    >
-      <div class="nav-button-content">
-        <div class="nav-button-direction">
-          <span class="nav-button-label">View</span>
-          <svg
-            class="w-5 h-5 transition-transform group-hover:translate-x-1"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M9 5l7 7-7 7"
-            ></path>
-          </svg>
-        </div>
-        <div class="nav-button-title">{{ term.name }}</div>
-        <div class="text-xs text-base-content/75">
-          {{ term.pages | length }} {% if term.pages | length == 1 %}document{%
-          else %}documents{% endif %}
-        </div>
-      </div>
-    </a>
-  </article>
+    {{ macros_catalog::term_card(term=term) }}
   {% endfor %}
 </div>
-{% endif %} {% endblock content %} {% block prev_link %}
-<a class="nav-button nav-button-prev group" href="/archive">
-  <div class="nav-button-content">
-    <div class="nav-button-direction">
-      <svg
-        class="w-5 h-5 transition-transform group-hover:-translate-x-1"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M15 19l-7-7 7-7"
-        ></path>
-      </svg>
-      <span class="nav-button-label">Back to</span>
-    </div>
-    <div class="nav-button-title">Archive</div>
-  </div>
-</a>
+{% endif %}
+{% endblock content %}
+
+{% block prev_link %}
+{{ macros_nav::render_button(url="/archive", title="Archive", subtitle="Back to", direction="prev") }}
 {% endblock prev_link %}

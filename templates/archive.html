@@ -1,5 +1,6 @@
 {% extends "index.html" %}
 {% import "macros/post_card.html" as post_macro %}
+{% import "macros/nav.html" as macros_nav %}
 {% block content %}
 <div class="mb-12 pb-4 border-b border-base-content/15">
   <h1>{{ section.title }}</h1>
@@ -61,17 +62,7 @@
 
 <div class="mt-12 pt-8 border-t border-base-content/15">
   <div class="w-full">
-    <a class="nav-button group" href="/blog">
-      <div class="nav-button-content items-center">
-        <div class="nav-button-direction flex flex-row items-center gap-1.5">
-          <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-          </svg>
-          <span class="nav-button-label">Return</span>
-        </div>
-        <div class="nav-button-title text-center block w-full mt-2">Back to Blog</div>
-      </div>
-    </a>
+    {{ macros_nav::render_button(url="/blog", title="Back to Blog", subtitle="Return", direction="prev") }}
   </div>
 </div>
 {% endblock content %}

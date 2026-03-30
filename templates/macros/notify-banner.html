@@ -1,12 +1,21 @@
-{% macro notify_banner(config, page) %} {# Only show notification banner on blog
-posts (like comments) #} {% set show_banner = false %} {# Check if this is a
-page under /blog/ #} {% if page is defined and page.path is defined %} {% set
-is_blog_post = page.path is starting_with('/blog/') and not page.path is
-ending_with('/_index/') %} {# Allow explicit override via page frontmatter #} {%
-if page.extra.notify_banner is defined %} {% set show_banner =
-page.extra.notify_banner %} {% else %} {# Default: show banner only on blog
-posts #} {% set show_banner = is_blog_post %} {% endif %} {% endif %} {% if
-show_banner %}
+{% macro notify_banner(config, page) %}
+{# Only show notification banner on blog posts (like comments) #}
+{% set show_banner = false %}
+
+{# Check if this is a page under /blog/ #}
+{% if page is defined and page.path is defined %}
+    {% set is_blog_post = page.path is starting_with('/blog/') and not page.path is ending_with('/_index/') %}
+
+    {# Allow explicit override via page frontmatter #}
+    {% if page.extra.notify_banner is defined %}
+        {% set show_banner = page.extra.notify_banner %}
+    {% else %}
+        {# Default: show banner only on blog posts #}
+        {% set show_banner = is_blog_post %}
+    {% endif %}
+{% endif %}
+
+{% if show_banner %}
 <div class="my-3">
   <!-- Notification Banner -->
   <div
@@ -48,4 +57,5 @@ show_banner %}
 </div>
 
 <script defer src="{{ get_url(path='js/notify-banner.js') | safe }}"></script>
-{% endif %} {% endmacro notify_banner %}
+{% endif %}
+{% endmacro notify_banner %}

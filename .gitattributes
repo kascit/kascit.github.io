@@ -21,6 +21,7 @@
 *.html      text eol=lf
 *.svg       text eol=lf
 *_headers   text eol=lf
+*.tera      text eol=lf
 
 # -------------------------------------------------
 # Binary files
@@ -32,5 +33,5 @@
 *.avif      binary
 *.ico       binary
 *.woff      binary
-*.woff2    binary
+*.woff2     binary
 *.ttf       binary

@@ -35,13 +35,23 @@
                 </main>
             </div>
         </div>
-        <div id="sidebar" class="drawer-side drawer-side-panel pt-16 border-e border-base-content/10 bg-[var(--color-sidebar)] overflow-hidden">
+
+        <div id="sidebar" class="drawer-side pt-16 z-[60] lg:z-40">
+            {{ macros_drawer::drawer_overlay() }}
             {{ macros_sidebar::sidebar(config=config, lang=config.default_language, current_path='/', section=false) }}
         </div>
-        {{ macros_drawer::drawer_overlay() }}
     </div>
 
-    <!-- Theme toggle script - critical for functionality -->
-    <script defer src="{{ get_url(path='js/app.js') | safe }}"></script>
+    {% if config.extra.theme is defined %}
+        {% set js_theme_colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) %}
+    {% else %}
+        {% set js_theme_colorset = config.extra.default_colorset | default(value='dark') %}
+    {% endif %}
+    <script defer src="{{ get_url(path='js/bundle.js') | safe }}"
+            data-default-colorset="{{ js_theme_colorset }}"
+            data-katex-css="{{ get_url(path='css/katex.min.css') | safe }}"
+            data-katex-js="{{ get_url(path='js/katex.min.js') | safe }}"
+            data-mermaid-js="{{ get_url(path='js/mermaid.min.js') | safe }}"
+            data-sw-path="{{ get_url(path='sw.js') | safe }}"></script>
 </body>
 </html>

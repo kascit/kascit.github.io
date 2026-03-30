@@ -1,0 +1,16 @@
+# Add labels based on modified file paths
+frontend:
+  - changed-files:
+    - any-glob-to-any-file: ['src/**/*.js', 'src/**/*.css', 'tailwind.config.js']
+
+backend:
+  - changed-files:
+    - any-glob-to-any-file: ['api/**/*', 'server/**/*']
+
+documentation:
+  - changed-files:
+    - any-glob-to-any-file: ['docs/**/*', 'README.md']
+
+dependencies:
+  - changed-files:
+    - any-glob-to-any-file: ['package.json', 'package-lock.json', 'versions.env']

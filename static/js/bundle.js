@@ -2190,113 +2190,6 @@ function updateGiscusTheme(userTheme) {
   }
 }
 
-function initToc() {
-  const headings = document.querySelectorAll(
-    ".prose h1[id], .prose h2[id], .prose h3[id], .prose h4[id], .prose h5[id], .prose h6[id]",
-  );
-  const tocLinks = document.querySelectorAll(".toc-link");
-  const tocDetails = document.querySelectorAll(".toc-details");
-
-  if (headings.length === 0 || tocLinks.length === 0) {
-    return;
-  }
-
-  const tocContainer = document.querySelector(".hidden.lg\\:block");
-  const tocExpand =
-    tocContainer && tocContainer.getAttribute("data-toc-expand") === "true";
-
-  let activeId = null;
-
-  const userClosedSections = new Set();
-
-  tocDetails.forEach((detail) => {
-    detail.addEventListener("toggle", (e) => {
-      if (!detail.open) {
-        const summary = detail.querySelector("summary");
-        let id = null;
-
-        if (summary && summary.hasAttribute("data-toc-href")) {
-          const href = summary.getAttribute("data-toc-href");
-          id = href.includes("#") ? href.split("#")[1] : null;
-        } else {
-          const link = detail.querySelector(".toc-link[href]");
-          if (link) {
-            const href = link.getAttribute("href");
-            id = href.includes("#") ? href.split("#")[1] : null;
-          }
-        }
-
-        if (id) {
-          userClosedSections.add(id);
-        }
-      }
-    });
-  });
-
-  const activateLink = (id) => {
-    if (activeId === id) return;
-
-    activeId = id;
-
-    tocLinks.forEach((link) => link.classList.remove("active"));
-
-    const correspondingLink = document.querySelector(
-      `.toc-link[href$="#${id}"]`,
-    );
-
-    if (correspondingLink) {
-      correspondingLink.classList.add("active");
-
-      let parentDetails = correspondingLink.closest("details");
-      while (parentDetails) {
-        const summary = parentDetails.querySelector("summary");
-        let parentId = null;
-
-        if (summary && summary.hasAttribute("data-toc-href")) {
-          const href = summary.getAttribute("data-toc-href");
-          parentId = href.includes("#") ? href.split("#")[1] : null;
-        } else {
-          const parentLink = parentDetails.querySelector(".toc-link[href]");
-          if (parentLink) {
-            const href = parentLink.getAttribute("href");
-            parentId = href.includes("#") ? href.split("#")[1] : null;
-          }
-        }
-
-        if (!parentId || !userClosedSections.has(parentId)) {
-          parentDetails.open = true;
-        }
-        parentDetails = parentDetails.parentElement.closest("details");
-      }
-    }
-  };
-
-  const observerOptions = {
-    root: null,
-    rootMargin: "-20% 0px -35% 0px",
-    threshold: 0,
-  };
-
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        const id = entry.target.getAttribute("id");
-        if (id) {
-          activateLink(id);
-        }
-      }
-    });
-  }, observerOptions);
-
-  headings.forEach((heading) => {
-    observer.observe(heading);
-  });
-
-  const hashId = location.hash ? location.hash.slice(1) : null;
-  if (hashId && document.getElementById(hashId)) {
-    activateLink(hashId);
-  }
-}
 
 function initMath() {
   if (typeof katex === "undefined") {
@@ -2442,67 +2335,6 @@ function initMath() {
     });
   }
 
-  // TOC Toggle Logic
-  function positionTocToggle() {
-    var wrap = document.getElementById("toc-toggle-wrapper");
-    if (!wrap) return;
-    var baseTop = wrap.getAttribute("data-base-top");
-    if (!baseTop) {
-      baseTop = String(Math.round(wrap.getBoundingClientRect().top));
-      wrap.setAttribute("data-base-top", baseTop);
-    }
-    if (!document.body.classList.contains("toc-collapsed")) {
-      wrap.style.position = "";
-      wrap.style.left = "";
-      wrap.style.right = "";
-      wrap.style.top = "";
-      return;
-    }
-    var container = document.querySelector(".w-full.min-w-0.max-w-7xl");
-    if (!container) {
-      wrap.style.position = "fixed";
-      wrap.style.left = "auto";
-      wrap.style.right = "8px";
-      wrap.style.top = baseTop + "px";
-      return;
-    }
-    var rect = container.getBoundingClientRect();
-    var spaceRight = Math.max(8, window.innerWidth - rect.right - 28);
-    wrap.style.position = "fixed";
-    wrap.style.left = "auto";
-    wrap.style.right = spaceRight + "px";
-    wrap.style.top = baseTop + "px";
-  }
-  function applyTocState(collapsed) {
-    if (collapsed) {
-      document.body.classList.add("toc-collapsed");
-    } else {
-      document.body.classList.remove("toc-collapsed");
-    }
-    positionTocToggle();
-  }
-
-  function toggleToc() {
-    var newCollapsedState = !document.body.classList.contains("toc-collapsed");
-    setBoolCookie("toc_collapsed", newCollapsedState);
-    applyTocState(newCollapsedState);
-  }
-
-  function initTocToggle() {
-    var toggleBtn = document.getElementById("toc-toggle");
-    if (!toggleBtn) return;
-
-    var collapsed = getBoolCookie("toc_collapsed");
-    applyTocState(collapsed);
-    positionTocToggle();
-    window.addEventListener("resize", positionTocToggle);
-
-    toggleBtn.addEventListener("click", function (e) {
-      e.preventDefault();
-      e.stopPropagation();
-      toggleToc();
-    });
-  }
 
   function initAppsGridCollapse() {
     var details = document.querySelector("details[data-apps-grid-sidebar]");
@@ -2519,12 +2351,10 @@ function initMath() {
   if (document.readyState === "loading") {
     document.addEventListener("DOMContentLoaded", function () {
       initSidebarToggle();
-      initTocToggle();
       initAppsGridCollapse();
     });
   } else {
     initSidebarToggle();
-    initTocToggle();
     initAppsGridCollapse();
   }
 })();
@@ -2532,7 +2362,6 @@ function initMath() {
 document.addEventListener("DOMContentLoaded", function () {
   initSearch();
   initThemeListeners();
-  initToc();
   initMath();
 
   document.addEventListener("keydown", function (event) {
@@ -2547,18 +2376,4 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 });
 
-/* --- toc-click.js --- */
-// TOC summary click handler — navigates to heading anchor.
-document
-  .querySelectorAll(".toc-menu summary[data-toc-href]")
-  .forEach(function (summary) {
-    summary.addEventListener("click", function (e) {
-      var href = this.getAttribute("data-toc-href");
-      if (href && href.includes("#")) {
-        var hash = href.split("#")[1];
-        if (hash) {
-          window.location.hash = hash;
-        }
-      }
-    });
-  });
+

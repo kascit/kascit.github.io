@@ -56,8 +56,22 @@
             </div>
             {% else %}
             <div class="p-4 md:p-8 w-full min-w-0 flex justify-center min-h-[calc(100dvh-4rem)]">
-                <div class="w-full min-w-0 max-w-7xl lg:grid lg:grid-cols-[minmax(0,1fr)_220px] lg:gap-10 rounded-box border border-base-content/5 bg-base-100 shadow-sm p-5 sm:p-6 md:p-8 lg:p-10">
-                    <main class="prose w-full min-w-0">
+                <div id="blog-layout" class="relative mx-auto w-full lg:w-fit min-w-0 max-w-7xl flex flex-row gap-0 rounded-box border border-base-content/5 bg-base-100 shadow-sm p-5 sm:p-6 md:p-8 lg:p-10 transition-[max-width,width,padding] duration-300 ease-in-out">
+                    <main class="relative prose min-w-0 max-w-prose w-full">
+                        {# Toggle button anchor: Absolute so it takes zero flex space (no empty bar) #}
+                        <div id="toc-toggle-anchor" class="hidden lg:block absolute h-full top-0 -right-6 lg:-right-10 w-0 z-50 pointer-events-none" aria-hidden="true">
+                            <div class="sticky top-24 overflow-visible pointer-events-auto">
+                                <button id="toc-toggle"
+                                        class="btn btn-ghost btn-circle btn-sm bg-base-200 border border-base-content/10 shadow-sm transition-all duration-200 absolute left-0 -translate-x-1/2"
+                                        aria-label="Toggle table of contents"
+                                        title="Toggle table of contents">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+
                         {% block content %}{% endblock content %}
 
                         {{ macros_comments::comments(config=config, page=page|default(value=false), section=section|default(value=false)) }}
@@ -74,26 +88,16 @@
                         </nav>
                     </main>
 
-                    <div class="hidden lg:flex h-full relative z-40">
-                        <div class="sticky top-24 self-start h-0 w-0">
-                            <div id="toc-toggle-wrapper" class="tooltip tooltip-left absolute -left-12 top-0" data-tip="Toggle table of contents">
-                                <button id="toc-toggle" class="btn btn-ghost btn-circle btn-sm bg-base-200 border border-base-content/10 shadow-sm transition-all duration-300 ease-out" aria-label="Toggle table of contents">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
-                                    </svg>
-                                </button>
-                            </div>
-                        </div>
-                        <div class="w-full">
-                            {% block toc_sidebar %}
-                            {% if page is defined %}
-                                {{ macros_toc::toc(page=page) }}
-                            {% endif %}
-                            {% if section is defined %}
-                                {{ macros_toc::toc(page=section) }}
-                            {% endif %}
-                            {% endblock toc_sidebar %}
-                        </div>
+                    {# TOC column #}
+                    <div id="toc-column" class="hidden lg:flex flex-col flex-none w-[220px] xl:w-[260px] opacity-100 pl-4 lg:pl-10 transition-all duration-300 ease-in-out origin-right" style="will-change: width, opacity, padding-left;">
+                        {% block toc_sidebar %}
+                        {% if page is defined %}
+                            {{ macros_toc::toc(page=page) }}
+                        {% endif %}
+                        {% if section is defined %}
+                            {{ macros_toc::toc(page=section) }}
+                        {% endif %}
+                        {% endblock toc_sidebar %}
                     </div>
                 </div>
             </div>
@@ -131,6 +135,7 @@
         {% else %}
             {% set js_theme_colorset = config.extra.default_colorset | default(value='dark') %}
         {% endif %}
+        <script defer src="{{ get_url(path='js/toc.js') | safe }}"></script>
         <script defer src="{{ get_url(path='js/bundle.js') | safe }}"
                 data-default-colorset="{{ js_theme_colorset }}"
                 data-katex-css="{{ get_url(path='css/katex.min.css') | safe }}"

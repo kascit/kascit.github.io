@@ -211,27 +211,30 @@ body.is-landing nav.mt-12 {
   font-size: 0.9em;
 }
 
-/* Ensure TOC can stick: avoid clipping by wrapper containers introduced for toggles */
-.hidden.lg\:flex {
-  overflow: visible !important;
-}
-.hidden.lg\:flex > .w-full {
+/* Ensure TOC column doesn't clip sticky child */
+#toc-column {
   overflow: visible !important;
 }
 
-/* Force sticky positioning explicitly for the ToC aside */
-#toc-sidebar {
-  position: -webkit-sticky;
-  position: sticky;
-  top: 5.25rem; /* accounts for navbar height */
-  z-index: 30;
-  -webkit-overflow-scrolling: touch;
-  overflow: clip;
-  transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1),
-              transform 300ms cubic-bezier(0.4, 0, 0.2, 1),
-              padding 300ms cubic-bezier(0.4, 0, 0.2, 1),
-              margin 300ms cubic-bezier(0.4, 0, 0.2, 1);
+/* Active TOC link — highlighted by JS IntersectionObserver */
+.toc-link.toc-active {
+  color: var(--color-base-content) !important;
+  font-weight: 600;
+  position: relative;
 }
+
+.toc-link.toc-active::before {
+  content: '';
+  position: absolute;
+  left: -0.5rem;
+  top: 10%;
+  height: 80%;
+  width: 2px;
+  background: var(--color-primary, currentColor);
+  border-radius: 2px;
+  opacity: 0.8;
+}
+
 
 /* Ensure consistent font-size for ToC summary elements (items with sub-items) */
 .toc-menu details > summary {
@@ -256,10 +259,7 @@ body.is-landing nav.mt-12 {
   color: inherit !important;
 }
 
-/* ToC Active Link Highlighting */
-.toc-link.active {
-  @apply text-base-content font-semibold;
-}
+
 
 /* Gallery Styles */
 .gallery-box {
@@ -570,47 +570,77 @@ body.is-landing nav.mt-12 {
  * TOC Toggle Styles
  * ------------------------------------- */
 
+/* =============================================
+ * TOC TOGGLE & SIDEBAR
+ * =============================================
+ * Layout:  main (flex-1) | #toc-toggle-anchor (w-0) | #toc-column (220px)
+ *
+ * The toggle button lives in #toc-toggle-anchor which is a zero-width flex
+ * sentinel with overflow:visible so it is NEVER clipped regardless of what
+ * happens to #toc-column.
+ *
+ * #toc-column collapses by animating width → 0 via body.toc-collapsed.
+ * overflow:hidden is only applied when collapsed so the width animation clips
+ * content — in expanded state it uses overflow:visible so the inner sticky div
+ * from the macro can work correctly.
+ * ============================================= */
+
+/* --- TOC sidebar: scrollable, sticky (sticky is on the inner div from macro) --- */
+#toc-sidebar {
+  /* Don't make this sticky — sticky is on the inner div in toc.html (sticky top-20) */
+  display: block;
+  height: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#toc-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+/* The inner sticky container from the macro: ensure it sticks */
+#toc-sidebar > div.sticky {
+  max-height: calc(100dvh - 5.5rem);
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#toc-sidebar > div.sticky::-webkit-scrollbar {
+  display: none;
+}
+
+/* --- TOC column: expanded state --- */
+#toc-column {
+  /* overflow:visible so the inner sticky div works correctly */
+  overflow: visible;
+}
+
+/* --- TOC column: collapsed state --- */
+body.toc-collapsed #toc-column {
+  width: 0 !important;
+  opacity: 0 !important;
+  overflow: hidden;
+  margin: 0 !important;
+  padding-left: 0 !important;
+  pointer-events: none;
+}
+
 body.toc-collapsed #toc-sidebar {
   opacity: 0;
   pointer-events: none;
-  transform: translateX(100%);
-  width: 0 !important;
-  padding-left: 0;
-  padding-right: 0;
-  margin-left: 0;
-  margin-right: 0;
 }
 
-body.toc-collapsed .w-full.min-w-0.max-w-7xl.lg\:grid {
-  grid-template-columns: minmax(0,1fr) 0px !important;
-  gap: 0 !important;
+/* --- Toggle button anchor --- */
+/* Kept visible so toggle button stays accessible when collapsed */
+#toc-toggle-anchor {
+  z-index: 41;
 }
 
-body.toc-collapsed #toc-sidebar > div {
-  border-left: 0 !important;
-}
-
-/* TOC toggle wrapper positioning and smooth transitions */
-#toc-toggle-wrapper {
-  left: 0; /* sit to the left of the TOC column by default */
-  transition: left 300ms cubic-bezier(0.4, 0, 0.2, 1),
-              right 300ms cubic-bezier(0.4, 0, 0.2, 1),
-              transform 150ms ease, opacity 200ms ease;
-  will-change: left, right, transform, opacity;
-  z-index: 9;
-}
-
-/* When TOC is collapsed, dock the toggle to the content container edge.
- * 7xl container is 80rem; clamp so on smaller viewports it hugs the viewport edge.
- * Slight negative offset to sit half outside the container.
- */
-@media (min-width: 1024px) {
-  body.toc-collapsed #toc-toggle-wrapper {
-    position: fixed;
-    left: auto;
-    right: max(0.5rem, calc((100vw - 80rem) / 2 - 0.75rem));
-    top: 6.25rem;
-  }
+/* Toggle button */
+#toc-toggle {
+  transition: transform 150ms ease, box-shadow 150ms ease, opacity 200ms ease, background-color 200ms ease;
 }
 
 #toc-toggle:hover {
@@ -620,7 +650,12 @@ body.toc-collapsed #toc-sidebar > div {
 
 #toc-toggle:active {
   transform: scale(0.95);
-  transition-duration: 100ms;
+  transition-duration: 80ms;
+}
+
+/* Optional: rotate button arrow when collapsed */
+body.toc-collapsed #toc-toggle svg {
+  transform: scaleX(-1);
 }
 
 /* Mobile drawer polish */

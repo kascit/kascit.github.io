@@ -1,0 +1,20 @@
+{
+  "terminal.integrated.defaultProfile.windows": "Git Bash",
+  "editor.formatOnSave": false,
+  "[html]": {
+    "editor.formatOnSave": false
+  },
+  "emmet.includeLanguages": {
+    "tera": "html"
+  },
+  "files.associations": {
+    "justfile": "just"
+  },
+  "powershell.scriptAnalysis.exclude": [
+    "**/justfile"
+  ],
+  "yaml.schemas": {
+    "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
+  },
+  "yaml.validate": false
+}

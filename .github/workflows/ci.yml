@@ -1,33 +1,13 @@
-name: Deploy Zola Site to GitHub Pages
+name: CI - Build & Test
 
 on:
-  push:
+  pull_request:
     branches: [main]
-    paths-ignore:
-      - "README.md"
-      - "LICENSE"
-      - "docs/**"
-      - ".prettierignore"
-  workflow_dispatch:
-    inputs:
-      zola_version:
-        description: 'Zola version to use (keep in sync with versions.env)'
-        required: false
-        default: '0.19.2'
-      deploy:
-        description: 'Deploy after build'
-        required: false
-        default: true
-        type: boolean
+  push:
+    branches-ignore: [main]
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: pages
-  cancel-in-progress: false
 
 defaults:
   run:
@@ -35,7 +15,7 @@ defaults:
 
 jobs:
   build:
-    name: Build Zola Site
+    name: Build & Validate
     runs-on: ubuntu-latest
     timeout-minutes: 15
 
@@ -48,13 +28,6 @@ jobs:
       - name: Load tool versions
         run: |
           grep -vE '^(#|$)' versions.env >> "$GITHUB_ENV"
-          if [[ -n "${{ github.event.inputs.zola_version }}" ]]; then
-            echo "ZOLA_VERSION=${{ github.event.inputs.zola_version }}" >> "$GITHUB_ENV"
-          fi
-
-      - name: Setup GitHub Pages
-        id: pages
-        uses: actions/configure-pages@v6.0.0
 
       - name: Cache Zola binary
         uses: actions/cache@v4
@@ -87,55 +60,52 @@ jobs:
             echo "Downloading Tailwind CSS v${TAILWIND_VERSION}"
             curl -fsSL -o ./tailwindcss "https://github.com/tailwindlabs/tailwindcss/releases/download/v${TAILWIND_VERSION}/tailwindcss-linux-x64"
             chmod +x ./tailwindcss
-          else
-            echo "Using cached Tailwind CSS"
           fi
           
           if [[ ! -f src/daisyui.js ]]; then
             echo "Downloading DaisyUI v${DAISYUI_VERSION}"
             curl -fsSL -o src/daisyui.js "https://github.com/saadeghi/daisyui/releases/download/v${DAISYUI_VERSION}/daisyui.js"
             curl -fsSL -o src/daisyui-theme.js "https://github.com/saadeghi/daisyui/releases/download/v${DAISYUI_VERSION}/daisyui-theme.js"
-          else
-            echo "Using cached DaisyUI"
           fi
           
           echo "Building CSS"
           ./tailwindcss -i src/main.css -o static/css/main.css --minify
 
       - name: Build site with Zola
-        env:
-          ZOLA_BASE_URL: ${{ steps.pages.outputs.base_url }}
         run: |
-          echo "Building site with base URL: $ZOLA_BASE_URL"
-          zola build --base-url "$ZOLA_BASE_URL"
+          echo "Building site..."
+          zola build
 
-      - name: Check site health
+      - name: Validate build output
         run: |
-          if [[ ! -f public/index.html ]]; then
-            echo "ERROR: index.html not generated"
-            exit 1
+          set -euo pipefail
+          
+          # Check critical files exist
+          [[ -f public/index.html ]] || { echo "ERROR: index.html missing"; exit 1; }
+          [[ -f public/404.html ]] || echo "WARN: 404.html missing"
+          [[ -d public/css ]] || { echo "ERROR: css directory missing"; exit 1; }
+          
+          # Check file count
+          file_count=$(find public -type f | wc -l)
+          echo "Generated $file_count files"
+          [[ $file_count -gt 0 ]] || { echo "ERROR: No files generated"; exit 1; }
+          
+          # Check for broken links (basic)
+          if grep -r "href=\"\"" public/ 2>/dev/null; then
+            echo "WARN: Empty hrefs found"
           fi
-          echo "Site built successfully"
-          find public -type f | wc -l | xargs echo "Total files:"
+          
+          echo "Build validation passed"
 
-      - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@v4.0.0
+      - name: Check Zola syntax
+        run: |
+          echo "Checking Zola templates..."
+          zola check || true
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
         with:
+          name: site-build-${{ github.run_id }}
           path: ./public
-          retention-days: 7
-
-  deploy:
-    name: Deploy to GitHub Pages
-    runs-on: ubuntu-latest
-    needs: build
-    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy == 'true')
-    timeout-minutes: 5
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v5.0.0
+          retention-days: 1
+          if-no-files-found: error

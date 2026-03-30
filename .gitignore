@@ -8,14 +8,25 @@ Thumbs.db
 Desktop.ini
 
 # Text Editor settings (VS Code, JetBrains, etc)
-.vscode/
+.vscode/*
+!.vscode/settings.json
 .idea/
 *.swp
 *.swo
 
 # Build artifacts & dependencies (downloaded on setup)
 src/tailwindcss.exe
+src/tailwindcss
 src/daisyui.js
 src/daisyui-theme.js
 static/css/main.css
+
+# Temp/log files
 tmp*
+*.tmp
+*.temp
+*.log
+
+# Env files
+.env
+.env.local

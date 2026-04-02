@@ -15,11 +15,11 @@
   function applyCollapsedState(collapsed) {
     document.body.classList.toggle("toc-collapsed", collapsed);
     const btn = document.getElementById("toc-toggle");
-    if (btn) {
-      const label = collapsed ? "Show table of contents" : "Hide table of contents";
-      btn.setAttribute("aria-label", label);
-      btn.setAttribute("title", label);
-    }
+    // if (btn) {
+    //   const label = collapsed ? "Show table of contents" : "Hide table of contents";
+    //   btn.setAttribute("aria-label", label);
+    //   btn.setAttribute("title", label);
+    // }
   }
 
   function initTocToggle() {
@@ -53,8 +53,9 @@
     let currentActiveId = null;
 
     function getTocLink(id) {
-      // Must escape id for CSS selector
-      return tocSidebar.querySelector(`a.toc-link[href="#${CSS.escape(id)}"]`);
+      if (!id) return null;
+      var safeId = CSS.escape(id);
+      return tocSidebar.querySelector(`a.toc-link[href="#${safeId}"]`);
     }
 
     function setActive(id) {
@@ -80,15 +81,14 @@
       }
 
       // Smooth scroll the sidebar to keep the link visible
-      const stickyWrapper = tocSidebar.querySelector('.sticky') || tocSidebar;
       link.scrollIntoView({ block: "nearest", behavior: "smooth" });
     }
 
     // Observer to detect which heading is at the top of the viewport
     const ioOptions = {
       root: null,
-      // Trigger when heading hits the top 10% of viewport
-      rootMargin: "0px 0px -85% 0px",
+      // Fire as heading enters the top 40% of the viewport (refined threshold)
+      rootMargin: "0px 0px -55% 0px",
       threshold: 0
     };
 
@@ -107,6 +107,30 @@
     }, ioOptions);
 
     headings.forEach(h => observer.observe(h));
+
+    // Also handle aggressive upward scrolling using scroll listener
+    let scrollRaf = null;
+    window.addEventListener("scroll", function () {
+      if (scrollRaf) return;
+      scrollRaf = requestAnimationFrame(function () {
+        scrollRaf = null;
+        const viewportMid = window.scrollY + window.innerHeight / 2;
+        let best = null;
+        
+        for (let i = 0; i < headings.length; i++) {
+          const top = headings[i].getBoundingClientRect().top + window.scrollY;
+          if (top <= viewportMid) {
+            best = headings[i].id;
+          } else {
+            break; // Headings are sequential, break early
+          }
+        }
+        
+        if (best && best !== currentActiveId) {
+          setActive(best);
+        }
+      });
+    }, { passive: true });
 
     // Handle initial hash or first heading
     const initialHash = location.hash ? location.hash.slice(1) : null;

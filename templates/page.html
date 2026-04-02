@@ -53,35 +53,47 @@
 {% endblock extra_head %}
 
 {% block content %}
-    <div class="mb-12 pb-4 border-b border-base-content/10">
-        <h1 class="flex items-center gap-3">
+<div class="mb-10 lg:mb-12 pb-6 border-b border-base-content/10">
+    <div class="mb-4 flex flex-wrap gap-2 text-sm font-semibold text-base-content/70 items-center">
+        {% if page.taxonomies.tags %}
+        <div class="flex items-center gap-2 mr-3">
+            <i class="fa-solid fa-tag text-xs opacity-50"></i>
+            {% for tag in page.taxonomies.tags %}
+            <a href="{{ get_taxonomy_url(kind="tags", name=tag) | safe }}" class="hover:text-primary transition-colors">{{ tag }}</a>{% if not loop.last %}<span class="opacity-30">,</span>{% endif %}
+            {% endfor %}
+        </div>
+        {% endif %}
+        
+        {% if page.reading_time %}
+        <div class="flex items-center gap-2 mr-3">
+            <i class="fa-regular fa-clock text-xs opacity-50"></i>
+            <span>{{ page.reading_time }} min read</span>
+        </div>
+        {% endif %}
+        
+        {% if page.date %}
+        <div class="flex items-center gap-2">
+            <i class="fa-regular fa-calendar text-xs opacity-50"></i>
+            <time datetime="{{ page.date }}">{{ page.date | date(format="%B %e, %Y") }}</time>
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="flex flex-row items-center justify-between gap-4">
+        <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-base-content m-0 flex items-center gap-3">
             {{ page.title }}
             {% if page.extra.badge %}
-                <span class="text-sm font-normal px-2 py-0.5 border border-base-content/20 rounded-sm">{{ page.extra.badge }}</span>
+            <span class="text-xs font-semibold px-2 py-0.5 uppercase tracking-wide border border-base-content/20 rounded-sm bg-base-200/50">{{ page.extra.badge }}</span>
             {% endif %}
         </h1>
-        <p class="text-base-content/75">{{ page.description }}</p>
-        <div class="flex flex-wrap items-center gap-3 mt-4 text-sm">
-            {% if page.date %}
-            <div class="badge badge-neutral gap-1.5 p-3 rounded-md border-base-content/10 bg-base-200/50">
-                {{ macros_icons::svg_calendar(class="w-3.5 h-3.5") }}
-                <time datetime="{{ page.date | date(format='%Y-%m-%d') }}">{{ page.date | date(format="%B %d, %Y") }}</time>
-            </div>
-            {% endif %}
-            {% if page.reading_time %}
-            <div class="badge badge-neutral gap-1.5 p-3 rounded-md border-base-content/10 bg-base-200/50">
-                {{ macros_icons::svg_clock(class="w-3.5 h-3.5") }}
-                <span>{{ page.reading_time }} min read</span>
-            </div>
-            {% endif %}
-            {% if page.word_count %}
-            <div class="badge badge-neutral gap-1.5 p-3 rounded-md border-base-content/10 bg-base-200/50">
-                {{ macros_icons::svg_book_open(class="w-3.5 h-3.5") }}
-                <span>{{ page.word_count }} words</span>
-            </div>
-            {% endif %}
-        </div>
     </div>
+    
+    {% if page.description %}
+    <p class="text-base sm:text-lg text-base-content/70 m-0 mt-4 leading-relaxed">
+        {{ page.description }}
+    </p>
+    {% endif %}
+</div>
     
     {{ macros_notify_banner::notify_banner(config=config, page=page) }}
     

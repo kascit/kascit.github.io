@@ -3,21 +3,23 @@
 {# taxonomy_single: pages for one taxonomy term #}
 
 {% block content %}
-    <div class="mb-12 pb-6 border-b border-base-content/10">
-        <div class="flex items-center justify-between gap-4 mb-3">
-            <h1 class="flex items-center gap-3">
+    <div class="mb-10 lg:mb-12 pb-6 border-b border-base-content/10">
+        <div class="flex flex-row items-center justify-between gap-4">
+            <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-base-content m-0 flex items-center gap-3">
+                {% if taxonomy.name == "tags" %}
+                    <i class="fa-solid fa-tag text-3xl opacity-50"></i>
+                {% else %}
+                    <i class="fa-solid fa-folder-open text-3xl opacity-50"></i>
+                {% endif %}
                 {{ term.name }}
-                <span class="text-xs font-medium px-2.5 py-1 border border-base-content/15 rounded-sm uppercase tracking-wide">
-                    {{ taxonomy.name | capitalize }}
-                </span>
             </h1>
-            <a href="{{ term.permalink | safe }}rss.xml" class="inline-flex items-center justify-center w-9 h-9 rounded-md border border-base-content/15 text-orange-500 bg-orange-500/5 hover:bg-orange-500/15 hover:border-orange-500/30 transition-all duration-200 no-underline shrink-0" title="Subscribe to {{ term.name }} RSS Feed">
+            <a href="{{ term.permalink | safe }}rss.xml" class="inline-flex items-center justify-center w-9 h-9 rounded-md border border-base-content/15 text-orange-500 bg-orange-500/5 hover:bg-orange-500/15 hover:border-orange-500/30 transition-all duration-200 no-underline shrink-0" title="Subscribe to RSS Feed">
                 <i class="fa-solid fa-rss text-sm"></i>
             </a>
         </div>
-
+        
         {% if term.pages | length > 0 %}
-            <p class="text-base text-base-content/70 mt-2">
+            <p class="text-base sm:text-lg text-base-content/70 m-0 mt-4 leading-relaxed">
                 {{ term.pages | length }}
                 {% if term.pages | length == 1 %}
                     document
@@ -27,7 +29,7 @@
                 tagged with "{{ term.name }}"
             </p>
         {% else %}
-            <p class="text-base text-base-content/70 mt-2">
+            <p class="text-base sm:text-lg text-base-content/70 m-0 mt-4 leading-relaxed">
                 No documents found for this term.
             </p>
         {% endif %}

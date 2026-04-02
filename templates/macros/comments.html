@@ -19,21 +19,20 @@
 {% set global_enabled = config.extra.comments and config.extra.comments.enabled %}
 
 {% if global_enabled and show_comments %}
-<div id="comments" class="mt-12">
+<div id="comments" class="mt-12"
+     data-repo="{{ config.extra.comments.repo | safe }}"
+     data-repo-id="{{ config.extra.comments.repo_id | safe }}"
+     data-category="{{ config.extra.comments.category | safe }}"
+     data-category-id="{{ config.extra.comments.category_id | safe }}"
+     data-mapping="{{ config.extra.comments.mapping | default(value='pathname') }}"
+     data-strict="{{ config.extra.comments.strict | default(value='0') }}"
+     data-reactions-enabled="{{ config.extra.comments.reactions_enabled | default(value='1') }}"
+     data-emit-metadata="{{ config.extra.comments.emit_metadata | default(value='1') }}"
+     data-input-position="{{ config.extra.comments.input_position | default(value='top') }}"
+     data-lang="{{ config.extra.comments.lang | default(value='en') }}"
+     data-loading="{{ config.extra.comments.loading | default(value='lazy') }}">
   {% if config.extra.comments.system == "giscus" %}
-  <script src="{{ get_url(path="js/comments-giscus.js") | safe }}"
-          data-target="comments"
-          data-repo="{{ config.extra.comments.repo | safe }}"
-          data-repo-id="{{ config.extra.comments.repo_id | safe }}"
-          data-category="{{ config.extra.comments.category | safe }}"
-          data-category-id="{{ config.extra.comments.category_id | safe }}"
-          data-mapping="{{ config.extra.comments.mapping | default(value='pathname') }}"
-          data-strict="{{ config.extra.comments.strict | default(value='0') }}"
-          data-reactions-enabled="{{ config.extra.comments.reactions_enabled | default(value='1') }}"
-          data-emit-metadata="{{ config.extra.comments.emit_metadata | default(value='1') }}"
-          data-input-position="{{ config.extra.comments.input_position | default(value='top') }}"
-          data-lang="{{ config.extra.comments.lang | default(value='en') }}"
-          data-loading="{{ config.extra.comments.loading | default(value='lazy') }}"></script>
+  <!-- Giscus initialized via main.js -->
   {% elif config.extra.comments.system == "utterances" %}
   <script
     src="https://utteranc.es/client.js"

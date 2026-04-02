@@ -55,22 +55,39 @@
                 </main>
             </div>
             {% else %}
+            {% set has_toc = false %}
+            {% if page is defined %}
+                {% if page.toc | length > 0 %}
+                    {% set has_toc = true %}
+                {% endif %}
+            {% elif section is defined %}
+                {% if section.toc | length > 0 %}
+                    {% set has_toc = true %}
+                {% endif %}
+            {% endif %}
+            {% if current_path is defined and current_path == "/archive/" %}
+                {% set has_toc = true %}
+            {% endif %}
+
             <div class="p-4 md:p-8 w-full min-w-0 flex justify-center min-h-[calc(100dvh-4rem)]">
-                <div id="blog-layout" class="relative mx-auto w-full lg:w-fit min-w-0 max-w-7xl flex flex-row gap-0 rounded-box border border-base-content/5 bg-base-100 shadow-sm p-5 sm:p-6 md:p-8 lg:p-10 transition-[max-width,width,padding] duration-300 ease-in-out">
-                    <main class="relative prose min-w-0 max-w-prose w-full">
+                <div id="blog-layout" class="relative mx-auto w-full min-w-0 max-w-6xl flex flex-row gap-5 sm:gap-6 md:gap-8 lg:gap-12 rounded-box border border-base-content/5 bg-base-100 shadow-sm p-5 sm:p-6 md:p-8 lg:p-12 transition-all duration-300 ease-in-out">
+                    <main class="relative prose min-w-0 w-full flex-1 max-w-none {% if has_toc %}md:max-w-[65ch]{% endif %}">
+                        {% if has_toc %}
                         {# Toggle button anchor: Absolute so it takes zero flex space (no empty bar) #}
-                        <div id="toc-toggle-anchor" class="hidden lg:block absolute h-full top-0 -right-6 lg:-right-10 w-0 z-50 pointer-events-none" aria-hidden="true">
+                        <div id="toc-toggle-anchor" class="hidden lg:block absolute h-full top-0 -right-2 lg:-right-4 w-0 z-50 pointer-events-none" aria-hidden="true">
                             <div class="sticky top-24 overflow-visible pointer-events-auto">
-                                <button id="toc-toggle"
-                                        class="btn btn-ghost btn-circle btn-sm bg-base-200 border border-base-content/10 shadow-sm transition-all duration-200 absolute left-0 -translate-x-1/2"
-                                        aria-label="Toggle table of contents"
-                                        title="Toggle table of contents">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
-                                    </svg>
-                                </button>
+                                <div class="tooltip tooltip-up absolute left-0 translate-x-1/2" data-tip="Toggle table of contents">
+                                    <button id="toc-toggle"
+                                            class="btn btn-ghost btn-circle btn-sm bg-base-200 border border-base-content/10 shadow-sm transition-all duration-200"
+                                            aria-label="Toggle table of contents">
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h7" />
+                                        </svg>
+                                    </button>
+                                </div>
                             </div>
                         </div>
+                        {% endif %}
 
                         {% block content %}{% endblock content %}
 
@@ -88,8 +105,9 @@
                         </nav>
                     </main>
 
+                    {% if has_toc %}
                     {# TOC column #}
-                    <div id="toc-column" class="hidden lg:flex flex-col flex-none w-[220px] xl:w-[260px] opacity-100 pl-4 lg:pl-10 transition-all duration-300 ease-in-out origin-right" style="will-change: width, opacity, padding-left;">
+                    <div id="toc-column" class="hidden lg:flex flex-col flex-none w-[220px] xl:w-[260px] opacity-100 transition-all duration-300 ease-in-out origin-right" style="will-change: width, opacity;">
                         {% block toc_sidebar %}
                         {% if page is defined %}
                             {{ macros_toc::toc(page=page) }}
@@ -99,6 +117,7 @@
                         {% endif %}
                         {% endblock toc_sidebar %}
                     </div>
+                    {% endif %}
                 </div>
             </div>
             {% endif %}
@@ -136,12 +155,16 @@
             {% set js_theme_colorset = config.extra.default_colorset | default(value='dark') %}
         {% endif %}
         <script defer src="{{ get_url(path='js/toc.js') | safe }}"></script>
-        <script defer src="{{ get_url(path='js/bundle.js') | safe }}"
-                data-default-colorset="{{ js_theme_colorset }}"
-                data-katex-css="{{ get_url(path='css/katex.min.css') | safe }}"
-                data-katex-js="{{ get_url(path='js/katex.min.js') | safe }}"
-                data-mermaid-js="{{ get_url(path='js/mermaid.min.js') | safe }}"
-                data-sw-path="{{ get_url(path='sw.js') | safe }}"></script>
+        <script id="site-config" type="application/json">
+        {
+            "defaultColorset": "{{ js_theme_colorset }}",
+            "katexCss": "{{ get_url(path='css/katex.min.css') | safe }}",
+            "katexJs": "{{ get_url(path='js/katex.min.js') | safe }}",
+            "mermaidJs": "{{ get_url(path='js/mermaid.min.js') | safe }}",
+            "swPath": "{{ get_url(path='sw.js') | safe }}"
+        }
+        </script>
+        <script type="module" src="{{ get_url(path='js/main.js') | safe }}"></script>
         {% if config.build_search_index %}
         <script defer src="{{ get_url(path='js/search-loader.js') | safe }}"
                 data-lang="{{ lang | default(value='en') }}"

@@ -11,27 +11,16 @@
 {% endblock title %}
 
 {% block content %}
-<div class="mb-12 pb-6 border-b border-base-content/15">
-  <div class="flex items-center justify-between gap-4 mb-3">
-      <h1 class="flex items-center gap-3">
-        {{ taxonomy.config.title | default(value=taxonomy.name | capitalize) }}
-        {{ macros_ui::kind_pill(text="Taxonomy") }}
-      </h1>
+<div class="mb-10 lg:mb-12 pb-6 border-b border-base-content/10">
+  <div class="flex flex-row items-center justify-between gap-4">
+    <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-base-content m-0 flex items-center gap-3">
+      {{ taxonomy.name | capitalize }}
+      <span class="text-xs font-semibold px-2 py-0.5 uppercase tracking-wide border border-base-content/20 rounded-sm bg-base-200/50">Taxonomy</span>
+    </h1>
   </div>
-
-  {% if taxonomy.config.description %}
-  <p class="text-base text-base-content/70">
-    {{ taxonomy.config.description }}
-  </p>
-  {% else %}
-  <p class="text-base text-base-content/70">
+  <p class="text-base sm:text-lg text-base-content/70 m-0 mt-4 leading-relaxed">
     Browse all {{ taxonomy.name }} used in this documentation.
   </p>
-  {% endif %}
-
-  <div class="mt-4 flex items-center gap-2 text-sm text-base-content/75">
-    <span>{{ terms | length }} {{ taxonomy.name }} available</span>
-  </div>
 </div>
 
 {% if terms | length == 0 %}

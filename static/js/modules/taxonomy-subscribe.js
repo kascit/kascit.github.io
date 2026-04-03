@@ -8,6 +8,7 @@
  */
 
 import { isDesktop, onResponsiveChange } from "./responsive.js";
+import { readCookie, writeCookie } from "./cookie-utils.js";
 
 const TAXONOMY_SELECTION_COOKIE = "taxonomy-rss-selection-v1";
 const TAXONOMY_SELECTION_COOKIE_MAX_AGE = 60 * 60 * 24 * 180;
@@ -41,23 +42,6 @@ function downloadTextFile(fileName, content, mimeType) {
   anchor.click();
   document.body.removeChild(anchor);
   URL.revokeObjectURL(blobUrl);
-}
-
-function readCookie(name) {
-  const target = `${name}=`;
-  const parts = document.cookie ? document.cookie.split(";") : [];
-  for (const part of parts) {
-    const item = part.trim();
-    if (item.startsWith(target)) {
-      return decodeURIComponent(item.slice(target.length));
-    }
-  }
-  return "";
-}
-
-function writeCookie(name, value, maxAgeSeconds) {
-  const secure = window.location.protocol === "https:" ? "; Secure" : "";
-  document.cookie = `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${maxAgeSeconds}; SameSite=Lax${secure}`;
 }
 
 function feedToPage(feed) {
@@ -128,13 +112,23 @@ function saveCookieSelection(items) {
       writeCookie(
         TAXONOMY_SELECTION_COOKIE,
         TAXONOMY_SELECTION_STORAGE_SENTINEL,
-        TAXONOMY_SELECTION_COOKIE_MAX_AGE
+        {
+          maxAgeSeconds: TAXONOMY_SELECTION_COOKIE_MAX_AGE,
+          path: "/",
+          sameSite: "Lax",
+          secure: window.location.protocol === "https:",
+        }
       );
       return;
     }
 
     localStorage.removeItem(TAXONOMY_SELECTION_STORAGE_KEY);
-    writeCookie(TAXONOMY_SELECTION_COOKIE, payload, TAXONOMY_SELECTION_COOKIE_MAX_AGE);
+    writeCookie(TAXONOMY_SELECTION_COOKIE, payload, {
+      maxAgeSeconds: TAXONOMY_SELECTION_COOKIE_MAX_AGE,
+      path: "/",
+      sameSite: "Lax",
+      secure: window.location.protocol === "https:",
+    });
   } catch (_error) {
     // ignore cookie write failures
   }

@@ -22,11 +22,11 @@
 
 {% set has_theme_specific_logos = logo_dark_image_path != "" or logo_light_image_path != "" %}
 
-<div class="navbar site-topbar fixed top-0 left-0 right-0 z-50 h-16 border-b border-base-content/10 bg-base-200/95 backdrop-blur-md">
+<div class="navbar site-topbar fixed top-0 left-0 right-0 z-50 h-16">
     <!-- Mobile hamburger (always visible) -->
     {% if show_mobile_menu %}
     <div class="flex-none lg:hidden">
-        <label id="hamburger-toggle" for="my-drawer-2" aria-label="Open menu" class="btn btn-ghost btn-circle btn-sm bg-base-200 border border-base-content/10 shadow-sm transition-all duration-200 hover:shadow-md hover:bg-base-200/70 active:scale-95">
+        <label id="hamburger-toggle" for="my-drawer-2" aria-label="Open menu" class="btn btn-ghost btn-circle btn-sm transition-colors duration-200">
             {{ macros_icons::svg_hamburger() }}
         </label>
     </div>
@@ -136,7 +136,7 @@
                     <div tabindex="0" role="button" class="btn btn-ghost px-2" aria-label="Languages">
                         {{ macros_icons::svg_language() }}
                     </div>
-                    <ul tabindex="0" class="dropdown-content menu bg-base-100 border border-base-content/10 rounded-box z-1 p-2 shadow-lg min-w-max whitespace-nowrap">
+                    <ul tabindex="0" class="dropdown-content menu bg-base-100 border border-base-content/10 rounded-box z-1 p-2 min-w-max whitespace-nowrap">
                         {% for lang_code, lang_config in config.languages %}
                             {% if lang_code != lang %}
                                 {% if page is defined and page.translations %}
@@ -169,8 +169,8 @@
                     <div tabindex="0" role="button" class="btn btn-ghost btn-square tooltip tooltip-bottom" data-tip="Apps" aria-label="Apps">
                         {{ macros_icons::svg_apps_grid() }}
                     </div>
-                    <div class="dropdown-panel z-50 mt-2 p-4 bg-base-100 border border-base-content/10 rounded-box shadow-lg w-64 right-0 mr-2 md:mr-4">
-                        {{ macros_apps::apps_grid(context="desktop") }}
+                    <div class="dropdown-panel z-50 mt-2 p-4 bg-base-100 border border-base-content/10 rounded-box w-64 right-0 mr-2 md:mr-4">
+                        {{ macros_apps::apps_grid(context="desktop", config=config) }}
                     </div>
                 </div>
             </li>
@@ -179,29 +179,29 @@
             <li data-nav-chrome="account" class="ml-1">
                 <div class="relative p-0" data-dropdown="account">
                     <div tabindex="0" role="button" class="btn btn-ghost btn-circle tooltip tooltip-bottom" data-tip="Account" aria-label="Account">
-                        <div class="w-9 h-9 rounded-full bg-base-300 flex items-center justify-center">
+                        <div data-auth="nav-guest-avatar" class="w-9 h-9 rounded-full bg-base-300 flex items-center justify-center">
                             <i class="fa-solid fa-user text-base-content/50 text-sm"></i>
                         </div>
-                        <div class="hidden w-9 h-9 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-1 overflow-hidden">
+                        <div data-auth="nav-authed-avatar" class="hidden w-9 h-9 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-1 overflow-hidden">
                             <img src="" alt="Profile" class="w-full h-full object-cover" />
                         </div>
                     </div>
-                    <div class="dropdown-panel z-50 mt-2 bg-base-100 border border-base-content/10 rounded-box shadow-lg w-64 right-0 mr-2 md:mr-4 overflow-hidden">
+                    <div class="dropdown-panel z-50 mt-2 bg-base-100 border border-base-content/10 rounded-box w-64 right-0 mr-2 md:mr-4 overflow-hidden">
                         
                         <!-- authed header -->
-                        <div class="hidden px-3 pt-3 pb-2 border-b border-base-content/10 cursor-default select-none">
+                        <div data-auth="nav-authed-header" class="hidden px-3 pt-3 pb-2 border-b border-base-content/10 cursor-default select-none">
                             <div class="flex items-center gap-2.5">
-                                <div class="w-8 h-8 rounded-full overflow-hidden shrink-0"><img class="w-full h-full object-cover" src="" alt="Profile" /></div>
+                                <div class="w-8 h-8 rounded-full overflow-hidden shrink-0"><img data-auth="nav-authed-header-avatar" class="w-full h-full object-cover" src="" alt="Profile" /></div>
                                 <div class="flex-1 min-w-0">
-                                    <div class="font-semibold truncate text-sm" data-auth="name"></div>
-                                    <div class="text-xs opacity-60 truncate" data-auth="email"></div>
+                                    <div class="font-semibold truncate text-sm" data-auth="nav-name"></div>
+                                    <div class="text-xs opacity-60 truncate" data-auth="nav-email"></div>
                                 </div>
-                                <span class="badge badge-sm hidden" data-auth="role"></span>
+                                <span class="badge badge-sm hidden" data-auth="nav-role"></span>
                             </div>
                         </div>
 
                         <!-- guest header -->
-                        <div class="px-3 pt-3 pb-2 border-b border-base-content/10 cursor-default select-none">
+                        <div data-auth="nav-guest-header" class="px-3 pt-3 pb-2 border-b border-base-content/10 cursor-default select-none">
                             <div class="flex items-center gap-2.5">
                                 <div class="w-8 h-8 rounded-full bg-base-300 flex items-center justify-center shrink-0">
                                     <i class="fa-solid fa-user text-base-content/40"></i>
@@ -262,14 +262,8 @@
                                 </a>
                             </li>
 
-                            <li class="hidden" data-auth="upgrade-item">
-                                <a href="javascript:void(0)" class="flex items-center gap-3 hover:no-underline" data-auth="upgrade-btn">
-                                    <i class="fa-solid fa-shield-halved w-4 text-center"></i><span>Admin Verify</span>
-                                </a>
-                            </li>
-
                             <li class="hidden border-t border-base-content/10 mt-1 pt-1" data-auth="logout-item">
-                                <a href="javascript:void(0)" class="flex items-center gap-3 hover:no-underline text-error" data-auth="logout-btn">
+                                <a href="javascript:void(0)" class="flex items-center gap-3 hover:no-underline text-error/80 hover:text-error" data-auth="logout-btn">
                                     <i class="fa-solid fa-right-from-bracket w-4 text-center"></i><span>Sign Out</span>
                                 </a>
                             </li>

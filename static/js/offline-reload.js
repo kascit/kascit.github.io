@@ -1,6 +1,7 @@
 // Auto-reload when the browser comes back online (offline page).
 (function () {
-  var el = document.getElementById('offline-status');
+  var el = document.querySelector('[data-offline-status]') || document.getElementById('offline-status');
+  if (!el) return;
   el.textContent = 'Waiting for connection\u2026';
 
   function goBack() {

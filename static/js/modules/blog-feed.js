@@ -2,23 +2,24 @@
  * Blog feed progressive reveal (infinite-scroll style)
  */
 
+import { isLargeScreen, prefersReducedMotion } from "./responsive.js";
+
 export function initBlogFeed() {
-  const feed = document.getElementById("blog-feed");
-  const sentinel = document.getElementById("blog-feed-sentinel");
-  const scroller = document.getElementById("blog-feed-scroller");
+  const mount = document.querySelector("[data-blog-feed-mount]");
+  const feed = (mount && mount.querySelector("[data-blog-feed]")) || document.getElementById("blog-feed");
+  const sentinel = (mount && mount.querySelector("[data-blog-feed-sentinel]")) || document.getElementById("blog-feed-sentinel");
+  const scroller = (mount && mount.querySelector("[data-blog-feed-scroller]")) || document.getElementById("blog-feed-scroller");
   if (!feed || !sentinel || !scroller) return;
 
   const items = Array.from(feed.querySelectorAll("[data-feed-item]"));
   if (items.length === 0) return;
-
-  const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function hiddenItems() {
     return items.filter((item) => item.classList.contains("hidden"));
   }
 
   function getBatchSize() {
-    return window.innerWidth < 1280 ? 1 : 2;
+    return isLargeScreen() ? 2 : 1;
   }
 
   function doneState() {
@@ -43,7 +44,7 @@ export function initBlogFeed() {
       item.classList.remove("hidden");
       item.classList.add("blog-feed-item-enter");
 
-      if (prefersReducedMotion) {
+      if (prefersReducedMotion()) {
         item.classList.add("is-visible");
       } else {
         requestAnimationFrame(() => {

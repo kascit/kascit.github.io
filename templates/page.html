@@ -6,6 +6,7 @@
 {% import "macros/article_meta.html" as macros_article_meta %}
 {% import "macros/nav.html" as macros_nav %}
 {% import "macros/taxonomy_chips.html" as taxonomy_chips %}
+{% import "macros/utils.html" as macros_utils %}
 
 {% block header %}
     {{ macros_header::header(config=config, lang=lang, page=page) }}
@@ -13,21 +14,22 @@
 
 {% block extra_head %}
 <!-- Structured Data for Blog Post (Schema.org JSON-LD) -->
-{% if page.taxonomies and (page.taxonomies.tags or page.taxonomies.categories) %}
-{% set_global headline = page.title | replace(from='"', to='\\"') | replace(from="'", to="\\'") %}
-{% set_global desc = page.description | default(value='') | replace(from='"', to='\\"') | replace(from="'", to="\\'") %}
+{% set is_blog_post = macros_utils::is_blog_post(page=page) | trim == "true" %}
+{% if is_blog_post %}
+{% set_global headline = macros_utils::json_escape(value=page.title) | trim %}
+{% set_global desc = macros_utils::json_escape(value=page.description | default(value='')) | trim %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "BlogPosting",
-  "headline": "{{ headline | safe }}",
-  "description": "{{ desc | safe }}",
+    "headline": "{{ headline }}",
+    "description": "{{ desc }}",
   "author": {
     "@type": "Person",
     "name": "{{ config.author | default(value='Dhanur') }}"
   },
-  "datePublished": "{{ page.date | date(format='%Y-%m-%dT%H:%M:%S%:z') }}",{% if page.updated %}
-  "dateModified": "{{ page.updated | date(format='%Y-%m-%dT%H:%M:%S%:z') }}",{% endif %}
+    "datePublished": "{{ page.date | date(format='%Y-%m-%dT%H:%M:%S%z') }}",{% if page.updated %}
+    "dateModified": "{{ page.updated | date(format='%Y-%m-%dT%H:%M:%S%z') }}",{% endif %}
   "publisher": {
     "@type": "Organization",
     "name": "{{ config.title | default(value='Dhanur') }}",{% if config.extra.logo and config.extra.logo.image_path %}
@@ -134,51 +136,54 @@
     {{ macros_content_footer::content_footer(config=config, item=page) }}
 {% endblock content %}
 
+{% block js_body %}
+    {{ super() }}
+    {% set is_blog_post = macros_utils::is_blog_post(page=page) | trim == "true" %}
+    {% set show_notify_banner = is_blog_post %}
+    {% if page.extra.notify_banner is defined %}
+        {% set show_notify_banner = page.extra.notify_banner %}
+    {% endif %}
+    {% if show_notify_banner %}
+    <script defer src="{{ get_url(path='js/notify-banner.js') | safe }}"></script>
+    {% endif %}
+{% endblock js_body %}
+
 {% block prev_link %}
     {# Blog post navigation - only for blog posts #}
     {% set blog_section = get_section(path="blog/_index.md") %}
-    
-    {# Find previous post by iterating and checking next post's slug #}
-    {% set_global found_prev = false %}
+
+    {% set_global current_index = -1 %}
     {% for post in blog_section.pages %}
-        {% if loop.index < blog_section.pages | length %}
-            {% set next_post = blog_section.pages[loop.index] %}
-            {% if next_post.slug == page.slug and not found_prev %}
-                {% set_global found_prev = true %}
-                {{ macros_nav::render_button(url=post.permalink, title=post.title, subtitle="Previous", direction="prev") }}
-            {% endif %}
+        {% if post.slug == page.slug %}
+            {% set_global current_index = loop.index0 %}
         {% endif %}
     {% endfor %}
-    
-    {# If no previous post found and we're in the blog section, show back to blog #}
-    {% if not found_prev %}
-        {% for post in blog_section.pages %}
-            {% if post.slug == page.slug %}
-                {{ macros_nav::render_button(url="/blog", title="Blog", subtitle="Back to", direction="prev") }}
-            {% endif %}
-        {% endfor %}
+
+    {% if current_index > 0 %}
+        {% set prev_index = current_index - 1 %}
+        {% set prev_post = blog_section.pages[prev_index] %}
+        {{ macros_nav::render_button(url=prev_post.permalink, title=prev_post.title, subtitle="Previous", direction="prev") }}
+    {% elif current_index == 0 %}
+        {{ macros_nav::render_button(url="/blog", title="Blog", subtitle="Back to", direction="prev") }}
     {% endif %}
 {% endblock prev_link %}
 
 {% block next_link %}
     {# Blog post navigation - only for blog posts #}
     {% set blog_section = get_section(path="blog/_index.md") %}
-    
-    {# Find next post by checking if current matches, then grab next one #}
-    {% set_global found_current = false %}
-    {% set_global found_next = false %}
+
+    {% set_global current_index = -1 %}
     {% for post in blog_section.pages %}
-        {% if found_current and not found_next %}
-            {% set_global found_next = true %}
-            {{ macros_nav::render_button(url=post.permalink, title=post.title, subtitle="Next", direction="next") }}
-        {% endif %}
         {% if post.slug == page.slug %}
-            {% set_global found_current = true %}
+            {% set_global current_index = loop.index0 %}
         {% endif %}
     {% endfor %}
-    
-    {# If no next post found and we're in the blog section, show archive #}
-    {% if found_current and not found_next %}
+
+    {% if current_index >= 0 and current_index + 1 < blog_section.pages | length %}
+        {% set next_index = current_index + 1 %}
+        {% set next_post = blog_section.pages[next_index] %}
+        {{ macros_nav::render_button(url=next_post.permalink, title=next_post.title, subtitle="Next", direction="next") }}
+    {% elif current_index >= 0 %}
         {{ macros_nav::render_button(url="/archive", title="Archive", subtitle="View All", direction="next") }}
     {% endif %}
 {% endblock next_link %}

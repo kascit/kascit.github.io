@@ -8,7 +8,7 @@ html {
 
 /* Landing page: hide prev/next navigation block */
 body.is-landing nav.mt-12 {
-  display: none !important;
+  display: none;
 }
 
 /* Dropdown panels: CSS-only hidden state, toggled via [data-open] */
@@ -35,11 +35,41 @@ body.is-landing nav.mt-12 {
  * Fallback: normal positioning when not in WCO mode
  */
 @media (display-mode: window-controls-overlay) {
-  .navbar {
+  .site-topbar {
     width: calc(
       100% - env(titlebar-area-x, 0) - (100% - env(titlebar-area-width, 100%))
     );
     margin-left: env(titlebar-area-x, 0);
+  }
+
+  /* Keep navbar content positioned as-is, but paint a full-width topbar layer
+     so the titlebar control area doesn't show a visual gap. */
+  .site-topbar::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 4rem;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      linear-gradient(
+        180deg,
+        var(--topbar-bg-1) 0%,
+        var(--topbar-bg-2) 100%
+      );
+    backdrop-filter: saturate(128%) blur(11px);
+    -webkit-backdrop-filter: saturate(128%) blur(11px);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-base-content) 11%, transparent);
+    box-shadow:
+      0 1px 0 color-mix(in oklab, var(--color-base-content) 9%, transparent) inset,
+      0 4px 12px -12px color-mix(in oklab, var(--color-base-content) 16%, transparent);
+  }
+
+  .site-topbar > * {
+    position: relative;
+    z-index: 1;
   }
 }
 
@@ -77,8 +107,8 @@ body.is-landing nav.mt-12 {
 
 .site-logo-link:hover,
 .site-logo-link:focus-visible {
-  background: transparent !important;
-  border-color: transparent !important;
+  background: transparent;
+  border-color: transparent;
 }
 
 .logo-firefly img {
@@ -217,7 +247,7 @@ body.is-landing nav.mt-12 {
   }
 
   #blog-layout > main.prose {
-    max-width: none !important;
+    max-width: none;
     width: 100%;
     min-width: 0;
   }
@@ -260,8 +290,8 @@ body.is-landing nav.mt-12 {
   }
 
   #sidebar {
-    transition: margin-left 300ms cubic-bezier(0.4, 0, 0.2, 1), 
-                opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    transition: margin-left 300ms var(--motion-ease-standard), 
+                opacity 300ms var(--motion-ease-standard);
     will-change: margin-left, opacity;
   }
 
@@ -281,8 +311,8 @@ body.is-landing nav.mt-12 {
   #sidebar-toggle-wrapper {
     left: calc(var(--sidebar-width) - var(--toggle-half-width));
     right: auto;
-    transition: left 300ms cubic-bezier(0.4, 0, 0.2, 1),
-                right 300ms cubic-bezier(0.4, 0, 0.2, 1),
+    transition: left 300ms var(--motion-ease-standard),
+                right 300ms var(--motion-ease-standard),
                 transform 150ms ease;
     will-change: left, right, transform;
   }
@@ -329,11 +359,11 @@ body.is-landing nav.mt-12 {
   }
 
   html[data-sidebar-collapsed="1"] #sidebar-toggle .sidebar-toggle-icon-collapsed {
-    display: block !important;
+    display: block;
   }
 
   html[data-sidebar-collapsed="1"] #sidebar-toggle .sidebar-toggle-icon-expanded {
-    display: none !important;
+    display: none;
   }
 }
 
@@ -346,12 +376,12 @@ body.is-landing nav.mt-12 {
 
 /* Ensure TOC column doesn't clip sticky child */
 #toc-column {
-  overflow: visible !important;
+  overflow: visible;
 }
 
 /* Active TOC link — highlighted by JS IntersectionObserver */
 .toc-link.toc-active {
-  color: var(--color-base-content) !important;
+  color: var(--color-base-content);
   font-weight: 600;
   position: relative;
 }
@@ -376,20 +406,20 @@ body.is-landing nav.mt-12 {
 
 .toc-link:hover {
   @apply no-underline font-semibold;
-  background: transparent !important;
+  background: transparent;
 }
 
 /* Override menu hover styles for ToC - only text highlighting, no button effect */
 .toc-menu a:hover,
 .toc-menu details > summary:hover {
-  background: transparent !important;
+  background: transparent;
 }
 
 /* Fix for DaisyUI Menu Active Flash: prevent non-link wrappers from flashing active colors when clicked inside */
 .menu li > div:active,
 .menu li > div:focus {
-  background-color: transparent !important;
-  color: inherit !important;
+  background-color: transparent;
+  color: inherit;
 }
 
 
@@ -401,8 +431,8 @@ body.is-landing nav.mt-12 {
 
 .gallery {
   display: grid;
-  grid-template-columns: repeat(3, auto);
-  justify-content: center;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  justify-content: stretch;
   align-content: center;
   grid-gap: 15px;
   padding: 20px;
@@ -608,15 +638,85 @@ body.is-landing nav.mt-12 {
 }
 
 .site-topbar {
+  --topbar-bg-1: color-mix(in oklab, var(--color-base-100) 84%, transparent);
+  --topbar-bg-2: color-mix(in oklab, var(--color-base-100) 92%, var(--color-base-200));
+  --topbar-control-hover-bg: color-mix(in oklab, var(--color-base-content) 7%, transparent);
+  --topbar-control-hover-border: color-mix(in oklab, var(--color-base-content) 14%, transparent);
+  position: fixed;
+  isolation: isolate;
   background:
     linear-gradient(
       180deg,
-      color-mix(in oklab, var(--color-base-100) 78%, var(--color-primary) 6%) 0%,
-      color-mix(in oklab, var(--color-base-100) 86%, transparent) 100%
+      var(--topbar-bg-1) 0%,
+      var(--topbar-bg-2) 100%
     );
-  backdrop-filter: saturate(125%) blur(12px);
-  border-bottom-color: color-mix(in oklab, var(--color-base-content) 14%, transparent);
-  box-shadow: 0 4px 30px color-mix(in oklab, var(--color-base-content) 9%, transparent);
+  backdrop-filter: saturate(128%) blur(11px);
+  -webkit-backdrop-filter: saturate(128%) blur(11px);
+  border-bottom: 1px solid color-mix(in oklab, var(--color-base-content) 11%, transparent);
+  box-shadow:
+    0 1px 0 color-mix(in oklab, var(--color-base-content) 9%, transparent) inset,
+    0 4px 12px -12px color-mix(in oklab, var(--color-base-content) 16%, transparent);
+}
+
+.site-topbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      100deg,
+      color-mix(in oklab, var(--color-base-content) 6%, transparent) 0%,
+      transparent 42%
+    );
+  opacity: 0.3;
+}
+
+.site-topbar #hamburger-toggle,
+.site-topbar .menu.menu-horizontal > li > :is(a.btn.btn-ghost, div.btn.btn-ghost),
+.site-topbar [data-dropdown] > [role="button"].btn.btn-ghost {
+  border: 1px solid transparent;
+  background: transparent;
+  color: color-mix(in oklab, var(--color-base-content) 84%, transparent);
+  box-shadow: none;
+}
+
+.site-topbar #hamburger-toggle:hover,
+.site-topbar .menu.menu-horizontal > li > :is(a.btn.btn-ghost, div.btn.btn-ghost):hover,
+.site-topbar [data-dropdown] > [role="button"].btn.btn-ghost:hover {
+  border-color: var(--topbar-control-hover-border);
+  background: var(--topbar-control-hover-bg);
+  color: var(--color-base-content);
+}
+
+.site-topbar #hamburger-toggle:focus-visible,
+.site-topbar .menu.menu-horizontal > li > :is(a.btn.btn-ghost, div.btn.btn-ghost):focus-visible,
+.site-topbar [data-dropdown] > [role="button"].btn.btn-ghost:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--color-primary) 40%, transparent);
+  outline-offset: 2px;
+}
+
+.site-topbar .dropdown-content,
+.site-topbar .dropdown-panel {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-base-100) 82%, transparent) 0%,
+      color-mix(in oklab, var(--color-base-100) 95%, var(--color-base-200)) 100%
+    );
+  border-color: color-mix(in oklab, var(--color-base-content) 13%, transparent);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  box-shadow:
+    0 1px 0 color-mix(in oklab, var(--color-base-content) 8%, transparent) inset,
+    0 8px 18px -16px color-mix(in oklab, var(--color-base-content) 18%, transparent);
+}
+
+@media (max-width: 1023px) {
+  .site-topbar {
+    backdrop-filter: saturate(124%) blur(9px);
+    -webkit-backdrop-filter: saturate(124%) blur(9px);
+  }
 }
 
 /* Navigation buttons */
@@ -737,7 +837,7 @@ body.is-landing nav.mt-12 {
   height: 100%;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  transition: opacity 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 300ms var(--motion-ease-standard);
 }
 
 #toc-sidebar::-webkit-scrollbar {
@@ -787,33 +887,42 @@ body.toc-collapsed #toc-sidebar {
   width: 0 !important;
   min-width: 0 !important;
   max-width: 0 !important;
-  right: calc(-1 * (var(--toc-column-pad, 1.5rem) + 1rem)) !important;
+  right: calc(-1 * var(--toc-toggle-offset, 0px)) !important;
 }
 
 @media (min-width: 1024px) {
   #blog-layout {
-    --toc-column-pad: 1.5rem;
+    --toc-toggle-offset: 1.5rem;
+    --blog-layout-pad-right: 2.5rem;
   }
 }
 
 @media (min-width: 1280px) {
   #blog-layout {
-    --toc-column-pad: 2rem;
+    --toc-toggle-offset: 2rem;
+    --blog-layout-pad-right: 2.5rem;
   }
+}
+
+body.toc-collapsed #blog-layout {
+  --toc-toggle-offset: var(--blog-layout-pad-right, 2.5rem);
 }
 
 /* Toggle button */
 #toc-toggle {
+  position: absolute;
+  left: 0;
+  transform: translateX(-50%);
   transition: transform 150ms ease, box-shadow 150ms ease, opacity 200ms ease, background-color 200ms ease;
 }
 
 #toc-toggle:hover {
-  transform: scale(1.1);
+  transform: translateX(-50%) scale(1.1);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 #toc-toggle:active {
-  transform: scale(0.95);
+  transform: translateX(-50%) scale(0.95);
   transition-duration: 80ms;
 }
 

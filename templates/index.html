@@ -32,7 +32,7 @@
     {{ macros_search::search(config=config) }}
 
     <div class="drawer lg:drawer-open">
-        <input id="my-drawer-2" type="checkbox" class="drawer-toggle" autocomplete="off" />
+        <input id="my-drawer-2" data-drawer-checkbox="true" type="checkbox" class="drawer-toggle" autocomplete="off" />
         <div class="drawer-content flex flex-col min-w-0 pt-16 bg-base-200">
             {{ macros_header::header(config=config, lang=lang) }}
 
@@ -85,9 +85,9 @@
                         {# Toggle button anchor: Absolute so it takes zero flex space (no empty bar) #}
                         <div id="toc-toggle-anchor" class="hidden lg:block absolute h-full top-0 right-0 w-0 z-50 pointer-events-none" aria-hidden="true">
                             <div class="sticky top-24 overflow-visible pointer-events-auto">
-                                <div class="tooltip tooltip-up" data-tip="{{ rail_hide_label }}">
-                                    <button id="toc-toggle"
-                                            class="btn btn-ghost btn-circle btn-sm bg-base-200 border border-base-content/10 shadow-sm transition-all duration-200 absolute left-0 -translate-x-full"
+                                <div class="tooltip tooltip-top" data-tip="{{ rail_hide_label }}">
+                                        <button id="toc-toggle" data-toc-toggle="true"
+                                            class="btn btn-ghost btn-circle btn-sm bg-base-200 border border-base-content/10 shadow-sm transition-all duration-200"
                                             aria-label="{{ rail_hide_label }}"
                                             data-hide-label="{{ rail_hide_label }}"
                                             data-show-label="{{ rail_show_label }}">
@@ -137,6 +137,7 @@
                         {% elif is_taxonomy_view %}
                                                 <aside
                                                     id="toc-sidebar"
+                                                    data-toc-sidebar="true"
                                                     class="hidden lg:block transition-all duration-300 ease-out origin-right"
                                                     role="navigation"
                                                     aria-label="Tools rail"
@@ -155,7 +156,7 @@
 
         </div>
 
-        <div id="sidebar" class="drawer-side pt-16 z-[60] lg:z-40 {% if is_landing %}lg:hidden{% endif %}">
+        <div id="sidebar" data-sidebar-root="true" class="drawer-side pt-16 z-[60] lg:z-40 {% if is_landing %}lg:hidden{% endif %}">
             {{ macros_drawer::drawer_overlay() }}
             {% if section is defined %}
                 {{ macros_sidebar::sidebar(config=config, lang=lang, current_path=current_path, section=section) }}
@@ -165,8 +166,8 @@
         </div>
         
         {% if not is_landing %}
-        <div id="sidebar-toggle-wrapper" class="tooltip tooltip-right hidden lg:flex fixed top-1/2 -translate-y-1/2 z-50" data-tip="Toggle sidebar">
-            <button id="sidebar-toggle" class="btn btn-ghost btn-circle btn-sm bg-base-200 border border-base-content/10 shadow-sm transition-all duration-300 ease-out" aria-label="Toggle sidebar">
+        <div id="sidebar-toggle-wrapper" data-sidebar-toggle-wrapper="true" class="tooltip tooltip-right hidden lg:flex fixed top-1/2 -translate-y-1/2 z-50" data-tip="Toggle sidebar">
+            <button id="sidebar-toggle" data-sidebar-toggle="true" class="btn btn-ghost btn-circle btn-sm bg-base-200 border border-base-content/10 shadow-sm transition-all duration-300 ease-out" aria-label="Toggle sidebar">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sidebar-toggle-icon-collapsed hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
@@ -181,11 +182,7 @@
     {{ macros_cookie_consent::banner() }}
 
     {% block js_body %}
-        {% if config.extra.theme is defined %}
-            {% set js_theme_colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) %}
-        {% else %}
-            {% set js_theme_colorset = config.extra.default_colorset | default(value='dark') %}
-        {% endif %}
+        {% set js_theme_colorset = macros_head::get_theme_colorset(config=config) | trim %}
         <script defer src="{{ get_url(path='js/toc.js') | safe }}"></script>
         <script id="site-config" type="application/json">
         {

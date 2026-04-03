@@ -1,87 +1,388 @@
 {
-  "id": "/",
+  "id": "/?source=pwa",
+  "name": "Dhanur Portfolio & Applications",
+  "short_name": "Dhanur",
+  "description": "Unified progressive web application for portfolio, links, projects, and blog.",
+  "start_url": "/?source=pwa",
   "scope": "/",
-  "start_url": "/",
-  "name": "dhanur.me",
-  "short_name": "dhanur.me",
-  "description": "mah corner",
-  "dir": "auto",
-  "lang": "en-US",
   "display": "standalone",
-  "display_override": ["window-controls-overlay", "standalone"],
-  "orientation": "any",
+  "display_override": [
+    "window-controls-overlay",
+    "tabbed",
+    "standalone",
+    "minimal-ui"
+  ],
   "theme_color": "#000000",
-  "background_color": "#000000",
-  "categories": ["personal", "blog"],
-  "launch_handler": {
-    "route_to": "existing-client",
-    "navigate_existing_client": "always"
-  },
+  "background_color": "#ffffff",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192x192-dark.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512-dark.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192x192-transparent.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512x512-transparent.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-192x192-maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-512x512-maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-192x192-maskable-dark.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-512x512-maskable-dark.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-192x192-maskable-transparent.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-512x512-maskable-transparent.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/icons/icon-192x192-monochrome.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "monochrome"
+    },
+    {
+      "src": "/icons/icon-512x512-monochrome.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "monochrome"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "/screenshots/desktop.png",
+      "sizes": "1920x1080",
+      "type": "image/png",
+      "form_factor": "wide"
+    },
+    {
+      "src": "/screenshots/mobile.png",
+      "sizes": "1080x1920",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
   "shortcuts": [
     {
-      "name": "Blog",
-      "short_name": "Blog",
-      "description": "Read the latest posts",
-      "url": "/blog/",
+      "name": "About",
+      "short_name": "About",
+      "description": "Learn more about Dhanur",
+      "url": "/about/?source=pwa",
       "icons": [
         {
-          "src": "/icons/android-chrome-192x192.png",
+          "src": "/icons/about.png",
           "sizes": "192x192",
-          "type": "image/png"
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/icons/about-512.png",
+          "sizes": "512x512",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/icons/about-light.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/icons/about-transparent.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/icons/about-maskable.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "maskable"
         }
       ]
     },
     {
       "name": "Projects",
       "short_name": "Projects",
-      "description": "Explore my projects",
-      "url": "/projects/",
+      "description": "Browse featured projects",
+      "url": "/projects/?source=pwa",
       "icons": [
         {
-          "src": "/icons/android-chrome-192x192.png",
+          "src": "/icons/projects.png",
           "sizes": "192x192",
-          "type": "image/png"
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/icons/projects-512.png",
+          "sizes": "512x512",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/icons/projects-light.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/icons/projects-transparent.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/icons/projects-maskable.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "maskable"
         }
       ]
     },
     {
-      "name": "About",
-      "short_name": "About",
-      "description": "Learn more about me",
-      "url": "/about/",
+      "name": "Links",
+      "short_name": "Links",
+      "description": "Open curated links",
+      "url": "/links/?source=pwa",
       "icons": [
         {
-          "src": "/icons/android-chrome-192x192.png",
+          "src": "/icons/links.png",
           "sizes": "192x192",
-          "type": "image/png"
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/icons/links-512.png",
+          "sizes": "512x512",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/icons/links-light.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/icons/links-transparent.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/icons/links-maskable.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "maskable"
+        }
+      ]
+    },
+    {
+      "name": "Blog",
+      "short_name": "Blog",
+      "description": "Read latest posts",
+      "url": "/blog/?source=pwa",
+      "icons": [
+        {
+          "src": "/icons/blog.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/icons/blog-512.png",
+          "sizes": "512x512",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/icons/blog-light.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/icons/blog-transparent.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "any"
+        },
+        {
+          "src": "/icons/blog-maskable.png",
+          "sizes": "192x192",
+          "type": "image/png",
+          "purpose": "maskable"
         }
       ]
     }
   ],
-  "icons": [
+  "scope_extensions": [
     {
-      "src": "/icons/android-chrome-192x192.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
+      "type": "origin",
+      "origin": "https://blog.dhanur.me"
     },
     {
-      "src": "/icons/android-chrome-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/android-chrome-192x192-maskable.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/icons/android-chrome-512x512-maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
+      "type": "origin",
+      "origin": "https://api.dhanur.me"
     }
-  ]
+  ],
+  "tab_strip": {
+    "home_tab": {
+      "scope_patterns": [
+        {
+          "pathname": "/*"
+        }
+      ]
+    }
+  },
+  "launch_handler": {
+    "client_mode": "focus-existing"
+  },
+  "protocol_handlers": [
+    {
+      "protocol": "web+dhanur",
+      "url": "/handler/?q=%s"
+    }
+  ],
+  "share_target": {
+    "action": "/share-target/",
+    "method": "POST",
+    "enctype": "multipart/form-data",
+    "params": {
+      "title": "title",
+      "text": "text",
+      "url": "url",
+      "files": [
+        {
+          "name": "media",
+          "accept": [
+            "image/*",
+            "video/*",
+            "text/plain"
+          ]
+        }
+      ]
+    }
+  },
+  "file_handlers": [
+    {
+      "action": "/open-file/",
+      "accept": {
+        "text/plain": [
+          ".txt",
+          ".md",
+          ".json"
+        ],
+        "text/csv": [
+          ".csv"
+        ]
+      }
+    }
+  ],
+  "categories": [
+    "productivity",
+    "education",
+    "developer"
+  ],
+  "edge_side_panel": {
+    "preferred_width": 400
+  },
+  "widgets": [
+    {
+      "name": "Latest Blog Posts",
+      "short_name": "Blog",
+      "description": "Preview the latest blog posts from the desktop widget.",
+      "tag": "blog-latest-widget",
+      "template": "latest-posts-widget",
+      "ms_ac_template": "/widgets/latest-posts-template.json",
+      "data": "/widgets/latest-posts-data.json",
+      "type": "application/json",
+      "auth": false,
+      "update": 3600,
+      "ms_ac_data": "/widgets/latest-posts-data.json",
+      "icons": [
+        {
+          "src": "/icons/favicon-96x96.png",
+          "sizes": "96x96",
+          "type": "image/png"
+        },
+        {
+          "src": "/icons/icon-192x192.png",
+          "sizes": "192x192",
+          "type": "image/png"
+        }
+      ],
+      "screenshots": [
+        {
+          "src": "/widgets/screenshot-600x400.png",
+          "sizes": "600x400",
+          "type": "image/png",
+          "platform": "windows",
+          "label": "Latest blog posts widget preview"
+        },
+        {
+          "src": "/widgets/screenshot.png",
+          "sizes": "300x300",
+          "type": "image/png",
+          "platform": "any",
+          "label": "Latest blog posts widget fallback preview"
+        }
+      ]
+    }
+  ],
+  "related_applications": [],
+  "prefer_related_applications": false
 }

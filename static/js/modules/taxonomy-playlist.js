@@ -7,6 +7,52 @@ import { isDesktop, onResponsiveChange } from "./responsive.js";
 
 const PLAYLIST_STORAGE_KEY = "site-playlist-v1";
 const PLAYLIST_EXIT_PATH = "/blog";
+const TITLE_MAX_LENGTH = 180;
+
+function normalizeTitle(raw) {
+	const text = String(raw || "").replace(/\s+/g, " ").trim();
+	if (!text) return "Untitled";
+	return text.slice(0, TITLE_MAX_LENGTH);
+}
+
+function normalizeInternalHref(raw) {
+	if (typeof raw !== "string" || raw.trim() === "") return "/";
+	const href = raw.trim();
+	if (href[0] === "#") return href;
+
+	try {
+		const parsed = new URL(href, window.location.origin);
+		if (parsed.origin !== window.location.origin) return "/";
+
+		let path = parsed.pathname || "/";
+		if (path.length > 1) {
+			path = path.replace(/\/+$/, "");
+		}
+
+		return `${path || "/"}${parsed.search || ""}${parsed.hash || ""}`;
+	} catch (_error) {
+		return "/";
+	}
+}
+
+function createIcon(className) {
+	const icon = document.createElement("i");
+	icon.className = className;
+	icon.setAttribute("aria-hidden", "true");
+	return icon;
+}
+
+function setButtonIcon(button, iconClass) {
+	if (!button) return;
+	button.textContent = "";
+	button.appendChild(createIcon(iconClass));
+}
+
+function makeSvgFromMarkup(markup) {
+	const wrapper = document.createElement("span");
+	wrapper.innerHTML = markup;
+	return wrapper.firstElementChild;
+}
 
 function toBase64Url(value) {
 	const utf8 = encodeURIComponent(value).replace(/%([0-9A-F]{2})/g, (_m, p1) =>
@@ -38,7 +84,7 @@ function decodePlaylist(encoded) {
 		return parsed
 			.map((entry) => ({
 				url: normalizePath(Array.isArray(entry) ? entry[0] : entry?.url),
-				title: String(Array.isArray(entry) ? entry[1] : entry?.title || "Untitled"),
+				title: normalizeTitle(Array.isArray(entry) ? entry[1] : entry?.title),
 			}))
 			.filter((item) => item.url);
 	} catch (_error) {
@@ -69,7 +115,7 @@ function loadPlaylist() {
 		return parsed
 			.map((item) => ({
 				url: normalizePath(item.url),
-				title: String(item.title || item.url || "Untitled"),
+				title: normalizeTitle(item.title || item.url),
 			}))
 			.filter((item) => item.url);
 	} catch (_error) {
@@ -96,26 +142,51 @@ function buildPlaylistUrl(path, playlist, exitPath) {
 function setNavSlot(slotSelector, direction, href, subtitle, title, onClick) {
 	const slot = document.querySelector(slotSelector);
 	if (!slot) return;
+	const safeDirection = direction === "prev" ? "prev" : "next";
+	const safeHref = normalizeInternalHref(href);
+	const safeSubtitle = normalizeTitle(subtitle);
+	const safeTitle = normalizeTitle(title);
 
 	const arrowLeft = '<svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>';
 	const arrowRight = '<svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>';
 
-	slot.innerHTML = `
-		<a class="nav-button nav-button-${direction} group" href="${href}">
-			<div class="nav-button-content">
-				<div class="nav-button-direction">
-					${direction === "prev" ? `${arrowLeft}<span class="nav-button-label">${subtitle}</span>` : `<span class="nav-button-label">${subtitle}</span>${arrowRight}`}
-				</div>
-				<div class="nav-button-title">${title}</div>
-			</div>
-		</a>
-	`;
+	slot.textContent = "";
+
+	const anchor = document.createElement("a");
+	anchor.className = `nav-button nav-button-${safeDirection} group`;
+	anchor.setAttribute("href", safeHref);
+
+	const content = document.createElement("div");
+	content.className = "nav-button-content";
+
+	const directionWrap = document.createElement("div");
+	directionWrap.className = "nav-button-direction";
+
+	const subtitleSpan = document.createElement("span");
+	subtitleSpan.className = "nav-button-label";
+	subtitleSpan.textContent = safeSubtitle;
+
+	if (safeDirection === "prev") {
+		const leftIcon = makeSvgFromMarkup(arrowLeft);
+		if (leftIcon) directionWrap.appendChild(leftIcon);
+		directionWrap.appendChild(subtitleSpan);
+	} else {
+		directionWrap.appendChild(subtitleSpan);
+		const rightIcon = makeSvgFromMarkup(arrowRight);
+		if (rightIcon) directionWrap.appendChild(rightIcon);
+	}
+
+	const titleWrap = document.createElement("div");
+	titleWrap.className = "nav-button-title";
+	titleWrap.textContent = safeTitle;
+
+	content.appendChild(directionWrap);
+	content.appendChild(titleWrap);
+	anchor.appendChild(content);
+	slot.appendChild(anchor);
 
 	if (typeof onClick === "function") {
-		const anchor = slot.querySelector("a.nav-button");
-		if (anchor) {
-			anchor.addEventListener("click", onClick);
-		}
+		anchor.addEventListener("click", onClick);
 	}
 }
 
@@ -217,36 +288,53 @@ export function initTaxonomyPlaylist() {
 			if (!btn) return;
 
 			btn.setAttribute("aria-pressed", selected ? "true" : "false");
-			btn.innerHTML = selected
-				? '<i class="fa-solid fa-check"></i>'
-				: '<i class="fa-solid fa-plus"></i>';
+			setButtonIcon(btn, selected ? "fa-solid fa-check" : "fa-solid fa-plus");
 			btn.setAttribute("title", selected ? "Remove from playlist" : "Add to playlist");
 		});
 	}
 
 	function renderPlaylistList() {
-		listNode.innerHTML = "";
+		listNode.textContent = "";
 
 		playlist.forEach((item, index) => {
+			const safeUrl = normalizeInternalHref(item.url);
+			const safeTitle = normalizeTitle(item.title);
+
 			const row = document.createElement("div");
 			row.className = "taxonomy-playlist-row";
-			row.setAttribute("data-playlist-url", item.url);
+			row.setAttribute("data-playlist-url", safeUrl);
 
-			row.innerHTML = `
-				<button
-					type="button"
-					class="taxonomy-playlist-handle"
-					data-playlist-handle
-					draggable="true"
-					aria-label="Drag to reorder ${item.title}"
-					title="Drag to reorder"
-				>
-					<i class="fa-solid fa-grip-vertical"></i>
-					<span class="taxonomy-playlist-index">${index + 1}</span>
-				</button>
-				<a class="taxonomy-playlist-link" href="${item.url}" title="${item.title}">${item.title}</a>
-				<button type="button" class="taxonomy-playlist-row-btn" data-playlist-action="remove" data-playlist-url="${item.url}" aria-label="Remove"><i class="fa-solid fa-xmark"></i></button>
-			`;
+			const handle = document.createElement("button");
+			handle.type = "button";
+			handle.className = "taxonomy-playlist-handle";
+			handle.setAttribute("data-playlist-handle", "");
+			handle.setAttribute("draggable", "true");
+			handle.setAttribute("aria-label", `Drag to reorder ${safeTitle}`);
+			handle.setAttribute("title", "Drag to reorder");
+			handle.appendChild(createIcon("fa-solid fa-grip-vertical"));
+
+			const indexBadge = document.createElement("span");
+			indexBadge.className = "taxonomy-playlist-index";
+			indexBadge.textContent = String(index + 1);
+			handle.appendChild(indexBadge);
+
+			const link = document.createElement("a");
+			link.className = "taxonomy-playlist-link";
+			link.setAttribute("href", safeUrl);
+			link.setAttribute("title", safeTitle);
+			link.textContent = safeTitle;
+
+			const removeBtn = document.createElement("button");
+			removeBtn.type = "button";
+			removeBtn.className = "taxonomy-playlist-row-btn";
+			removeBtn.setAttribute("data-playlist-action", "remove");
+			removeBtn.setAttribute("data-playlist-url", safeUrl);
+			removeBtn.setAttribute("aria-label", "Remove");
+			removeBtn.appendChild(createIcon("fa-solid fa-xmark"));
+
+			row.appendChild(handle);
+			row.appendChild(link);
+			row.appendChild(removeBtn);
 
 			listNode.appendChild(row);
 		});
@@ -267,7 +355,7 @@ export function initTaxonomyPlaylist() {
 
 	function addPost(path, title) {
 		if (!path || hasInPlaylist(path)) return;
-		playlist.push({ url: path, title: title || path });
+		playlist.push({ url: normalizePath(path), title: normalizeTitle(title || path) });
 	}
 
 	function removePost(path) {

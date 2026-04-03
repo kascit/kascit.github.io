@@ -1,70 +1,13 @@
-{% import "macros/head.html" as macros_head %}
-{% import "macros/header.html" as macros_header %}
-{% import "macros/footer.html" as macros_footer %}
-{% import "macros/sidebar.html" as macros_sidebar %}
-{% import "macros/drawer.html" as macros_drawer %}
-{% import "macros/cookie_consent.html" as macros_cookie_consent %}
+{% extends "status.html" %}
 
-{% set offline_title = "Offline" %}
-{% set offline_desc = "No internet connection" %}
-{% set offline_url = config.base_url ~ "/offline/" %}
+{% set status_title = "Offline" %}
+{% set status_desc = "No internet connection" %}
+{% set status_url = config.base_url ~ "/offline/" %}
 
-<!DOCTYPE html>
-{{ macros_head::html_tag(config=config, lang=config.default_language) }}
-<head>
-    {{ macros_head::head(
-        config=config,
-        page=page,
-        section=false,
-        current_url=offline_url
-    ) }}
-    <title>{{ offline_title }}</title>
-    <meta name="description" content="{{ offline_desc }}">
-    <meta property="og:title" content="{{ offline_title }}">
-    <meta property="og:description" content="{{ offline_desc }}">
-    <meta property="og:url" content="{{ offline_url }}">
-</head>
-<body>
-    <div class="drawer lg:drawer-open">
-        <input id="my-drawer-2" type="checkbox" class="drawer-toggle" autocomplete="off" />
-        <div class="drawer-content flex flex-col min-w-0 pt-16 bg-base-200">
-            {{ macros_header::header(config=config, lang=config.default_language) }}
-            <div class="p-8 w-full max-w-3xl mx-auto flex flex-col justify-center items-center min-h-[60vh]">
-                <main class="flex flex-auto flex-col items-center justify-center px-4 text-center sm:flex-row">
-                    <h1 class="text-3xl font-extrabold tracking-tight text-base-content sm:mr-6 sm:border-r sm:border-base-content/15 sm:pr-6 md:text-4xl">{{ offline_title }}</h1>
-                    <h2 class="mt-2 text-lg text-base-content/70 sm:mt-0">{{ offline_desc }}</h2>
-                </main>
-                <p id="offline-status" class="mt-4 text-sm text-base-content/50"></p>
-            </div>
-        </div>
+{% block status_content %}
+<p id="offline-status" data-offline-status="true" class="mt-4 text-sm text-base-content/50"></p>
+{% endblock status_content %}
 
-        <div id="sidebar" class="drawer-side pt-16 z-[60] lg:z-40">
-            {{ macros_drawer::drawer_overlay() }}
-            {{ macros_sidebar::sidebar(config=config, lang=config.default_language, current_path='/', section=false) }}
-        </div>
-    </div>
-
-    {{ macros_cookie_consent::banner() }}
-
-    {% if config.extra.theme is defined %}
-        {% set js_theme_colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) %}
-    {% else %}
-        {% set js_theme_colorset = config.extra.default_colorset | default(value='dark') %}
-    {% endif %}
-    <script id="site-config" type="application/json">
-    {
-        "defaultColorset": "{{ js_theme_colorset }}",
-        "katexCss": "{{ get_url(path='css/katex.min.css') | safe }}",
-        "katexJs": "{{ get_url(path='js/katex.min.js') | safe }}",
-        "mermaidJs": "{{ get_url(path='js/mermaid.min.js') | safe }}",
-        "swPath": "{{ get_url(path='sw.js') | safe }}",
-        "gtagId": "{{ config.extra.gtag | default(value='') }}",
-        "sentryScriptUrl": "https://js-de.sentry-cdn.com/76f095eb3818528a530b2347e1735e14.min.js"
-    }
-    </script>
-    <script type="module" src="{{ get_url(path='js/main.js') | safe }}"></script>
-
-    <!-- Auto-reload when back online -->
-    <script src="{{ get_url(path='js/offline-reload.js') | safe }}"></script>
-</body>
-</html>
+{% block status_scripts %}
+<script src="{{ get_url(path='js/offline-reload.js') | safe }}"></script>
+{% endblock status_scripts %}

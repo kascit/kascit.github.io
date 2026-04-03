@@ -1,10 +1,12 @@
+{% import "macros/utils.html" as macros_utils %}
+
 {% macro comments(config, page, section) %}
 {# Only show comments on blog posts (pages under /blog/), not on sections, taxonomies, or other pages #}
 {% set show_comments = false %}
 
 {# Check if this is a page (not a section) and it's under /blog/ #}
 {% if page is defined and page.path is defined %}
-    {% set is_blog_post = page.path is starting_with('/blog/') and not page.path is ending_with('/_index/') %}
+  {% set is_blog_post = macros_utils::is_blog_post(page=page) | trim == "true" %}
 
     {# Allow explicit override via page frontmatter #}
     {% if page.extra.comments is defined %}
@@ -19,7 +21,7 @@
 {% set global_enabled = config.extra.comments and config.extra.comments.enabled %}
 
 {% if global_enabled and show_comments %}
-<div id="comments-thread" class="mt-12"
+<div class="mt-12"
   data-comments-mount="true"
      data-repo="{{ config.extra.comments.repo | safe }}"
      data-repo-id="{{ config.extra.comments.repo_id | safe }}"

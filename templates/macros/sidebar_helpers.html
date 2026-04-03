@@ -1,0 +1,45 @@
+{% macro render_blog_preview(sorted_pages, normalized_current_path, lang, sidebar_blog_preview_count) %}
+{% if sorted_pages | length > 0 %}
+    {% set total_posts = sorted_pages | length %}
+    {% set_global current_idx = -1 %}
+    {% for blog_page in sorted_pages %}
+        {% if normalized_current_path == blog_page.path %}
+            {% set_global current_idx = loop.index0 %}
+        {% endif %}
+    {% endfor %}
+
+    {% if current_idx >= 0 %}
+        {% set window_start = current_idx - 1 %}
+        {% if window_start < 0 %}{% set window_start = 0 %}{% endif %}
+        {% set window_end = current_idx + 2 %}
+        {% if window_end > total_posts %}{% set window_end = total_posts %}{% endif %}
+
+        {% if window_start > 0 %}
+            <li class="opacity-70 text-center text-base font-semibold tracking-[0.18em] px-2 py-1.5 select-none">...</li>
+        {% endif %}
+
+        {% for page in sorted_pages | slice(start=window_start, end=window_end) %}
+            <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
+                <a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a>
+            </li>
+        {% endfor %}
+
+        {% if window_end < total_posts %}
+            <li class="opacity-70 text-center text-base font-semibold tracking-[0.18em] px-2 py-1.5 select-none">...</li>
+        {% endif %}
+    {% else %}
+        {% for page in sorted_pages | slice(start=0, end=sidebar_blog_preview_count) %}
+            <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
+                <a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a>
+            </li>
+        {% endfor %}
+        {% if total_posts > sidebar_blog_preview_count %}
+            <li class="opacity-70 text-center text-base font-semibold tracking-[0.18em] px-2 py-1.5 select-none">...</li>
+        {% endif %}
+    {% endif %}
+
+    <li>
+        <a class="hover:no-underline font-medium text-primary" href="{{ get_url(path="/archive/", lang=lang) | safe }}">Archive</a>
+    </li>
+{% endif %}
+{% endmacro render_blog_preview %}

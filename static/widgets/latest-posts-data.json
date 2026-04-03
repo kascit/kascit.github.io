@@ -1,0 +1,31 @@
+{
+  "updatedAt": "2026-04-03T20:10:15.414Z",
+  "updatedAtHuman": "2026-04-03",
+  "posts": [
+    {
+      "title": "The Art of Writing Technical Documentation That People Actually Read",
+      "url": "https://dhanur.me/blog/writing-documentation/",
+      "description": "How to write docs that stay useful after launch, based on years of fixing stale and unread documentation"
+    },
+    {
+      "title": "Debugging Production Issues Like a Detective",
+      "url": "https://dhanur.me/blog/debugging-production/",
+      "description": "A systematic approach to finding and fixing bugs when you can't reproduce the issue locally"
+    },
+    {
+      "title": "The Hidden Cost of 'Free' SaaS Tools",
+      "url": "https://dhanur.me/blog/hidden-cost-saas/",
+      "description": "Why 'free' software often costs more than you think, and how to calculate the real price"
+    },
+    {
+      "title": "Why I Switched from VS Code to Neovim",
+      "url": "https://dhanur.me/blog/vscode-to-neovim/",
+      "description": "A journey of pain, frustration, and eventual productivity with terminal-based editors"
+    },
+    {
+      "title": "Building APIs That Don't Suck: A Spring Boot Journey",
+      "url": "https://dhanur.me/blog/building-scalable-apis/",
+      "description": "Lessons learned from building REST APIs that people actually want to use (and maintaining them at 3 AM)"
+    }
+  ]
+}

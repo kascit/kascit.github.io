@@ -1,6 +1,16 @@
-{% macro apps_grid(context="desktop") %}
+{% macro apps_grid(context="desktop", config=false) %}
 {% set is_desktop = context == "desktop" %}
 <div class="grid grid-cols-3 gap-2"{% if is_desktop %} data-apps-grid{% else %} data-apps-grid-sidebar{% endif %}>
+    {% if config and config.extra and config.extra.apps and config.extra.apps | length > 0 %}
+    {% for item in config.extra.apps %}
+    <a href="{{ item.url | safe }}" class="group flex flex-col items-center gap-1.5 {% if is_desktop %}p-3{% else %}p-2.5{% endif %} rounded-md hover:bg-base-200 transition-colors duration-200 no-underline hover:no-underline text-base-content">
+        <div class="w-10 h-10 rounded-md bg-base-300/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors">
+            <i class="{{ item.icon | default(value='fa-solid fa-link') }} text-lg"></i>
+        </div>
+        <span class="text-[10px] font-medium opacity-70 group-hover:opacity-100">{{ item.name | default(value='App') }}</span>
+    </a>
+    {% endfor %}
+    {% else %}
     <a href="https://dhanur.me" class="group flex flex-col items-center gap-1.5 {% if is_desktop %}p-3{% else %}p-2.5{% endif %} rounded-md hover:bg-base-200 transition-colors duration-200 no-underline hover:no-underline text-base-content">
         <div class="w-10 h-10 rounded-md bg-base-300/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors">
             <i class="fa-solid fa-home text-lg"></i>
@@ -19,5 +29,6 @@
         </div>
         <span class="text-[10px] font-medium opacity-70 group-hover:opacity-100">Tasks</span>
     </a>
+    {% endif %}
 </div>
 {% endmacro %}

@@ -11,10 +11,18 @@
 
   const STORAGE_KEY = "toc-collapsed";
 
+  function getTocToggleBtn() {
+    return document.querySelector("[data-toc-toggle]") || document.getElementById("toc-toggle");
+  }
+
+  function getTocSidebar() {
+    return document.querySelector("[data-toc-sidebar]") || document.getElementById("toc-sidebar");
+  }
+
   // --- 1. Toggle Logic ---
   function applyCollapsedState(collapsed) {
     document.body.classList.toggle("toc-collapsed", collapsed);
-    const btn = document.getElementById("toc-toggle");
+    const btn = getTocToggleBtn();
     if (btn) {
       const showLabel = btn.getAttribute("data-show-label") || "Show table of contents";
       const hideLabel = btn.getAttribute("data-hide-label") || "Hide table of contents";
@@ -29,7 +37,7 @@
   }
 
   function initTocToggle() {
-    const btn = document.getElementById("toc-toggle");
+    const btn = getTocToggleBtn();
     if (!btn) return;
 
     // Load state
@@ -47,7 +55,7 @@
 
   // --- 2. Active Section Highlighting ---
   function initTocSpy() {
-    const tocSidebar = document.getElementById("toc-sidebar");
+    const tocSidebar = getTocSidebar();
     if (!tocSidebar) return;
 
     // Collect headings ONLY from within main prose
@@ -222,7 +230,7 @@
 
   // --- 3. Auto-close TOC dropdown groups when focus/click leaves sidebar ---
   function initTocAutoClose() {
-    const tocSidebar = document.getElementById("toc-sidebar");
+    const tocSidebar = getTocSidebar();
     if (!tocSidebar) return;
 
     const closeOpenDetails = () => {

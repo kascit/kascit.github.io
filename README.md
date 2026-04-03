@@ -17,7 +17,7 @@ Personal website built with **Zola** static site generator + **Tailwind CSS** + 
 
 ### Prerequisites
 
-- Windows (PowerShell 5.1+)
+- Windows (PowerShell 5.1+) or Unix-like shell (bash/zsh)
 - [Zola](https://www.getzola.org/documentation/getting-started/installation/) installed
 
 ### First Time
@@ -31,14 +31,12 @@ just dev      # Starts dev server with hot-reload
 
 ```bash
 just dev      # CSS build + Zola dev server
-just open     # Open site in browser
 ```
 
 ### Build for Production
 
 ```bash
 just build    # Clean, CSS minify, Zola build
-just stats    # Build + show file statistics
 ```
 
 ## Available Commands
@@ -49,15 +47,12 @@ just          # List all commands
 # Development
 just dev      # Full dev mode (CSS + Zola server)
 just watch    # CSS watch mode
-just open     # Open in browser
 
 # Build & Deploy
 just build    # Production build (clean + CSS + Zola)
-just stats    # Build with statistics
 just clean    # Remove build artifacts
 
 # Maintenance
-just update   # Update Tailwind CSS and DaisyUI
 just versions # Show tool versions
 just doctor   # Health check
 ```

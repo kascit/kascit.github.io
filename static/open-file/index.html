@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Open File | Dhanur</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1220;
+      --panel: #111827;
+      --line: #1f2937;
+      --text: #e5e7eb;
+      --muted: #9ca3af;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(circle at top, #0f172a, var(--bg));
+      color: var(--text);
+      padding: 1rem;
+    }
+    main {
+      width: min(50rem, 100%);
+      background: color-mix(in srgb, var(--panel) 90%, black);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 1rem 1.1rem;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    }
+    h1 { margin: 0 0 .5rem; font-size: 1.2rem; }
+    p { margin: .35rem 0; color: var(--muted); }
+    .item {
+      border-top: 1px solid var(--line);
+      margin-top: .8rem;
+      padding-top: .75rem;
+    }
+    .name { font-weight: 700; }
+    .meta { color: var(--muted); font-size: .92rem; }
+    pre {
+      margin: .5rem 0 0;
+      padding: .6rem;
+      border-radius: 10px;
+      border: 1px solid var(--line);
+      background: #0a1020;
+      overflow-x: auto;
+      white-space: pre-wrap;
+      word-break: break-word;
+      color: #cbd5e1;
+      font-size: .86rem;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Open File Handler</h1>
+    <p id="status">Waiting for launch payload...</p>
+    <div id="files"></div>
+  </main>
+
+  <script>
+    (function () {
+      var statusEl = document.getElementById("status");
+      var filesEl = document.getElementById("files");
+
+      function clearChildren(el) {
+        while (el.firstChild) el.removeChild(el.firstChild);
+      }
+
+      function formatBytes(bytes) {
+        var value = Number(bytes) || 0;
+        if (value < 1024) return value + " B";
+        if (value < 1024 * 1024) return (value / 1024).toFixed(1) + " KB";
+        return (value / (1024 * 1024)).toFixed(1) + " MB";
+      }
+
+      async function renderFileList(handles) {
+        clearChildren(filesEl);
+
+        if (!Array.isArray(handles) || handles.length === 0) {
+          statusEl.textContent = "No files were provided.";
+          return;
+        }
+
+        statusEl.textContent = "Received " + handles.length + " file(s).";
+
+        for (var i = 0; i < handles.length; i += 1) {
+          var handle = handles[i];
+          if (!handle || typeof handle.getFile !== "function") continue;
+          var file = await handle.getFile();
+
+          var item = document.createElement("section");
+          item.className = "item";
+
+          var name = document.createElement("div");
+          name.className = "name";
+          name.textContent = file.name;
+
+          var meta = document.createElement("div");
+          meta.className = "meta";
+          meta.textContent = (file.type || "unknown") + " • " + formatBytes(file.size);
+
+          item.appendChild(name);
+          item.appendChild(meta);
+
+          if ((file.type || "").startsWith("text/") || /\.(md|txt|json|csv)$/i.test(file.name)) {
+            try {
+              var text = await file.text();
+              var preview = document.createElement("pre");
+              preview.textContent = text.slice(0, 1600);
+              item.appendChild(preview);
+            } catch (_e) {
+              // Ignore preview failures.
+            }
+          }
+
+          filesEl.appendChild(item);
+        }
+      }
+
+      if ("launchQueue" in window && typeof window.launchQueue.setConsumer === "function") {
+        statusEl.textContent = "LaunchQueue available. Waiting for opened files...";
+        window.launchQueue.setConsumer(function (launchParams) {
+          renderFileList((launchParams && launchParams.files) || []);
+        });
+      } else {
+        statusEl.textContent = "File Handling API is not available in this browser context.";
+      }
+    })();
+  </script>
+</body>
+</html>

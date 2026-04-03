@@ -1,10 +1,12 @@
+{% import "macros/utils.html" as macros_utils %}
+
 {% macro notify_banner(config, page) %}
 {# Only show notification banner on blog posts (like comments) #}
 {% set show_banner = false %}
 
 {# Check if this is a page under /blog/ #}
 {% if page is defined and page.path is defined %}
-    {% set is_blog_post = page.path is starting_with('/blog/') and not page.path is ending_with('/_index/') %}
+  {% set is_blog_post = macros_utils::is_blog_post(page=page) | trim == "true" %}
 
     {# Allow explicit override via page frontmatter #}
     {% if page.extra.notify_banner is defined %}
@@ -16,7 +18,7 @@
 {% endif %}
 
 {% if show_banner %}
-<div class="notify-banner-wrap my-3 not-prose">
+<div class="notify-banner-wrap my-3 not-prose" data-notify-banner-mount="true">
   <div
     class="notify-banner hidden"
     data-notify-banner
@@ -53,7 +55,5 @@
     </div>
   </div>
 </div>
-
-<script defer src="{{ get_url(path='js/notify-banner.js') | safe }}"></script>
 {% endif %}
 {% endmacro notify_banner %}

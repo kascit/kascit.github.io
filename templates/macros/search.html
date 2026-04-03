@@ -3,11 +3,14 @@
 <input
   type="checkbox"
   id="search-modal"
+  data-search-modal="true"
   class="modal-toggle"
   aria-hidden="true"
   tabindex="-1"
 />
 <div
+  data-search-mount="true"
+  data-search-backdrop="true"
   class="modal modal-middle"
   role="dialog"
   aria-modal="true"
@@ -43,6 +46,7 @@
           </svg>
           <input
             id="search"
+            data-search-input="true"
             type="search"
             placeholder="Search posts..."
             class="search-input w-full pl-12 pr-4 py-3 text-base bg-transparent border-0 focus:outline-none focus:ring-0 text-base-content placeholder:text-base-content/40"
@@ -51,11 +55,12 @@
         </div>
       </div>
       <!-- Search Results Container -->
-      <div class="search-results-container px-2 py-2 h-96 overflow-y-auto">
+      <div data-search-results-container="true" class="search-results-container px-2 py-2 h-96 overflow-y-auto">
         <div
+          data-search-results-header="true"
           class="search-results__header px-4 py-2 text-xs text-base-content/75"
         ></div>
-        <ul class="search-results__items space-y-1"></ul>
+        <ul data-search-results-items="true" class="search-results__items space-y-1"></ul>
       </div>
       <!-- Search Footer -->
       <div

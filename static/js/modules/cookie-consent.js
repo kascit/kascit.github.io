@@ -6,28 +6,12 @@
  */
 
 import { getConfig } from "./config.js";
+import { readCookie, writeCookie } from "./cookie-utils.js";
 
 const CONSENT_COOKIE_KEY = "site_cookie_consent_v1";
 const CONSENT_COOKIE_MAX_AGE = 60 * 60 * 24 * 180;
 const CONSENT_ALL = "all";
 const CONSENT_NECESSARY = "necessary";
-
-function readCookie(name) {
-  const key = `${name}=`;
-  const parts = document.cookie ? document.cookie.split(";") : [];
-  for (const part of parts) {
-    const item = part.trim();
-    if (item.startsWith(key)) {
-      return decodeURIComponent(item.slice(key.length));
-    }
-  }
-  return "";
-}
-
-function writeCookie(name, value, maxAgeSeconds) {
-  const secure = window.location.protocol === "https:" ? "; Secure" : "";
-  document.cookie = `${name}=${encodeURIComponent(value)}; Path=/; Max-Age=${maxAgeSeconds}; SameSite=Lax${secure}`;
-}
 
 function getDomainCandidates() {
   const host = window.location.hostname;
@@ -175,7 +159,12 @@ export function hasOptionalConsent() {
 export function setCookieConsent(choice) {
   if (!isValidChoice(choice)) return;
 
-  writeCookie(CONSENT_COOKIE_KEY, choice, CONSENT_COOKIE_MAX_AGE);
+  writeCookie(CONSENT_COOKIE_KEY, choice, {
+    maxAgeSeconds: CONSENT_COOKIE_MAX_AGE,
+    path: "/",
+    sameSite: "Lax",
+    secure: window.location.protocol === "https:",
+  });
   const config = getConfig();
   applyChoice(choice, config);
   updateConsentStatusUi(choice);

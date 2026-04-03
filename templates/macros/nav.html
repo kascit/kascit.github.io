@@ -1,7 +1,11 @@
 {% import "macros/icons.html" as macros_icons %}
 
 {% macro render_button(url, title, subtitle, direction="next") %}
-<a class="nav-button nav-button-{{ direction }} group" href="{{ url | safe }}">
+{% set nav_url = "#" %}
+{% if url is starting_with("/") or url is starting_with("http://") or url is starting_with("https://") %}
+    {% set nav_url = url %}
+{% endif %}
+<a class="nav-button nav-button-{{ direction }} group" href="{{ nav_url | safe }}">
     <div class="nav-button-content">
         <div class="nav-button-direction">
             {% if direction == "prev" %}

@@ -115,7 +115,7 @@ _dl-katex:
 
 [doc("Build CSS then start Zola dev server (blocking)")]
 [group('dev')]
-dev: css
+dev: widget-data css
     zola serve
 
 [doc("Watch CSS for changes (blocking)")]
@@ -148,8 +148,13 @@ clean:
 
 [doc("Full production build (clean + css + zola)")]
 [group('build')]
-build: clean css
+build: clean widget-data css
     zola build
+
+[doc("Generate latest-posts widget data from blog content")]
+[group('build')]
+widget-data:
+    node scripts/generate-latest-posts-widget.js
 
 # ---------------------------------------------------------------------------
 # Info

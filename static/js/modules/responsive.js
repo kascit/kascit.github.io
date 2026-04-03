@@ -23,7 +23,13 @@ function updateResponsiveState() {
 function notifyListeners() {
   state.listeners.forEach((cb) => {
     try {
-      cb({ isDesktop: state.isDesktop, isMobile: state.isMobile, isLargeScreen: isLargeScreen(), isTouchDevice: isTouchDevice() });
+      cb({
+        isDesktop: state.isDesktop,
+        isMobile: state.isMobile,
+        isLargeScreen: isLargeScreen(),
+        isTouchDevice: isTouchDevice(),
+        prefersReducedMotion: prefersReducedMotion(),
+      });
     } catch (e) { console.error(e); }
   });
 }
@@ -34,6 +40,7 @@ export function initResponsive() {
   state.mediaQueries.finePointer = window.matchMedia("(pointer: fine)");
   state.mediaQueries.largeScreen = window.matchMedia(`(min-width: ${BREAKPOINTS.LG}px)`);
   state.mediaQueries.touchDevice = window.matchMedia("(pointer: coarse)");
+  state.mediaQueries.reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
   updateResponsiveState();
 
@@ -47,6 +54,7 @@ export const isDesktop = () => state.isDesktop;
 export const isMobile = () => state.isMobile;
 export const isLargeScreen = () => state.mediaQueries.largeScreen?.matches || false;
 export const isTouchDevice = () => state.mediaQueries.touchDevice?.matches || false;
+export const prefersReducedMotion = () => state.mediaQueries.reducedMotion?.matches || false;
 
 export function onResponsiveChange(callback) {
   state.listeners.add(callback);

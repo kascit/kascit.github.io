@@ -29,7 +29,7 @@ This section highlights the projects that best represent how I think about engin
 
 These repositories are where I deliberately practice fundamentals, test ideas, and sharpen instincts outside of production deadlines.
 
-<div class="not-prose grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+<div class="not-prose grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-12">
 
 {{ project_card(title="LeetCode Solutions", icon="fa-solid fa-bolt", description="A structured collection of algorithmic problem-solving approaches and optimizations.", lang="Java", github_url="https://github.com/kascit/leetcode-solutions", url="https://leetcode.com/u/kascit/", url_label="Profile", external=true) }}
 
@@ -43,7 +43,7 @@ These repositories are where I deliberately practice fundamentals, test ideas, a
 
 Experiments are smaller bets, usually built to explore a pattern, language feature, or workflow idea quickly.
 
-<div class="not-prose grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
+<div class="not-prose grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4 mb-12">
 
 {{ project_card(title="Tic-Tac-Toe", icon="fa-solid fa-gamepad", description="Because every developer has to build one eventually.", lang="JavaScript", status="archived", github_url="https://github.com/kascit/tic-tac-toe") }}
 

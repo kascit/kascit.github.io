@@ -1,20 +1,17 @@
 {%- import "macros/header.html" as macros_header -%}
 {%- import "macros/sidebar.html" as macros_sidebar -%}
 {%- import "macros/drawer.html" as macros_drawer -%}
+{%- import "macros/head.html" as macros_head -%}
 
-{%- if config.extra.theme is defined -%}
-    {%- set theme_colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value="dark")) -%}
-{%- else -%}
-    {%- set theme_colorset = config.extra.default_colorset | default(value="dark") -%}
-{%- endif -%}
+{%- set theme_colorset = macros_head::get_theme_colorset(config=config) | trim -%}
 
 <div class="drawer site-nav-shell" data-default-colorset="{{ theme_colorset }}">
-    <input id="my-drawer-2" type="checkbox" class="drawer-toggle" autocomplete="off" />
+    <input id="my-drawer-2" data-drawer-checkbox="true" type="checkbox" class="drawer-toggle" autocomplete="off" />
     <div class="drawer-content flex flex-col min-w-0 pt-16">
         {{ macros_header::header(config=config, lang=lang, is_export=true, show_mobile_menu=true) }}
         <div class="site-nav-slot"></div>
     </div>
-    <div id="sidebar" class="drawer-side pt-16 z-[60] lg:hidden">
+    <div id="sidebar" data-sidebar-root="true" class="drawer-side pt-16 z-[60] lg:hidden">
         {{ macros_drawer::drawer_overlay() }}
         {{ macros_sidebar::sidebar(config=config, lang=lang, current_path="/", section=false, is_export=true) }}
     </div>

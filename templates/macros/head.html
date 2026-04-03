@@ -1,17 +1,21 @@
 {% macro get_theme_color(config) %}
 {# Theme configuration with backward compatibility #}
 {# Priority: theme.dark_brightness/light_brightness (new per-theme) > theme.brightness (common) > brightness (legacy) #}
-{% if config.extra.theme is defined %}
-    {%- set colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) -%}
-{% else %}
-    {%- set colorset = config.extra.default_colorset | default(value='dark') -%}
-{% endif %}
+{%- set colorset = self::get_theme_colorset(config=config) | trim -%}
 {%- if colorset == "dark" -%}
 #0a0a0f
 {%- else -%}
 #f8fafc
 {%- endif -%}
 {% endmacro get_theme_color %}
+
+{% macro get_theme_colorset(config) %}
+{% if config.extra.theme is defined %}
+  {{ config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) }}
+{% else %}
+  {{ config.extra.default_colorset | default(value='dark') }}
+{% endif %}
+{% endmacro get_theme_colorset %}
 
 {% macro html_tag(config, lang) %}
 {%- set theme_color = self::get_theme_color(config=config) | trim -%}
@@ -43,11 +47,7 @@
     <link rel="preload" href="{{ get_url(path="webfonts/fa-brands-400.woff2") | safe }}" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="{{ get_url(path="fonts/Pretendard-Regular.woff") | safe }}" as="font" type="font/woff" crossorigin>
 
-    {% if config.extra.theme is defined %}
-        {% set theme_colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) %}
-    {% else %}
-        {% set theme_colorset = config.extra.default_colorset | default(value='dark') %}
-    {% endif %}
+    {% set theme_colorset = self::get_theme_colorset(config=config) | trim %}
     <!-- Critical theme init to prevent FOUC — must run synchronously (no defer) -->
     {%- set cookie_domain = config.base_url | replace(from="https://", to="") | replace(from="http://", to="") -%}
     <script src="{{ get_url(path="js/boot.js") | safe }}"
@@ -221,6 +221,8 @@
       {# Users can override individual paths in [extra.favicon] section #}
       {% if config.extra.favicon is defined %}
           {% set favicon_base = config.extra.favicon.base_path | default(value="/icons/") %}
+          {% set favicon_16x16 = config.extra.favicon.favicon_16x16 | default(value=favicon_base ~ "favicon-16x16.png") %}
+          {% set favicon_32x32 = config.extra.favicon.favicon_32x32 | default(value=favicon_base ~ "favicon-32x32.png") %}
           {% set favicon_96x96 = config.extra.favicon.favicon_96x96 | default(value=favicon_base ~ "favicon-96x96.png") %}
           {% set favicon_svg = config.extra.favicon.favicon_svg | default(value=favicon_base ~ "favicon.svg") %}
           {% set favicon_ico = config.extra.favicon.favicon_ico | default(value=favicon_base ~ "favicon.ico") %}
@@ -228,12 +230,16 @@
           {% set site_webmanifest = config.extra.favicon.site_webmanifest | default(value=favicon_base ~ "site.webmanifest") %}
       {% else %}
           {% set favicon_base = "/icons/" %}
+          {% set favicon_16x16 = favicon_base ~ "favicon-16x16.png" %}
+          {% set favicon_32x32 = favicon_base ~ "favicon-32x32.png" %}
           {% set favicon_96x96 = favicon_base ~ "favicon-96x96.png" %}
           {% set favicon_svg = favicon_base ~ "favicon.svg" %}
           {% set favicon_ico = favicon_base ~ "favicon.ico" %}
           {% set apple_touch_icon = favicon_base ~ "apple-touch-icon.png" %}
           {% set site_webmanifest = favicon_base ~ "site.webmanifest" %}
       {% endif %}
+        <link rel="icon" type="image/png" href="{{ favicon_16x16 | safe }}" sizes="16x16" />
+        <link rel="icon" type="image/png" href="{{ favicon_32x32 | safe }}" sizes="32x32" />
       <link rel="icon" type="image/png" href="{{ favicon_96x96 | safe }}" sizes="96x96" />
       <link rel="icon" type="image/svg+xml" href="{{ favicon_svg | safe }}" />
       <link rel="shortcut icon" href="{{ favicon_ico | safe }}" />

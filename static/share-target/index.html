@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Share Target | Dhanur</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1220;
+      --panel: #111827;
+      --muted: #9ca3af;
+      --text: #e5e7eb;
+      --line: #1f2937;
+      --accent: #93c5fd;
+    }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(circle at top, #0f172a, var(--bg));
+      color: var(--text);
+      display: grid;
+      place-items: center;
+      padding: 1rem;
+    }
+    main {
+      width: min(46rem, 100%);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: color-mix(in srgb, var(--panel) 90%, black);
+      padding: 1rem 1.1rem;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+    }
+    h1 { margin: 0 0 .5rem; font-size: 1.2rem; }
+    p { margin: .35rem 0; color: var(--muted); }
+    .row { margin-top: .8rem; border-top: 1px solid var(--line); padding-top: .75rem; }
+    .label { color: var(--muted); font-size: .82rem; text-transform: uppercase; letter-spacing: .04em; }
+    .value { margin-top: .2rem; white-space: pre-wrap; word-break: break-word; }
+    ul { margin: .45rem 0 0; padding-left: 1.15rem; }
+    a { color: var(--accent); }
+    .actions { margin-top: 1rem; display: flex; gap: .6rem; flex-wrap: wrap; }
+    .btn {
+      text-decoration: none;
+      border: 1px solid var(--line);
+      color: var(--text);
+      padding: .45rem .7rem;
+      border-radius: 10px;
+      background: #0b1324;
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Share Target</h1>
+    <p id="status">Loading shared payload...</p>
+
+    <div class="row">
+      <div class="label">Title</div>
+      <div id="title" class="value">-</div>
+    </div>
+
+    <div class="row">
+      <div class="label">Text</div>
+      <div id="text" class="value">-</div>
+    </div>
+
+    <div class="row">
+      <div class="label">URL</div>
+      <div id="url" class="value">-</div>
+    </div>
+
+    <div class="row">
+      <div class="label">Files</div>
+      <ul id="files"></ul>
+    </div>
+
+    <div class="actions">
+      <a class="btn" href="/">Home</a>
+      <a class="btn" href="/blog/">Blog</a>
+      <a class="btn" href="/links/">Links</a>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      var statusEl = document.getElementById("status");
+      var titleEl = document.getElementById("title");
+      var textEl = document.getElementById("text");
+      var urlEl = document.getElementById("url");
+      var filesEl = document.getElementById("files");
+
+      function setText(el, value) {
+        el.textContent = value && String(value).trim() ? String(value) : "-";
+      }
+
+      function clearChildren(el) {
+        while (el.firstChild) el.removeChild(el.firstChild);
+      }
+
+      function safeHttpUrl(raw) {
+        if (typeof raw !== "string" || !raw.trim()) return "";
+        try {
+          var u = new URL(raw.trim(), location.origin);
+          if (u.protocol !== "http:" && u.protocol !== "https:") return "";
+          return u.href;
+        } catch (_e) {
+          return "";
+        }
+      }
+
+      function renderUrl(raw) {
+        clearChildren(urlEl);
+        var safe = safeHttpUrl(raw);
+        if (!safe) {
+          urlEl.textContent = "-";
+          return;
+        }
+        var a = document.createElement("a");
+        a.href = safe;
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.textContent = safe;
+        urlEl.appendChild(a);
+      }
+
+      function renderFiles(files) {
+        clearChildren(filesEl);
+        var list = Array.isArray(files) ? files : [];
+        if (list.length === 0) {
+          var li = document.createElement("li");
+          li.textContent = "No files shared";
+          filesEl.appendChild(li);
+          return;
+        }
+
+        list.forEach(function (file) {
+          var li = document.createElement("li");
+          var name = file && file.name ? String(file.name) : "unnamed";
+          var type = file && file.type ? String(file.type) : "unknown";
+          var size = file && typeof file.size === "number" ? file.size : 0;
+          li.textContent = name + " (" + type + ", " + size + " bytes)";
+          filesEl.appendChild(li);
+        });
+      }
+
+      fetch("/__runtime/share-target.json", { cache: "no-store" })
+        .then(function (res) {
+          if (!res.ok) throw new Error("No share payload available");
+          return res.json();
+        })
+        .then(function (payload) {
+          setText(titleEl, payload.title || "");
+          setText(textEl, payload.text || "");
+          renderUrl(payload.url || "");
+          renderFiles(payload.files || []);
+          statusEl.textContent = "Share payload received.";
+        })
+        .catch(function () {
+          statusEl.textContent = "No share payload found yet. This page works when launched as a share target.";
+          setText(titleEl, "");
+          setText(textEl, "");
+          renderUrl("");
+          renderFiles([]);
+        });
+    })();
+  </script>
+</body>
+</html>

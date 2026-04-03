@@ -1,0 +1,62 @@
+{% import "macros/head.html" as macros_head %}
+{% import "macros/header.html" as macros_header %}
+{% import "macros/sidebar.html" as macros_sidebar %}
+{% import "macros/drawer.html" as macros_drawer %}
+{% import "macros/cookie_consent.html" as macros_cookie_consent %}
+
+{% set status_title = status_title | default(value='Status') %}
+{% set status_desc = status_desc | default(value='') %}
+{% set status_url = status_url | default(value=config.base_url) %}
+
+<!DOCTYPE html>
+{{ macros_head::html_tag(config=config, lang=config.default_language) }}
+<head>
+    {{ macros_head::head(
+        config=config,
+        page=false,
+        section=false,
+        current_url=status_url
+    ) }}
+    <title>{{ status_title }}</title>
+    <meta name="description" content="{{ status_desc }}">
+    <meta property="og:title" content="{{ status_title }}">
+    <meta property="og:description" content="{{ status_desc }}">
+    <meta property="og:url" content="{{ status_url }}">
+</head>
+<body>
+    <div class="drawer lg:drawer-open">
+        <input id="my-drawer-2" data-drawer-checkbox="true" type="checkbox" class="drawer-toggle" autocomplete="off" />
+        <div class="drawer-content flex flex-col min-w-0 pt-16 bg-base-200">
+            {{ macros_header::header(config=config, lang=config.default_language) }}
+            <div class="p-8 w-full max-w-3xl mx-auto flex flex-col justify-center items-center min-h-[60vh]">
+                <main class="flex flex-auto flex-col items-center justify-center px-4 text-center sm:flex-row">
+                    <h1 class="text-3xl font-extrabold tracking-tight text-base-content sm:mr-6 sm:border-r sm:border-base-content/15 sm:pr-6 md:text-4xl">{{ status_title }}</h1>
+                    <h2 class="mt-2 text-lg text-base-content/70 sm:mt-0">{{ status_desc }}</h2>
+                </main>
+                {% block status_content %}{% endblock status_content %}
+            </div>
+        </div>
+
+        <div id="sidebar" data-sidebar-root="true" class="drawer-side pt-16 z-[60] lg:z-40">
+            {{ macros_drawer::drawer_overlay() }}
+            {{ macros_sidebar::sidebar(config=config, lang=config.default_language, current_path='/', section=false) }}
+        </div>
+    </div>
+
+    {{ macros_cookie_consent::banner() }}
+
+    <script id="site-config" type="application/json">
+    {
+        "defaultColorset": "{{ macros_head::get_theme_colorset(config=config) | trim }}",
+        "katexCss": "{{ get_url(path='css/katex.min.css') | safe }}",
+        "katexJs": "{{ get_url(path='js/katex.min.js') | safe }}",
+        "mermaidJs": "{{ get_url(path='js/mermaid.min.js') | safe }}",
+        "swPath": "{{ get_url(path='sw.js') | safe }}",
+        "gtagId": "{{ config.extra.gtag | default(value='') }}",
+        "sentryScriptUrl": "https://js-de.sentry-cdn.com/76f095eb3818528a530b2347e1735e14.min.js"
+    }
+    </script>
+    <script type="module" src="{{ get_url(path='js/main.js') | safe }}"></script>
+    {% block status_scripts %}{% endblock status_scripts %}
+</body>
+</html>

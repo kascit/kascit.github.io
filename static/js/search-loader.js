@@ -20,6 +20,20 @@
   var searchLoaded = false;
   var searchReady = false;
 
+  function getSearchMount() {
+    return document.querySelector("[data-search-mount]") || document.querySelector(".modal");
+  }
+
+  function getSearchModal() {
+    var mount = getSearchMount();
+    return (mount && mount.querySelector("[data-search-modal]")) || document.getElementById("search-modal");
+  }
+
+  function getSearchInput() {
+    var mount = getSearchMount();
+    return (mount && mount.querySelector("[data-search-input]")) || document.getElementById("search");
+  }
+
   // ── Debounce util ────────────────────────────────────────────────────
   function debounce(func, wait) {
     var timeout;
@@ -106,30 +120,121 @@
   }
 
   // ── Result item renderer ─────────────────────────────────────────────
+  var DOC_ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-base-content/50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>';
+  var ARROW_ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-base-content/40" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>';
+
+  function sanitizeResultHref(rawHref) {
+    if (typeof rawHref !== "string" || rawHref.trim() === "") return "#";
+    var href = rawHref.trim();
+
+    if (href[0] === "#") return href;
+    if (href[0] === "/") {
+      if (/\s/.test(href)) return "#";
+      return href;
+    }
+
+    try {
+      var parsed = new URL(href, window.location.origin);
+      var protocol = (parsed.protocol || "").toLowerCase();
+      if (protocol !== "http:" && protocol !== "https:") return "#";
+      if (parsed.origin !== window.location.origin) return "#";
+      return parsed.pathname + parsed.search + parsed.hash;
+    } catch (_error) {
+      return "#";
+    }
+  }
+
+  function renderTeaserText(target, teaser) {
+    var tokens = String(teaser || "").split(/(<b>|<\/b>)/);
+    var isBold = false;
+
+    for (var i = 0; i < tokens.length; i++) {
+      var token = tokens[i];
+      if (token === "<b>") {
+        isBold = true;
+        continue;
+      }
+      if (token === "</b>") {
+        isBold = false;
+        continue;
+      }
+      if (!token) continue;
+
+      if (isBold) {
+        var strong = document.createElement("strong");
+        strong.textContent = token;
+        target.appendChild(strong);
+      } else {
+        target.appendChild(document.createTextNode(token));
+      }
+    }
+  }
+
   function formatSearchResultItem(item, terms) {
     var li = document.createElement("li");
     li.className = "search-result-item";
-    li.innerHTML =
-      '<a href="' + item.item.id + '" class="search-result-link block px-4 py-3 rounded-md hover:bg-base-200/50 transition-colors duration-150">' +
-        '<div class="flex items-start gap-3">' +
-          '<div class="search-result-icon flex-shrink-0 mt-1">' +
-            '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-base-content/50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>' +
-          '</div>' +
-          '<div class="flex-1 min-w-0">' +
-            '<div class="search-result-title font-semibold text-sm text-base-content mb-1">' + item.item.title + '</div>' +
-            '<div class="search-result-excerpt text-xs text-base-content/60 line-clamp-2">' + makeTeaser(item.item.body, terms) + '</div>' +
-          '</div>' +
-          '<div class="search-result-arrow flex-shrink-0 opacity-0 transition-opacity duration-150">' +
-            '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-base-content/40" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>' +
-          '</div>' +
-        '</div>' +
-      '</a>';
+    var link = document.createElement("a");
+    link.href = sanitizeResultHref(item && item.item ? item.item.id : "");
+    link.className = "search-result-link block px-4 py-3 rounded-md hover:bg-base-200/50 transition-colors duration-150";
 
-    var link = li.querySelector(".search-result-link");
-    var arrow = li.querySelector(".search-result-arrow");
+    var row = document.createElement("div");
+    row.className = "flex items-start gap-3";
+
+    var iconWrap = document.createElement("div");
+    iconWrap.className = "search-result-icon flex-shrink-0 mt-1";
+    iconWrap.innerHTML = DOC_ICON_SVG;
+
+    var bodyWrap = document.createElement("div");
+    bodyWrap.className = "flex-1 min-w-0";
+
+    var title = document.createElement("div");
+    title.className = "search-result-title font-semibold text-sm text-base-content mb-1";
+    title.textContent = item && item.item && typeof item.item.title === "string" ? item.item.title : "Untitled";
+
+    var excerpt = document.createElement("div");
+    excerpt.className = "search-result-excerpt text-xs text-base-content/60 line-clamp-2";
+    renderTeaserText(excerpt, makeTeaser(item && item.item ? item.item.body : "", terms));
+
+    var arrow = document.createElement("div");
+    arrow.className = "search-result-arrow flex-shrink-0 opacity-0 transition-opacity duration-150";
+    arrow.innerHTML = ARROW_ICON_SVG;
+
+    bodyWrap.appendChild(title);
+    bodyWrap.appendChild(excerpt);
+    row.appendChild(iconWrap);
+    row.appendChild(bodyWrap);
+    row.appendChild(arrow);
+    link.appendChild(row);
+    li.appendChild(link);
+
     link.addEventListener("mouseenter", function () { arrow.style.opacity = "1"; });
     link.addEventListener("mouseleave", function () { arrow.style.opacity = "0"; });
     return li;
+  }
+
+  function setSearchHeader($searchResultsHeader, term, count, isEmpty) {
+    if (!$searchResultsHeader) return;
+    $searchResultsHeader.textContent = "";
+
+    var wrap = document.createElement("span");
+    wrap.className = "text-base-content/60";
+
+    if (isEmpty) {
+      wrap.appendChild(document.createTextNode('No results found for '));
+      var emptyStrong = document.createElement("strong");
+      emptyStrong.className = "text-base-content";
+      emptyStrong.textContent = '"' + term + '"';
+      wrap.appendChild(emptyStrong);
+      $searchResultsHeader.appendChild(wrap);
+      return;
+    }
+
+    wrap.appendChild(document.createTextNode(String(count) + " result" + (count === 1 ? "" : "s") + " for "));
+    var strong = document.createElement("strong");
+    strong.className = "text-base-content";
+    strong.textContent = '"' + term + '"';
+    wrap.appendChild(strong);
+    $searchResultsHeader.appendChild(wrap);
   }
 
   // ── Core search wiring ───────────────────────────────────────────────
@@ -138,12 +243,14 @@
     if (searchReady) return;
     searchReady = true;
 
-    var $searchInput = document.getElementById("search");
+    var mount = getSearchMount();
+    var $searchInput = getSearchInput();
     if (!$searchInput) return;
 
-    var $searchResultsContainer = document.querySelector(".search-results-container");
-    var $searchResultsHeader = document.querySelector(".search-results__header");
-    var $searchResultsItems = document.querySelector(".search-results__items");
+    var $searchResultsContainer = (mount && mount.querySelector("[data-search-results-container]")) || document.querySelector(".search-results-container");
+    var $searchResultsHeader = (mount && mount.querySelector("[data-search-results-header]")) || document.querySelector(".search-results__header");
+    var $searchResultsItems = (mount && mount.querySelector("[data-search-results-items]")) || document.querySelector(".search-results__items");
+    if (!$searchResultsContainer || !$searchResultsHeader || !$searchResultsItems) return;
     var MAX_ITEMS = 10;
     var selectedIndex = -1;
 
@@ -188,21 +295,20 @@
       var results = fuse.search(term).filter(function (r) { return r.item.body !== ""; });
 
       if (results.length === 0) {
-        $searchResultsHeader.innerHTML = '<span class="text-base-content/60">No results found for <strong class="text-base-content">"' + term + '"</strong></span>';
+        setSearchHeader($searchResultsHeader, term, 0, true);
         return;
       }
 
       currentTerm = term;
-      $searchResultsHeader.innerHTML = '<span class="text-base-content/60">' + results.length + ' result' +
-        (results.length === 1 ? "" : "s") + ' for <strong class="text-base-content">"' + term + '"</strong></span>';
+      setSearchHeader($searchResultsHeader, term, results.length, false);
       for (var i = 0; i < Math.min(results.length, MAX_ITEMS); i++) {
         if (!results[i].item.body) continue;
         $searchResultsItems.appendChild(formatSearchResultItem(results[i], term.split(" ")));
       }
     }, 150));
 
-    var searchModal = document.getElementById("search-modal");
-    var modalBackdrop = document.querySelector(".modal");
+    var searchModal = getSearchModal();
+    var modalBackdrop = (mount && mount.querySelector("[data-search-backdrop]")) || mount || document.querySelector(".modal");
 
     if (searchModal) {
       searchModal.addEventListener("change", function () {
@@ -256,7 +362,7 @@
     if (searchLoaded) return;
     searchLoaded = true;
 
-    var searchInput = document.getElementById("search");
+    var searchInput = getSearchInput();
     if (searchInput) {
       searchInput.placeholder = "Loading search...";
       searchInput.disabled = true;
@@ -283,7 +389,7 @@
 
   // ── Event wiring ─────────────────────────────────────────────────────
   document.addEventListener("DOMContentLoaded", function () {
-    var searchModal = document.getElementById("search-modal");
+    var searchModal = getSearchModal();
 
     // Lazy-load on modal open
     if (searchModal) {

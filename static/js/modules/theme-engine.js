@@ -2,6 +2,7 @@
  * Theme Engine (Light/Dark/Auto)
  */
 import { COOKIE_DOMAIN } from './config.js';
+import { readCookie, writeCookie } from './cookie-utils.js';
 
 const THEME_MAP = { dark: "dark", light: "light" };
 const MODE_CYCLE = ["auto", "light", "dark"];
@@ -11,14 +12,18 @@ let _mediaQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: 
 
 function getCookie() {
   if (window.__getThemeCookie) return window.__getThemeCookie();
-  const m = document.cookie.match(/(?:^|; )theme=([^;]*)/);
-  return m ? m[1] : null;
+  return readCookie("theme") || null;
 }
 
 function setCookie(val) {
   if (window.__setThemeCookie) { window.__setThemeCookie(val); return; }
-  const d = COOKIE_DOMAIN ? `; domain=${COOKIE_DOMAIN}` : "";
-  document.cookie = `theme=${val}; path=/${d}; max-age=31536000; SameSite=Lax`;
+  writeCookie("theme", val, {
+    maxAgeSeconds: 31536000,
+    domain: COOKIE_DOMAIN || undefined,
+    path: "/",
+    sameSite: "Lax",
+    secure: window.location.protocol === "https:",
+  });
 }
 
 function resolveColorset(val) {

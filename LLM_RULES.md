@@ -17,3 +17,9 @@ Non-negotiable rules for this repo.
 13. For desktop/mobile feature gating, reuse `static/js/modules/responsive.js`; avoid ad-hoc breakpoint logic.
 14. Use `not-prose` in markup, not inside `@apply`.
 15. Keep TOC/rail toggle placement controlled by `src/layout.css` variables, not hardcoded template offsets.
+16. Do not inject untrusted content with `innerHTML`; use DOM construction with `textContent` for dynamic text.
+17. Guard dynamic URLs before rendering in `href`/`src`; reject unsafe schemes (e.g., `javascript:`).
+18. For shell/HTML bootstrap fetches on navigable pages, use `AbortController` and clean up on `pagehide`/`beforeunload`.
+19. For reusable Tera helper logic, prefer separate imported macro files over deep same-file macro chaining.
+20. `dhanur.me` is the static Zola host; treat `shell.js` as integration runtime for non-static `*.dhanur.me` apps and keep it backward-compatible for embedded usage.
+21. Shell bootstrap network calls must be bounded (abort + timeout) so dynamic subdomain apps do not hang waiting on remote navbar fetches.

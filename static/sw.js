@@ -3,6 +3,7 @@
 const CACHE_VERSION = "v9";
 const CACHE_NAME = `kascit-${CACHE_VERSION}`;
 const META_CACHE = `kascit-meta-${CACHE_VERSION}`;
+const RUNTIME_META_CACHE = "kascit-runtime-meta-v1";
 
 // Critical assets that must be cached on install
 const CRITICAL_ASSETS = [
@@ -58,6 +59,10 @@ const DO_NOT_CACHE = [
   /giscus/,
   /^\/sw\.js$/,
   /^\/js\/notify-banner\.js$/,
+  /^\/__runtime\//,
+  /^\/share-target\/$/,
+  /^\/open-file\/$/,
+  /^\/handler\/$/,
 ];
 
 // Service Worker Install Event
@@ -95,7 +100,8 @@ self.addEventListener("activate", (event) => {
           }),
         );
       })
-      .then(() => self.clients.claim()),
+      .then(() => self.clients.claim())
+      .then(() => updateInstalledWidgets()),
   );
 });
 
@@ -126,6 +132,160 @@ async function setStoredLatest(info) {
     // ignore
   }
 }
+
+async function setRuntimeJson(path, payload) {
+  try {
+    const cache = await caches.open(RUNTIME_META_CACHE);
+    await cache.put(
+      path,
+      new Response(JSON.stringify(payload), {
+        headers: {
+          "Content-Type": "application/json",
+          "Cache-Control": "no-store",
+        },
+      }),
+    );
+  } catch (_e) {
+    // ignore runtime cache failures
+  }
+}
+
+async function getRuntimeJson(path) {
+  try {
+    const cache = await caches.open(RUNTIME_META_CACHE);
+    const res = await cache.match(path);
+    if (!res) return null;
+    return await res.json();
+  } catch (_e) {
+    return null;
+  }
+}
+
+function jsonResponse(payload, status = 200) {
+  return new Response(JSON.stringify(payload), {
+    status,
+    headers: {
+      "Content-Type": "application/json",
+      "Cache-Control": "no-store",
+    },
+  });
+}
+
+function normalizeShareText(value) {
+  if (typeof value !== "string") return "";
+  return value.trim().slice(0, 5000);
+}
+
+async function handleShareTargetPost(request) {
+  try {
+    const formData = await request.formData();
+    const payload = {
+      title: normalizeShareText(formData.get("title") || ""),
+      text: normalizeShareText(formData.get("text") || ""),
+      url: normalizeShareText(formData.get("url") || ""),
+      files: [],
+      receivedAt: new Date().toISOString(),
+    };
+
+    for (const [field, value] of formData.entries()) {
+      if (typeof File !== "undefined" && value instanceof File) {
+        payload.files.push({
+          field,
+          name: value.name,
+          type: value.type || "application/octet-stream",
+          size: value.size || 0,
+        });
+      }
+    }
+
+    await setRuntimeJson("/__runtime/share-target", payload);
+    return Response.redirect("/share-target/?shared=1", 303);
+  } catch (_e) {
+    return Response.redirect("/share-target/?error=1", 303);
+  }
+}
+
+function hasWidgetRuntime() {
+  return (
+    !!self.widgets &&
+    typeof self.widgets.updateByTag === "function" &&
+    typeof self.widgets.getByTag === "function"
+  );
+}
+
+function getWidgetTemplateUrl(definition) {
+  return (
+    definition?.msAcTemplate ||
+    definition?.ms_ac_template ||
+    ""
+  );
+}
+
+function getWidgetDataUrl(definition) {
+  return (
+    definition?.data ||
+    definition?.msAcData ||
+    definition?.ms_ac_data ||
+    ""
+  );
+}
+
+async function buildWidgetPayload(definition) {
+  const templateUrl = getWidgetTemplateUrl(definition);
+  if (!templateUrl) return null;
+
+  const templateRes = await fetch(templateUrl, { cache: "no-store" });
+  if (!templateRes.ok) return null;
+
+  const dataUrl = getWidgetDataUrl(definition);
+  const dataRes = dataUrl
+    ? await fetch(dataUrl, { cache: "no-store" }).catch(() => null)
+    : null;
+
+  return {
+    template: await templateRes.text(),
+    data: dataRes && dataRes.ok ? await dataRes.text() : "{}",
+  };
+}
+
+async function updateWidgetByTag(tag, definitionHint) {
+  if (!hasWidgetRuntime() || !tag) return;
+
+  const widget = await self.widgets.getByTag(tag).catch(() => null);
+  const definition = definitionHint || widget?.definition;
+  if (!definition) return;
+
+  const payload = await buildWidgetPayload(definition).catch(() => null);
+  if (!payload) return;
+
+  await self.widgets.updateByTag(tag, payload).catch(() => {});
+}
+
+async function updateInstalledWidgets() {
+  if (!hasWidgetRuntime() || typeof self.widgets.matchAll !== "function") {
+    return;
+  }
+
+  const widgets = await self.widgets.matchAll().catch(() => []);
+  for (const widget of widgets) {
+    const tag = widget?.definition?.tag;
+    if (tag) {
+      await updateWidgetByTag(tag, widget.definition);
+    }
+  }
+}
+
+self.addEventListener("widgetinstall", (event) => {
+  const tag = event?.widget?.definition?.tag;
+  if (!tag) return;
+  event.waitUntil(updateWidgetByTag(tag, event.widget.definition));
+});
+
+self.addEventListener("widgetresume", (event) => {
+  const tag = event?.widget?.definition?.tag;
+  if (!tag) return;
+  event.waitUntil(updateWidgetByTag(tag, event.widget.definition));
+});
 
 function parseLatestFromRSS(xmlText) {
   try {
@@ -213,6 +373,24 @@ self.addEventListener("fetch", (event) => {
 
   // Don't cache cross-origin requests
   if (url.origin !== location.origin) {
+    return;
+  }
+
+  // share_target: capture POST payload and redirect to reader page.
+  if (request.method === "POST" && url.pathname === "/share-target/") {
+    event.respondWith(handleShareTargetPost(request));
+    return;
+  }
+
+  // Runtime metadata endpoint used by feature pages.
+  if (request.method === "GET" && url.pathname === "/__runtime/share-target.json") {
+    event.respondWith(
+      (async () => {
+        const payload = await getRuntimeJson("/__runtime/share-target");
+        if (!payload) return jsonResponse({ error: "not_found" }, 404);
+        return jsonResponse(payload, 200);
+      })(),
+    );
     return;
   }
 

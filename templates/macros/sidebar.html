@@ -1,6 +1,7 @@
 {% import "macros/apps.html" as macros_apps %}
 {% import "macros/icons.html" as macros_icons %}
 {% import "macros/footer.html" as macros_footer %}
+{% import "macros/sidebar_helpers.html" as sidebar_helpers %}
 {% macro sidebar(config, lang, current_path, section, is_export=false) %}
 {# Sidebar configuration with backward compatibility #}
 {# Priority: sidebar.* (new) > sidebar_expand_depth (legacy) #}
@@ -52,46 +53,7 @@
                                 {% set is_blog_root = section_key == "blog" or s1.path is ending_with("/blog/") %}
                                 {% if is_blog_root %}
                                     {% set sorted_pages = s1.pages | sort(attribute="date") | reverse %}
-                                    {% set total_posts = sorted_pages | length %}
-                                    {% set_global current_idx = -1 %}
-                                    {% for blog_page in sorted_pages %}
-                                        {% if normalized_current_path == blog_page.path %}
-                                            {% set_global current_idx = loop.index0 %}
-                                        {% endif %}
-                                    {% endfor %}
-
-                                    {% if current_idx >= 0 %}
-                                        {% set window_start = current_idx - 1 %}
-                                        {% if window_start < 0 %}{% set window_start = 0 %}{% endif %}
-                                        {% set window_end = current_idx + 2 %}
-                                        {% if window_end > total_posts %}{% set window_end = total_posts %}{% endif %}
-
-                                        {% if window_start > 0 %}
-                                            <li class="opacity-70 text-center text-base font-semibold tracking-[0.18em] px-2 py-1.5 select-none">...</li>
-                                        {% endif %}
-
-                                        {% for page in sorted_pages | slice(start=window_start, end=window_end) %}
-                                            <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
-                                                <a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a>
-                                            </li>
-                                        {% endfor %}
-
-                                        {% if window_end < total_posts %}
-                                            <li class="opacity-70 text-center text-base font-semibold tracking-[0.18em] px-2 py-1.5 select-none">...</li>
-                                        {% endif %}
-                                    {% else %}
-                                        {% for page in sorted_pages | slice(start=0, end=sidebar_blog_preview_count) %}
-                                            <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
-                                                <a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a>
-                                            </li>
-                                        {% endfor %}
-                                        {% if total_posts > sidebar_blog_preview_count %}
-                                            <li class="opacity-70 text-center text-base font-semibold tracking-[0.18em] px-2 py-1.5 select-none">...</li>
-                                        {% endif %}
-                                    {% endif %}
-                                    <li>
-                                        <a class="hover:no-underline font-medium text-primary" href="{{ get_url(path="/archive/", lang=lang) | safe }}">Archive</a>
-                                    </li>
+                                    {{ sidebar_helpers::render_blog_preview(sorted_pages=sorted_pages, normalized_current_path=normalized_current_path, lang=lang, sidebar_blog_preview_count=sidebar_blog_preview_count) }}
                                 {% else %}
                                     {% for page in s1.pages %}
                                         <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
@@ -185,40 +147,7 @@
                                 {# Level 2 #}
                                 {% if s1.path is ending_with("/blog/") %}
                                     {% set sorted_pages = s1.pages | sort(attribute="date") | reverse %}
-                                    {% set total_posts = sorted_pages | length %}
-                                    {% set_global current_idx = -1 %}
-                                    {% for blog_page in sorted_pages %}
-                                        {% if normalized_current_path == blog_page.path %}
-                                            {% set_global current_idx = loop.index0 %}
-                                        {% endif %}
-                                    {% endfor %}
-
-                                    {% if current_idx >= 0 %}
-                                        {% set window_start = current_idx - 1 %}
-                                        {% if window_start < 0 %}{% set window_start = 0 %}{% endif %}
-                                        {% set window_end = current_idx + 2 %}
-                                        {% if window_end > total_posts %}{% set window_end = total_posts %}{% endif %}
-
-                                        {% if window_start > 0 %}
-                                            <li class="opacity-70 text-center text-base font-semibold tracking-[0.18em] px-2 py-1.5 select-none">...</li>
-                                        {% endif %}
-                                        {% for page in sorted_pages | slice(start=window_start, end=window_end) %}
-                                            <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
-                                        {% endfor %}
-                                        {% if window_end < total_posts %}
-                                            <li class="opacity-70 text-center text-base font-semibold tracking-[0.18em] px-2 py-1.5 select-none">...</li>
-                                        {% endif %}
-                                    {% else %}
-                                        {% for page in sorted_pages | slice(start=0, end=sidebar_blog_preview_count) %}
-                                            <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
-                                        {% endfor %}
-                                        {% if total_posts > sidebar_blog_preview_count %}
-                                            <li class="opacity-70 text-center text-base font-semibold tracking-[0.18em] px-2 py-1.5 select-none">...</li>
-                                        {% endif %}
-                                    {% endif %}
-                                    <li>
-                                        <a class="hover:no-underline font-medium text-primary" href="{{ get_url(path="/archive/", lang=lang) | safe }}">Archive</a>
-                                    </li>
+                                    {{ sidebar_helpers::render_blog_preview(sorted_pages=sorted_pages, normalized_current_path=normalized_current_path, lang=lang, sidebar_blog_preview_count=sidebar_blog_preview_count) }}
                                 {% else %}
                                     {% for page in s1.pages %}
                                         <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
@@ -241,24 +170,24 @@
             </svg>
         </summary>
         <div class="px-4 py-3">
-            {{ macros_apps::apps_grid(context="mobile") }}
+            {{ macros_apps::apps_grid(context="mobile", config=config) }}
         </div>
     </details>
 
     {# Account section for mobile #}
     <div class="px-4 py-3 border-t border-base-content/10 lg:hidden" data-sidebar-account>
         <div class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-full bg-base-300 flex items-center justify-center shrink-0">
+            <div data-auth="sidebar-guest-avatar" class="w-9 h-9 rounded-full bg-base-300 flex items-center justify-center shrink-0">
                 <i class="fa-solid fa-user text-base-content/75 text-sm"></i>
             </div>
             
-            <div class="hidden w-9 h-9 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-1 overflow-hidden shrink-0">
+            <div data-auth="sidebar-authed-avatar" class="hidden w-9 h-9 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-1 overflow-hidden shrink-0">
                 <img src="" alt="Profile" class="w-full h-full object-cover">
             </div>
 
             <div class="flex-1 min-w-0">
-                <div class="font-semibold text-sm truncate" data-auth="name">Guest</div>
-                <div class="text-xs opacity-60 truncate" data-auth="email">Not signed in</div>
+                <div class="font-semibold text-sm truncate" data-auth="sidebar-name">Guest</div>
+                <div class="text-xs opacity-60 truncate" data-auth="sidebar-email">Not signed in</div>
             </div>
 
             {% if config.extra.theme is defined %}
@@ -293,7 +222,7 @@
         
         <div class="mt-2 flex gap-2">
             <a href="https://auth.dhanur.me" class="btn btn-primary btn-sm flex-1 hover:no-underline" data-auth="sidebar-login-btn">Sign In</a>
-            <a href="#" class="btn btn-ghost btn-sm flex-1 text-error hidden hover:no-underline" data-auth="sidebar-logout-btn">Sign Out</a>
+            <a href="#" class="btn btn-ghost btn-sm flex-1 text-error/80 hover:text-error hidden hover:no-underline" data-auth="sidebar-logout-btn">Sign Out</a>
             <a href="https://auth.dhanur.me" class="btn btn-ghost btn-sm flex-1 hidden hover:no-underline" data-auth="sidebar-account-btn">Account</a>
         </div>
     </div>

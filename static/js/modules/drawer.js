@@ -7,10 +7,14 @@ import { isMobile } from './responsive.js';
 const SIDEBAR_KEY = "sidebar-collapsed";
 const APPS_KEY = "apps_collapsed";
 
+function getDrawerCheckbox() {
+  return document.querySelector("[data-drawer-checkbox]") || document.getElementById("my-drawer-2");
+}
+
 export function initDrawer() {
   // --- Mobile drawer sync ---
   function syncDrawerOpenClass() {
-    const d = document.getElementById("my-drawer-2");
+    const d = getDrawerCheckbox();
     if (!d) return;
     const open = d.checked && isMobile();
     document.body.classList.toggle("drawer-mobile-open", open);
@@ -18,13 +22,13 @@ export function initDrawer() {
 
   window.addEventListener("pageshow", (e) => {
     if (e.persisted) {
-      const d = document.getElementById("my-drawer-2");
+      const d = getDrawerCheckbox();
       if (d) d.checked = false;
     }
     syncDrawerOpenClass();
   });
 
-  const d = document.getElementById("my-drawer-2");
+  const d = getDrawerCheckbox();
   if (d) {
     d.addEventListener("change", syncDrawerOpenClass);
     window.addEventListener("resize", syncDrawerOpenClass);
@@ -42,13 +46,13 @@ export function initDrawer() {
 }
 
 function initSidebarToggle() {
-  const toggleBtn = document.getElementById("sidebar-toggle");
+  const toggleBtn = document.querySelector("[data-sidebar-toggle]") || document.getElementById("sidebar-toggle");
   if (!toggleBtn) return;
 
   const drawer = toggleBtn.closest(".drawer");
   if (!drawer) return;
 
-  const tooltipWrap = document.getElementById("sidebar-toggle-wrapper");
+  const tooltipWrap = document.querySelector("[data-sidebar-toggle-wrapper]") || document.getElementById("sidebar-toggle-wrapper");
 
   const collapsedIcon = toggleBtn.querySelector(".sidebar-toggle-icon-collapsed");
   const expandedIcon = toggleBtn.querySelector(".sidebar-toggle-icon-expanded");
@@ -114,7 +118,8 @@ function resolveLocalPath(href) {
 }
 
 function initSidebarCurrentPage() {
-  const navRoot = document.querySelector("#sidebar [data-sidebar-nav]");
+  const sidebarRoot = document.querySelector("[data-sidebar-root]") || document.getElementById("sidebar");
+  const navRoot = sidebarRoot ? sidebarRoot.querySelector("[data-sidebar-nav]") : document.querySelector("#sidebar [data-sidebar-nav]");
   if (!navRoot) return;
 
   const currentPath = normalizePath(window.location.pathname);

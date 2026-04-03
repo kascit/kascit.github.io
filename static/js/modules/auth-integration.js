@@ -69,30 +69,80 @@ function hideCreditsUI(drawer) {
 export function initAuth(drawerElement = document) {
   injectAuthSDK(() => {
     if (typeof AUTH === "undefined" || !window.AUTH) return;
+
+    const navbarRoot = drawerElement.querySelector(".navbar");
+    const sidebarRoot = drawerElement.querySelector("[data-sidebar-root]") || drawerElement.querySelector("#sidebar");
+    const sidebarAccountRoot = drawerElement.querySelector("[data-sidebar-account]");
+
+    const pick = (...nodes) => nodes.find(Boolean) || null;
     
     const r = {
-      navGuestAvatar: drawerElement.querySelector('.navbar [data-dropdown="account"] .bg-base-300'),
-      navAuthedAvatar: drawerElement.querySelector('.navbar [data-dropdown="account"] .ring-primary'),
-      navAvatarImg: drawerElement.querySelector('.navbar [data-dropdown="account"] .ring-primary img'),
-      navAuthedHeader: drawerElement.querySelector('.navbar .dropdown-panel [data-auth="name"]')?.closest('.border-b'),
-      navGuestHeader: drawerElement.querySelector('.navbar .dropdown-panel .fa-user')?.closest('.border-b'),
-      navName: drawerElement.querySelector('.navbar [data-auth="name"]'),
-      navEmail: drawerElement.querySelector('.navbar [data-auth="email"]'),
-      navRole: drawerElement.querySelector('.navbar [data-auth="role"]'),
-      navLoginItem: drawerElement.querySelector('.navbar [data-auth="login-item"]'),
-      navAccountItem: drawerElement.querySelector('.navbar [data-auth="account-item"]'),
-      navUpgradeItem: drawerElement.querySelector('.navbar [data-auth="upgrade-item"]'),
-      navLogoutItem: drawerElement.querySelector('.navbar [data-auth="logout-item"]'),
+      navGuestAvatar: pick(
+        drawerElement.querySelector('[data-auth="nav-guest-avatar"]'),
+        navbarRoot?.querySelector('[data-dropdown="account"] .bg-base-300')
+      ),
+      navAuthedAvatar: pick(
+        drawerElement.querySelector('[data-auth="nav-authed-avatar"]'),
+        navbarRoot?.querySelector('[data-dropdown="account"] .ring-primary')
+      ),
+      navAvatarImg: pick(
+        drawerElement.querySelector('[data-auth="nav-authed-avatar"] img'),
+        navbarRoot?.querySelector('[data-dropdown="account"] .ring-primary img')
+      ),
+      navAuthedHeader: pick(
+        drawerElement.querySelector('[data-auth="nav-authed-header"]'),
+        navbarRoot?.querySelector('.dropdown-panel [data-auth="nav-name"]')?.closest('.border-b')
+      ),
+      navGuestHeader: pick(
+        drawerElement.querySelector('[data-auth="nav-guest-header"]'),
+        navbarRoot?.querySelector('.dropdown-panel .fa-user')?.closest('.border-b')
+      ),
+      navAuthedHeaderImg: drawerElement.querySelector('[data-auth="nav-authed-header-avatar"]'),
+      navName: pick(
+        drawerElement.querySelector('[data-auth="nav-name"]'),
+        navbarRoot?.querySelector('[data-auth="name"]')
+      ),
+      navEmail: pick(
+        drawerElement.querySelector('[data-auth="nav-email"]'),
+        navbarRoot?.querySelector('[data-auth="email"]')
+      ),
+      navRole: pick(
+        drawerElement.querySelector('[data-auth="nav-role"]'),
+        navbarRoot?.querySelector('[data-auth="role"]')
+      ),
+      navLoginItem: navbarRoot?.querySelector('[data-auth="login-item"]') || null,
+      navAccountItem: navbarRoot?.querySelector('[data-auth="account-item"]') || null,
+      navLogoutItem: navbarRoot?.querySelector('[data-auth="logout-item"]') || null,
       
-      sidebarGuestAvatar: drawerElement.querySelector('#sidebar [data-sidebar-account] .bg-base-300'),
-      sidebarAuthedAvatar: drawerElement.querySelector('#sidebar [data-sidebar-account] .ring-primary'),
-      sidebarAvatarImg: drawerElement.querySelector('#sidebar [data-sidebar-account] .ring-primary img'),
-      sidebarName: drawerElement.querySelector('#sidebar [data-sidebar-account] .font-semibold'),
-      sidebarEmail: drawerElement.querySelector('#sidebar [data-sidebar-account] .text-xs.opacity-60'),
-      sidebarLoginBtn: drawerElement.querySelector('#sidebar [data-auth="sidebar-login-btn"]'),
-      sidebarLogoutBtn: drawerElement.querySelector('#sidebar [data-auth="sidebar-logout-btn"]'),
-      sidebarAccountBtn: drawerElement.querySelector('#sidebar [data-auth="sidebar-account-btn"]')
+      sidebarGuestAvatar: pick(
+        drawerElement.querySelector('[data-auth="sidebar-guest-avatar"]'),
+        sidebarAccountRoot?.querySelector('.bg-base-300')
+      ),
+      sidebarAuthedAvatar: pick(
+        drawerElement.querySelector('[data-auth="sidebar-authed-avatar"]'),
+        sidebarAccountRoot?.querySelector('.ring-primary')
+      ),
+      sidebarAvatarImg: pick(
+        drawerElement.querySelector('[data-auth="sidebar-authed-avatar"] img'),
+        sidebarAccountRoot?.querySelector('.ring-primary img')
+      ),
+      sidebarName: pick(
+        drawerElement.querySelector('[data-auth="sidebar-name"]'),
+        sidebarAccountRoot?.querySelector('.font-semibold')
+      ),
+      sidebarEmail: pick(
+        drawerElement.querySelector('[data-auth="sidebar-email"]'),
+        sidebarAccountRoot?.querySelector('.text-xs.opacity-60')
+      ),
+      sidebarLoginBtn: sidebarRoot?.querySelector('[data-auth="sidebar-login-btn"]') || null,
+      sidebarLogoutBtn: sidebarRoot?.querySelector('[data-auth="sidebar-logout-btn"]') || null,
+      sidebarAccountBtn: sidebarRoot?.querySelector('[data-auth="sidebar-account-btn"]') || null
     };
+
+    const show = (...els) => els.forEach((el) => el?.classList.remove("hidden"));
+    const hide = (...els) => els.forEach((el) => el?.classList.add("hidden"));
+    const setText = (el, value) => { if (el) el.textContent = value; };
+    const setSrc = (el, value) => { if (el) el.src = value; };
 
     function updateUI(status) {
       if (!status) return;
@@ -102,59 +152,37 @@ export function initAuth(drawerElement = document) {
       const userName = user?.name || "User";
       
       if (authed && user) {
-        r.navGuestAvatar?.classList.add("hidden");
-        r.navAuthedAvatar?.classList.remove("hidden");
-        if (r.navAvatarImg) r.navAvatarImg.src = avatarUrl;
+        hide(r.navGuestAvatar, r.navGuestHeader, r.navLoginItem);
+        show(r.navAuthedAvatar, r.navAuthedHeader, r.navAccountItem, r.navLogoutItem);
+        setSrc(r.navAvatarImg, avatarUrl);
         
-        r.navAuthedHeader?.classList.remove("hidden");
-        r.navGuestHeader?.classList.add("hidden");
-        if (r.navAuthedHeader?.querySelector('img')) r.navAuthedHeader.querySelector('img').src = avatarUrl;
+        setSrc(r.navAuthedHeaderImg, avatarUrl);
         
-        if (r.navName) r.navName.textContent = userName;
-        if (r.navEmail) r.navEmail.textContent = user.email || "";
+        setText(r.navName, userName);
+        setText(r.navEmail, user.email || "");
         
         if (r.navRole) {
           const role = status.role || "user";
           r.navRole.textContent = role.toUpperCase();
           r.navRole.className = role === "admin" ? "badge badge-sm badge-error" : "badge badge-sm badge-success";
-          r.navRole.classList.remove("hidden");
-          r.navUpgradeItem?.classList.toggle("hidden", role === "admin");
+          show(r.navRole);
         }
-        
-        r.navLoginItem?.classList.add("hidden");
-        r.navAccountItem?.classList.remove("hidden");
-        r.navLogoutItem?.classList.remove("hidden");
 
-        r.sidebarGuestAvatar?.classList.add("hidden");
-        r.sidebarAuthedAvatar?.classList.remove("hidden");
-        if (r.sidebarAvatarImg) r.sidebarAvatarImg.src = avatarUrl;
-        if (r.sidebarName) r.sidebarName.textContent = userName;
-        if (r.sidebarEmail) r.sidebarEmail.textContent = user.email || "";
+        hide(r.sidebarGuestAvatar, r.sidebarLoginBtn);
+        show(r.sidebarAuthedAvatar, r.sidebarLogoutBtn, r.sidebarAccountBtn);
+        setSrc(r.sidebarAvatarImg, avatarUrl);
+        setText(r.sidebarName, userName);
+        setText(r.sidebarEmail, user.email || "");
         
-        r.sidebarLoginBtn?.classList.add("hidden");
-        r.sidebarLogoutBtn?.classList.remove("hidden");
-        r.sidebarAccountBtn?.classList.remove("hidden");
-
         updateCreditsUI(drawerElement, status.credits || null);
       } else {
-        r.navGuestAvatar?.classList.remove("hidden");
-        r.navAuthedAvatar?.classList.add("hidden");
-        r.navAuthedHeader?.classList.add("hidden");
-        r.navGuestHeader?.classList.remove("hidden");
-        r.navRole?.classList.add("hidden");
-        r.navLoginItem?.classList.remove("hidden");
-        r.navAccountItem?.classList.add("hidden");
-        r.navLogoutItem?.classList.add("hidden");
-        r.navUpgradeItem?.classList.add("hidden");
+        show(r.navGuestAvatar, r.navGuestHeader, r.navLoginItem);
+        hide(r.navAuthedAvatar, r.navAuthedHeader, r.navRole, r.navAccountItem, r.navLogoutItem);
 
-        r.sidebarGuestAvatar?.classList.remove("hidden");
-        r.sidebarAuthedAvatar?.classList.add("hidden");
-        if (r.sidebarName) r.sidebarName.textContent = "Guest";
-        if (r.sidebarEmail) r.sidebarEmail.textContent = "Not signed in";
-        
-        r.sidebarLoginBtn?.classList.remove("hidden");
-        r.sidebarLogoutBtn?.classList.add("hidden");
-        r.sidebarAccountBtn?.classList.add("hidden");
+        show(r.sidebarGuestAvatar, r.sidebarLoginBtn);
+        hide(r.sidebarAuthedAvatar, r.sidebarLogoutBtn, r.sidebarAccountBtn);
+        setText(r.sidebarName, "Guest");
+        setText(r.sidebarEmail, "Not signed in");
 
         hideCreditsUI(drawerElement);
       }
@@ -174,12 +202,16 @@ export function initAuth(drawerElement = document) {
     drawerElement.querySelectorAll('[data-auth="logout-btn"], [data-auth="sidebar-logout-btn"]').forEach(btn => {
       btn.addEventListener("click", e => {
         e.preventDefault();
-        if (AUTH.logout) AUTH.logout().then(() => window.location.reload());
+        if (AUTH.logout) {
+          AUTH.logout()
+            .then(() => window.location.reload())
+            .catch((error) => {
+              console.warn("[Auth] Logout failed:", error);
+              window.location.reload();
+            });
+        }
       });
     });
 
-    drawerElement.querySelectorAll('[data-auth="upgrade-btn"]').forEach(btn => {
-      btn.addEventListener("click", e => { e.preventDefault(); AUTH.upgrade && AUTH.upgrade(); });
-    });
   });
 }

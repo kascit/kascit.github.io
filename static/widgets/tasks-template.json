@@ -1,0 +1,21 @@
+{
+  "schema": "1.0",
+  "name": "Task Overview",
+  "description": "Placeholder adaptive card template for task widget",
+  "type": "AdaptiveCard",
+  "version": "1.4",
+  "body": [
+    {
+      "type": "TextBlock",
+      "text": "Task Overview",
+      "size": "Medium",
+      "weight": "Bolder"
+    },
+    {
+      "type": "TextBlock",
+      "text": "No live data configured.",
+      "wrap": true,
+      "isSubtle": true
+    }
+  ]
+}

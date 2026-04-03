@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Protocol Handler | Dhanur</title>
+  <style>
+    :root { color-scheme: dark; --bg:#0b1220; --text:#e5e7eb; --muted:#9ca3af; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      font-family: "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: radial-gradient(circle at top, #0f172a, var(--bg));
+      color: var(--text);
+      text-align: center;
+      padding: 2rem;
+    }
+    .spinner {
+      width: 2.1rem;
+      height: 2.1rem;
+      border: 3px solid rgba(255,255,255,0.15);
+      border-top-color: rgba(255,255,255,0.85);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    .title { margin: 0 0 .45rem; font-size: 1.12rem; font-weight: 700; }
+    .muted { margin: 0; color: var(--muted); }
+    .actions { margin-top: 1rem; }
+    a {
+      color: #93c5fd;
+      text-decoration: none;
+    }
+    a:hover { text-decoration: underline; }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="spinner" aria-hidden="true"></div>
+    <h1 class="title">Opening destination...</h1>
+    <p id="status" class="muted">Redirecting now.</p>
+    <div class="actions">
+      <a id="home-link" href="/">Go to homepage</a>
+    </div>
+  </main>
+
+  <script>
+    (function () {
+      var statusEl = document.getElementById("status");
+      var homeLinkEl = document.getElementById("home-link");
+
+      var routeMap = {
+        about: "/about/",
+        projects: "/projects/",
+        links: "/links/",
+        blog: "/blog/",
+        privacy: "/privacy/",
+        tos: "/tos/",
+        archive: "/archive/"
+      };
+
+      function safeInternal(url) {
+        try {
+          var parsed = new URL(url, location.origin);
+          if (parsed.origin !== location.origin) return "";
+          if (!/^\//.test(parsed.pathname)) return "";
+          return parsed.pathname + parsed.search + parsed.hash;
+        } catch (_e) {
+          return "";
+        }
+      }
+
+      function resolveProtocolTarget(raw) {
+        if (typeof raw !== "string" || !raw.trim()) return "/";
+        var input = raw.trim();
+
+        if (input.startsWith("web+dhanur:")) {
+          try {
+            var parsed = new URL(input);
+            var host = (parsed.hostname || "").toLowerCase();
+            var first = (parsed.pathname || "").split("/").filter(Boolean)[0] || "";
+            var token = host || first;
+            if (routeMap[token]) return routeMap[token];
+            if (parsed.searchParams.get("path")) {
+              var candidate = safeInternal(parsed.searchParams.get("path"));
+              if (candidate) return candidate;
+            }
+            return "/";
+          } catch (_e) {
+            return "/";
+          }
+        }
+
+        var asInternal = safeInternal(input);
+        return asInternal || "/";
+      }
+
+      function redirectToTarget(target) {
+        var destination = target || "/";
+        try {
+          location.replace(destination);
+        } catch (_e) {
+          location.href = destination;
+        }
+      }
+
+      var raw = new URL(location.href).searchParams.get("q") || "";
+      var decoded = raw;
+      try {
+        decoded = decodeURIComponent(raw);
+      } catch (_e) {
+        decoded = raw;
+      }
+
+      var target = resolveProtocolTarget(decoded);
+      homeLinkEl.href = "/";
+      statusEl.textContent = "Redirecting to " + target;
+
+      // Instant redirect for good UX.
+      redirectToTarget(target);
+
+      // Fallback: if navigation is blocked/interrupted, send user home.
+      window.setTimeout(function () {
+        statusEl.textContent = "Still here? Sending you to homepage...";
+        redirectToTarget("/");
+      }, 1400);
+    })();
+  </script>
+</body>
+</html>

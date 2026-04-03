@@ -1,0 +1,14 @@
+{% macro is_blog_post(page) %}
+{% if page is defined and page.path is defined and page.path is starting_with('/blog/') and not page.path is ending_with('/_index/') %}true{% else %}false{% endif %}
+{% endmacro %}
+
+{% macro json_escape(value='') %}
+{{ value
+  | default(value='')
+  | replace(from='\\', to='\\\\')
+  | replace(from='"', to='\\"')
+  | replace(from='\n', to=' ')
+  | replace(from='\r', to=' ')
+  | trim
+}}
+{% endmacro %}

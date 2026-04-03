@@ -16,11 +16,16 @@ import { initDropdowns } from './modules/dropdowns.js';
 
 window.__componentsJS = true;
 let _injected = false;
+let _activeShellController = null;
+let _shellAbortHandlersBound = false;
 
 const DEFAULT_SHELL_CONFIG = {
   shellPath: '/navbar/',
+  shellFetchTimeoutMs: 10000,
   noCss: false,
   favicon: true,
+  enablePwa: true,
+  swPath: '/sw.js',
   showNavbar: true,
   showMobileMenu: true,
   showLanguage: false,
@@ -48,6 +53,21 @@ function normalizePath(path) {
 
 function isSameOriginHost() {
   return window.location.origin === BASE_URL;
+}
+
+function maybeRegisterServiceWorker(config) {
+  if (config.enablePwa === false) return;
+  if (!("serviceWorker" in navigator) || !window.isSecureContext) return;
+
+  const swPath = typeof config.swPath === 'string' && config.swPath.trim() !== ''
+    ? config.swPath
+    : '/sw.js';
+
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register(swPath).catch(() => {
+      // Subdomains can opt out or provide their own /sw.js.
+    });
+  }, { once: true });
 }
 
 // Helpers to inject CSS and favicon assets into foreign documents.
@@ -151,10 +171,15 @@ function hydrate(shellRoot) {
   const config = getShellRuntimeConfig();
   const sameOrigin = isSameOriginHost();
 
-  // Only inject CSS/favicons if we are truly on a subdomain layout,
-  // not accidentally running on the main site
-  if (!sameOrigin) {
+  const hasMainStyles = !!document.querySelector('link[rel="stylesheet"][href*="/css/main.css"], link[data-shell-style="main"]');
+  const hasFaviconLinks = !!document.querySelector('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]');
+
+  // On subdomains always inject shared assets.
+  // On same-origin shell test pages, inject only if missing.
+  if (!sameOrigin || !hasMainStyles) {
     injectCSS(sameOrigin, config);
+  }
+  if (!sameOrigin || !hasFaviconLinks) {
     injectFavicons(sameOrigin, config);
   }
 
@@ -170,12 +195,29 @@ function resolveShellRoot(doc) {
   return doc.querySelector('.site-nav-shell') || doc.querySelector('.drawer');
 }
 
-function bootstrapShell() {
+function abortActiveShellFetch() {
+  if (_activeShellController) {
+    _activeShellController.abort();
+    _activeShellController = null;
+  }
+}
+
+function bindShellAbortHandlers() {
+  if (_shellAbortHandlersBound) return;
+  _shellAbortHandlersBound = true;
+
+  window.addEventListener('pagehide', abortActiveShellFetch, { once: true });
+  window.addEventListener('beforeunload', abortActiveShellFetch, { once: true });
+}
+
+async function bootstrapShell() {
   if (_injected) return;
   _injected = true;
 
   const config = getShellRuntimeConfig();
   if (config.showNavbar === false) return;
+
+  maybeRegisterServiceWorker(config);
 
   const sameOrigin = isSameOriginHost();
 
@@ -188,36 +230,55 @@ function bootstrapShell() {
     return;
   }
 
-  // We are on an external subdomain. Hide root content, fetch shell, inject content into slot.
-  const children = Array.from(document.body.children);
-  children.forEach(c => document.body.removeChild(c));
-
+  // We are on an external subdomain. Fetch shell first, then atomically move content.
   const shellUrl = `${BASE_URL}${normalizePath(config.shellPath)}`;
+  const timeoutMs = Number(config.shellFetchTimeoutMs) > 0
+    ? Number(config.shellFetchTimeoutMs)
+    : DEFAULT_SHELL_CONFIG.shellFetchTimeoutMs;
+  const controller = new AbortController();
+  let timedOut = false;
+  const timeoutId = window.setTimeout(() => {
+    timedOut = true;
+    controller.abort();
+  }, timeoutMs);
 
-  fetch(shellUrl)
-    .then(res => {
-      if (!res.ok) throw new Error("Failed to fetch layout shell");
-      return res.text();
-    })
-    .then(html => {
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
-      const shellRoot = resolveShellRoot(doc);
-      if (!shellRoot) throw new Error("Navbar shell root not found in fetched HTML");
+  _activeShellController = controller;
+  bindShellAbortHandlers();
 
-      const slot = shellRoot.querySelector(".site-nav-slot");
-      if (!slot) throw new Error("site-nav-slot missing in fetched navbar shell");
+  try {
+    const res = await fetch(shellUrl, { signal: controller.signal });
+    if (!res.ok) throw new Error("Failed to fetch layout shell");
 
-      children.forEach(node => slot.appendChild(node));
-      document.body.appendChild(shellRoot);
+    const html = await res.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    const shellRoot = resolveShellRoot(doc);
+    if (!shellRoot) throw new Error("Navbar shell root not found in fetched HTML");
 
-      hydrate(shellRoot);
-    })
-    .catch(err => {
-      console.error("[shell.js] Bootstrap Error:", err);
-      // Fallback
-      children.forEach(node => document.body.appendChild(node));
-    });
+    const slot = shellRoot.querySelector(".site-nav-slot");
+    if (!slot) throw new Error("site-nav-slot missing in fetched navbar shell");
+
+    const children = Array.from(document.body.children);
+    const fragment = document.createDocumentFragment();
+    children.forEach(node => fragment.appendChild(node));
+
+    slot.appendChild(fragment);
+    document.body.appendChild(shellRoot);
+    hydrate(shellRoot);
+  } catch (err) {
+    if (err && err.name === 'AbortError') {
+      if (timedOut) {
+        console.warn(`[shell.js] Bootstrap fetch timed out after ${timeoutMs}ms`);
+      }
+      return;
+    }
+    console.error("[shell.js] Bootstrap Error:", err);
+  } finally {
+    window.clearTimeout(timeoutId);
+    if (_activeShellController === controller) {
+      _activeShellController = null;
+    }
+  }
 }
 
 if (document.readyState === "loading") {

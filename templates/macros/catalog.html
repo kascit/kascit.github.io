@@ -4,13 +4,14 @@
 {% macro term_card(term) %}
 <article class="catalog-card group">
   <a href="{{ term.permalink | safe }}" class="catalog-card__link">
-    <div class="catalog-card__content">
+    <div class="catalog-card__head">
       <h2 class="catalog-card__title">{{ term.name }}</h2>
-      <p class="catalog-card__meta">
-        {{ term.pages | length }}
-        {% if term.pages | length == 1 %} document{% else %} documents{% endif %}
-      </p>
+      <span class="catalog-card__count">{{ term.pages | length }}</span>
     </div>
+    <p class="catalog-card__meta">
+          {{ term.pages | length }}
+          {% if term.pages | length == 1 %} post{% else %} posts{% endif %}
+    </p>
     <div class="catalog-card__row">
       <span class="catalog-card__action">View</span>
       {{ macros_icons::svg_arrow_right(class="catalog-card__chevron group-hover:translate-x-1") }}

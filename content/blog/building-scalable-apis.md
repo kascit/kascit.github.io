@@ -15,11 +15,7 @@ Let's be honest - Java gets a lot of hate. "Too verbose." "Boilerplate hell." "W
 
 Spring Boot fixed most of that. It's opinionated enough to get you started fast, but flexible enough to not box you in. Plus:
 
-- Auto-configuration that actually works
-- Embedded Tomcat (no more XML deployment nightmares)
-- Production-ready features out of the box
-- A massive ecosystem for literally everything
-- Great documentation (rare for Java)
+In practice, it gives you auto-configuration that is usually correct, embedded runtime defaults that eliminate old deployment friction, strong production features out of the box, and an ecosystem large enough that most problems already have a known pattern. The documentation is also unusually usable for a mature Java stack.
 
 Is it perfect? No. But it's solid, battle-tested, and won't randomly explode in production (unlike some frameworks I won't name).
 
@@ -295,11 +291,7 @@ public class User {
 
 ## Things I Wish Someone Told Me Earlier
 
-1. **Version your API from day one.** Adding `/v1/` later is painful.
-2. **Log everything important** (requests, errors, slow queries). Future you debugging at 3 AM will be grateful.
-3. **Write integration tests** for critical endpoints. Unit tests are great, but integration tests catch the real issues.
-4. **Document your API** with OpenAPI/Swagger. Consumers will actually use your API if they understand it.
-5. **Rate limit from the start.** Waiting until someone DoS's you is... not ideal.
+Version your API from day one, because retrofitting versioned routes later is usually painful. Log the events that matter, especially failures and slow paths, since production debugging depends on observability more than intuition. Write integration tests for critical flows, document behavior with OpenAPI, and add basic rate limiting early rather than waiting for abuse to force a rushed response.
 
 ## The Reality Check
 
@@ -307,20 +299,12 @@ Perfect APIs don't exist. You'll make tradeoffs. You'll ship bugs. You'll realiz
 
 That's fine. Ship something that works, iterate, and make it better. Just avoid the obvious pitfalls:
 
-- Exposing entities directly
-- No pagination
-- No validation
-- No error handling
-- SQL injection vulnerabilities
-- No logging
+Avoid exposing entities directly, skipping pagination, ignoring validation, shipping without consistent error handling, leaving query paths vulnerable, or operating blind without logs.
 
 Do those things right, and you're already ahead of 70% of APIs out there.
 
 ## Resources
 
-- [Spring Boot Docs](https://spring.io/projects/spring-boot) - Actually read them
-- [Baeldung](https://www.baeldung.com/) - Saved me countless times
-- Spring Boot source code - When docs fail, read the code
-- Random Stack Overflow answers at 2 AM
+The [Spring Boot docs](https://spring.io/projects/spring-boot) and [Baeldung](https://www.baeldung.com/) are still the fastest way to validate implementation details, and when either leaves ambiguity, reading the framework source directly tends to clear things up faster than guesswork.
 
 \- Dhanur

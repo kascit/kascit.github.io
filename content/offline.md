@@ -1,6 +1,6 @@
 +++
 title = "Offline"
-description = "No internet connection"
+description = "You appear to be offline. Reconnect to continue browsing the site."
 template = "offline.html"
 path = "offline"
 

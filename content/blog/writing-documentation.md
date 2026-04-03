@@ -1,327 +1,81 @@
 +++
 title = "The Art of Writing Technical Documentation That People Actually Read"
 date = 2026-03-12
-description = "How to write docs that don't suck, based on years of writing documentation nobody reads"
+description = "How to write docs that stay useful after launch, based on years of fixing stale and unread documentation"
 
 [taxonomies]
 tags = ["documentation", "writing", "technical", "communication", "best-practices"]
 categories = ["Development"]
+
+[extra]
+thumbnail_image = "images/whood-light.jpg"
 +++
 
-Let's be honest: most technical documentation is terrible. It's either too basic, too complex, or just plain wrong. I've written my share of awful docs, and after years of trial and error, I've figured out what actually works.
+Most documentation fails for a simple reason: it is written once, merged, and then abandoned while the product keeps changing. The first draft is usually good enough for the sprint demo, but not resilient enough for real users who arrive months later with different assumptions and different urgency.
 
-## Why Most Documentation Fails
+The second reason is perspective drift. Experts forget what is obvious only after years of context, so they accidentally skip setup steps, naming conventions, and error expectations that new readers need before they can even begin.
 
-### The "Write It and Forget It" Problem
-You write the docs during the sprint, merge the PR, and never touch them again. Six months later, they're completely wrong but still live.
+## Documentation As A System
 
-### The "Expert Blind Spot" Problem
-You know the system so well that you forget what it's like to be a beginner. You skip "obvious" steps that aren't obvious at all.
+I now treat documentation as a product surface with its own architecture. A useful doc set has an entry path, a problem-solving path, and a deep reference path. Quick starts get someone to a visible result fast, guides solve focused tasks, and reference sections remove ambiguity when implementation details matter.
 
-### The "Wall of Text" Problem
-You dump everything into a single README file with no structure, no examples, and no mercy for the reader.
+When these layers are mixed into one giant file, readers get lost. New users drown in details and experienced users waste time scrolling for exact parameters. Splitting by intent keeps docs readable even as the codebase grows.
 
-## The Documentation Pyramid
+## A Better API Doc Pattern
 
-Think of documentation like a pyramid:
+A weak API page says an endpoint exists and lists raw fields. A strong page shows how to call it, what success looks like, and how to handle failure without guesswork.
 
-```
-        Quick Start
-           ^
-    How-To Guides
-           ^
-     Reference Docs
-           ^
-  Background/Concepts
-```
-
-Each level serves a different purpose and audience.
-
-### Level 1: Quick Start (5 minutes)
-Goal: Get someone from zero to working example.
-
-**What to include:**
-- Prerequisites
-- One complete example
-- Expected output
-- Next steps
-
-**What to exclude:**
-- Detailed explanations
-- Edge cases
-- Alternative approaches
-
-### Level 2: How-To Guides (15 minutes)
-Goal: Solve specific problems step-by-step.
-
-**What to include:**
-- Clear problem statement
-- Step-by-step instructions
-- Code examples
-- Common pitfalls
-
-### Level 3: Reference Docs (lookup)
-Goal: Complete, accurate information about every feature.
-
-**What to include:**
-- All parameters and options
-- Return values and types
-- Error conditions
-- Version differences
-
-### Level 4: Background/Concepts (deep dive)
-Goal: Explain why things work the way they do.
-
-**What to include:**
-- Architecture overview
-- Design decisions
-- Historical context
-- Trade-offs made
-
-## Real Example: API Documentation
-
-### Before (The Bad Way)
-```markdown
-# User API
-
-## Create User
-POST /api/users
-
-Creates a user in the system.
-
-Parameters:
-- email: string
-- name: string  
-- password: string
-
-Returns: User object
-```
-
-### After (The Good Way)
-
-#### Quick Start
 ````markdown
 # Quick Start
 
-Create your first user in 30 seconds:
+Create a user in one request.
 
 ```bash
 curl -X POST https://api.example.com/users \
   -H "Content-Type: application/json" \
   -d '{
     "email": "user@example.com",
-    "name": "John Doe", 
+    "name": "John Doe",
     "password": "secure-password"
   }'
 ```
 
-Response:
-```json
-{
-  "id": "123",
-  "email": "user@example.com",
-  "name": "John Doe",
-  "created_at": "2024-01-01T00:00:00Z"
-}
-```
+Response includes `id`, `email`, `name`, and `created_at`.
 ````
 
-#### How-To Guide
-````markdown
-# How to Create Users with Different Roles
+After the quick path, add practical guides for role-based creation, migrations, and retries, then maintain strict reference tables for field-level behavior and error semantics.
 
-## Creating an Admin User
+## Write For Action, Not Performance
 
-```bash
-curl -X POST https://api.example.com/users \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_ADMIN_TOKEN" \
-  -d '{
-    "email": "admin@example.com",
-    "name": "Admin User",
-    "password": "admin-password",
-    "role": "admin"
-  }'
-```
+Readers open documentation because they want to do something specific. They are usually blocked, under time pressure, and willing to skim aggressively. That means prose should be direct and contextual, examples should use realistic data, and each section should make the next action obvious.
 
-## Creating a Regular User
-
-[Same as quick start]
-
-## Common Errors
-
-**400 Bad Request**: Check that all required fields are present.
-**401 Unauthorized**: You need admin privileges to create admin users.
-**409 Conflict**: Email already exists.
-````
-
-#### Reference Documentation
-```markdown
-# POST /api/users
-
-Creates a new user in the system.
-
-### Request Body
-
-| Field | Type | Required | Description |
-|-------|------|----------|-------------|
-| email | string | Yes | User's email address (must be unique) |
-| name | string | Yes | User's display name |
-| password | string | Yes | Password (min 8 characters) |
-| role | string | No | User role ("user" or "admin", defaults to "user") |
-
-### Response
-
-Returns a [User object](#user-object).
-
-### Errors
-
-| Status | Code | Description |
-|--------|------|-------------|
-| 400 | INVALID_EMAIL | Email format is invalid |
-| 400 | WEAK_PASSWORD | Password doesn't meet requirements |
-| 401 | UNAUTHORIZED | Missing or invalid authentication |
-| 409 | EMAIL_EXISTS | Email address already in use |
-```
-
-## Writing Techniques That Actually Work
-
-### 1. Start with the User's Goal
-Instead of "Here's what our API does," think "Here's how you solve your problem."
-
-### 2. Use Real Examples
-Don't use placeholder data like "foo" and "bar." Use realistic examples that users can copy-paste.
-
-### 3. Show, Don't Just Tell
-```markdown
-# Bad
-The API supports filtering by multiple fields.
-
-# Good
-Filter users by status and date:
-```bash
-GET /api/users?status=active&created_after=2024-01-01
-```
-
-Returns only active users created after January 1, 2024.
-```
-
-### 4. Include Error Handling
-Show users what happens when things go wrong:
+This is also why error handling belongs in examples. A perfect success-path snippet is less useful than a realistic snippet that shows how the call fails, how to classify the failure, and what to retry.
 
 ```javascript
-// Good example
 try {
   const user = await createUser(userData);
-  console.log('User created:', user);
+  console.log("User created", user.id);
 } catch (error) {
-  if (error.code === 'EMAIL_EXISTS') {
-    console.log('User already exists');
+  if (error.code === "EMAIL_EXISTS") {
+    console.log("User already exists");
   } else {
-    console.error('Unexpected error:', error);
+    console.error("Unexpected API failure", error);
   }
 }
 ```
 
-### 5. Keep It Updated
-Documentation that's wrong is worse than no documentation.
+## Keep Docs Alive
 
-**Automate where possible:**
-- Generate API docs from OpenAPI specs
-- Include code examples in tests
-- Set up linter checks for docstrings
+Documentation quality is mostly a maintenance discipline. The highest-leverage improvement is to update docs in the same pull request as behavior changes. If that is hard, it usually means docs are too entangled or too broad and need clearer boundaries.
 
-**Review regularly:**
-- Monthly doc review in team meetings
-- Update docs when features change
-- Remove deprecated information
+Automated generation helps for schemas and interfaces, but generated output is not a replacement for human guidance. Users still need narrative context, migration notes, caveats, and examples that map directly to real workflows.
 
-## Tools That Help
+## How I Judge Doc Quality
 
-### For API Docs
-- **Swagger/OpenAPI**: Generate interactive API docs
-- **Postman**: Shareable API collections
-- **ReadTheDocs**: Host documentation with versioning
+I look for whether a new teammate can get a feature running without help, whether support questions keep repeating despite published docs, and whether incident retrospectives reveal missing operational instructions. If docs are not reducing friction in those places, they are incomplete no matter how polished they look.
 
-### For Code Documentation
-- **JSDoc/TSDoc**: Standardized code comments
-- **Sphinx**: Python documentation generator
-- **Doxygen**: C++/Java documentation
-
-### For General Docs
-- **GitBook**: Book-style documentation
-- **Notion**: Collaborative docs with good UX
-- **Docusaurus**: React-based static site generator
-
-## Measuring Documentation Quality
-
-### Analytics
-- Which pages get the most visits?
-- Where do users spend the most time?
-- What search terms lead to docs?
-
-### User Feedback
-- "Was this helpful?" buttons
-- GitHub issues on documentation
-- Direct user interviews
-
-### Internal Metrics
-- How many support tickets could be prevented with better docs?
-- How quickly do new team members get up to speed?
-- How often are docs referenced in code reviews?
-
-## The Documentation Workflow
-
-### 1. Plan
-- Identify user personas
-- Map user journeys
-- Choose documentation types
-
-### 2. Write
-- Start with quick start
-- Add how-to guides
-- Fill in reference docs
-
-### 3. Review
-- Technical accuracy check
-- User experience review
-- Copy editing
-
-### 4. Maintain
-- Regular updates
-- Version control
-- Archive old versions
-
-## Common Pitfalls to Avoid
-
-### Don't Document Everything
-Not every function needs documentation. Focus on:
-- Public APIs
-- Complex workflows
-- Common use cases
-- Troubleshooting steps
-
-### Don't Assume Knowledge
-What's obvious to you might not be to others. Always include:
-- Prerequisites
-- Environment setup
-- Basic terminology
-
-### Don't Use Jargon
-Write for humans, not compilers. Replace technical terms with plain language when possible.
-
-### Don't Forget Non-Technical Users
-Remember that not everyone reading your docs is a developer. Include:
-- Business context
-- User stories
-- Success criteria
-
-## Conclusion
-
-Good documentation is an investment, not a cost. It reduces support tickets, speeds up onboarding, and makes your product more accessible.
-
-Start small, focus on your users' goals, and keep it updated. Your future self (and your users) will thank you.
+Good documentation is not decorative writing. It is operational infrastructure for people.
 
 ---
 
-*What's the best or worst documentation you've encountered? Share your stories in the comments!*
+If you have ever lost hours because the docs were wrong, you already understand why this matters.

@@ -6,8 +6,10 @@
 {# Priority: sidebar.* (new) > sidebar_expand_depth (legacy) #}
 {% if config.extra.sidebar is defined %}
     {% set sidebar_expand_depth = config.extra.sidebar.expand_depth | default(value=config.extra.sidebar_expand_depth | default(value=0)) | int %}
+    {% set sidebar_blog_preview_count = config.extra.sidebar.blog_preview_count | default(value=config.extra.sidebar_blog_preview_count | default(value=4)) | int %}
 {% else %}
     {% if config.extra.sidebar_expand_depth is defined %}{% set sidebar_expand_depth = config.extra.sidebar_expand_depth | int %}{% else %}{% set sidebar_expand_depth = 0 %}{% endif %}
+    {% if config.extra.sidebar_blog_preview_count is defined %}{% set sidebar_blog_preview_count = config.extra.sidebar_blog_preview_count | int %}{% else %}{% set sidebar_blog_preview_count = 4 %}{% endif %}
 {% endif %}
 {# Normalize current_path for comparison by removing language prefix #}
 {% if lang != config.default_language and current_path is starting_with("/" ~ lang ~ "/") %}
@@ -15,7 +17,7 @@
 {% else %}
     {% set normalized_current_path = current_path %}
 {% endif %}
-<div class="pt-4 w-68 h-[calc(100vh-4rem)] bg-[var(--color-sidebar)] border-e border-base-content/10 text-base-content flex flex-col overflow-x-hidden overflow-y-auto thin-scrollbar">
+<div class="pt-4 w-68 h-[calc(100vh-4rem)] bg-[var(--color-sidebar)] border-e border-base-content/10 text-base-content flex flex-col overflow-x-hidden overflow-y-auto lg:overflow-y-hidden thin-scrollbar">
     {% if config.build_search_index and not is_export %}
     <div class="px-2 pt-4 pb-0 flex flex-col items-center gap-2">
         <div class="w-full flex items-center gap-2">
@@ -47,20 +49,49 @@
                                 <a class="hover:no-underline" href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.extra.link_title | default(value=s1.title) }}</a>
                             </li>
                             {# Level 2 #}
-                                {% set is_blog_root = s1.path == "blog/_index.md" %}
+                                {% set is_blog_root = section_key == "blog" or s1.path is ending_with("/blog/") %}
                                 {% if is_blog_root %}
                                     {% set sorted_pages = s1.pages | sort(attribute="date") | reverse %}
-                                    {% set recent_pages = sorted_pages | slice(start=0, end=5) %}
-                                    {% for page in recent_pages %}
-                                        <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
-                                            <a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a>
-                                        </li>
+                                    {% set total_posts = sorted_pages | length %}
+                                    {% set_global current_idx = -1 %}
+                                    {% for blog_page in sorted_pages %}
+                                        {% if normalized_current_path == blog_page.path %}
+                                            {% set_global current_idx = loop.index0 %}
+                                        {% endif %}
                                     {% endfor %}
-                                    {% if sorted_pages | length > recent_pages | length %}
-                                        <li>
-                                            <a class="hover:no-underline font-medium text-primary" href="{{ get_url(path=s1.path, lang=lang) | safe }}">All posts →</a>
-                                        </li>
+
+                                    {% if current_idx >= 0 %}
+                                        {% set window_start = current_idx - 1 %}
+                                        {% if window_start < 0 %}{% set window_start = 0 %}{% endif %}
+                                        {% set window_end = current_idx + 2 %}
+                                        {% if window_end > total_posts %}{% set window_end = total_posts %}{% endif %}
+
+                                        {% if window_start > 0 %}
+                                            <li class="opacity-70 text-center text-base font-semibold tracking-[0.18em] px-2 py-1.5 select-none">...</li>
+                                        {% endif %}
+
+                                        {% for page in sorted_pages | slice(start=window_start, end=window_end) %}
+                                            <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
+                                                <a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a>
+                                            </li>
+                                        {% endfor %}
+
+                                        {% if window_end < total_posts %}
+                                            <li class="opacity-70 text-center text-base font-semibold tracking-[0.18em] px-2 py-1.5 select-none">...</li>
+                                        {% endif %}
+                                    {% else %}
+                                        {% for page in sorted_pages | slice(start=0, end=sidebar_blog_preview_count) %}
+                                            <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
+                                                <a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a>
+                                            </li>
+                                        {% endfor %}
+                                        {% if total_posts > sidebar_blog_preview_count %}
+                                            <li class="opacity-70 text-center text-base font-semibold tracking-[0.18em] px-2 py-1.5 select-none">...</li>
+                                        {% endif %}
                                     {% endif %}
+                                    <li>
+                                        <a class="hover:no-underline font-medium text-primary" href="{{ get_url(path="/archive/", lang=lang) | safe }}">Archive</a>
+                                    </li>
                                 {% else %}
                                     {% for page in s1.pages %}
                                         <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
@@ -152,9 +183,47 @@
                                     <a class="hover:no-underline" href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.title }}</a>
                                 </li>
                                 {# Level 2 #}
-                                {% for page in s1.pages %}
-                                    <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
-                                {% endfor %}
+                                {% if s1.path is ending_with("/blog/") %}
+                                    {% set sorted_pages = s1.pages | sort(attribute="date") | reverse %}
+                                    {% set total_posts = sorted_pages | length %}
+                                    {% set_global current_idx = -1 %}
+                                    {% for blog_page in sorted_pages %}
+                                        {% if normalized_current_path == blog_page.path %}
+                                            {% set_global current_idx = loop.index0 %}
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {% if current_idx >= 0 %}
+                                        {% set window_start = current_idx - 1 %}
+                                        {% if window_start < 0 %}{% set window_start = 0 %}{% endif %}
+                                        {% set window_end = current_idx + 2 %}
+                                        {% if window_end > total_posts %}{% set window_end = total_posts %}{% endif %}
+
+                                        {% if window_start > 0 %}
+                                            <li class="opacity-70 text-center text-base font-semibold tracking-[0.18em] px-2 py-1.5 select-none">...</li>
+                                        {% endif %}
+                                        {% for page in sorted_pages | slice(start=window_start, end=window_end) %}
+                                            <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
+                                        {% endfor %}
+                                        {% if window_end < total_posts %}
+                                            <li class="opacity-70 text-center text-base font-semibold tracking-[0.18em] px-2 py-1.5 select-none">...</li>
+                                        {% endif %}
+                                    {% else %}
+                                        {% for page in sorted_pages | slice(start=0, end=sidebar_blog_preview_count) %}
+                                            <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
+                                        {% endfor %}
+                                        {% if total_posts > sidebar_blog_preview_count %}
+                                            <li class="opacity-70 text-center text-base font-semibold tracking-[0.18em] px-2 py-1.5 select-none">...</li>
+                                        {% endif %}
+                                    {% endif %}
+                                    <li>
+                                        <a class="hover:no-underline font-medium text-primary" href="{{ get_url(path="/archive/", lang=lang) | safe }}">Archive</a>
+                                    </li>
+                                {% else %}
+                                    {% for page in s1.pages %}
+                                        <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
+                                    {% endfor %}
+                                {% endif %}
                             </ul>
                         </details>
                     {% else %}<a {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %} href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.title }}</a>{% endif %}
@@ -198,14 +267,14 @@
                 {% set disable_theme_toggle = config.extra.disable_theme_toggle | default(value=false) %}
             {% endif %}
             {% if not disable_theme_toggle %}
-            <div id="theme-toggle-mobile" class="theme-switcher flex rounded-lg bg-base-300/60 p-0.5 text-xs font-medium">
-                <button data-theme-mode="light" class="theme-switcher-btn rounded-md px-2 py-1 transition-all duration-200 cursor-pointer" aria-label="Light theme">
+            <div id="theme-toggle-mobile" class="theme-switcher bg-base-300/60 text-xs font-medium">
+                <button data-theme-mode="light" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer" aria-label="Light theme">
                     <i class="fa-solid fa-sun"></i>
                 </button>
-                <button data-theme-mode="dark" class="theme-switcher-btn rounded-md px-2 py-1 transition-all duration-200 cursor-pointer" aria-label="Dark theme">
+                <button data-theme-mode="dark" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer" aria-label="Dark theme">
                     <i class="fa-solid fa-moon"></i>
                 </button>
-                <button data-theme-mode="auto" class="theme-switcher-btn rounded-md px-2 py-1 transition-all duration-200 cursor-pointer" aria-label="Auto theme">
+                <button data-theme-mode="auto" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer" aria-label="Auto theme">
                     <i class="fa-solid fa-circle-half-stroke"></i>
                 </button>
             </div>

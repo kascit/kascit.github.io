@@ -11,6 +11,8 @@ enabled = false
 
 ## Featured Work
 
+This section highlights the projects that best represent how I think about engineering tradeoffs, delivery quality, and practical execution.
+
 <div class="not-prose grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12">
 
 {{ project_card(title="Face Rekognition", icon="fa-solid fa-microchip", description="IoT-powered automated attendance system using ESP32-CAM, AWS IoT Core, Lambda, and AWS Rekognition. Serverless architecture with face detection and real-time processing.", lang="C++ · Python", status="academic", techs="AWS IoT, Lambda, Rekognition, ESP32-CAM, DynamoDB", github_url="https://github.com/kascit/face-rekognition") }}
@@ -25,6 +27,8 @@ enabled = false
 
 ## Learning & Practice
 
+These repositories are where I deliberately practice fundamentals, test ideas, and sharpen instincts outside of production deadlines.
+
 <div class="not-prose grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
 
 {{ project_card(title="LeetCode Solutions", icon="fa-solid fa-bolt", description="A structured collection of algorithmic problem-solving approaches and optimizations.", lang="Java", github_url="https://github.com/kascit/leetcode-solutions", url="https://leetcode.com/u/kascit/", url_label="Profile", external=true) }}
@@ -37,6 +41,8 @@ enabled = false
 
 ## Experiments
 
+Experiments are smaller bets, usually built to explore a pattern, language feature, or workflow idea quickly.
+
 <div class="not-prose grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-12">
 
 {{ project_card(title="Tic-Tac-Toe", icon="fa-solid fa-gamepad", description="Because every developer has to build one eventually.", lang="JavaScript", status="archived", github_url="https://github.com/kascit/tic-tac-toe") }}
@@ -46,10 +52,8 @@ enabled = false
 {{ project_card(title="WalloWords", icon="fa-solid fa-spell-check", description="A word-based experiment actively in development.", lang="Coming Soon", status="wip", github_url="https://github.com/kascit/wallowords") }}
 
 </div>
-    
+
 <div class="not-prose mt-16 py-12 border-t border-base-content/10">
-    <p class="text-xl text-center md:text-3xl font-bold tracking-tight mb-8">Want to hack on something together?</p>
-    <div class="mt-4">
-        {{ link_card(url="/links", external=false, icon="fa-solid fa-envelope", title="Get in touch", description="Let's build something awesome", contrast=true) }}
-    </div>
+	<p class="text-xl text-center md:text-3xl font-bold tracking-tight mb-8">Want to hack on something together?</p>
+	{{ link_card(url="/links", external=false, icon="fa-solid fa-envelope", title="Get in Touch", description="Let's build something useful together.", contrast=true) }}
 </div>

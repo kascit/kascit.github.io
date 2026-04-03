@@ -19,7 +19,8 @@
 {% set global_enabled = config.extra.comments and config.extra.comments.enabled %}
 
 {% if global_enabled and show_comments %}
-<div id="comments" class="mt-12"
+<div id="comments-thread" class="mt-12"
+  data-comments-mount="true"
      data-repo="{{ config.extra.comments.repo | safe }}"
      data-repo-id="{{ config.extra.comments.repo_id | safe }}"
      data-category="{{ config.extra.comments.category | safe }}"

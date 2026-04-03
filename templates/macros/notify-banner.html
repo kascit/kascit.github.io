@@ -16,42 +16,40 @@
 {% endif %}
 
 {% if show_banner %}
-<div class="my-3">
-  <!-- Notification Banner -->
+<div class="notify-banner-wrap my-3 not-prose">
   <div
-    id="notify-banner"
-    class="alert border border-base-300 py-2 px-3 flex-wrap sm:flex-nowrap gap-2 rounded-md hidden"
+    class="notify-banner hidden"
+    data-notify-banner
+    role="region"
+    aria-live="polite"
+    aria-label="Post notifications"
   >
-    <i class="fa fa-bell text-base"></i>
-    <div class="flex-1 min-w-0">
-      <div class="font-medium text-sm">Get notified about new posts</div>
-      <div class="text-xs opacity-60 mt-0.5">
-        Stay updated when I publish new content
-      </div>
+    <div class="notify-banner__icon" aria-hidden="true">
+      <i class="fa-solid fa-bell"></i>
     </div>
-    <div class="flex gap-2 w-full sm:w-auto">
-      <button
-        class="btn btn-ghost btn-sm flex-1 sm:flex-none rounded-md"
-        id="notify-dismiss"
-      >
+    <div class="notify-banner__body">
+      <p class="notify-banner__title">Get notified about new posts</p>
+      <p class="notify-banner__text">Stay updated when I publish new content.</p>
+    </div>
+    <div class="notify-banner__actions">
+      <button class="notify-banner__btn" type="button" data-notify-dismiss>
         Dismiss
       </button>
-      <button
-        class="btn btn-primary btn-sm flex-1 sm:flex-none rounded-md"
-        id="notify-enable"
-      >
+      <button class="notify-banner__btn notify-banner__btn--primary" type="button" data-notify-enable>
         Enable
       </button>
     </div>
   </div>
 
-  <!-- Toast Container -->
   <div
-    id="notify-toast"
-    class="toast toast-bottom toast-end z-50 hidden"
+    class="notify-toast hidden"
+    data-notify-toast
+    role="status"
+    aria-live="polite"
+    aria-atomic="true"
   >
-    <div class="alert shadow-lg">
-      <span id="notify-toast-message" class="text-sm"></span>
+    <div class="notify-toast__content notify-toast__content--info" data-notify-toast-alert>
+      <span class="notify-toast__message" data-notify-toast-message></span>
     </div>
   </div>
 </div>

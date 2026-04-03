@@ -93,20 +93,30 @@
   }
 
   p {
-    @apply my-6 text-base-content/85;
+    @apply my-5 text-base-content/85;
     line-height: 1.8;
+  }
+
+  #blog-layout main.prose {
+    font-size: clamp(1rem, 0.95rem + 0.16vw, 1.07rem);
+    line-height: 1.75;
+  }
+
+  #blog-layout main.prose > p {
+    margin-top: 1.2rem;
+    margin-bottom: 1.2rem;
   }
 
   /* Prose lists: disc/decimal, comfortable leading (Medium/GitHub). Scoped so .card / .menu lists stay custom. */
   main.prose > ul,
   main .prose ul {
-    @apply list-disc mb-6 pl-6;
+    @apply list-disc mb-5 pl-5 sm:pl-6;
     list-style-position: outside;
   }
 
   main.prose > ul li,
   main .prose ul li {
-    @apply mb-2 pl-1 text-base text-base-content/90;
+    @apply mb-1.5 pl-1 text-base text-base-content/90;
     line-height: 1.65;
   }
 
@@ -122,13 +132,13 @@
 
   main.prose > ol,
   main .prose ol {
-    @apply list-decimal mb-6 pl-6;
+    @apply list-decimal mb-5 pl-5 sm:pl-6;
     list-style-position: outside;
   }
 
   main.prose > ol li,
   main .prose ol li {
-    @apply mb-2 pl-1 text-base text-base-content/90;
+    @apply mb-1.5 pl-1 text-base text-base-content/90;
     line-height: 1.65;
   }
 

@@ -4,6 +4,15 @@
   var script = document.currentScript;
   var cookieDomain = script.getAttribute('data-cookie-domain') || '';
   var defaultColorset = script.getAttribute('data-default-colorset') || 'dark';
+  var SIDEBAR_KEY = 'sidebar-collapsed';
+
+  function getStorageFlag(key) {
+    try {
+      return window.localStorage.getItem(key) === '1';
+    } catch (_) {
+      return false;
+    }
+  }
 
   // Cookie helpers — shared with all theme scripts via window globals
   // Scoped to .<cookieDomain> so all subdomains share the theme
@@ -40,4 +49,10 @@
     document.documentElement.classList.add('light');
     document.documentElement.style.colorScheme = 'light';
   }
+
+  // Prepaint UI state hydration: prevents first-frame sidebar/TOC flicker on navigation.
+  document.documentElement.setAttribute(
+    'data-sidebar-collapsed',
+    getStorageFlag(SIDEBAR_KEY) ? '1' : '0'
+  );
 })();

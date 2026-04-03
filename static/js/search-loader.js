@@ -269,7 +269,7 @@
       searchIndexScript.src = indexSrc;
       searchIndexScript.onload = function () {
         if (searchInput) {
-          searchInput.placeholder = "Search documentation...";
+          searchInput.placeholder = "Search posts...";
           searchInput.disabled = false;
           searchInput.focus();
         }

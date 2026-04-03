@@ -12,7 +12,7 @@ version = "v1.0"
 [extra.hero]
 title = "Hey, I'm Dhanur"
 # badge = "Tinkerer"
-description = "This is where I dump my brain on the internet. By day, I wrangle backend services and convince servers to behave. By night, I break my Arch setup and frantically Google how to fix it (again). Sometimes I write code that works. Sometimes I write blog posts about why it didn't."
+description = "This is my public notebook for backend engineering, systems design, and the occasional operational war story. By day I build services and infrastructure, and by night I write about what worked, what failed, and what I learned while fixing both."
 image = "/images/whood.png"
 # Optional: use different hero images per theme
 image_dark = "/images/whood.png"
@@ -28,7 +28,7 @@ cta_buttons = [
 # -----------------------------------------------------------------------------
 [extra.features_section]
 title = "What I Actually Do"
-description = "When I'm not Googling error messages or arguing with Docker, here's where I spend my time:"
+description = "Most of my time goes into backend systems, cloud operations, and practical engineering work that survives production traffic."
 
 [[extra.features_section.features]]
 title = "Backend Shenanigans"
@@ -57,7 +57,7 @@ icon = "fa-solid fa-diagram-project"
 
 [[extra.features_section.features]]
 title = "Blog Procrastination"
-desc = "Writing about the stuff I break and occasionally fix. Think of it as documentation, but with more memes and self-deprecating humor. Warning: contains traces of actual technical content."
+desc = "Writing about the stuff I break and occasionally fix. Think of it as blog posts, but with more memes and self-deprecating humor. Warning: contains traces of actual technical content."
 icon = "fa-solid fa-pen-nib"
 
 # -----------------------------------------------------------------------------

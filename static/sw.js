@@ -1,6 +1,6 @@
 // Service Worker with smart caching strategy
 // Cache versioning: Update CACHE_VERSION when assets change
-const CACHE_VERSION = "v7";
+const CACHE_VERSION = "v9";
 const CACHE_NAME = `kascit-${CACHE_VERSION}`;
 const META_CACHE = `kascit-meta-${CACHE_VERSION}`;
 
@@ -17,8 +17,20 @@ const CRITICAL_ASSETS = [
   // Assets needed for offline page to render properly
   "/css/main.css",
   "/css/font-awesome.min.css",
-  "/js/app.js",
-  "/js/theme-init.js",
+  "/js/main.js",
+  "/js/offline-reload.js",
+  "/js/modules/config.js",
+  "/js/modules/responsive.js",
+  "/js/modules/theme-engine.js",
+  "/js/modules/auth-integration.js",
+  "/js/modules/dropdowns.js",
+  "/js/modules/drawer.js",
+  "/js/modules/clipboard.js",
+  "/js/modules/shortcuts.js",
+  "/js/modules/scroll-top.js",
+  "/js/modules/lazy-plugins.js",
+  "/js/modules/service-worker.js",
+  "/js/modules/comments.js",
   "/fonts/Pretendard-Regular.woff",
   "/webfonts/fa-solid-900.woff2",
   "/webfonts/fa-brands-400.woff2",
@@ -40,7 +52,13 @@ const CACHEABLE_PATTERNS = [
 ];
 
 // Assets to never cache
-const DO_NOT_CACHE = [/\.map$/, /analytics/, /giscus/];
+const DO_NOT_CACHE = [
+  /\.map$/,
+  /analytics/,
+  /giscus/,
+  /^\/sw\.js$/,
+  /^\/js\/notify-banner\.js$/,
+];
 
 // Service Worker Install Event
 self.addEventListener("install", (event) => {

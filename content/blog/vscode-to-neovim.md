@@ -12,24 +12,13 @@ Let me start by saying this: I still love VS Code. It's an amazing editor that p
 
 ## The Breaking Point
 
-It wasn't one single thing. It was death by a thousand papercuts:
-
-- Extensions slowing down startup
-- Memory usage creeping up to 2GB+ 
-- The constant context switching between mouse and keyboard
-- Feeling like I was "fighting" the editor instead of flowing with it
+It was not one dramatic failure. It was a steady accumulation of friction: slower startup as extensions grew, memory usage creeping upward, constant mouse-keyboard context switching, and a persistent feeling that I was managing the editor more than writing code.
 
 ## The First Week (aka: Why I Almost Gave Up)
 
 If you're thinking about switching to Neovim, prepare yourself. The first week is brutal.
 
-**Day 1:** I couldn't even save a file without googling.
-**Day 2:** Spent 30 minutes trying to exit a file. (Yes, really.)
-**Day 3:** Almost went back to VS Code. Twice.
-**Day 4:** Finally understood hjkl movement.
-**Day 5:** Configured basic Lua settings.
-**Day 6:** Actually felt productive for 5 minutes.
-**Day 7:** Started to see the light.
+The first few days were chaotic. I had to relearn basic movement and command patterns, repeatedly hit frustration walls, and nearly switched back more than once. Around the end of the first week, core motions and configuration started to click, and productivity finally became plausible instead of theoretical.
 
 ## What Makes It Worth It
 
@@ -46,6 +35,8 @@ My editor works exactly how I want it to. No compromises.
 
 ### 4. The "Flow State"
 This is hard to explain, but there's something about staying in the terminal that keeps me in a deeper state of concentration.
+
+Taken together, those four shifts changed how coding sessions feel: less interruption, faster iteration, and a setup that behaves like a toolbelt rather than a platform to tame.
 
 ## My Current Setup
 
@@ -66,23 +57,15 @@ After 2+ months of tweaking, here's what works for me:
 - **LSP** for language server support
 - **nvim-cmp** for autocompletion
 
+The exact plugins matter less than the principle: pick a minimal core, make it dependable, and avoid piling on extras before the base workflow is stable.
+
 ## What I Still Miss
 
-- **GitLens** blame annotations
-- **Live Share** for pair programming
-- **Some marketplace extensions** that don't have Neovim equivalents
+I still miss a few VS Code conveniences, especially rich GitLens context, Live Share collaboration, and niche marketplace extensions with no direct Neovim replacement.
 
 ## Should You Switch?
 
-**Don't switch if:**
-- You're happy with your current editor
-- You don't want to spend weeks learning
-- You rely heavily on GUI-based tools
-
-**Consider switching if:**
-- You spend most of your day in the terminal
-- You want to optimize every aspect of your workflow
-- You enjoy tweaking and customizing your tools
+You should not switch just for aesthetics. If your current editor already supports your workflow and you do not want to invest learning time, there is no strong reason to move. But if you are terminal-first, enjoy deep tooling control, and are willing to absorb short-term pain for long-term speed, Neovim can be a meaningful upgrade.
 
 ## Final Thoughts
 

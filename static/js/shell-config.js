@@ -1,10 +1,12 @@
 window.SiteNavConfig = {
-  // Navigation
-  nav: [],
-  sidebarNav: [],
+  // Design-language shell defaults
+  shellPath: "/navbar/",
+  favicon: true,
 
-  // Chrome
-  showSearch: false,
+  // Top navbar chrome
+  showMobileMenu: true,
+  showLanguage: false,
   showAppsGrid: true,
-  showThemeToggle: true,
+  showAccountButton: true,
+  showThemeToggle: false,
 };

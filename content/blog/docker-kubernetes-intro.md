@@ -20,19 +20,7 @@ Spoiler: It mostly works, but you'll still spend hours debugging networking issu
 
 Real talk - containers changed the game:
 
-**The Promise:**
-
-- "Works on my machine" ✅ Actually works elsewhere too
-- No more dependency hell
-- Consistent environments from dev to prod
-- Spin up services in seconds
-
-**The Reality:**
-
-- YAML hell instead of dependency hell
-- "Why is this container using 4GB of RAM?"
-- Port conflicts. So many port conflicts.
-- Volume mounts that make no sense
+The promise is straightforward: builds become reproducible, dependencies stop drifting across machines, and environments stay consistent from local to production. The reality is still better than the old world, but it introduces new pain points around YAML sprawl, memory surprises, port conflicts, and confusing volume behavior.
 
 But honestly? Still worth it.
 
@@ -89,7 +77,7 @@ docker run -d \
 
 ### Docker Tips That'll Save Your Life
 
-**1. Use `.dockerignore`**
+Use `.dockerignore` aggressively so large folders and local-only artifacts never make it into image context.
 
 ```
 node_modules/
@@ -100,7 +88,7 @@ node_modules/
 
 Your images will be 10x smaller. You're welcome.
 
-**2. Multi-stage builds for compiled languages:**
+For compiled languages, multi-stage builds drastically cut runtime image size and reduce attack surface.
 
 ```dockerfile
 # Build stage
@@ -117,7 +105,7 @@ CMD ["/main"]
 
 Went from 800MB to 20MB. Feel that dopamine hit.
 
-**3. Actually use health checks:**
+Always add health checks so orchestration can make better restart and routing decisions.
 
 ```dockerfile
 HEALTHCHECK --interval=30s --timeout=3s \
@@ -188,18 +176,7 @@ It's a container orchestrator. Fancy words for: "Deploy your Docker containers a
 
 **K8s manages:**
 
-- Scaling (add more containers automatically)
-- Self-healing (container crashed? Restart it)
-- Load balancing (distribute traffic)
-- Rolling updates (deploy without downtime)
-- Service discovery (containers finding each other)
-
-**You manage:**
-
-- Your sanity (good luck)
-- Infinite YAML files
-- A growing hatred of networking
-- Your kubectl muscle memory
+Kubernetes handles scaling, self-healing, rollout orchestration, load balancing, and service discovery. What it does not remove is operational complexity, which means you still own configuration discipline, networking clarity, and the debugging burden when cluster behavior differs from expectations.
 
 ### Baby's First K8s Deployment
 
@@ -278,11 +255,7 @@ kubectl logs -f <pod-name>  # When things inevitably break
 
 ## Resources That Helped Me Not Quit
 
-- [Docker Docs](https://docs.docker.com/) - Actually pretty good
-- [Kubernetes Docs](https://kubernetes.io/docs/) - Overwhelming but comprehensive
-- [DevOps Twitter](https://twitter.com/) - Memes and troubleshooting
-- Random YouTube tutorials at 3 AM
-- Stack Overflow (obviously)
+The [Docker docs](https://docs.docker.com/) and [Kubernetes docs](https://kubernetes.io/docs/) are still the best primary references, and community resources like conference talks, issue threads, and practical troubleshooting posts are usually what bridge the gap between theory and production reality.
 
 ## Final Thoughts
 

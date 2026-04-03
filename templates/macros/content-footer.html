@@ -1,12 +1,12 @@
 {% macro content_footer(config, item) %} 
 <div class="mt-8 pt-6 border-t border-base-content/10">
-  <div class="flex flex-wrap items-center gap-3">
+  <div class="post-actions__row">
     {% if config.extra.edit_url and item.path is starting_with("/blog/") %}
     <a
       href="{{ config.extra.edit_url }}/content/{{ item.relative_path }}"
       target="_blank"
       rel="noopener noreferrer"
-      class="inline-flex items-center gap-2 text-xs font-medium px-3.5 py-2 rounded-sm border border-base-content/15 text-base-content/70 hover:border-base-content/30 hover:text-base-content hover:bg-base-200/50 transition-colors duration-200 shadow-sm no-underline tooltip tooltip-bottom"
+      class="post-action-btn tooltip tooltip-bottom"
       data-tip="Fork & PR"
     >
       <svg
@@ -37,21 +37,10 @@
     {% if enable_copy_url %}
     <button
       data-copy-url
-      class="inline-flex items-center gap-2 text-xs font-medium px-3.5 py-2 rounded-sm border border-base-content/15 text-base-content/70 hover:border-success/40 hover:text-success hover:bg-success/5 transition-colors duration-200 shadow-sm cursor-pointer"
+      class="post-action-btn post-action-btn--copy cursor-pointer"
+      data-copy-feedback="Copied"
     >
-      <svg
-        class="w-3.5 h-3.5"
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"
-        ></path>
-      </svg>
+      <i class="fa-solid fa-link post-action-btn__icon" aria-hidden="true"></i>
       <span>Copy URL</span>
     </button>
     {% endif %} 
@@ -61,7 +50,7 @@
       href="https://twitter.com/intent/tweet?url={{ item.permalink | urlencode }}&text={{ item.title | urlencode }}"
       target="_blank"
       rel="noopener noreferrer"
-      class="inline-flex items-center gap-2 text-xs font-medium px-3.5 py-2 rounded-sm border border-base-content/15 text-base-content/70 hover:border-blue-500/40 hover:text-blue-500 hover:bg-blue-500/5 transition-colors duration-200 shadow-sm no-underline"
+      class="post-action-btn post-action-btn--share"
     >
       <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
         <path

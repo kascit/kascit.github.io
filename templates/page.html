@@ -5,6 +5,7 @@
 {% import "macros/icons.html" as macros_icons %}
 {% import "macros/article_meta.html" as macros_article_meta %}
 {% import "macros/nav.html" as macros_nav %}
+{% import "macros/taxonomy_chips.html" as taxonomy_chips %}
 
 {% block header %}
     {{ macros_header::header(config=config, lang=lang, page=page) }}
@@ -40,8 +41,8 @@
     "@type": "WebPage",
     "@id": "{{ page.permalink | safe }}"
   },
-  "url": "{{ page.permalink | safe }}",{% if page.extra.image or config.extra.default_thumbnail %}
-  "image": "{{ get_url(path=page.extra.image | default(value=config.extra.default_thumbnail)) | safe }}",{% endif %}{% if page.taxonomies.tags %}
+    "url": "{{ page.permalink | safe }}",{% set schema_thumb = page.extra.thumbnail_image | default(value=page.extra.thumbnail | default(value=page.extra.image | default(value=config.extra.default_thumbnail | default(value="")))) %}{% if schema_thumb != "" %}
+    "image": "{% if schema_thumb is starting_with("http://") or schema_thumb is starting_with("https://") %}{{ schema_thumb | safe }}{% else %}{{ get_url(path=schema_thumb) | safe }}{% endif %}",{% endif %}{% if page.taxonomies.tags %}
   "keywords": "{{ page.taxonomies.tags | join(sep=', ') }}",{% endif %}
   "articleSection": "{{ page.taxonomies.categories | default(value=['Blog']) | first }}",
   "inLanguage": "{{ lang | default(value='en') }}",
@@ -53,47 +54,76 @@
 {% endblock extra_head %}
 
 {% block content %}
-<div class="mb-10 lg:mb-12 pb-6 border-b border-base-content/10">
-    <div class="mb-4 flex flex-wrap gap-2 text-sm font-semibold text-base-content/70 items-center">
-        {% if page.taxonomies.tags %}
-        <div class="flex items-center gap-2 mr-3">
-            <i class="fa-solid fa-tag text-xs opacity-50"></i>
-            {% for tag in page.taxonomies.tags %}
-            <a href="{{ get_taxonomy_url(kind="tags", name=tag) | safe }}" class="hover:text-primary transition-colors">{{ tag }}</a>{% if not loop.last %}<span class="opacity-30">,</span>{% endif %}
-            {% endfor %}
-        </div>
-        {% endif %}
-        
-        {% if page.reading_time %}
-        <div class="flex items-center gap-2 mr-3">
-            <i class="fa-regular fa-clock text-xs opacity-50"></i>
-            <span>{{ page.reading_time }} min read</span>
-        </div>
-        {% endif %}
-        
-        {% if page.date %}
-        <div class="flex items-center gap-2">
-            <i class="fa-regular fa-calendar text-xs opacity-50"></i>
-            <time datetime="{{ page.date }}">{{ page.date | date(format="%B %e, %Y") }}</time>
-        </div>
-        {% endif %}
-    </div>
-    
-    <div class="flex flex-row items-center justify-between gap-4">
-        <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-base-content m-0 flex items-center gap-3">
+<div class="mb-8 lg:mb-10 pb-6 border-b border-base-content/10">
+    <div class="flex flex-col gap-3">
+        <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-base-content m-0 flex items-center gap-3 flex-wrap">
             {{ page.title }}
             {% if page.extra.badge %}
             <span class="text-xs font-semibold px-2 py-0.5 uppercase tracking-wide border border-base-content/20 rounded-sm bg-base-200/50">{{ page.extra.badge }}</span>
             {% endif %}
         </h1>
+
+        {% if page.description %}
+        <p class="text-base sm:text-lg text-base-content/70 m-0 leading-relaxed">
+            {{ page.description }}
+        </p>
+        {% endif %}
+
+        <div class="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm font-medium text-base-content/62 min-w-0">
+            {% if page.reading_time %}
+            <div class="flex items-center gap-2">
+                <i class="fa-regular fa-clock text-xs opacity-60"></i>
+                <span>{{ page.reading_time }} min read</span>
+            </div>
+            {% endif %}
+
+            {% if page.word_count %}
+            <div class="flex items-center gap-2">
+                <i class="fa-regular fa-file-lines text-xs opacity-60"></i>
+                <span>{{ page.word_count }} words</span>
+            </div>
+            {% endif %}
+
+            {% if page.date %}
+            <div class="flex items-center gap-2">
+                <i class="fa-regular fa-calendar text-xs opacity-60"></i>
+                <time datetime="{{ page.date }}">{{ page.date | date(format="%B %e, %Y") }}</time>
+            </div>
+            {% endif %}
+        </div>
+
+        {% if page.taxonomies and (page.taxonomies.categories or page.taxonomies.tags) %}
+        <div class="mt-1 flex flex-wrap items-center gap-1.5 sm:gap-2 min-w-0">
+            {% if page.taxonomies.categories %}
+                {% for cat in page.taxonomies.categories %}
+                {{ taxonomy_chips::category_link(name=cat) }}
+                {% endfor %}
+            {% endif %}
+            {% if page.taxonomies.tags %}
+                {% for tag in page.taxonomies.tags %}
+                {{ taxonomy_chips::tag_link(name=tag) }}
+                {% endfor %}
+            {% endif %}
+        </div>
+        {% endif %}
     </div>
-    
-    {% if page.description %}
-    <p class="text-base sm:text-lg text-base-content/70 m-0 mt-4 leading-relaxed">
-        {{ page.description }}
-    </p>
-    {% endif %}
 </div>
+
+{% set post_thumbnail = page.extra.thumbnail_image | default(value=page.extra.thumbnail | default(value=page.extra.image | default(value=""))) %}
+{% if post_thumbnail != "" %}
+    {% if post_thumbnail is starting_with("http://") or post_thumbnail is starting_with("https://") %}
+        {% set post_thumbnail_url = post_thumbnail %}
+    {% else %}
+        {% set post_thumbnail_url = get_url(path=post_thumbnail) | safe %}
+    {% endif %}
+<div class="not-prose mb-8 md:mb-10 overflow-hidden rounded-2xl border border-base-content/10 bg-base-200/30 shadow-sm post-hero-thumb aspect-video">
+    <img src="{{ post_thumbnail_url | safe }}"
+         alt="{{ page.extra.thumbnail_alt | default(value=page.title) }}"
+         class="w-full h-full object-cover"
+         loading="eager"
+         decoding="async" />
+</div>
+{% endif %}
     
     {{ macros_notify_banner::notify_banner(config=config, page=page) }}
     

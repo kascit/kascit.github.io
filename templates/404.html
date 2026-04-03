@@ -3,6 +3,7 @@
 {% import "macros/footer.html" as macros_footer %}
 {% import "macros/sidebar.html" as macros_sidebar %}
 {% import "macros/drawer.html" as macros_drawer %}
+{% import "macros/cookie_consent.html" as macros_cookie_consent %}
 
 {% set not_found_title = "404" %}
 {% set not_found_desc = "Page not found" %}
@@ -42,16 +43,24 @@
         </div>
     </div>
 
+    {{ macros_cookie_consent::banner() }}
+
     {% if config.extra.theme is defined %}
         {% set js_theme_colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) %}
     {% else %}
         {% set js_theme_colorset = config.extra.default_colorset | default(value='dark') %}
     {% endif %}
-    <script defer src="{{ get_url(path='js/bundle.js') | safe }}"
-            data-default-colorset="{{ js_theme_colorset }}"
-            data-katex-css="{{ get_url(path='css/katex.min.css') | safe }}"
-            data-katex-js="{{ get_url(path='js/katex.min.js') | safe }}"
-            data-mermaid-js="{{ get_url(path='js/mermaid.min.js') | safe }}"
-            data-sw-path="{{ get_url(path='sw.js') | safe }}"></script>
+    <script id="site-config" type="application/json">
+    {
+        "defaultColorset": "{{ js_theme_colorset }}",
+        "katexCss": "{{ get_url(path='css/katex.min.css') | safe }}",
+        "katexJs": "{{ get_url(path='js/katex.min.js') | safe }}",
+        "mermaidJs": "{{ get_url(path='js/mermaid.min.js') | safe }}",
+        "swPath": "{{ get_url(path='sw.js') | safe }}",
+        "gtagId": "{{ config.extra.gtag | default(value='') }}",
+        "sentryScriptUrl": "https://js-de.sentry-cdn.com/76f095eb3818528a530b2347e1735e14.min.js"
+    }
+    </script>
+    <script type="module" src="{{ get_url(path='js/main.js') | safe }}"></script>
 </body>
 </html>

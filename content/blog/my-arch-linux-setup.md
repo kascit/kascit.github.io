@@ -16,20 +16,7 @@ But seriously, after a year of daily-driving Arch for development, I've got opin
 
 Look past the memes and superiority complex, and there are legit reasons:
 
-**The Good:**
-
-- Rolling release = always bleeding-edge packages (until something breaks)
-- AUR = literally any software exists here
-- Minimal base = you only install what you need
-- Forces you to actually understand your system
-- Did I mention I can say "I use Arch btw"?
-
-**The Bad:**
-
-- Updates can and will break things at the worst possible time
-- You WILL spend a Saturday fixing something that worked yesterday
-- Installation is a rite of passage (or torture, depending on perspective)
-- Reading the wiki becomes your new hobby
+The upside is control: rolling packages, access to the AUR ecosystem, and a minimal base that keeps the system intentional. The downside is operational overhead. Updates can break unexpectedly, installation requires attention, and the wiki becomes required reading rather than optional help.
 
 ## My Current Setup
 
@@ -147,6 +134,8 @@ My editor config is probably overengineered, but here are the plugins that actua
 - treesitter      -- Syntax highlighting that doesn't suck
 ```
 
+That stack gives me fast navigation, reliable language support, and enough UI feedback without pulling me back into a heavy graphical workflow.
+
 ## Window Management: Hyprland
 
 Tiling window managers are peak productivity (after the learning curve):
@@ -185,10 +174,7 @@ But do I use Arch BTW? You bet I do.
 
 ## Resources That Saved Me
 
-- [Arch Wiki](https://wiki.archlinux.org/) - Literally everything you need
-- [r/unixporn](https://reddit.com/r/unixporn) - For ricing inspiration
-- StackOverflow - For when things break
-- Twitter Linux community - Surprisingly helpful
+The [Arch Wiki](https://wiki.archlinux.org/) remains the primary source of truth, while community threads and practical troubleshooting posts are most useful for edge cases and hardware quirks.
 
 ---
 

@@ -17,27 +17,17 @@ Dhanur.me is a personal portfolio, blog, and central hub for various web applica
 
 ## 2. User Accounts and Authentication
 
-Some subdomains and Services require authentication. When you create an account (managed via `auth.dhanur.me`), you agree to:
-- Provide accurate and complete information (typically provided seamlessly via OAuth).
-- Accept responsibility for all activities that occur under your account.
-- Not share your credentials or exploit the authentication system.
+Some subdomains and services require authentication through `auth.dhanur.me`. By using an account, you agree to provide accurate information, remain responsible for activity under your account, and avoid credential sharing or misuse of the authentication flow.
 
 We reserve the right to suspend or terminate accounts that violate these terms or engage in abusive behavior.
 
 ## 3. Usage Credits
 
-Certain Services on our subdomains operate on a "credits" system to prevent abuse of backend resources.
-- Users are granted a specific allocation of credits (e.g., monthly).
-- Credits have zero monetary value, cannot be purchased, transferred, or exchanged for cash.
-- We reserve the right to modify credit allocations, reset balances, or change the cost of activities at any time without prior notice.
+Some services use a credits model to protect backend capacity and reduce abuse. Credits are an internal usage measure with no monetary value and cannot be purchased, transferred, or redeemed. Credit allocations and activity costs may change at any time as platform needs evolve.
 
 ## 4. Acceptable Use
 
-You agree not to:
-- Use the Services for any illegal or unauthorized purpose.
-- Attempt to hack, destabilize, or reverse engineer the backend infrastructure or authentication services.
-- Spam the comment sections or submit malicious code.
-- Exploit the API endpoints to bypass the credit system.
+You agree not to use the services for unlawful activity, attempts to compromise infrastructure, spam, malicious submissions, or behavior intended to bypass technical protections such as credit limits and service safeguards.
 
 ## 5. Intellectual Property
 

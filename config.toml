@@ -78,7 +78,7 @@ include_content = true
 # THEME CONFIGURATION
 # =============================================================================
 [extra]
-default_thumbnail = "images/default_thumbnail.jpg"
+default_thumbnail = "images/whood-light.jpg"
 
 # Analytics (leave empty to disable cleanly)
 gtag = "G-BY8SPYYYYR"

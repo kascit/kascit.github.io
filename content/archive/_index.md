@@ -5,4 +5,4 @@ template = "archive.html"
 sort_by = "date"
 +++
 
-All posts, ordered by date.
+This page lists every published post in chronological order so you can browse the full writing history without jumping between categories.

@@ -15,24 +15,88 @@
         <style>
           /* Basic resets just in case XSLT strips some defaults */
           .copy-btn:active { transform: scale(0.95); }
+
+          #rss-scroll-top {
+            position: fixed;
+            right: 1rem;
+            bottom: 1rem;
+            z-index: 70;
+            opacity: 0;
+            pointer-events: none;
+            transform: translateY(10px);
+            transition: opacity 180ms ease, transform 180ms ease;
+          }
+
+          #rss-scroll-top.is-visible {
+            opacity: 1;
+            pointer-events: auto;
+            transform: translateY(0);
+          }
         </style>
         
         <script>
+          function writeToClipboard(text) {
+            if (navigator.clipboard &amp;&amp; navigator.clipboard.writeText) {
+              return navigator.clipboard.writeText(text);
+            }
+
+            return new Promise(function(resolve, reject) {
+              try {
+                var area = document.createElement("textarea");
+                area.value = text;
+                area.setAttribute("readonly", "readonly");
+                area.style.position = "fixed";
+                area.style.left = "-9999px";
+                document.body.appendChild(area);
+                area.select();
+                var ok = document.execCommand("copy");
+                document.body.removeChild(area);
+                if (ok) resolve();
+                else reject(new Error("Copy command failed"));
+              } catch (err) {
+                reject(err);
+              }
+            });
+          }
+
           function copyFeedUrl() {
             var urlField = document.getElementById("feed-url");
-            urlField.select();
-            urlField.setSelectionRange(0, 99999); // For mobile devices
-            navigator.clipboard.writeText(urlField.value);
-            
             var btn = document.getElementById("copy-btn");
+            var originalTip = btn.getAttribute("data-tip") || "Copy feed URL";
             var originalHtml = btn.innerHTML;
-            btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
-            btn.classList.add("btn-success");
-            
-            setTimeout(function() {
-              btn.innerHTML = originalHtml;
-              btn.classList.remove("btn-success");
-            }, 2000);
+
+            writeToClipboard(urlField.value).then(function() {
+              btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+              btn.classList.add("btn-success");
+              btn.setAttribute("data-tip", "Copied!");
+
+              setTimeout(function() {
+                btn.innerHTML = originalHtml;
+                btn.classList.remove("btn-success");
+                btn.setAttribute("data-tip", originalTip);
+              }, 1800);
+            }).catch(function() {
+              btn.setAttribute("data-tip", "Copy failed");
+              setTimeout(function() {
+                btn.setAttribute("data-tip", originalTip);
+              }, 1800);
+            });
+          }
+
+          function goBackOrHome() {
+            try {
+              if (document.referrer) {
+                var previous = new URL(document.referrer);
+                if (previous.origin === window.location.origin &amp;&amp; window.history.length &gt; 1) {
+                  window.history.back();
+                  return;
+                }
+              }
+            } catch (e) {
+              // ignore and fallback to home
+            }
+
+            window.location.href = "/";
           }
 
           document.addEventListener("DOMContentLoaded", function() {
@@ -40,6 +104,32 @@
             var encodedUrl = encodeURIComponent(feedUrl);
             document.getElementById("feedly-btn").href = "https://feedly.com/i/subscription/feed/" + encodedUrl;
             document.getElementById("inoreader-btn").href = "https://www.inoreader.com/?add_feed=" + encodedUrl;
+
+            var backBtn = document.getElementById("go-back-btn");
+            if (backBtn) {
+              backBtn.addEventListener("click", function(event) {
+                event.preventDefault();
+                goBackOrHome();
+              });
+            }
+
+            var scrollTopBtn = document.getElementById("rss-scroll-top");
+            if (scrollTopBtn) {
+              var syncScrollTopState = function() {
+                if (window.scrollY &gt; 300) {
+                  scrollTopBtn.classList.add("is-visible");
+                } else {
+                  scrollTopBtn.classList.remove("is-visible");
+                }
+              };
+
+              window.addEventListener("scroll", syncScrollTopState, { passive: true });
+              syncScrollTopState();
+
+              scrollTopBtn.addEventListener("click", function() {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              });
+            }
           });
         </script>
       </head>
@@ -47,6 +137,13 @@
       <body class="bg-base-200 text-base-content min-w-0 font-sans antialiased selection:bg-primary selection:text-primary-content">
         
         <div class="max-w-3xl mx-auto px-4 py-12 md:py-24">
+
+          <div class="mb-6 flex items-center justify-start">
+            <button id="go-back-btn" class="btn btn-ghost btn-sm border border-base-content/15 shadow-sm">
+              <i class="fa-solid fa-arrow-left"></i>
+              Go Back
+            </button>
+          </div>
           
           <!-- Header section -->
           <header class="mb-10 text-center flex flex-col items-center">
@@ -94,7 +191,7 @@
               </label>
               <div class="join w-full shadow-sm">
                 <input id="feed-url" type="text" class="input input-bordered join-item w-full bg-base-200/50 font-mono text-sm focus:outline-none" readonly="readonly" value="{/rss/channel/atom:link[@rel='self']/@href}" />
-                <button id="copy-btn" class="btn btn-secondary join-item w-32 copy-btn" onclick="copyFeedUrl()">
+                <button id="copy-btn" class="btn btn-secondary join-item w-32 copy-btn tooltip tooltip-left" data-tip="Copy feed URL" onclick="copyFeedUrl()">
                   <i class="fa-regular fa-copy"></i> Copy
                 </button>
               </div>
@@ -138,6 +235,10 @@
           </footer>
           
         </div>
+
+        <button id="rss-scroll-top" class="btn btn-circle btn-primary shadow-lg" type="button" aria-label="Scroll to top" title="Scroll to top">
+          <i class="fa-solid fa-arrow-up"></i>
+        </button>
         
       </body>
     </html>

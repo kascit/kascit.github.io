@@ -3,46 +3,95 @@
 {# taxonomy_single: pages for one taxonomy term #}
 
 {% block content %}
-    <div class="mb-10 lg:mb-12 pb-6 border-b border-base-content/10">
-        <div class="flex flex-row items-center justify-between gap-4">
+    <div class="not-prose mb-12 pb-6 border-b border-base-content/10">
+        <div class="flex items-center justify-between gap-4 mb-3">
             <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-base-content m-0 flex items-center gap-3">
-                {% if taxonomy.name == "tags" %}
-                    <i class="fa-solid fa-tag text-3xl opacity-50"></i>
-                {% else %}
-                    <i class="fa-solid fa-folder-open text-3xl opacity-50"></i>
-                {% endif %}
                 {{ term.name }}
+                <span class="text-xs font-medium px-2.5 py-1 border border-base-content/15 rounded-sm uppercase tracking-wide">
+                    {{ taxonomy.name | capitalize }}
+                </span>
             </h1>
-            <a href="{{ term.permalink | safe }}rss.xml" class="inline-flex items-center justify-center w-9 h-9 rounded-md border border-base-content/15 text-orange-500 bg-orange-500/5 hover:bg-orange-500/15 hover:border-orange-500/30 transition-all duration-200 no-underline shrink-0" title="Subscribe to RSS Feed">
+            <a href="{{ term.permalink | safe }}rss.xml" class="rss-action-btn shrink-0" title="Subscribe to {{ term.name }} RSS Feed">
                 <i class="fa-solid fa-rss text-sm"></i>
             </a>
         </div>
-        
+
         {% if term.pages | length > 0 %}
-            <p class="text-base sm:text-lg text-base-content/70 m-0 mt-4 leading-relaxed">
+            <p class="text-base sm:text-lg text-base-content/70 mt-2 mb-0">
                 {{ term.pages | length }}
                 {% if term.pages | length == 1 %}
-                    document
+                    post
                 {% else %}
-                    documents
+                    posts
                 {% endif %}
                 tagged with "{{ term.name }}"
             </p>
         {% else %}
-            <p class="text-base sm:text-lg text-base-content/70 m-0 mt-4 leading-relaxed">
-                No documents found for this term.
+            <p class="text-base sm:text-lg text-base-content/70 mt-2 mb-0">
+                No posts found for this term.
             </p>
         {% endif %}
     </div>
 
     {% if term.pages | length > 0 %}
-        <div class="grid grid-cols-1 gap-6">
+        <div class="not-prose grid grid-cols-1 xl:grid-cols-2 gap-6">
             {% for page in term.pages %}
-                {{ post_macro::render(post=page) }}
+            <div
+                class="taxonomy-playlist-post"
+                data-taxonomy-playlist-post
+                data-post-url="{{ page.permalink | safe }}"
+                data-post-title="{{ page.title }}"
+            >
+                <button
+                    type="button"
+                    class="taxonomy-playlist-pick"
+                    data-taxonomy-playlist-toggle
+                    aria-label="Add {{ page.title }} to playlist"
+                    title="Add to playlist"
+                    aria-pressed="false"
+                >
+                    <i class="fa-solid fa-plus"></i>
+                </button>
+                {{ post_macro::render(post=page, default_thumb=config.extra.default_thumbnail | default(value="")) }}
+            </div>
             {% endfor %}
         </div>
     {% endif %}
 {% endblock content %}
+
+{% block taxonomy_sidebar %}
+{% if term.pages | length > 0 %}
+<section
+    class="taxonomy-playlist-rail not-prose"
+    data-taxonomy-playlist
+    data-playlist-taxonomy="{{ taxonomy.name }}"
+    data-playlist-term="{{ term.name }}"
+>
+    <div class="taxonomy-playlist-card">
+        <div class="taxonomy-playlist-head">
+            <h2 class="taxonomy-playlist-title">Playlist Builder</h2>
+            <span class="taxonomy-playlist-badge">{{ taxonomy.name | capitalize }}</span>
+        </div>
+
+        <p class="taxonomy-playlist-desc">Build your own reading order. Playlist is saved locally so you can add posts from other tags or categories too.</p>
+
+        <div class="taxonomy-playlist-actions">
+            <button type="button" class="taxonomy-playlist-btn" data-taxonomy-playlist-add-page>Add All From Page</button>
+            <button type="button" class="taxonomy-playlist-btn" data-taxonomy-playlist-clear>Clear</button>
+        </div>
+
+        <div class="taxonomy-playlist-list" data-taxonomy-playlist-list></div>
+        <p class="taxonomy-playlist-empty" data-taxonomy-playlist-empty>No posts in playlist yet.</p>
+
+        <div class="taxonomy-playlist-footer">
+            <p class="taxonomy-playlist-meta" data-taxonomy-playlist-meta>0 in playlist</p>
+            <button type="button" class="taxonomy-playlist-btn" data-taxonomy-playlist-share disabled>Share Playlist Link</button>
+            <button type="button" class="taxonomy-playlist-btn" data-taxonomy-playlist-open-first disabled>Start Reading</button>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock taxonomy_sidebar %}
 
 {% block prev_link %}
     <a class="nav-button nav-button-prev group" href="/{{ taxonomy.slug }}/">

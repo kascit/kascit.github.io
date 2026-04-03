@@ -37,13 +37,7 @@
     <!-- CSP, HSTS, COOP, X-Frame-Options, etc. are configured via HTTP headers -->
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
-    <!-- Resource Hints for better performance -->
-    {% if config.extra.gtag and config.extra.gtag != "" %}
-    <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
-    <link rel="preconnect" href="https://www.google-analytics.com" crossorigin>
-    <link rel="dns-prefetch" href="https://www.googletagmanager.com">
-    <link rel="dns-prefetch" href="https://www.google-analytics.com">
-    {% endif %}
+    <!-- Resource hints for optional integrations are loaded only after user consent. -->
     {# Preload critical fonts to reduce critical path latency #}
     <link rel="preload" href="{{ get_url(path="webfonts/fa-solid-900.woff2") | safe }}" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="{{ get_url(path="webfonts/fa-brands-400.woff2") | safe }}" as="font" type="font/woff2" crossorigin>
@@ -59,20 +53,6 @@
     <script src="{{ get_url(path="js/boot.js") | safe }}"
             data-cookie-domain="{{ cookie_domain }}"
             data-default-colorset="{{ theme_colorset }}"></script>
-
-    <!-- Sentry error monitoring -->
-    <script src="https://js-de.sentry-cdn.com/76f095eb3818528a530b2347e1735e14.min.js" crossorigin="anonymous"></script>
-    <script>
-      Sentry.onLoad(function() {
-        Sentry.init({
-          // Tracing
-          tracesSampleRate: 1.0, // Capture 100% of the transactions
-          // Session Replay
-          replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
-          replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
-        });
-      });
-    </script>
 
         {# Font configuration with backward compatibility #}
         {% if config.extra.font is defined %}
@@ -125,12 +105,7 @@
       {%- endif -%}
     </title>
 
-    {# Google Analytics gtag.js integration - deferred to not block rendering #}
-        {% if config.extra.gtag and config.extra.gtag != "" %}
-        <!-- Google tag (gtag.js) -->
-        <script async src="https://www.googletagmanager.com/gtag/js?id={{ config.extra.gtag }}"></script>
-        <script src="{{ get_url(path="js/gtag-init.js") | safe }}" defer data-gtag-id="{{ config.extra.gtag }}"></script>
-        {% endif %}
+    {# Google Analytics and Sentry are loaded client-side only after cookie consent. #}
 
       <!-- SEO: Open Graph / Twitter Card -->
       <meta property="og:title" content="
@@ -153,13 +128,20 @@
           {{ config.description }}
         {%- endif -%}
       " />
-      <meta property="og:url" content="{{ current_url | safe }}" />
-      <meta property="og:type" content="website" />
-      {% if page.extra.thumbnail %}
-      <meta property="og:image" content="{{ get_url(path=page.extra.thumbnail) | safe }}" />
-      {% elif config.extra.default_thumbnail %}
-      <meta property="og:image" content="{{ get_url(path=config.extra.default_thumbnail) | safe }}" />
-      {% endif %}
+        <meta property="og:url" content="{{ current_url | safe }}" />
+        <meta property="og:type" content="website" />
+        {% if page is defined %}
+          {% set resolved_thumb = page.extra.thumbnail_image | default(value=page.extra.thumbnail | default(value=page.extra.image | default(value=config.extra.default_thumbnail | default(value="")))) %}
+          {% if resolved_thumb != "" %}
+            {% if resolved_thumb is starting_with("http://") or resolved_thumb is starting_with("https://") %}
+            <meta property="og:image" content="{{ resolved_thumb | safe }}" />
+            {% else %}
+            <meta property="og:image" content="{{ get_url(path=resolved_thumb) | safe }}" />
+            {% endif %}
+          {% endif %}
+        {% elif config.extra.default_thumbnail %}
+        <meta property="og:image" content="{{ get_url(path=config.extra.default_thumbnail) | safe }}" />
+        {% endif %}
 
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:title" content="{% if page %}{{ page.title }}{% else %}{{ config.title }}{% endif %}" />
@@ -187,11 +169,18 @@
       {% if twitter_creator != "" %}
       <meta name="twitter:creator" content="{{ twitter_creator }}" />
       {% endif %}
-      {% if page.extra.thumbnail %}
-      <meta name="twitter:image" content="{{ get_url(path=page.extra.thumbnail) | safe }}" />
-      {% elif config.extra.default_thumbnail %}
-      <meta name="twitter:image" content="{{ get_url(path=config.extra.default_thumbnail) | safe }}" />
-      {% endif %}
+        {% if page is defined %}
+          {% set resolved_thumb = page.extra.thumbnail_image | default(value=page.extra.thumbnail | default(value=page.extra.image | default(value=config.extra.default_thumbnail | default(value="")))) %}
+          {% if resolved_thumb != "" %}
+            {% if resolved_thumb is starting_with("http://") or resolved_thumb is starting_with("https://") %}
+            <meta name="twitter:image" content="{{ resolved_thumb | safe }}" />
+            {% else %}
+            <meta name="twitter:image" content="{{ get_url(path=resolved_thumb) | safe }}" />
+            {% endif %}
+          {% endif %}
+        {% elif config.extra.default_thumbnail %}
+        <meta name="twitter:image" content="{{ get_url(path=config.extra.default_thumbnail) | safe }}" />
+        {% endif %}
 
       <!-- Structured Data (Schema.org JSON-LD) -->
       <script type="application/ld+json">
@@ -249,7 +238,7 @@
       <link rel="icon" type="image/svg+xml" href="{{ favicon_svg | safe }}" />
       <link rel="shortcut icon" href="{{ favicon_ico | safe }}" />
       <link rel="apple-touch-icon" sizes="180x180" href="{{ apple_touch_icon | safe }}" />
-      <link rel="manifest" href="/icons/site.webmanifest" />
+      <link rel="manifest" href="{{ site_webmanifest | safe }}" />
 
       <!-- CSS -->
     <!-- Preload critical stylesheets for faster rendering -->

@@ -7,17 +7,50 @@ template = "page.html"
 enabled = false
 +++
 
-> **Last updated: March 22, 2026**
+> **Last updated: April 3, 2026**
 
 ## About This Website
 
-**dhanur.me** (and its subdomains) is a personal platform owned and operated by Dhanur. It is not part of any company. Data collection is minimal and focused entirely on providing site functionality, security, and basic analytics. No personal data is sold.
+**dhanur.me** and its subdomains are personal projects run by Dhanur. The site is not operated by a company, and data collection is intentionally minimal. Information is only used for functionality, security, and lightweight analytics, and personal data is never sold.
 
-## Cookies & Local Storage
+## Cookie Controls
 
-- **Theme Preferences**: We use a single local cookie (`theme`) to remember if you prefer light, dark, or system-default mode. It stores no identifying information.
-- **Authentication**: Our ecosystem (`*.dhanur.me`) utilizes a centralized authentication service at `auth.dhanur.me`. When you log in (e.g., via Google Auth), authentication tokens and account data are securely managed by this service.
-- **Giscus** (comments) uses cookies/session storage when you opt to comment via GitHub.
+You can choose one of two modes:
+
+- **Necessary Only**: enables only cookies required for core site behavior and security.
+- **Allow All Cookies**: enables necessary cookies plus optional services (analytics, error monitoring, comments).
+
+<div class="not-prose privacy-consent-panel">
+	<div class="privacy-consent-panel__head">
+		<strong>Current preference:</strong>
+		<span class="privacy-consent-panel__status" data-cookie-consent-status>Not set</span>
+	</div>
+	<div class="privacy-consent-panel__actions">
+		<button type="button" class="cookie-consent-btn" data-cookie-consent-action="necessary">Necessary Only</button>
+		<button type="button" class="cookie-consent-btn cookie-consent-btn--primary" data-cookie-consent-action="all">Allow All Cookies</button>
+	</div>
+</div>
+
+## Necessary Cookies & Storage
+
+Necessary cookies/storage may include:
+
+- `theme` cookie to remember light/dark/auto preference.
+- `site_cookie_consent_v1` cookie to remember your cookie choice.
+- Local storage keys for interface behavior (for example sidebar/TOC state and playlist tools).
+- Security and infrastructure cookies set by hosting/CDN providers (including Cloudflare) for DDoS protection, abuse mitigation, and request integrity.
+
+These are used for site operation, safety, and usability.
+
+## Optional Services (Allow All)
+
+If you choose **Allow All Cookies**, the site may load:
+
+- **Google Analytics (gtag)** for aggregate traffic and usage metrics.
+- **Sentry** for error monitoring and diagnostics.
+- **Giscus** for comments (which relies on GitHub Discussions and related third-party storage/cookies).
+
+If you choose **Necessary Only**, these optional services are not loaded.
 
 ## Hosting & Architecture
 
@@ -25,32 +58,23 @@ The site is statically hosted on **GitHub Pages**, and dynamic backend services 
 
 ## User Accounts & Authentication
 
-- Services on subdomains may require an account (managed via `auth.dhanur.me`).
-- We collect only the information necessary to provide the service: your display name, email address (via OAuth), and an avatar image.
-- We maintain a basic "credits" ledger for your usage across our apps.
+Some subdomain services require an account managed through `auth.dhanur.me`. For those services, only the minimum needed profile data is collected, typically display name, email address from OAuth, and avatar. A simple credits ledger may also be maintained to support usage controls for app features.
 
 ## Comments
 
-- Comments run through **[Giscus](https://giscus.app)**, backed by GitHub Discussions.
-- If you comment, you authenticate with GitHub; your GitHub username/avatar become public with your comment.
-- Comment content is stored on GitHub.
+Comments are powered by **[Giscus](https://giscus.app)** and stored through GitHub Discussions. If you comment, your GitHub identity is visible with your post according to GitHub's platform behavior. Giscus loads only when optional cookies are enabled.
 
 ## Analytics
 
-- We may use basic, privacy-respecting analytics (such as Google Analytics or Plausible) to measure aggregate usage (page views, device type, referrers). Data is processed per their respective policies. No user-level profiling is performed by this site.
+The site uses Google Analytics only when optional cookies are enabled to understand aggregate traffic patterns like page views, device types, and referrers. This is used to improve content and reliability, not for user-level profiling.
 
 ## What We Collect (summary)
 
-- **Server logs**: IP, user agent, timestamps for security/ops.
-- **Accounts**: Email, name, and avatar if you explicitly sign in via our authentication service.
-- **Comments (optional)**: Your GitHub handle/avatar and comment text.
-- **Analytics**: Aggregate, anonymized usage metrics.
+In practice, data collection is limited to operational server logs, basic account profile fields when you explicitly sign in, optional comment content tied to your GitHub identity, optional error reports, and optional aggregate analytics metrics.
 
 ## Your Choices & Rights
 
-- You are not required to create an account to view the main site.
-- Clear/block cookies to limit storage, though this may sign you out or reset your theme.
-- For account data deletion, please contact me directly.
+You do not need an account to read the main site. You can clear or block cookies at any time, though doing so may reset preferences or sign you out of related apps. If you want account-related data removed, contact me directly and I will handle the request.
 
 ## Changes
 
@@ -62,19 +86,10 @@ Questions? Reach out at [contact@dhanur.me](mailto:contact@dhanur.me) or [github
 
 ## Open Source
 
-This website is open source. You can view the code and how it works:
-
-- **Repository**: [github.com/kascit/kascit.github.io](https://github.com/kascit/kascit.github.io)
+This website is open source, and you can inspect the implementation in the public repository at [github.com/kascit/kascit.github.io](https://github.com/kascit/kascit.github.io).
 
 ## Copyright & Licensing
 
-- Site content (posts, pages) © <span id="copyright-year">2026</span> Dhanur Relhan, all rights reserved unless otherwise noted.
-- Site source code follows its repo license (e.g., MIT). Code snippets in posts may be reused with attribution.
+Site content (posts and pages) is copyright 2026 Dhanur Relhan unless stated otherwise. Source code follows the repository license, and code snippets in posts may generally be reused with attribution.
 
-<script defer src="/js/copyright-year.js"></script>
-
----
-
-<div style="text-align: center; margin-top: 2rem; opacity: 0.7;">
-    <p>This website respects your privacy. We believe in transparency and minimal data collection.</p>
-</div>
+This policy aims to be transparent and practical, with minimal collection by default.

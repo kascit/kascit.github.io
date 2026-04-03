@@ -75,7 +75,9 @@ body.drawer-mobile-open #scroll-to-top {
 
 @media (hover: none) and (pointer: coarse) {
   button,
-  a,
+  .btn,
+  [role="button"],
+  summary,
   input[type="checkbox"],
   input[type="radio"] {
     /* Ensure minimum 44x44px touch target */

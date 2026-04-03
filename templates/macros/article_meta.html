@@ -4,20 +4,24 @@
 
 {% macro taxonomy_footer(page) %}
 {% if page.taxonomies and (page.taxonomies.tags or page.taxonomies.categories) %}
-<footer class="article-taxonomies not-prose mt-10 pt-6 border-t border-base-content/10" aria-label="Post topics">
+<footer class="article-taxonomies not-prose mt-8 pt-5 border-t border-base-content/10" aria-label="Post topics">
   {% if page.taxonomies.categories %}
   <div class="article-taxonomies__row">
-    <span class="article-taxonomies__label" title="Categories">{{ article_icons::svg_folder() }}</span>
+    <a class="action-icon-btn article-taxonomies__jump" href="{{ get_url(path='/categories/', lang=lang) | safe }}" title="All categories" aria-label="All categories">
+      {{ article_icons::svg_folder() }}
+    </a>
     <div class="article-taxonomies__chips">
       {% for cat in page.taxonomies.categories %}
-      <a href="{{ get_taxonomy_url(kind='categories', name=cat) }}" class="surface-chip-link">{{ cat }}</a>
+      {{ taxonomy_chips::category_link(name=cat) }}
       {% endfor %}
     </div>
   </div>
   {% endif %}
   {% if page.taxonomies.tags %}
-  <div class="article-taxonomies__row {% if page.taxonomies.categories %}mt-3{% endif %}">
-    <span class="article-taxonomies__label" title="Tags">{{ article_icons::svg_tag() }}</span>
+  <div class="article-taxonomies__row">
+    <a class="action-icon-btn article-taxonomies__jump" href="{{ get_url(path='/tags/', lang=lang) | safe }}" title="All tags" aria-label="All tags">
+      {{ article_icons::svg_tag() }}
+    </a>
     <div class="article-taxonomies__chips">
       {% for tag in page.taxonomies.tags %}
       {{ taxonomy_chips::tag_link(name=tag) }}

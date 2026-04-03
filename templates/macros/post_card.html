@@ -1,34 +1,50 @@
 {% import "macros/taxonomy_chips.html" as taxonomy_chips %}
 
-{% macro render(post) %}
-<article class="relative flex flex-col p-5 sm:p-6 border border-base-content/10 rounded-box bg-base-100 transition-colors duration-200 hover:border-base-content/20 hover:shadow-md group">
+{% macro render(post, default_thumb="") %}
+{% set card_thumb = post.extra.thumbnail_image | default(value=post.extra.thumbnail | default(value=post.extra.image | default(value=""))) %}
+<article class="not-prose relative flex flex-col p-4 sm:p-5 border border-base-content/10 rounded-box bg-base-100 transition-colors duration-200 hover:border-base-content/20 hover:shadow-md group">
     <a href="{{ post.permalink | safe }}" class="absolute inset-0 z-10"><span class="sr-only">Read {{ post.title }}</span></a>
+
+    {% if card_thumb != "" %}
+    {% if card_thumb is starting_with("http://") or card_thumb is starting_with("https://") %}
+        {% set card_thumb_url = card_thumb %}
+    {% else %}
+        {% set card_thumb_url = get_url(path=card_thumb) | safe %}
+    {% endif %}
+    <div class="not-prose mb-3 overflow-hidden rounded-lg border border-base-content/10 bg-base-200/25 relative z-20 post-card-thumb">
+        <img src="{{ card_thumb_url | safe }}"
+             alt="{{ post.extra.thumbnail_alt | default(value=post.title) }}"
+             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.015]"
+             loading="lazy"
+             decoding="async" />
+    </div>
+    {% endif %}
     
-    <div class="flex flex-col gap-2.5">
-        <h3 class="text-lg sm:text-xl font-bold text-base-content m-0 leading-snug break-words group-hover:text-primary transition-colors">
+    <div class="flex flex-col gap-2">
+        <h3 class="text-base sm:text-lg font-bold text-base-content m-0 leading-snug break-words group-hover:text-primary transition-colors">
             {{ post.title }}
         </h3>
         
         {% if post.description %}
-        <p class="text-sm text-base-content/75 m-0 line-clamp-2 leading-relaxed">
+        <p class="text-sm text-base-content/72 m-0 line-clamp-2 leading-relaxed">
             {{ post.description }}
         </p>
         {% endif %}
         
-        <div class="flex items-center justify-between mt-1">
+        <div class="flex items-center justify-between mt-0.5">
             <div class="flex items-center gap-3 text-xs font-medium text-base-content/50">
                 {% if post.date %}
                 <time datetime="{{ post.date }}" class="font-mono">{{ post.date | date(format="%Y-%m-%d") }}</time>
                 {% endif %}
             </div>
-            <div class="text-xs font-semibold text-primary opacity-0 -translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-0 flex items-center gap-1">
+            <div class="text-xs font-semibold text-primary/75 group-hover:text-primary transition-colors duration-200 flex items-center gap-1">
                 Read <i class="fa-solid fa-arrow-right text-[10px]"></i>
             </div>
         </div>
     </div>
 
     {% if post.taxonomies %}
-    <div class="mt-4 pt-4 border-t border-base-content/5 flex flex-wrap gap-2 relative z-20">
+    <div class="mt-3 pt-3 border-t border-base-content/5 flex flex-wrap gap-2 relative z-20">
         {% if post.taxonomies.categories %}
             {% for cat in post.taxonomies.categories %}
             {{ taxonomy_chips::category_link(name=cat) }}

@@ -9,11 +9,17 @@ import { initAuth } from './modules/auth-integration.js';
 import { initDropdowns } from './modules/dropdowns.js';
 import { initDrawer } from './modules/drawer.js';
 import { initClipboard } from './modules/clipboard.js';
+import { initCodeBlocks } from './modules/code-blocks.js';
 import { initShortcuts } from './modules/shortcuts.js';
 import { initScrollToTop } from './modules/scroll-top.js';
 import { initLazyPlugins } from './modules/lazy-plugins.js';
 import { initServiceWorker } from './modules/service-worker.js';
 import { initComments } from './modules/comments.js';
+import { initBlogFeed } from './modules/blog-feed.js';
+import { initTaxonomyFilter } from './modules/taxonomy-filter.js';
+import { initTaxonomySubscribe } from './modules/taxonomy-subscribe.js';
+import { initTaxonomyPlaylist } from './modules/taxonomy-playlist.js';
+import { initCookieConsent } from './modules/cookie-consent.js';
 
 function bootstrapSite() {
   console.log(`
@@ -42,9 +48,15 @@ DDDDDDDDDDb·······················PDDDDDDDDDDDDDDDPP··�
   initDropdowns(document);
   
   // Features
+  initCookieConsent();
+  initCodeBlocks();
   initClipboard();
   initShortcuts();
   initScrollToTop();
+  initBlogFeed();
+  initTaxonomyFilter();
+  initTaxonomySubscribe();
+  initTaxonomyPlaylist();
   
   // Plugins & Integrations
   initLazyPlugins();

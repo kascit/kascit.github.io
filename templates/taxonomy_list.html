@@ -1,6 +1,5 @@
 {% extends "index.html" %}
 {% import "macros/ui.html" as macros_ui %}
-{% import "macros/catalog.html" as macros_catalog %}
 {% import "macros/nav.html" as macros_nav %}
 {% import "macros/icons.html" as macros_icons %}
 
@@ -11,20 +10,34 @@
 {% endblock title %}
 
 {% block content %}
-<div class="mb-10 lg:mb-12 pb-6 border-b border-base-content/10">
-  <div class="flex flex-row items-center justify-between gap-4">
-    <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-base-content m-0 flex items-center gap-3">
-      {{ taxonomy.name | capitalize }}
-      <span class="text-xs font-semibold px-2 py-0.5 uppercase tracking-wide border border-base-content/20 rounded-sm bg-base-200/50">Taxonomy</span>
-    </h1>
+<section class="not-prose mb-12 pb-6 border-b border-base-content/15">
+  <div class="flex items-center justify-between gap-4 mb-3">
+      <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-base-content m-0 flex items-center gap-3">
+        {{ taxonomy.config.title | default(value=taxonomy.name | capitalize) }}
+        {{ macros_ui::kind_pill(text="Taxonomy") }}
+      </h1>
+      <a href="/rss.xml" class="rss-action-btn shrink-0" title="Subscribe to site RSS feed">
+        <i class="fa-solid fa-rss text-sm"></i>
+      </a>
   </div>
-  <p class="text-base sm:text-lg text-base-content/70 m-0 mt-4 leading-relaxed">
-    Browse all {{ taxonomy.name }} used in this documentation.
+
+  {% if taxonomy.config.description %}
+  <p class="text-base sm:text-lg text-base-content/70 m-0">
+    {{ taxonomy.config.description }}
   </p>
-</div>
+  {% else %}
+  <p class="text-base sm:text-lg text-base-content/70 m-0">
+    Browse all {{ taxonomy.name }} used across blog posts.
+  </p>
+  {% endif %}
+
+  <div class="mt-4 flex items-center gap-2 text-sm text-base-content/75">
+    <span>{{ terms | length }} {{ taxonomy.name }} available</span>
+  </div>
+</section>
 
 {% if terms | length == 0 %}
-<div class="flex flex-col items-center justify-center py-12 text-center">
+<div class="not-prose flex flex-col items-center justify-center py-12 text-center">
   <svg
     class="w-16 h-16 mb-4 text-base-content/20"
     fill="none"
@@ -38,16 +51,87 @@
       d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"
     ></path>
   </svg>
-  <p class="text-base-content/75">No terms defined for this taxonomy yet.</p>
+  <p class="text-base-content/75">No {{ taxonomy.name }} are available yet.</p>
 </div>
 {% else %}
-<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+<section class="not-prose taxonomy-filter-wrap" data-taxonomy-filter>
+  <label for="taxonomy-filter-input" class="taxonomy-filter-label">Search {{ taxonomy.name }}</label>
+  <div class="taxonomy-filter-input-wrap">
+    <i class="fa-solid fa-magnifying-glass taxonomy-filter-icon" aria-hidden="true"></i>
+    <input
+      id="taxonomy-filter-input"
+      type="search"
+      class="taxonomy-filter-input"
+      placeholder="Search {{ taxonomy.name }}"
+      autocomplete="off"
+      spellcheck="false"
+      data-taxonomy-filter-input
+    />
+    <button type="button" class="taxonomy-filter-clear" data-taxonomy-filter-clear hidden>Clear</button>
+  </div>
+  <p class="taxonomy-filter-meta" data-taxonomy-filter-meta>{{ terms | length }} terms</p>
+  <p class="taxonomy-filter-empty" data-taxonomy-filter-empty hidden>No matching {{ taxonomy.name }} found.</p>
+
+  <div class="taxonomy-term-grid mt-3" data-taxonomy-filter-list>
   {% for term in terms %}
-    {{ macros_catalog::term_card(term=term) }}
+  <article
+    class="taxonomy-term-item"
+    data-taxonomy-term
+    data-term-taxonomy="{{ taxonomy.name }}"
+    data-term-name="{{ term.name }}"
+    data-term-feed="{{ term.permalink | safe }}rss.xml"
+    data-term-url="{{ term.permalink | safe }}"
+  >
+    <a href="{{ term.permalink | safe }}" class="taxonomy-term-btn" title="View {{ term.name }}">
+      <span class="taxonomy-term-btn__name">{{ term.name }}</span>
+      <span class="taxonomy-term-btn__count">{{ term.pages | length }}</span>
+    </a>
+    <button
+      type="button"
+      class="taxonomy-term-pick"
+      data-taxonomy-subscribe-toggle
+      aria-label="Select {{ term.name }}"
+      title="Select for RSS bundle"
+      aria-pressed="false"
+    >
+      <i class="fa-solid fa-plus"></i>
+    </button>
+  </article>
   {% endfor %}
-</div>
+  </div>
+</section>
 {% endif %}
 {% endblock content %}
+
+{% block taxonomy_sidebar %}
+{% if terms | length > 0 %}
+<section class="taxonomy-subscribe-rail not-prose" data-taxonomy-subscribe data-taxonomy-name="{{ taxonomy.name }}">
+  <div class="taxonomy-subscribe-card">
+    <div class="taxonomy-subscribe-head">
+      <h2 class="taxonomy-subscribe-title">RSS Builder</h2>
+      <span class="taxonomy-subscribe-badge">{{ taxonomy.name | capitalize }}</span>
+    </div>
+
+    <p class="taxonomy-subscribe-desc">Selections are saved in cookies, so you can build one RSS bundle across both tags and categories.</p>
+
+    <div class="taxonomy-subscribe-actions">
+      <button type="button" class="taxonomy-subscribe-btn" data-taxonomy-subscribe-add-visible>Add Visible</button>
+      <button type="button" class="taxonomy-subscribe-btn" data-taxonomy-subscribe-clear>Clear</button>
+    </div>
+
+    <div class="taxonomy-subscribe-selected" data-taxonomy-subscribe-selected></div>
+    <p class="taxonomy-subscribe-empty" data-taxonomy-subscribe-empty>No selections yet.</p>
+
+    <div class="taxonomy-subscribe-footer">
+      <p class="taxonomy-subscribe-meta" data-taxonomy-subscribe-meta>0 selected</p>
+      <a class="taxonomy-subscribe-link is-disabled" data-taxonomy-subscribe-single aria-disabled="true" target="_blank" rel="noopener noreferrer">Open Single Feed</a>
+      <button type="button" class="taxonomy-subscribe-btn" data-taxonomy-subscribe-copy disabled>Copy Feed URLs</button>
+      <button type="button" class="taxonomy-subscribe-btn" data-taxonomy-subscribe-opml disabled>Download OPML</button>
+    </div>
+  </div>
+</section>
+{% endif %}
+{% endblock taxonomy_sidebar %}
 
 {% block prev_link %}
 {{ macros_nav::render_button(url="/archive", title="Archive", subtitle="Back to", direction="prev") }}

@@ -30,9 +30,27 @@ Access-Control-Allow-Origin: \*
 Cache-Control: public, max-age=31536000, immutable
 Access-Control-Allow-Origin: \*
 
+# Core app stylesheet is not content-hashed; keep cache short for safe rollouts
+/css/main.css
+Cache-Control: public, max-age=3600
+Access-Control-Allow-Origin: *
+
 /js/\*
 Cache-Control: public, max-age=31536000, immutable
 Access-Control-Allow-Origin: \*
+
+# Core app entry + modules are not content-hashed; keep cache short for safe rollouts
+/js/main.js
+Cache-Control: public, max-age=3600
+Access-Control-Allow-Origin: *
+
+/js/modules/*
+Cache-Control: public, max-age=3600
+Access-Control-Allow-Origin: *
+
+/js/notify-banner.js
+Cache-Control: public, max-age=3600
+Access-Control-Allow-Origin: *
 
 # shell.js changes more often — short cache so subdomains pick up fixes
 

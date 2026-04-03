@@ -15,11 +15,17 @@
   function applyCollapsedState(collapsed) {
     document.body.classList.toggle("toc-collapsed", collapsed);
     const btn = document.getElementById("toc-toggle");
-    // if (btn) {
-    //   const label = collapsed ? "Show table of contents" : "Hide table of contents";
-    //   btn.setAttribute("aria-label", label);
-    //   btn.setAttribute("title", label);
-    // }
+    if (btn) {
+      const showLabel = btn.getAttribute("data-show-label") || "Show table of contents";
+      const hideLabel = btn.getAttribute("data-hide-label") || "Hide table of contents";
+      const label = collapsed ? showLabel : hideLabel;
+      btn.setAttribute("aria-label", label);
+      btn.removeAttribute("title");
+      const tooltipWrap = btn.closest(".tooltip");
+      if (tooltipWrap) {
+        tooltipWrap.setAttribute("data-tip", label);
+      }
+    }
   }
 
   function initTocToggle() {
@@ -51,11 +57,35 @@
     if (headings.length === 0) return;
 
     let currentActiveId = null;
+    let clickLockUntil = 0;
+
+    function getActiveOffsetPx() {
+      const rootStyle = window.getComputedStyle(document.documentElement);
+      const scrollPaddingTop = parseFloat(rootStyle.scrollPaddingTop || "0") || 0;
+      return Math.max(96, scrollPaddingTop + 18);
+    }
+
+    const CLICK_LOCK_MS = 1200;
+
+    function nowMs() {
+      return (window.performance && typeof window.performance.now === "function")
+        ? window.performance.now()
+        : Date.now();
+    }
 
     function getTocLink(id) {
       if (!id) return null;
       var safeId = CSS.escape(id);
-      return tocSidebar.querySelector(`a.toc-link[href="#${safeId}"]`);
+      const exact = tocSidebar.querySelector(`a.toc-link[href="#${safeId}"]`);
+      if (exact) return exact;
+
+      const summaryTarget = tocSidebar.querySelector(`.toc-link[data-toc-id="${safeId}"]`);
+      if (summaryTarget) return summaryTarget;
+
+      return Array.from(tocSidebar.querySelectorAll("a.toc-link[href]")).find((a) => {
+        const href = a.getAttribute("href") || "";
+        return href.endsWith(`#${id}`);
+      }) || null;
     }
 
     function setActive(id) {
@@ -63,7 +93,7 @@
       currentActiveId = id;
 
       // Clear previous active
-      tocSidebar.querySelectorAll("a.toc-link.toc-active").forEach(el => {
+      tocSidebar.querySelectorAll(".toc-link.toc-active").forEach(el => {
         el.classList.remove("toc-active");
       });
 
@@ -72,6 +102,9 @@
 
       // Set new active
       link.classList.add("toc-active");
+
+      const tocIsCollapsed = document.body.classList.contains("toc-collapsed");
+      if (tocIsCollapsed) return;
 
       // Auto-open parent details elements for nested hierarchies
       let parentDetails = link.closest("details");
@@ -84,73 +117,130 @@
       link.scrollIntoView({ block: "nearest", behavior: "smooth" });
     }
 
-    // Observer to detect which heading is at the top of the viewport
-    const ioOptions = {
-      root: null,
-      // Fire as heading enters the top 40% of the viewport (refined threshold)
-      rootMargin: "0px 0px -55% 0px",
-      threshold: 0
-    };
+    function findActiveHeadingFromScroll() {
+      const scrollY = window.scrollY || window.pageYOffset || 0;
+      const viewportBottom = scrollY + window.innerHeight;
+      const docHeight = document.documentElement.scrollHeight;
 
-    let latestVisibleId = null;
-
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          latestVisibleId = entry.target.id;
-        }
-      });
-
-      if (latestVisibleId) {
-        setActive(latestVisibleId);
+      // Keep the final heading active when user reaches the bottom of page.
+      if (viewportBottom >= docHeight - 2) {
+        return headings[headings.length - 1].id;
       }
-    }, ioOptions);
 
-    headings.forEach(h => observer.observe(h));
+      const activationLine = scrollY + getActiveOffsetPx();
+      let best = headings[0].id;
+      let bestTop = headings[0].getBoundingClientRect().top + scrollY;
+      let nextTop = null;
+      let nextId = null;
 
-    // Also handle aggressive upward scrolling using scroll listener
+      for (let i = 0; i < headings.length; i++) {
+        const top = headings[i].getBoundingClientRect().top + scrollY;
+        if (top <= activationLine + 1) {
+          best = headings[i].id;
+          bestTop = top;
+        } else {
+          nextTop = top;
+          nextId = headings[i].id;
+          break;
+        }
+      }
+
+      // Prevent a persistent "one heading behind" state around anchor landings.
+      if (nextId && nextTop !== null && (nextTop - activationLine) <= 28) {
+        return nextId;
+      }
+
+      return best;
+    }
+
+    function syncActiveFromScroll() {
+      if (nowMs() < clickLockUntil) return;
+      const best = findActiveHeadingFromScroll();
+      if (best && best !== currentActiveId) {
+        setActive(best);
+      }
+    }
+
+    function setActiveFromIdWithLock(id) {
+      if (!id) return;
+      if (!document.getElementById(id)) return;
+      clickLockUntil = nowMs() + CLICK_LOCK_MS;
+      setActive(id);
+      window.setTimeout(syncActiveFromScroll, CLICK_LOCK_MS + 120);
+    }
+
     let scrollRaf = null;
-    window.addEventListener("scroll", function () {
+    function scheduleSyncFromScroll() {
       if (scrollRaf) return;
       scrollRaf = requestAnimationFrame(function () {
         scrollRaf = null;
-        const viewportMid = window.scrollY + window.innerHeight / 2;
-        let best = null;
-        
-        for (let i = 0; i < headings.length; i++) {
-          const top = headings[i].getBoundingClientRect().top + window.scrollY;
-          if (top <= viewportMid) {
-            best = headings[i].id;
-          } else {
-            break; // Headings are sequential, break early
-          }
-        }
-        
-        if (best && best !== currentActiveId) {
-          setActive(best);
-        }
+        syncActiveFromScroll();
       });
-    }, { passive: true });
+    }
 
-    // Handle initial hash or first heading
-    const initialHash = location.hash ? location.hash.slice(1) : null;
+    window.addEventListener("scroll", scheduleSyncFromScroll, { passive: true });
+    window.addEventListener("resize", scheduleSyncFromScroll, { passive: true });
+
+    tocSidebar.addEventListener("click", function (event) {
+      const target = event.target.closest(".toc-link");
+      if (!target) return;
+
+      let targetId = target.getAttribute("data-toc-id") || "";
+      if (!targetId) {
+        const href = target.getAttribute("href") || "";
+        const hashIndex = href.indexOf("#");
+        if (hashIndex >= 0) {
+          targetId = decodeURIComponent(href.slice(hashIndex + 1));
+        }
+      }
+
+      if (!targetId) return;
+
+      // Summary targets (data-toc-id) may not navigate by default; sync hash to native anchor behavior.
+      if (target.hasAttribute("data-toc-id") && location.hash !== `#${targetId}`) {
+        location.hash = targetId;
+      }
+
+      setActiveFromIdWithLock(targetId);
+    });
+
+    window.addEventListener("hashchange", function () {
+      const id = location.hash ? decodeURIComponent(location.hash.slice(1)) : "";
+      if (id) {
+        setActiveFromIdWithLock(id);
+      }
+    });
+
+    // Handle initial hash or scroll position.
+    const initialHash = location.hash ? decodeURIComponent(location.hash.slice(1)) : "";
     if (initialHash && document.getElementById(initialHash)) {
-      setActive(initialHash);
-    } else if (headings.length > 0) {
-      setActive(headings[0].id);
+      setActiveFromIdWithLock(initialHash);
+    } else {
+      syncActiveFromScroll();
     }
   }
 
-  // --- 3. Click summary elements to jump ---
-  function initTocClicks() {
-    document.querySelectorAll(".toc-menu summary[data-toc-href]").forEach(summary => {
-      summary.addEventListener("click", function () {
-        const href = this.getAttribute("data-toc-href");
-        if (href && href.includes("#")) {
-          const hash = href.split("#")[1];
-          if (hash) window.location.hash = hash;
-        }
+  // --- 3. Auto-close TOC dropdown groups when focus/click leaves sidebar ---
+  function initTocAutoClose() {
+    const tocSidebar = document.getElementById("toc-sidebar");
+    if (!tocSidebar) return;
+
+    const closeOpenDetails = () => {
+      tocSidebar.querySelectorAll("details.toc-details[open]").forEach((d) => {
+        d.open = false;
       });
+    };
+
+    document.addEventListener("click", (event) => {
+      if (!tocSidebar.contains(event.target)) {
+        closeOpenDetails();
+      }
+    });
+
+    document.addEventListener("focusin", (event) => {
+      if (!tocSidebar.contains(event.target)) {
+        closeOpenDetails();
+      }
     });
   }
 
@@ -158,7 +248,7 @@
   function initAll() {
     initTocToggle();
     initTocSpy();
-    initTocClicks();
+    initTocAutoClose();
   }
 
   if (document.readyState === "loading") {

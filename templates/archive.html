@@ -7,7 +7,7 @@
     <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-base-content m-0 flex items-center gap-3">
       {{ section.title }}
     </h1>
-    <a href="/rss.xml" class="inline-flex items-center justify-center w-9 h-9 rounded-md border border-base-content/15 text-orange-500 bg-orange-500/5 hover:bg-orange-500/15 hover:border-orange-500/30 transition-all duration-200 no-underline shrink-0" title="Subscribe to RSS Feed">
+    <a href="/rss.xml" class="rss-action-btn shrink-0" title="Subscribe to RSS Feed">
       <i class="fa-solid fa-rss text-sm"></i>
     </a>
   </div>
@@ -55,7 +55,7 @@
       {% set_global current_month = post_month %}
     {% endif %}
     
-    {{ post_macro::render(post=post) }}
+    {{ post_macro::render(post=post, default_thumb=config.extra.default_thumbnail | default(value="")) }}
   {% endfor %}
   
   {# Close last month and year #}
@@ -79,47 +79,53 @@
 {% endblock content %}
 
 {% block toc_sidebar %}
-{# Custom TOC Sidebar for Archive - On This Page #}
-<div class="hidden lg:block">
-  <div class="sticky top-20 px-4 py-2 border-l border-base-content/15">
-    <h2 class="text-lg font-bold mb-1">ON THIS PAGE</h2>
-    <nav class="space-y-2">
+<aside
+  id="toc-sidebar"
+  class="hidden lg:block transition-all duration-300 ease-out origin-right"
+  data-toc-expand="false"
+  role="navigation"
+  aria-label="Table of contents"
+>
+  <div class="sticky top-20 px-4 py-2 border-l border-base-content/10">
+    <h2 class="text-[11px] font-semibold uppercase tracking-wider text-base-content/50 mb-3">On this page</h2>
+    <ul class="menu menu-sm toc-menu">
       {% set_global blog_section = get_section(path="blog/_index.md") %}
       {% if blog_section.pages %}
         {% set_global current_year = "" %}
         {% set_global last_month = "" %}
         {% for post in blog_section.pages %}
           {% set post_year = post.date | date(format="%Y") %}
+          {% set post_month = post.date | date(format="%B") %}
+          {% set post_month_num = post.date | date(format="%m") %}
+
           {% if post_year != current_year %}
             {% if current_year != "" %}
-              </div>
-            </div>
+                </ul>
+              </li>
             {% endif %}
-            <div class="toc-year">
-              <a href="#year-{{ post_year }}" class="block py-1 text-sm font-semibold hover:text-primary transition-colors">
-                {{ post_year }}
-              </a>
-              <div class="ml-3 space-y-0.5">
+            <li>
+              <a href="#year-{{ post_year }}" class="toc-link font-semibold">{{ post_year }}</a>
+              <ul>
             {% set_global current_year = post_year %}
             {% set_global last_month = "" %}
           {% endif %}
-          {% set post_month = post.date | date(format="%B") %}
-          {% set post_month_num = post.date | date(format="%m") %}
+
           {% if post_month != last_month %}
-                <a href="#month-{{ post_year }}-{{ post_month_num }}" class="block py-0.5 text-xs text-base-content/75 hover:text-primary transition-colors">
-                  {{ post_month }}
-                </a>
+            <li>
+              <a href="#month-{{ post_year }}-{{ post_month_num }}" class="toc-link text-[0.78rem]">{{ post_month }}</a>
+            </li>
             {% set_global last_month = post_month %}
           {% endif %}
         {% endfor %}
+
         {% if current_year != "" %}
-              </div>
-            </div>
+              </ul>
+            </li>
         {% endif %}
       {% endif %}
-    </nav>
+    </ul>
   </div>
-</div>
+</aside>
 {% endblock toc_sidebar %}
 
 {% block prev_link %}
@@ -144,7 +150,7 @@
       <div class="nav-button-direction">
         <span class="nav-button-label">Browse</span>
         <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7a2 2 0 012-2h5l2 2h7a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path>
         </svg>
       </div>
       <div class="nav-button-title">Categories</div>

@@ -1,6 +1,6 @@
 {% import "macros/apps.html" as macros_apps %}
 {% import "macros/icons.html" as macros_icons %}
-{% macro header(config, lang, is_export=false) %}
+{% macro header(config, lang, is_export=false, show_mobile_menu=true) %}
 {# Resolve logo configuration with backward compatibility #}
 {# Priority: logo.* (new) > logo_* (legacy) #}
 
@@ -22,16 +22,18 @@
 
 {% set has_theme_specific_logos = logo_dark_image_path != "" or logo_light_image_path != "" %}
 
-<div class="navbar fixed top-0 left-0 right-0 z-50 h-16 border-b border-base-content/10 bg-base-200/95 backdrop-blur-md">
+<div class="navbar site-topbar fixed top-0 left-0 right-0 z-50 h-16 border-b border-base-content/10 bg-base-200/95 backdrop-blur-md">
     <!-- Mobile hamburger (always visible) -->
+    {% if show_mobile_menu %}
     <div class="flex-none lg:hidden">
         <label id="hamburger-toggle" for="my-drawer-2" aria-label="Open menu" class="btn btn-ghost btn-circle btn-sm bg-base-200 border border-base-content/10 shadow-sm transition-all duration-200 hover:shadow-md hover:bg-base-200/70 active:scale-95">
             {{ macros_icons::svg_hamburger() }}
         </label>
     </div>
+    {% endif %}
     <!-- Logo (centered on mobile) -->
     <div class="flex-1 flex justify-center items-center lg:flex lg:justify-start">
-        <a href="/" class="btn btn-ghost hover:bg-transparent hover:border-transparent normal-case text-xl font-bold text-base-content logo-firefly">
+        <a href="/" class="btn btn-ghost hover:bg-transparent hover:border-transparent normal-case text-xl font-bold text-base-content logo-firefly site-logo-link">
             {% if has_theme_specific_logos %}
                 {# Theme-specific logos stacked in same space to prevent layout shift on switch #}
                 {% set dark_logo_src = logo_dark_image_path %}
@@ -80,13 +82,7 @@
     <!-- Desktop Menu -->
     <div class="flex-none hidden lg:flex">
         <ul class="menu menu-horizontal px-1 items-center">
-            {% if is_export %}
-                <li>
-                    <a class="btn btn-ghost hover:no-underline" href="https://dhanur.me">
-                        <i class="fa-solid fa-house"></i> Home
-                    </a>
-                </li>
-            {% else %}
+            {% if not is_export %}
                 {% set current_nav = config.extra.nav %}
                 {% if lang and lang != config.default_language %}
                     {% set nav_key = "nav_" ~ lang %}
@@ -237,16 +233,16 @@
                             {% endif %}
                             {% if not disable_theme_toggle %}
                             <li data-nav-chrome="theme">
-                                <div class="flex items-center gap-3 px-2 py-1.5">
+                                <div class="flex items-center gap-2.5 px-2.5 py-2">
                                     <i class="fa-solid fa-circle-half-stroke w-4 text-center opacity-60"></i>
-                                    <div id="theme-toggle" class="theme-switcher flex rounded-lg bg-base-300/75 p-0.5 text-xs font-medium flex-1">
-                                        <button data-theme-mode="light" class="theme-switcher-btn flex-1 rounded-md px-2.5 py-1 transition-all duration-200 cursor-pointer" aria-label="Light theme">
+                                    <div id="theme-toggle" class="theme-switcher w-full bg-base-300/70 text-xs font-medium">
+                                        <button data-theme-mode="light" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer" aria-label="Light theme">
                                             <i class="fa-solid fa-sun mr-1"></i>Light
                                         </button>
-                                        <button data-theme-mode="dark" class="theme-switcher-btn flex-1 rounded-sm px-2.5 py-1 transition-colors duration-200 cursor-pointer" aria-label="Dark theme">
+                                        <button data-theme-mode="dark" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer" aria-label="Dark theme">
                                             <i class="fa-solid fa-moon mr-1"></i>Dark
                                         </button>
-                                        <button data-theme-mode="auto" class="theme-switcher-btn flex-1 rounded-sm px-2.5 py-1 transition-colors duration-200 cursor-pointer" aria-label="Auto theme">
+                                        <button data-theme-mode="auto" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer" aria-label="Auto theme">
                                             <i class="fa-solid fa-circle-half-stroke mr-1"></i>Auto
                                         </button>
                                     </div>

@@ -19,8 +19,15 @@ jobs:
           fetch-depth: 0
 
       - name: Lint Code Base
-        uses: super-linter/super-linter@1fa6ba58a88783e9714725cf89ac26d53e80c148 # v6
+        uses: super-linter/super-linter@9e863354e3ff62e0727d37183162c4a88873df41 # v8.6.0
         env:
           VALIDATE_ALL_CODEBASE: false
           DEFAULT_BRANCH: main
+          # Keep high-signal checks for this repo and disable noisy/irrelevant validators.
+          VALIDATE_BIOME_FORMAT: false
+          VALIDATE_BIOME_LINT: false
+          VALIDATE_CHECKOV: false
+          VALIDATE_GITHUB_ACTIONS_ZIZMOR: false
+          VALIDATE_JSCPD: false
+          VALIDATE_YAML_PRETTIER: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

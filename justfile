@@ -49,7 +49,7 @@ setup-build-deps: _ensure-tailwind _ensure-daisyui
 _ensure-tailwind:
     #!/usr/bin/env bash
     set -euo pipefail
-    if [ -f "{{ tailwind }}" ]; then
+        if [ -x "{{ tailwind }}" ] && [ -s "{{ tailwind }}" ]; then
       echo "Tailwind CSS binary already present."
       exit 0
     fi
@@ -58,7 +58,7 @@ _ensure-tailwind:
 [private]
 [windows]
 _ensure-tailwind:
-    @if (Test-Path "{{ tailwind }}") { Write-Host "Tailwind CSS binary already present." } else { just _dl-tailwind }
+    @if ((Test-Path "{{ tailwind }}") -and ((Get-Item "{{ tailwind }}").Length -gt 0)) { Write-Host "Tailwind CSS binary already present." } else { just _dl-tailwind }
 
 [private, unix]
 _ensure-daisyui:
@@ -79,19 +79,35 @@ _ensure-daisyui:
 _dl-tailwind:
     #!/usr/bin/env bash
     set -euo pipefail
-    url="https://github.com/tailwindlabs/tailwindcss/releases/download/v${TAILWIND_VERSION}/tailwindcss-linux-x64"
-    if [ "{{ os }}" = "macos" ]; then
-      url="https://github.com/tailwindlabs/tailwindcss/releases/download/v${TAILWIND_VERSION}/tailwindcss-macos-arm64"
+        os_name="linux"
+        arch_name="x64"
+        uname_s="$(uname -s | tr '[:upper:]' '[:lower:]')"
+        uname_m="$(uname -m)"
+
+        if [ "$uname_s" = "darwin" ]; then
+            os_name="macos"
+        fi
+
+        if [ "$uname_m" = "aarch64" ] || [ "$uname_m" = "arm64" ]; then
+            arch_name="arm64"
     fi
+
+        url="https://github.com/tailwindlabs/tailwindcss/releases/download/v${TAILWIND_VERSION}/tailwindcss-${os_name}-${arch_name}"
+        target="{{ tailwind }}"
+        target_dir="$(dirname "$target")"
+        tmp_file="${target}.tmp"
+
     echo "Installing Tailwind CSS v${TAILWIND_VERSION}..."
-    curl -fsSL "$url" -o "{{ tailwind }}"
-    chmod +x "{{ tailwind }}"
+        mkdir -p "$target_dir"
+        curl --fail --location --silent --show-error --retry 3 --retry-all-errors "$url" -o "$tmp_file"
+        chmod +x "$tmp_file"
+        mv -f "$tmp_file" "$target"
     echo "  done."
 
 [private]
 [windows]
 _dl-tailwind:
-    @$url = "https://github.com/tailwindlabs/tailwindcss/releases/download/v$env:TAILWIND_VERSION/tailwindcss-windows-x64.exe"; echo "Installing Tailwind CSS v$env:TAILWIND_VERSION..."; Invoke-WebRequest -Uri $url -OutFile "{{ tailwind }}"; echo "  done."
+    @$url = "https://github.com/tailwindlabs/tailwindcss/releases/download/v$env:TAILWIND_VERSION/tailwindcss-windows-x64.exe"; $target = "{{ tailwind }}"; $targetDir = Split-Path -Parent $target; if (!(Test-Path $targetDir)) { New-Item -ItemType Directory -Path $targetDir | Out-Null }; echo "Installing Tailwind CSS v$env:TAILWIND_VERSION..."; Invoke-WebRequest -Uri $url -OutFile "$target.tmp"; Move-Item -Force "$target.tmp" $target; echo "  done."
 
 [private, unix]
 _dl-daisyui:

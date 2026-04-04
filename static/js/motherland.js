@@ -60,7 +60,7 @@
       link.href =
         typeof config.favicon === "string"
           ? config.favicon
-          : `${Config.URLS.base}/favicon.ico`;
+          : `${Config.URLS.base}/icons/favicon-transparent.ico`;
 
       document.head.appendChild(link);
     },

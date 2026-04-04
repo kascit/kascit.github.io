@@ -70,6 +70,12 @@
 
   <div class="taxonomy-term-grid mt-3" data-taxonomy-filter-list>
   {% for term in terms %}
+  {% set_global term_visible_count = 0 %}
+  {% for page in term.pages %}
+    {% if not (page.permalink is containing("/about/skill-tags-seed/")) %}
+      {% set_global term_visible_count = term_visible_count + 1 %}
+    {% endif %}
+  {% endfor %}
   <article
     class="taxonomy-term-item"
     data-taxonomy-term
@@ -80,7 +86,7 @@
   >
     <a href="{{ term.permalink | safe }}" class="taxonomy-term-btn" title="View {{ term.name }}">
       <span class="taxonomy-term-btn__name">{{ term.name }}</span>
-      <span class="taxonomy-term-btn__count">{{ term.pages | length }}</span>
+      <span class="taxonomy-term-btn__count">{{ term_visible_count }}</span>
     </a>
     <button
       type="button"
@@ -111,7 +117,7 @@
     <p class="taxonomy-subscribe-desc">Selections are saved in cookies, so you can build one RSS bundle across both tags and categories.</p>
 
     <div class="taxonomy-subscribe-actions">
-      <button type="button" class="taxonomy-subscribe-btn" data-taxonomy-subscribe-add-visible>Add Visible</button>
+      <button type="button" class="taxonomy-subscribe-btn taxonomy-subscribe-btn--primary" data-taxonomy-subscribe-add-visible>Add Visible</button>
       <button type="button" class="taxonomy-subscribe-btn" data-taxonomy-subscribe-clear>Clear</button>
     </div>
 
@@ -120,8 +126,8 @@
 
     <div class="taxonomy-subscribe-footer">
       <p class="taxonomy-subscribe-meta" data-taxonomy-subscribe-meta>0 selected</p>
-      <a class="taxonomy-subscribe-link is-disabled" data-taxonomy-subscribe-single aria-disabled="true" target="_blank" rel="noopener noreferrer">Open Single Feed</a>
-      <button type="button" class="taxonomy-subscribe-btn" data-taxonomy-subscribe-copy disabled>Copy Feed URLs</button>
+      <a class="taxonomy-subscribe-link taxonomy-subscribe-link--primary is-disabled" data-taxonomy-subscribe-single aria-disabled="true" target="_blank" rel="noopener noreferrer">Open Single Feed</a>
+      <button type="button" class="taxonomy-subscribe-btn taxonomy-subscribe-btn--primary" data-taxonomy-subscribe-copy disabled>Copy Feed URLs</button>
       <button type="button" class="taxonomy-subscribe-btn" data-taxonomy-subscribe-opml disabled>Download OPML</button>
     </div>
   </div>

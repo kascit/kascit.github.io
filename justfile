@@ -191,7 +191,7 @@ _dl-katex:
 
 [doc("Build CSS then start Zola dev server (blocking)")]
 [group('dev')]
-dev: project-pages widget-data css
+dev: project-pages about-skill-tags widget-data css
     zola serve
 
 [doc("Watch CSS for changes (blocking)")]
@@ -228,7 +228,7 @@ clean:
 [unix]
 [doc("Full production build (clean + generated content + css + zola)")]
 [group('build')]
-build: clean project-pages widget-data css
+build: clean project-pages about-skill-tags widget-data css
         #!/usr/bin/env bash
         set -euo pipefail
         if [ -n "${ZOLA_BASE_URL:-}" ]; then
@@ -241,7 +241,7 @@ build: clean project-pages widget-data css
 [windows]
 [doc("Full production build (clean + generated content + css + zola)")]
 [group('build')]
-build: clean project-pages widget-data css
+build: clean project-pages about-skill-tags widget-data css
     @if ($env:ZOLA_BASE_URL) { zola build --base-url "$env:ZOLA_BASE_URL" } else { zola build }
     node scripts/clean-pagination-redirects.js
 
@@ -256,24 +256,29 @@ project-pages:
 widget-data:
     node scripts/generate-latest-posts-widget.js
 
+[doc("Generate taxonomy seed entries for About-page skill chips")]
+[group('build')]
+about-skill-tags:
+    node scripts/sync-about-skill-tags.js
+
 [unix]
 [doc("Fail if generated content differs from committed files")]
 [group('ci')]
-verify-generated-clean: project-pages widget-data
+verify-generated-clean: project-pages about-skill-tags widget-data
     #!/usr/bin/env bash
     set -euo pipefail
-        if ! git diff --quiet -- content/projects static/widgets/latest-posts-data.json; then
+        if ! git diff --quiet -- content/projects content/about/_skill-tags-seed.md data/about-skill-tags.json static/widgets/latest-posts-data.json; then
             echo "ERROR: Generated content is out of sync."
-            echo "Run 'just project-pages widget-data' and commit changes."
-            git --no-pager diff -- content/projects static/widgets/latest-posts-data.json
+            echo "Run 'just project-pages about-skill-tags widget-data' and commit changes."
+            git --no-pager diff -- content/projects content/about/_skill-tags-seed.md data/about-skill-tags.json static/widgets/latest-posts-data.json
       exit 1
     fi
 
 [windows]
 [doc("Fail if generated content differs from committed files")]
 [group('ci')]
-verify-generated-clean: project-pages widget-data
-    @git diff --quiet -- content/projects static/widgets/latest-posts-data.json; if ($LASTEXITCODE -ne 0) { Write-Host "ERROR: Generated content is out of sync."; Write-Host "Run 'just project-pages widget-data' and commit changes."; git --no-pager diff -- content/projects static/widgets/latest-posts-data.json; exit 1 }
+verify-generated-clean: project-pages about-skill-tags widget-data
+    @git diff --quiet -- content/projects content/about/_skill-tags-seed.md data/about-skill-tags.json static/widgets/latest-posts-data.json; if ($LASTEXITCODE -ne 0) { Write-Host "ERROR: Generated content is out of sync."; Write-Host "Run 'just project-pages about-skill-tags widget-data' and commit changes."; git --no-pager diff -- content/projects content/about/_skill-tags-seed.md data/about-skill-tags.json static/widgets/latest-posts-data.json; exit 1 }
 
 [unix]
 [doc("Validate required output artifacts in public/")]

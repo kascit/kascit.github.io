@@ -3,9 +3,16 @@
 {# taxonomy_single: pages for one taxonomy term #}
 
 {% block content %}
+    {% set about_skill_data = load_data(path="data/about-skill-tags.json", format="json") %}
     {% set term_name_lc = term.name | lower %}
-    {% set skill_terms = ["java", "python", "go", "c / c++", "javascript", "typescript", "sql", "bash", "spring boot", "node.js", "postgresql", "mongodb", "redis", "dynamodb", "aws", "gcp", "docker", "kubernetes", "ci/cd", "git", "neovim", "arch linux", "terraform", "postman"] %}
+    {% set skill_terms = about_skill_data.skill_terms_lc | default(value=[]) %}
     {% set is_skill_term = taxonomy.name == "tags" and (skill_terms is containing(term_name_lc)) %}
+    {% set_global visible_page_count = 0 %}
+    {% for page in term.pages %}
+        {% if not (page.permalink is containing("/about/skill-tags-seed/")) %}
+            {% set_global visible_page_count = visible_page_count + 1 %}
+        {% endif %}
+    {% endfor %}
 
     <div class="not-prose mb-12 pb-6 border-b border-base-content/10">
         <div class="flex items-center justify-between gap-4 mb-3">
@@ -20,10 +27,10 @@
             </a>
         </div>
 
-        {% if term.pages | length > 0 %}
+        {% if visible_page_count > 0 %}
             <p class="text-base sm:text-lg text-base-content/70 mt-2 mb-0">
-                {{ term.pages | length }}
-                {% if term.pages | length == 1 %}
+                {{ visible_page_count }}
+                {% if visible_page_count == 1 %}
                     item
                 {% else %}
                     items
@@ -43,9 +50,10 @@
         {% endif %}
     </div>
 
-    {% if term.pages | length > 0 %}
+    {% if visible_page_count > 0 %}
         <div class="not-prose grid grid-cols-1 xl:grid-cols-2 gap-6">
             {% for page in term.pages %}
+            {% if not (page.permalink is containing("/about/skill-tags-seed/")) %}
             <div
                 class="taxonomy-playlist-post"
                 data-taxonomy-playlist-post
@@ -64,13 +72,14 @@
                 </button>
                 {{ post_macro::render(post=page, default_thumb=config.extra.default_thumbnail | default(value="")) }}
             </div>
+            {% endif %}
             {% endfor %}
         </div>
     {% endif %}
 {% endblock content %}
 
 {% block taxonomy_sidebar %}
-{% if term.pages | length > 0 %}
+{% if visible_page_count > 0 %}
 <section
     class="taxonomy-playlist-rail not-prose"
     data-taxonomy-playlist
@@ -86,7 +95,7 @@
         <p class="taxonomy-playlist-desc">Build your own reading order. Playlist is saved locally so you can add posts from other tags or categories too.</p>
 
         <div class="taxonomy-playlist-actions">
-            <button type="button" class="taxonomy-playlist-btn" data-taxonomy-playlist-add-page>Add All From Page</button>
+            <button type="button" class="taxonomy-playlist-btn taxonomy-playlist-btn--primary" data-taxonomy-playlist-add-page>Add All From Page</button>
             <button type="button" class="taxonomy-playlist-btn" data-taxonomy-playlist-clear>Clear</button>
         </div>
 
@@ -96,7 +105,7 @@
         <div class="taxonomy-playlist-footer">
             <p class="taxonomy-playlist-meta" data-taxonomy-playlist-meta>0 in playlist</p>
             <button type="button" class="taxonomy-playlist-btn" data-taxonomy-playlist-share disabled>Share Playlist Link</button>
-            <button type="button" class="taxonomy-playlist-btn" data-taxonomy-playlist-open-first disabled>Start Reading</button>
+            <button type="button" class="taxonomy-playlist-btn taxonomy-playlist-btn--primary" data-taxonomy-playlist-open-first disabled>Start Reading</button>
         </div>
     </div>
 </section>

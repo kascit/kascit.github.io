@@ -2,5 +2,6 @@
 {% if chip_name %}
 {% set chip_variant = variant | default(value="tag") %}
 {% set chip_label = label | default(value=chip_name) | trim %}
-<a href="/about/" class="surface-chip-link taxonomy-chip taxonomy-chip--{{ chip_variant }}" aria-label="View About page">{{ chip_label }}</a>
+{% set chip_slug = chip_name | slugify %}
+<a href="/tags/{{ chip_slug }}/" class="surface-chip-link taxonomy-chip taxonomy-chip--{{ chip_variant }}" aria-label="View tag {{ chip_name }}">{{ chip_label }}</a>
 {% endif %}

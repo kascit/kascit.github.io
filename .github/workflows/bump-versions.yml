@@ -77,12 +77,43 @@ jobs:
 
             raise RuntimeError(f"Failed to fetch latest release for {repo} after retries")
 
+          def latest_npm_version(package_name: str) -> str:
+            url = f"https://registry.npmjs.org/{package_name}/latest"
+
+            for attempt in range(1, max_retries + 1):
+              try:
+                with urllib.request.urlopen(url, timeout=timeout_seconds) as resp:
+                  data = json.load(resp)
+                version = data.get("version")
+                if not version:
+                  raise RuntimeError(f"Missing version in npm response for {package_name}")
+                return version
+              except urllib.error.HTTPError as exc:
+                retryable = exc.code in (429, 500, 502, 503, 504)
+                if retryable and attempt < max_retries:
+                  time.sleep(2 ** (attempt - 1))
+                  continue
+                raise RuntimeError(
+                  f"Failed to fetch latest npm version for {package_name}: HTTP {exc.code}"
+                ) from exc
+              except (urllib.error.URLError, TimeoutError) as exc:
+                if attempt < max_retries:
+                  time.sleep(2 ** (attempt - 1))
+                  continue
+                raise RuntimeError(
+                  f"Failed to fetch latest npm version for {package_name}: {exc}"
+                ) from exc
+
+            raise RuntimeError(f"Failed to fetch latest npm version for {package_name} after retries")
+
           versions = {
             "zola": latest_tag("getzola/zola").lstrip("v"),
             "tailwind": latest_tag("tailwindlabs/tailwindcss").lstrip("v"),
             "daisyui": latest_tag("saadeghi/daisyui").lstrip("v"),
             "katex": latest_tag("KaTeX/KaTeX").lstrip("v"),
             "fa": latest_tag("FortAwesome/Font-Awesome").lstrip("v"),
+            "terser": latest_npm_version("terser"),
+            "esbuild": latest_npm_version("esbuild"),
           }
 
           out_path = os.environ["GITHUB_OUTPUT"]
@@ -102,6 +133,8 @@ jobs:
           sed -i -E "s/^DAISYUI_VERSION=.*/DAISYUI_VERSION=${{ steps.latest.outputs.daisyui }}/" "$file"
           sed -i -E "s/^FA_VERSION=.*/FA_VERSION=${{ steps.latest.outputs.fa }}/" "$file"
           sed -i -E "s/^KATEX_VERSION=.*/KATEX_VERSION=${{ steps.latest.outputs.katex }}/" "$file"
+          sed -i -E "s/^TERSER_VERSION=.*/TERSER_VERSION=${{ steps.latest.outputs.terser }}/" "$file"
+          sed -i -E "s/^ESBUILD_VERSION=.*/ESBUILD_VERSION=${{ steps.latest.outputs.esbuild }}/" "$file"
 
           echo "Updated versions.env:" 
           cat "$file"
@@ -119,6 +152,8 @@ jobs:
             - DaisyUI: ${{ steps.latest.outputs.daisyui }}
             - Font Awesome: ${{ steps.latest.outputs.fa }}
             - KaTeX: ${{ steps.latest.outputs.katex }}
+            - Terser: ${{ steps.latest.outputs.terser }}
+            - esbuild: ${{ steps.latest.outputs.esbuild }}
           branch: chore/bump-tool-versions
           delete-branch: true
           labels: |

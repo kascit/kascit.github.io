@@ -102,10 +102,10 @@ function injectFavicons(sameOrigin, config) {
   document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]').forEach(el => el.remove());
 
   const iconLinks = [
-    { rel: "icon", type: "image/png", sizes: "96x96", href: `${iconBase}favicon-96x96.png` },
+    { rel: "icon", type: "image/png", sizes: "96x96", href: `${iconBase}favicon-96x96-transparent.png` },
     { rel: "icon", type: "image/svg+xml", href: `${iconBase}favicon.svg` },
-    { rel: "shortcut icon", href: `${iconBase}favicon.ico` },
-    { rel: "apple-touch-icon", sizes: "180x180", href: `${iconBase}apple-touch-icon.png` }
+    { rel: "shortcut icon", href: `${iconBase}favicon-transparent.ico` },
+    { rel: "apple-touch-icon", sizes: "180x180", href: `${iconBase}apple-touch-icon-180x180-transparent.png` }
   ];
 
   // Avoid cross-origin webmanifest warnings on subdomains.

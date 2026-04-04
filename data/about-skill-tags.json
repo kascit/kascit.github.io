@@ -1,0 +1,174 @@
+{
+  "skill_terms": [
+    {
+      "name": "Java",
+      "slug": "java",
+      "lower": "java"
+    },
+    {
+      "name": "Python",
+      "slug": "python",
+      "lower": "python"
+    },
+    {
+      "name": "Go",
+      "slug": "go",
+      "lower": "go"
+    },
+    {
+      "name": "C / C++",
+      "slug": "c-c",
+      "lower": "c / c++"
+    },
+    {
+      "name": "JavaScript",
+      "slug": "javascript",
+      "lower": "javascript"
+    },
+    {
+      "name": "TypeScript",
+      "slug": "typescript",
+      "lower": "typescript"
+    },
+    {
+      "name": "SQL",
+      "slug": "sql",
+      "lower": "sql"
+    },
+    {
+      "name": "Bash",
+      "slug": "bash",
+      "lower": "bash"
+    },
+    {
+      "name": "Spring Boot",
+      "slug": "spring-boot",
+      "lower": "spring boot"
+    },
+    {
+      "name": "Node.js",
+      "slug": "node-js",
+      "lower": "node.js"
+    },
+    {
+      "name": "PostgreSQL",
+      "slug": "postgresql",
+      "lower": "postgresql"
+    },
+    {
+      "name": "MongoDB",
+      "slug": "mongodb",
+      "lower": "mongodb"
+    },
+    {
+      "name": "Redis",
+      "slug": "redis",
+      "lower": "redis"
+    },
+    {
+      "name": "DynamoDB",
+      "slug": "dynamodb",
+      "lower": "dynamodb"
+    },
+    {
+      "name": "AWS",
+      "slug": "aws",
+      "lower": "aws"
+    },
+    {
+      "name": "GCP",
+      "slug": "gcp",
+      "lower": "gcp"
+    },
+    {
+      "name": "Docker",
+      "slug": "docker",
+      "lower": "docker"
+    },
+    {
+      "name": "Kubernetes",
+      "slug": "kubernetes",
+      "lower": "kubernetes"
+    },
+    {
+      "name": "CI/CD",
+      "slug": "ci-cd",
+      "lower": "ci/cd"
+    },
+    {
+      "name": "Git",
+      "slug": "git",
+      "lower": "git"
+    },
+    {
+      "name": "Neovim",
+      "slug": "neovim",
+      "lower": "neovim"
+    },
+    {
+      "name": "Arch Linux",
+      "slug": "arch-linux",
+      "lower": "arch linux"
+    },
+    {
+      "name": "Terraform",
+      "slug": "terraform",
+      "lower": "terraform"
+    },
+    {
+      "name": "Postman",
+      "slug": "postman",
+      "lower": "postman"
+    },
+    {
+      "name": "AI",
+      "slug": "ai",
+      "lower": "ai"
+    },
+    {
+      "name": "Cryptography",
+      "slug": "cryptography",
+      "lower": "cryptography"
+    },
+    {
+      "name": "Web3",
+      "slug": "web3",
+      "lower": "web3"
+    },
+    {
+      "name": "Computer Graphics",
+      "slug": "computer-graphics",
+      "lower": "computer graphics"
+    }
+  ],
+  "skill_terms_lc": [
+    "java",
+    "python",
+    "go",
+    "c / c++",
+    "javascript",
+    "typescript",
+    "sql",
+    "bash",
+    "spring boot",
+    "node.js",
+    "postgresql",
+    "mongodb",
+    "redis",
+    "dynamodb",
+    "aws",
+    "gcp",
+    "docker",
+    "kubernetes",
+    "ci/cd",
+    "git",
+    "neovim",
+    "arch linux",
+    "terraform",
+    "postman",
+    "ai",
+    "cryptography",
+    "web3",
+    "computer graphics"
+  ]
+}

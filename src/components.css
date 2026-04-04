@@ -230,16 +230,16 @@ h6:hover .copy-heading-link-button {
 }
 
 .blog-feed-wrap {
-  border-color: color-mix(in oklab, var(--color-base-content) 11%, transparent);
+  border-color: color-mix(in oklab, var(--color-base-content) 14%, transparent);
   background: linear-gradient(
     180deg,
-    color-mix(in oklab, var(--color-base-200) 60%, var(--color-base-100)) 0%,
+    color-mix(in oklab, var(--color-base-200) 68%, var(--color-base-100)) 0%,
     var(--color-base-100) 70%
   );
 }
 
 .blog-feed-head {
-  background: color-mix(in oklab, var(--color-base-100) 72%, var(--color-base-200));
+  background: color-mix(in oklab, var(--color-base-100) 66%, var(--color-base-200));
 }
 
 .blog-feed-scroller {
@@ -257,7 +257,7 @@ h6:hover .copy-heading-link-button {
 }
 
 .blog-feed-sentinel {
-  @apply flex items-center justify-center gap-3 rounded-xl border border-base-content/10 bg-base-200/30 px-4 py-3 text-sm text-base-content/65;
+  @apply flex items-center justify-center gap-3 rounded-xl border border-base-content/12 bg-base-200/32 px-4 py-3 text-sm text-base-content/72;
 }
 
 .blog-feed-loader {
@@ -894,16 +894,16 @@ main .design-showcase ol li {
 }
 
 .taxonomy-filter-wrap {
-  @apply rounded-box border border-base-content/10 p-4 sm:p-5 shadow-sm;
+  @apply rounded-box border border-base-content/14 p-4 sm:p-5 shadow-sm;
   background: linear-gradient(
     180deg,
-    color-mix(in oklab, var(--color-base-100) 80%, var(--color-base-200)) 0%,
+    color-mix(in oklab, var(--color-base-100) 76%, var(--color-base-200)) 0%,
     var(--color-base-100) 100%
   );
 }
 
 .taxonomy-filter-label {
-  @apply block text-[11px] font-semibold uppercase tracking-[0.1em] text-base-content/52 mb-2;
+  @apply block text-[11px] font-semibold uppercase tracking-[0.1em] text-base-content/58 mb-2;
 }
 
 .taxonomy-filter-input-wrap {
@@ -938,16 +938,16 @@ main .design-showcase ol li {
 }
 
 .taxonomy-filter-meta {
-  @apply mt-2 text-xs text-base-content/62;
+  @apply mt-2 text-xs text-base-content/68;
 }
 
 .taxonomy-filter-empty {
-  @apply mt-2 text-sm text-base-content/65;
+  @apply mt-2 text-sm text-base-content/72;
 }
 
 .taxonomy-term-btn {
   @apply inline-flex items-center justify-between gap-2 rounded-md px-3 py-2.5 no-underline;
-  @apply border border-base-content/12 bg-base-100 text-base-content/88 transition-colors duration-200 shadow-sm;
+  @apply border border-base-content/14 bg-base-100 text-base-content/92 transition-colors duration-200 shadow-sm;
 }
 
 .taxonomy-term-item {
@@ -986,14 +986,14 @@ main .design-showcase ol li {
 }
 
 .taxonomy-term-btn__name {
-  @apply text-[0.86rem] font-semibold truncate;
+  @apply text-[0.9rem] font-semibold truncate;
 }
 
 .taxonomy-term-btn__count {
   @apply inline-flex items-center justify-center rounded-md text-[10px] font-semibold px-1.5 py-0.5 shrink-0;
-  border: 1px solid color-mix(in oklab, var(--color-base-content) 16%, transparent);
-  background: color-mix(in oklab, var(--color-base-content) 9%, transparent);
-  color: color-mix(in oklab, var(--color-base-content) 70%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 20%, transparent);
+  background: color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 74%, transparent);
 }
 
 .taxonomy-subscribe-rail {
@@ -1001,7 +1001,7 @@ main .design-showcase ol li {
 }
 
 .taxonomy-subscribe-card {
-  @apply rounded-box border border-base-content/10 p-4;
+  @apply rounded-box border border-base-content/14 p-4;
   display: flex;
   flex-direction: column;
   max-height: calc(100dvh - 7rem);
@@ -1009,7 +1009,7 @@ main .design-showcase ol li {
   overflow: hidden;
   background: linear-gradient(
     180deg,
-    color-mix(in oklab, var(--color-base-100) 85%, var(--color-base-200)) 0%,
+    color-mix(in oklab, var(--color-base-100) 80%, var(--color-base-200)) 0%,
     var(--color-base-100) 100%
   );
 }
@@ -1019,18 +1019,18 @@ main .design-showcase ol li {
 }
 
 .taxonomy-subscribe-title {
-  @apply text-sm font-semibold m-0 text-base-content;
+  @apply text-base font-semibold m-0 text-base-content;
 }
 
 .taxonomy-subscribe-badge {
   @apply text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-md;
-  border: 1px solid color-mix(in oklab, var(--color-base-content) 14%, transparent);
-  color: color-mix(in oklab, var(--color-base-content) 62%, transparent);
-  background: color-mix(in oklab, var(--color-base-content) 7%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 18%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 74%, transparent);
+  background: color-mix(in oklab, var(--color-base-content) 10%, transparent);
 }
 
 .taxonomy-subscribe-desc {
-  @apply mt-2 mb-0 text-xs leading-relaxed text-base-content/65;
+  @apply mt-2 mb-0 text-xs leading-relaxed text-base-content/74;
 }
 
 .taxonomy-subscribe-actions {
@@ -1039,11 +1039,22 @@ main .design-showcase ol li {
 
 .taxonomy-subscribe-btn {
   @apply inline-flex items-center justify-center rounded-md px-2.5 py-1.5 text-[11px] font-semibold;
-  @apply border border-base-content/14 bg-base-100 text-base-content/70 transition-colors duration-150;
+  @apply border border-base-content/18 bg-base-100 text-base-content/78 transition-colors duration-150;
 }
 
 .taxonomy-subscribe-btn:hover {
-  @apply border-base-content/24 text-base-content bg-base-200/28;
+  @apply border-base-content/28 text-base-content bg-base-200/34;
+}
+
+.taxonomy-subscribe-btn--primary {
+  border-color: color-mix(in oklab, var(--color-primary) 44%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 14%, var(--color-base-100));
+  color: color-mix(in oklab, var(--color-primary) 92%, var(--color-base-content));
+}
+
+.taxonomy-subscribe-btn--primary:hover {
+  border-color: color-mix(in oklab, var(--color-primary) 56%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 22%, var(--color-base-100));
 }
 
 .taxonomy-subscribe-btn:disabled {
@@ -1060,12 +1071,12 @@ main .design-showcase ol li {
 
 .taxonomy-subscribe-chip {
   @apply inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-[11px] font-medium;
-  @apply border border-base-content/14 text-base-content/80 bg-base-200/35;
+  @apply border border-base-content/16 text-base-content/84 bg-base-200/42;
 }
 
 .taxonomy-subscribe-chip-icon {
   font-size: 0.65rem;
-  color: color-mix(in oklab, var(--color-base-content) 55%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 68%, transparent);
 }
 
 .taxonomy-subscribe-chip-remove {
@@ -1078,30 +1089,41 @@ main .design-showcase ol li {
 }
 
 .taxonomy-subscribe-empty {
-  @apply mt-2 text-xs text-base-content/55;
+  @apply mt-2 text-xs text-base-content/62;
 }
 
 .taxonomy-subscribe-footer {
-  @apply mt-4 flex flex-col gap-2 pt-3 border-t border-base-content/10;
+  @apply mt-4 flex flex-col gap-2 pt-3 border-t border-base-content/14;
 }
 
 .taxonomy-subscribe-meta {
-  @apply m-0 text-xs font-medium text-base-content/62;
+  @apply m-0 text-xs font-medium text-base-content/72;
 }
 
 .taxonomy-subscribe-link {
   @apply inline-flex items-center justify-center rounded-md px-2.5 py-1.5 text-[11px] font-semibold no-underline;
-  @apply border border-base-content/14 text-base-content/70 bg-base-100 transition-colors duration-150;
+  @apply border border-base-content/18 text-base-content/78 bg-base-100 transition-colors duration-150;
 }
 
 .taxonomy-subscribe-link:hover {
-  @apply no-underline border-base-content/24 text-base-content bg-base-200/28;
+  @apply no-underline border-base-content/28 text-base-content bg-base-200/34;
+}
+
+.taxonomy-subscribe-link--primary {
+  border-color: color-mix(in oklab, var(--color-primary) 44%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 14%, var(--color-base-100));
+  color: color-mix(in oklab, var(--color-primary) 92%, var(--color-base-content));
+}
+
+.taxonomy-subscribe-link--primary:hover {
+  border-color: color-mix(in oklab, var(--color-primary) 56%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 22%, var(--color-base-100));
 }
 
 .taxonomy-subscribe-link.is-disabled,
 .taxonomy-subscribe-link.is-disabled:hover {
   @apply opacity-45 cursor-not-allowed;
-  @apply border-base-content/14 text-base-content/62 bg-base-100;
+  @apply border-base-content/14 text-base-content/58 bg-base-100;
   pointer-events: none;
 }
 
@@ -1138,7 +1160,7 @@ main .design-showcase ol li {
 }
 
 .taxonomy-playlist-card {
-  @apply rounded-box border border-base-content/10 p-4;
+  @apply rounded-box border border-base-content/14 p-4;
   display: flex;
   flex-direction: column;
   max-height: calc(100dvh - 7rem);
@@ -1146,7 +1168,7 @@ main .design-showcase ol li {
   overflow: hidden;
   background: linear-gradient(
     180deg,
-    color-mix(in oklab, var(--color-base-100) 85%, var(--color-base-200)) 0%,
+    color-mix(in oklab, var(--color-base-100) 80%, var(--color-base-200)) 0%,
     var(--color-base-100) 100%
   );
 }
@@ -1156,18 +1178,18 @@ main .design-showcase ol li {
 }
 
 .taxonomy-playlist-title {
-  @apply text-sm font-semibold m-0 text-base-content;
+  @apply text-base font-semibold m-0 text-base-content;
 }
 
 .taxonomy-playlist-badge {
   @apply text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-md;
-  border: 1px solid color-mix(in oklab, var(--color-base-content) 14%, transparent);
-  color: color-mix(in oklab, var(--color-base-content) 62%, transparent);
-  background: color-mix(in oklab, var(--color-base-content) 7%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 18%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 74%, transparent);
+  background: color-mix(in oklab, var(--color-base-content) 10%, transparent);
 }
 
 .taxonomy-playlist-desc {
-  @apply mt-2 mb-0 text-xs leading-relaxed text-base-content/65;
+  @apply mt-2 mb-0 text-xs leading-relaxed text-base-content/74;
 }
 
 .taxonomy-playlist-actions {
@@ -1176,11 +1198,22 @@ main .design-showcase ol li {
 
 .taxonomy-playlist-btn {
   @apply inline-flex items-center justify-center rounded-md px-2.5 py-1.5 text-[11px] font-semibold;
-  @apply border border-base-content/14 bg-base-100 text-base-content/70 transition-colors duration-150;
+  @apply border border-base-content/18 bg-base-100 text-base-content/78 transition-colors duration-150;
 }
 
 .taxonomy-playlist-btn:hover {
-  @apply border-base-content/24 text-base-content bg-base-200/28;
+  @apply border-base-content/28 text-base-content bg-base-200/34;
+}
+
+.taxonomy-playlist-btn--primary {
+  border-color: color-mix(in oklab, var(--color-primary) 44%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 14%, var(--color-base-100));
+  color: color-mix(in oklab, var(--color-primary) 92%, var(--color-base-content));
+}
+
+.taxonomy-playlist-btn--primary:hover {
+  border-color: color-mix(in oklab, var(--color-primary) 56%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 22%, var(--color-base-100));
 }
 
 .taxonomy-playlist-btn:disabled {
@@ -1196,7 +1229,7 @@ main .design-showcase ol li {
 }
 
 .taxonomy-playlist-empty {
-  @apply mt-2 text-xs text-base-content/55;
+  @apply mt-2 text-xs text-base-content/62;
 }
 
 .taxonomy-playlist-row {
@@ -1238,7 +1271,7 @@ main .design-showcase ol li {
 }
 
 .taxonomy-playlist-link {
-  @apply text-[11px] font-medium no-underline text-base-content/78 truncate;
+  @apply text-[11px] font-medium no-underline text-base-content/84 truncate;
 }
 
 .taxonomy-playlist-link:hover {
@@ -1255,11 +1288,11 @@ main .design-showcase ol li {
 }
 
 .taxonomy-playlist-footer {
-  @apply mt-4 flex flex-col gap-2 pt-3 border-t border-base-content/10;
+  @apply mt-4 flex flex-col gap-2 pt-3 border-t border-base-content/14;
 }
 
 .taxonomy-playlist-meta {
-  @apply m-0 text-xs font-medium text-base-content/62;
+  @apply m-0 text-xs font-medium text-base-content/72;
 }
 
 .status-pill {

@@ -172,8 +172,8 @@ creator = "@nkascit"
 # =============================================================================
 [extra.favicon]
 base_path = "/icons/"
-favicon_96x96 = "/icons/favicon-96x96.png"
+favicon_96x96 = "/icons/favicon-96x96-transparent.png"
 favicon_svg = "/icons/favicon.svg"
-favicon_ico = "/icons/favicon.ico"
-apple_touch_icon = "/icons/apple-touch-icon.png"
+favicon_ico = "/icons/favicon-transparent.ico"
+apple_touch_icon = "/icons/apple-touch-icon-180x180-transparent.png"
 site_webmanifest = "/icons/site.webmanifest"

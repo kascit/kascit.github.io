@@ -48,7 +48,7 @@
                         <summary>{{ s1.title }}</summary>
                             <ul>
                             <li {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
-                                <a class="hover:no-underline" href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.extra.link_title | default(value=s1.title) }}</a>
+                                <a class="hover:no-underline" href="{{ nav_item.url | safe }}">{{ s1.extra.link_title | default(value=s1.title) }}</a>
                             </li>
                             {# Level 2 #}
                                 {% set is_blog_root = section_key == "blog" or s1.path is ending_with("/blog/") %}
@@ -125,7 +125,7 @@
                             {% endfor %}
                         </ul>
                     </details>
-                {% else %}<a {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %} href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.title }}</a>{% endif %}
+                {% else %}<a {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %} href="{{ nav_item.url | safe }}">{{ s1.title }}</a>{% endif %}
             </li>
                         {% endif %}
                     {% endif %}
@@ -224,7 +224,7 @@
         
         <div class="mt-2 flex gap-2">
             <a href="https://auth.dhanur.me" class="btn btn-primary btn-sm flex-1 hover:no-underline" data-auth="sidebar-login-btn">Sign In</a>
-            <a href="#" class="btn btn-ghost btn-sm flex-1 text-error/80 hover:text-error hidden hover:no-underline" data-auth="sidebar-logout-btn">Sign Out</a>
+            <button type="button" class="btn btn-ghost btn-sm flex-1 text-error/80 hover:text-error hidden" data-auth="sidebar-logout-btn">Sign Out</button>
             <a href="https://auth.dhanur.me" class="btn btn-ghost btn-sm flex-1 hidden hover:no-underline" data-auth="sidebar-account-btn">Account</a>
         </div>
     </div>

@@ -24,6 +24,7 @@ content/projects/*.md
 !content/projects/_index.md
 
 # Temp/log files
+.tmp*
 tmp*
 *.tmp
 *.temp

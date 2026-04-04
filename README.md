@@ -37,6 +37,7 @@ just dev      # CSS build + Zola dev server
 
 ```bash
 just build    # Clean, CSS minify, Zola build
+just ci-build # CI-grade build: verify generated content, build, JS optimize, validate output
 ```
 
 ### Generated Content Pipeline
@@ -49,6 +50,7 @@ just widget-data     # Regenerate static/widgets/latest-posts-data.json
 ```
 
 CI and deploy workflows enforce that generated files are committed.
+Both workflows now execute the same build path via `just ci-build`.
 
 ## Available Commands
 
@@ -61,6 +63,7 @@ just watch    # CSS watch mode
 
 # Build & Deploy
 just build    # Production build (clean + CSS + Zola)
+just ci-build # CI/deploy build pipeline with validation and JS optimization
 just clean    # Remove build artifacts
 
 # Maintenance

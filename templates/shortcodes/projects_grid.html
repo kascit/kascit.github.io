@@ -50,15 +50,15 @@
       <a href="{{ project_live }}" target="_blank" rel="noopener" class="project-card-btn btn-live"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live</a>
       {% endif %}
 
-      {% if project_github %}
+      {% if project_github and project_github != project_live %}
       <a href="{{ project_github }}" target="_blank" rel="noopener" class="project-card-btn"><i class="fa-brands fa-github"></i> Code</a>
       {% endif %}
 
-      {% if project_url %}
+      {% if project_url and project_url != project_live and project_url != project_github %}
       <a href="{{ project_url }}" {% if project_external %}target="_blank" rel="noopener"{% endif %} class="project-card-btn"><i class="fa-solid fa-link"></i> {{ project_url_label }}</a>
       {% endif %}
 
-      <a href="/projects/{{ project.slug }}/" class="project-card-btn"><i class="fa-solid fa-book-open"></i> Details</a>
+      <a href="/projects/{{ project.slug }}/" class="project-card-btn" aria-label="{{ project.title }}" title="{{ project.title }}"><i class="fa-solid fa-book-open"></i> Details</a>
     </div>
   </article>
   {% endif %}

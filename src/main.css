@@ -1,9 +1,7 @@
 @import "tailwindcss" source(none);
 @source "../templates/**/*.{html,md}";
 @source "../content/**/*.{html,md}";
-
-/* Cross-project safelist: all utility classes subdomains may use via shell.js */
-@source "./safelist.html";
+@source "../static/js/**/*.js";
 
 /*
  * Safelist for Dynamic Classes
@@ -48,6 +46,7 @@
 @import "./theme-system.css";
 @import "./typography.css";
 @import "./components.css";
+@import "./dui.css";
 @import "./layout.css";
 @import "./responsive-display.css";
 

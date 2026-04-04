@@ -76,23 +76,11 @@ function injectCSS(sameOrigin, config) {
   if (document.querySelector('link[data-shell-style="main"]')) return;
 
   const cssBase = sameOrigin ? '' : BASE_URL;
-
-  // Preloads
-  [
-    { href: `${cssBase}/webfonts/fa-solid-900.woff2`, type: "font/woff2" },
-    { href: `${cssBase}/webfonts/fa-brands-400.woff2`, type: "font/woff2" },
-    { href: `${cssBase}/fonts/Pretendard-Regular.woff`, type: "font/woff" },
-  ].forEach(p => {
-    const pl = document.createElement("link");
-    pl.rel = "preload"; pl.as = "font"; pl.type = p.type;
-    pl.href = p.href; pl.crossOrigin = "anonymous";
-    pl.setAttribute('data-shell-style', 'preload');
-    document.head.appendChild(pl);
-  });
+  const shellCssHref = sameOrigin ? `${cssBase}/css/main.css` : `${cssBase}/css/dui.css`;
 
   const mainLink = document.createElement("link");
   mainLink.rel = "stylesheet";
-  mainLink.href = `${cssBase}/css/main.css`;
+  mainLink.href = shellCssHref;
   mainLink.setAttribute('data-shell-style', 'main');
   if (!sameOrigin) mainLink.crossOrigin = "anonymous";
   document.head.appendChild(mainLink);
@@ -105,17 +93,6 @@ function injectCSS(sameOrigin, config) {
   faLink.onload = function () { this.media = "all"; };
   if (!sameOrigin) faLink.crossOrigin = "anonymous";
   document.head.appendChild(faLink);
-
-  const fontStyle = document.createElement("style");
-  fontStyle.textContent = `
-    @font-face{font-family:"Font Awesome 6 Brands";font-style:normal;font-weight:400;font-display:swap;src:url(${cssBase}/webfonts/fa-brands-400.woff2) format("woff2"),url(${cssBase}/webfonts/fa-brands-400.ttf) format("truetype")}
-    @font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:400;font-display:swap;src:url(${cssBase}/webfonts/fa-regular-400.woff2) format("woff2"),url(${cssBase}/webfonts/fa-regular-400.ttf) format("truetype")}
-    @font-face{font-family:"Font Awesome 6 Free";font-style:normal;font-weight:900;font-display:swap;src:url(${cssBase}/webfonts/fa-solid-900.woff2) format("woff2"),url(${cssBase}/webfonts/fa-solid-900.ttf) format("truetype")}
-    @font-face{font-family:"Pretendard-Regular";src:url('${cssBase}/fonts/Pretendard-Regular.woff') format("woff");font-weight:400;font-style:normal;font-display:swap}
-    body{font-family:"Pretendard-Regular",sans-serif}
-  `;
-  fontStyle.setAttribute('data-shell-style', 'fonts');
-  document.head.appendChild(fontStyle);
 }
 
 function injectFavicons(sameOrigin, config) {
@@ -171,7 +148,7 @@ function hydrate(shellRoot) {
   const config = getShellRuntimeConfig();
   const sameOrigin = isSameOriginHost();
 
-  const hasMainStyles = !!document.querySelector('link[rel="stylesheet"][href*="/css/main.css"], link[data-shell-style="main"]');
+  const hasMainStyles = !!document.querySelector('link[rel="stylesheet"][href*="/css/main.css"], link[rel="stylesheet"][href*="/css/dui.css"], link[data-shell-style="main"]');
   const hasFaviconLinks = !!document.querySelector('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]');
 
   // On subdomains always inject shared assets.

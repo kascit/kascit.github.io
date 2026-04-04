@@ -8,10 +8,10 @@ GEN_DIR="$ROOT_DIR/scripts/.tmp-icons"
 
 # Visual palettes
 LIGHT_BG="#ffffff"
-LIGHT_FG="#111827"
-DARK_BG="#0b1220"
-DARK_FG="#e5e7eb"
-MUTED_FG="#9ca3af"
+LIGHT_FG="#000000"
+DARK_BG="#000000"
+DARK_FG="#ffffff"
+MUTED_FG="#000000"
 
 if [[ ! -f "$SRC_SVG" ]]; then
   echo "Source SVG not found: $SRC_SVG" >&2
@@ -101,6 +101,10 @@ generate_shortcut_family() {
   # Maskable variants with safer insets
   render_svg_icon "$svg" 192 "$DARK_BG"  "$ICON_DIR/${name}-maskable.png"          48 "$DARK_FG"
   render_svg_icon "$svg" 512 "$DARK_BG"  "$ICON_DIR/${name}-maskable-512.png"      48 "$DARK_FG"
+
+  # Transparent maskable variants (preferred in manifest order)
+  render_svg_icon "$svg" 192 none         "$ICON_DIR/${name}-maskable-transparent.png"       48 "$MUTED_FG"
+  render_svg_icon "$svg" 512 none         "$ICON_DIR/${name}-maskable-transparent-512.png"   48 "$MUTED_FG"
 }
 
 rm -rf "$GEN_DIR"

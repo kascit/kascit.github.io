@@ -87,6 +87,7 @@ Prefer **`border-base-content/10`–`/20`**, not raw `gray-*`, so borders track 
 
 ```bash
 tailwindcss -i src/main.css -o static/css/main.css --minify
+tailwindcss -i src/dui-export.css -o static/css/dui.css --minify
 zola build
 ```
 

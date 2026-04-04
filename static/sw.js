@@ -1,6 +1,6 @@
 // Service Worker with smart caching strategy
 // Cache versioning: Update CACHE_VERSION when assets change
-const CACHE_VERSION = "v12";
+const CACHE_VERSION = "v13";
 const CACHE_NAME = `kascit-${CACHE_VERSION}`;
 const META_CACHE = `kascit-meta-${CACHE_VERSION}`;
 const RUNTIME_META_CACHE = "kascit-runtime-meta-v1";
@@ -18,20 +18,9 @@ const CRITICAL_ASSETS = [
   // Assets needed for offline page to render properly
   "/css/main.css",
   "/css/font-awesome.min.css",
+  "/js/boot.js",
   "/js/main.js",
   "/js/offline-reload.js",
-  "/js/modules/config.js",
-  "/js/modules/responsive.js",
-  "/js/modules/theme-engine.js",
-  "/js/modules/auth-integration.js",
-  "/js/modules/dropdowns.js",
-  "/js/modules/drawer.js",
-  "/js/modules/clipboard.js",
-  "/js/modules/shortcuts.js",
-  "/js/modules/scroll-top.js",
-  "/js/modules/lazy-plugins.js",
-  "/js/modules/service-worker.js",
-  "/js/modules/comments.js",
   "/fonts/Pretendard-Regular.woff",
   "/webfonts/fa-solid-900.woff2",
   "/webfonts/fa-brands-400.woff2",
@@ -64,6 +53,18 @@ const DO_NOT_CACHE = [
   /^\/open-file\/$/,
   /^\/handler\/$/,
 ];
+
+function canonicalDocumentPath(pathname) {
+  if (!pathname || pathname === "/") return "/";
+  if (pathname.endsWith("/")) return pathname;
+  if (/\.[A-Za-z0-9]+$/.test(pathname)) return pathname;
+  return `${pathname}/`;
+}
+
+function documentCacheKey(url) {
+  const canonicalPath = canonicalDocumentPath(url.pathname);
+  return `${canonicalPath}${url.search}`;
+}
 
 // Service Worker Install Event
 self.addEventListener("install", (event) => {
@@ -452,12 +453,15 @@ self.addEventListener("fetch", (event) => {
     event.respondWith(
       (async () => {
         const cache = await caches.open(CACHE_NAME);
-        const cachedResponse = await cache.match(request);
+        const key = documentCacheKey(url);
+        const cachedResponse =
+          (await cache.match(key)) ||
+          (await cache.match(request));
 
         const networkFetch = fetch(request)
           .then((response) => {
             if (response && response.status === 200) {
-              cache.put(request, response.clone());
+              cache.put(key, response.clone());
             }
             return response;
           })

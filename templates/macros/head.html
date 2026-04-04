@@ -43,17 +43,82 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
 
     <!-- Resource hints for optional integrations are loaded only after user consent. -->
-    {# Preload critical fonts to reduce critical path latency #}
-    <link rel="preload" href="{{ get_url(path="webfonts/fa-solid-900.woff2") | safe }}" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="{{ get_url(path="webfonts/fa-brands-400.woff2") | safe }}" as="font" type="font/woff2" crossorigin>
-    <link rel="preload" href="{{ get_url(path="fonts/Pretendard-Regular.woff") | safe }}" as="font" type="font/woff" crossorigin>
-
     {% set theme_colorset = self::get_theme_colorset(config=config) | trim %}
-    <!-- Critical theme init to prevent FOUC — must run synchronously (no defer) -->
+    <!-- Critical theme init to prevent FOUC — must run synchronously (inline) -->
     {%- set cookie_domain = config.base_url | replace(from="https://", to="") | replace(from="http://", to="") -%}
-    <script src="{{ get_url(path="js/boot.js") | safe }}"
-            data-cookie-domain="{{ cookie_domain }}"
-            data-default-colorset="{{ theme_colorset }}"></script>
+    <script>
+    (function () {
+      var cookieDomain = "{{ cookie_domain }}";
+      var defaultColorset = "{{ theme_colorset }}" || "dark";
+      var SIDEBAR_KEY = "sidebar-collapsed";
+      var TOC_KEY = "toc-collapsed";
+
+      // Gate layout transitions until runtime modules finish syncing initial state.
+      document.documentElement.setAttribute("data-ui-init", "0");
+
+      function getStorageFlag(key) {
+        try {
+          return window.localStorage.getItem(key) === "1";
+        } catch (_) {
+          return false;
+        }
+      }
+
+      window.__getThemeCookie = function () {
+        var m = document.cookie.match(/(?:^|; )theme=([^;]*)/);
+        return m ? m[1] : null;
+      };
+
+      window.__setThemeCookie = function (val) {
+        var h = location.hostname;
+        var d = (h === "localhost" || h === "127.0.0.1") ? "" : "; domain=." + cookieDomain;
+        document.cookie = "theme=" + val + "; path=/" + d + "; max-age=31536000; SameSite=Lax";
+      };
+
+      window.__resolveColorset = function (val) {
+        if (val === "auto") {
+          return (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+        }
+        return val;
+      };
+
+      var rawColorset = window.__getThemeCookie() || defaultColorset;
+      var colorset = window.__resolveColorset(rawColorset);
+      var themeMap = { dark: "dark", light: "light" };
+      var themeName = themeMap[colorset] || colorset;
+      var prepaintBgMap = { dark: "#010409", light: "#f6f8fa" };
+      var prepaintBg = prepaintBgMap[colorset] || prepaintBgMap.dark;
+
+      document.documentElement.setAttribute("data-theme", themeName);
+      document.documentElement.style.backgroundColor = prepaintBg;
+
+      if (colorset === "dark") {
+        document.documentElement.classList.add("dark");
+        document.documentElement.style.colorScheme = "dark";
+      } else {
+        document.documentElement.classList.add("light");
+        document.documentElement.style.colorScheme = "light";
+      }
+
+      document.documentElement.setAttribute(
+        "data-sidebar-collapsed",
+        getStorageFlag(SIDEBAR_KEY) ? "1" : "0"
+      );
+
+      var tocCollapsed = getStorageFlag(TOC_KEY);
+      document.documentElement.setAttribute(
+        "data-toc-collapsed",
+        tocCollapsed ? "1" : "0"
+      );
+      if (tocCollapsed) {
+        document.addEventListener("DOMContentLoaded", function () {
+          if (document.body) {
+            document.body.classList.add("toc-collapsed");
+          }
+        }, { once: true });
+      }
+    })();
+    </script>
 
         {# Font configuration with backward compatibility #}
         {% if config.extra.font is defined %}
@@ -75,7 +140,7 @@
                     src: url('{{ get_url(path=font_path) | safe }}') format("woff");
                     font-weight: 400;
                     font-style: normal;
-                    font-display: swap;
+                  font-display: swap;
                 }
                 </style>
             {% endif %}
@@ -248,10 +313,10 @@
     <!-- Preload critical stylesheets for faster rendering -->
     <link rel="preload" href="{{ get_url(path="css/main.css") | safe }}" as="style">
     <link rel="stylesheet" href="{{ get_url(path="css/main.css") | safe }}">
-    <!-- Load Font Awesome normally (prevent inline onload CSP violation) -->
+      <!-- Keep icon font stylesheet eager to avoid icon pop-in across page navigations -->
     <link rel="preload" href="{{ get_url(path="css/font-awesome.min.css") | safe }}" as="style">
-    <link rel="stylesheet" href="{{ get_url(path="css/font-awesome.min.css") | safe }}">
-    <!-- Loaded Font Awesome normally (prevent inline onload CSP violation) -->
+      <link rel="stylesheet" href="{{ get_url(path="css/font-awesome.min.css") | safe }}">
+    <link rel="modulepreload" href="{{ get_url(path="js/main.js") | safe }}">
 
     <meta name="js-modules"
             data-katex-css="{{ get_url(path="css/katex.min.css") | safe }}"

@@ -1,0 +1,29 @@
+@import "tailwindcss" source(none);
+@source "../templates/**/*.{html,md}";
+@source "../content/**/*.{html,md}";
+@source "../static/js/**/*.js";
+
+/* Cross-project safelist for shell consumers on external subdomains. */
+@source "./safelist.html";
+
+/* Keep dynamic shortcode classes available in export builds as well. */
+@source inline("lg:grid-cols-1 lg:grid-cols-2 lg:grid-cols-3 lg:grid-cols-4 lg:grid-cols-5 lg:grid-cols-6");
+@source inline("alert-soft alert-outline alert-dash");
+@source inline("opacity-0 opacity-5 opacity-10 opacity-15 opacity-20 opacity-25 opacity-30 opacity-35 opacity-40 opacity-45 opacity-50 opacity-55 opacity-60 opacity-65 opacity-70 opacity-75 opacity-80 opacity-85 opacity-90 opacity-95 opacity-100");
+
+@plugin "./vendor/daisyui.js" {
+  themes:
+    light --default,
+    dark;
+}
+
+@plugin "./vendor/daisyui-theme.js" {
+}
+
+@import "./theme-system.css";
+@import "./typography.css";
+@import "./components.css";
+@import "./dui.css";
+@import "./layout.css";
+@import "./responsive-display.css";
+@import "./syntax-highlight.css";

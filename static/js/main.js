@@ -1,37 +1,30 @@
 /**
  * Main Web Application Entrypoint (ES Module)
- * Replaces the old monolithic bundle.js
  */
 
-import { initResponsive } from './modules/responsive.js';
-import { initTheme } from './modules/theme-engine.js';
-import { initAuth } from './modules/auth-integration.js';
-import { initDropdowns } from './modules/dropdowns.js';
-import { initDrawer } from './modules/drawer.js';
-import { initClipboard } from './modules/clipboard.js';
-import { initCodeBlocks } from './modules/code-blocks.js';
-import { initShortcuts } from './modules/shortcuts.js';
-import { initScrollToTop } from './modules/scroll-top.js';
-import { initLazyPlugins } from './modules/lazy-plugins.js';
-import { initServiceWorker } from './modules/service-worker.js';
-import { initComments } from './modules/comments.js';
-import { initBlogFeed } from './modules/blog-feed.js';
-import { initTaxonomyFilter } from './modules/taxonomy-filter.js';
-import { initTaxonomySubscribe } from './modules/taxonomy-subscribe.js';
-import { initTaxonomyPlaylist } from './modules/taxonomy-playlist.js';
-import { initCookieConsent } from './modules/cookie-consent.js';
-import { initLayoutRecommendation } from './modules/layout-recommendation.js';
+import { initResponsive } from "./modules/responsive.js";
+import { initTheme } from "./modules/theme-engine.js";
+import { initAuth } from "./modules/auth-integration.js";
+import { initDropdowns } from "./modules/dropdowns.js";
+import { initDrawer } from "./modules/drawer.js";
+import { initServiceWorker } from "./modules/service-worker.js";
+import { initCookieConsent } from "./modules/cookie-consent.js";
 
-function runSafely(initFn) {
+function runSafely(task, label) {
   try {
-    initFn();
+    const result = task();
+    if (result && typeof result.catch === "function") {
+      result.catch((error) => {
+        console.error(`[Bootstrap] ${label} failed:`, error);
+      });
+    }
   } catch (error) {
-    console.error('[Bootstrap] Module init failed:', error);
+    console.error(`[Bootstrap] ${label} failed:`, error);
   }
 }
 
 function runAfterFirstPaint(callback) {
-  if (typeof window.requestAnimationFrame === 'function') {
+  if (typeof window.requestAnimationFrame === "function") {
     window.requestAnimationFrame(() => {
       window.requestAnimationFrame(callback);
     });
@@ -42,7 +35,7 @@ function runAfterFirstPaint(callback) {
 }
 
 function runWhenIdle(callback, timeout = 1200) {
-  if (typeof window.requestIdleCallback === 'function') {
+  if (typeof window.requestIdleCallback === "function") {
     window.requestIdleCallback(callback, { timeout });
     return;
   }
@@ -50,61 +43,115 @@ function runWhenIdle(callback, timeout = 1200) {
   window.setTimeout(callback, 120);
 }
 
+function markUiInitReady() {
+  const apply = () => {
+    document.documentElement.setAttribute("data-ui-init", "1");
+  };
+
+  if (typeof window.requestAnimationFrame === "function") {
+    window.requestAnimationFrame(() => window.requestAnimationFrame(apply));
+    return;
+  }
+
+  window.setTimeout(apply, 0);
+}
+
+function syncPrepaintLayoutState() {
+  const doc = document.documentElement;
+  const sidebarCollapsed = doc.getAttribute("data-sidebar-collapsed") === "1";
+  const tocCollapsed = doc.getAttribute("data-toc-collapsed") === "1";
+
+  document.querySelectorAll(".drawer").forEach((drawer) => {
+    drawer.classList.toggle("sidebar-collapsed", sidebarCollapsed);
+  });
+
+  if (document.body) {
+    document.body.classList.toggle("toc-collapsed", tocCollapsed);
+  }
+}
+
+async function importAndInit(modulePath, exportName, args = []) {
+  const mod = await import(modulePath);
+  const fn = mod[exportName];
+  if (typeof fn === "function") fn(...args);
+}
+
+function has(selector) {
+  return !!document.querySelector(selector);
+}
+
+function hasAny(selectors) {
+  return selectors.some((selector) => has(selector));
+}
+
 function bootstrapSite() {
-  console.log(`\x1b[1m
-···························································
-··············qpppu········································
-·······)pDDDDDDDDDDDDDDbpu······················)DDDDDDDDDD
-·····pDDDDDDDDDDDDDDDDDDDDDbu···················)DDDDDDDDDD
-···pDDDDDDDDDDDDDDDDDDDDDDDDDbp·················)DDDDDDDDDD
-·)DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDp···············)DDDDDDDDDD
-·DDDDDDDDDDDP·······PDDDDDDDDDDDDb··············QDDDDDDDDDD
-(DDDDDDDDDDP··········(DDDDDDDDDDDDb···········)DDDDDDDDDDP
-QDDDDDDDDDP·············PDDDDDDDDDDDDDp······)pDDDDDDDDDDD·
-DDDDDDDDDDb···············)QDDDDDDDDDDDDDDDDDDDDDDDDDDDDDP·
-DDDDDDDDDDb·················)DDDDDDDDDDDDDDDDDDDDDDDDDDP···
-DDDDDDDDDDb···················)DDDDDDDDDDDDDDDDDDDDDDPP····
-DDDDDDDDDDb·······················PDDDDDDDDDDDDDDDPP·······
-······································c(·PPPP(c············
-···························································
-\x1b[0m`);
+  runSafely(() => initResponsive(), "responsive");
 
-  runSafely(() => initResponsive());
+  // Align classes with prepaint attrs before transitions are enabled.
+  runSafely(() => syncPrepaintLayoutState(), "prepaint layout sync");
 
-  // Register SW early so non-critical runtime issues never block installability.
-  runSafely(() => initServiceWorker());
-  
-  // Critical UI state first: theme/layout/auth + consent surfaces.
-  runSafely(() => initTheme(document));
-  runSafely(() => initDrawer());
-  runSafely(() => initDropdowns(document));
-  runSafely(() => initCookieConsent());
-  runSafely(() => initAuth(document));
+  // Keep key page-shell behavior eager to avoid flashes during navigation.
+  runSafely(() => initTheme(document), "theme");
+  runSafely(() => initDrawer(), "drawer");
+  runSafely(() => initDropdowns(document), "dropdowns");
+  runSafely(() => initCookieConsent(), "cookie consent");
+  runSafely(() => initAuth(document), "auth");
 
-  // Interactive niceties after initial paint.
+  // Register SW early so runtime issues never block installability.
+  runSafely(() => initServiceWorker(), "service worker");
+
+  // Turn transitions on only after initial shell state is fully synced.
+  markUiInitReady();
+
+  // UX niceties after initial paint.
   runAfterFirstPaint(() => {
-    runSafely(() => initCodeBlocks());
-    runSafely(() => initClipboard());
-    runSafely(() => initShortcuts());
-    runSafely(() => initScrollToTop());
-    runSafely(() => initLazyPlugins());
+    if (has("pre > code")) {
+      runSafely(() => importAndInit("./modules/code-blocks.js", "initCodeBlocks"), "code blocks");
+    }
+
+    if (hasAny(["[data-copy-url]", "main h1[id]", "main h2[id]", "main h3[id]", "main h4[id]", "main h5[id]", "main h6[id]"])) {
+      runSafely(() => importAndInit("./modules/clipboard.js", "initClipboard"), "clipboard");
+    }
+
+    if (has("[data-shortcut]")) {
+      runSafely(() => importAndInit("./modules/shortcuts.js", "initShortcuts"), "shortcuts");
+    }
+
+    runSafely(() => importAndInit("./modules/scroll-top.js", "initScrollToTop"), "scroll top");
+
+    if (hasAny([".katex-inline", ".katex-block", ".mermaid"])) {
+      runSafely(() => importAndInit("./modules/lazy-plugins.js", "initLazyPlugins"), "lazy plugins");
+    }
   });
 
   // Heavier/optional page features during idle time.
   runWhenIdle(() => {
-    runSafely(() => initBlogFeed());
-    runSafely(() => initTaxonomyFilter());
-    runSafely(() => initTaxonomySubscribe());
-    runSafely(() => initTaxonomyPlaylist());
-    runSafely(() => initLayoutRecommendation());
-    runSafely(() => initComments());
+    if (hasAny(["[data-blog-feed]", "[data-blog-feed-mount]"])) {
+      runSafely(() => importAndInit("./modules/blog-feed.js", "initBlogFeed"), "blog feed");
+    }
+
+    if (has("[data-taxonomy-filter]")) {
+      runSafely(() => importAndInit("./modules/taxonomy-filter.js", "initTaxonomyFilter"), "taxonomy filter");
+    }
+
+    if (has("[data-taxonomy-subscribe]")) {
+      runSafely(() => importAndInit("./modules/taxonomy-subscribe.js", "initTaxonomySubscribe"), "taxonomy subscribe");
+    }
+
+    if (has("[data-taxonomy-playlist]") || new URLSearchParams(window.location.search).has("pl")) {
+      runSafely(() => importAndInit("./modules/taxonomy-playlist.js", "initTaxonomyPlaylist"), "taxonomy playlist");
+    }
+
+    if (has("[data-comments-mount]")) {
+      runSafely(() => importAndInit("./modules/comments.js", "initComments"), "comments");
+    }
   });
-  
+
+  window.addEventListener("pageshow", () => {
+    document.documentElement.setAttribute("data-ui-init", "1");
+  });
 }
 
-// -----------------------------------------------------------------------
-// Initialization Hook
-// -----------------------------------------------------------------------
 if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", bootstrapSite);
 } else {

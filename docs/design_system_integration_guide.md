@@ -5,7 +5,7 @@
 
 ## The Prompt to Provide:
 
-**Goal**: I am building a new subdomain/microservice. It needs to look **exactly** like my primary domain, utilizing the same monolithic `shell.js` library, which auto-injects my highly customized DaisyUI + Tailwind CSS v4 design system, handles themes (monochromatic Zinc scale), and builds my unified Navbar and Drawer architecture.
+**Goal**: I am building a new subdomain/microservice. It needs to look **exactly** like my primary domain, utilizing the same monolithic `shell.js` library, which auto-injects my exported `dui.css` (DaisyUI + Tailwind CSS v4 design system), handles themes (monochromatic Zinc scale), and builds my unified Navbar and Drawer architecture.
 
 **Your Instructions**:
 
@@ -42,7 +42,7 @@
        </script>
 
        <!-- 2. The Abyssal Integration Script -->
-       <script src="https://dhanur.me/js/shell.js" defer></script>
+       <script type="module" src="https://dhanur.me/js/shell.js"></script>
    </head>
    <body>
        <!-- The shell.js will automatically wrap this main element within a .drawer context -->

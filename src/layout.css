@@ -6,9 +6,21 @@ html {
   scrollbar-gutter: stable;
 }
 
+/* Disable automatic cross-document view transitions.
+ * They can introduce visible snapshot flashes when fixed rails/nav are shared across pages.
+ */
 @supports (view-transition-name: root) {
   @view-transition {
     navigation: auto;
+  }
+
+  /* Keep fixed chrome out of root cross-fade snapshots to avoid rail/nav flash. */
+  .site-topbar,
+  #sidebar,
+  #sidebar-toggle-wrapper,
+  #toc-column,
+  #toc-toggle-anchor {
+    view-transition-name: none;
   }
 
   ::view-transition-old(root),
@@ -16,6 +28,19 @@ html {
     animation-duration: 160ms;
     animation-timing-function: ease-out;
   }
+}
+
+/* Prevent first-frame layout popping: enable transitions only after runtime init sync. */
+html[data-ui-init="0"] #sidebar,
+html[data-ui-init="0"] #sidebar-toggle-wrapper,
+html[data-ui-init="0"] #blog-layout,
+html[data-ui-init="0"] #toc-column,
+html[data-ui-init="0"] #toc-sidebar,
+html[data-ui-init="0"] #toc-toggle-anchor,
+html[data-ui-init="0"] #toc-toggle,
+html[data-ui-init="0"] #toc-toggle svg {
+  transition: none !important;
+  animation: none !important;
 }
 
 /* Landing page: hide prev/next navigation block */
@@ -898,7 +923,8 @@ body.is-landing nav.mt-12 {
 }
 
 /* --- TOC column: collapsed state --- */
-body.toc-collapsed #toc-column {
+body.toc-collapsed #toc-column,
+html[data-toc-collapsed="1"] body #toc-column {
   width: 0;
   max-width: 0;
   min-width: 0;
@@ -911,7 +937,8 @@ body.toc-collapsed #toc-column {
   transform: translateX(0.5rem);
 }
 
-body.toc-collapsed #toc-sidebar {
+body.toc-collapsed #toc-sidebar,
+html[data-toc-collapsed="1"] body #toc-sidebar {
   opacity: 0;
   pointer-events: none;
   transform: translateX(0.4rem);
@@ -950,7 +977,8 @@ body.toc-collapsed #toc-sidebar {
   }
 }
 
-body.toc-collapsed #blog-layout {
+body.toc-collapsed #blog-layout,
+html[data-toc-collapsed="1"] body #blog-layout {
   --toc-toggle-offset: var(--blog-layout-pad-right, 2.5rem);
 }
 
@@ -978,11 +1006,13 @@ body.toc-collapsed #blog-layout {
 }
 
 /* Optional: rotate button arrow when collapsed */
-body.toc-collapsed #toc-toggle svg {
+body.toc-collapsed #toc-toggle svg,
+html[data-toc-collapsed="1"] body #toc-toggle svg {
   transform: scaleX(-1);
 }
 
-body.toc-collapsed #toc-toggle {
+body.toc-collapsed #toc-toggle,
+html[data-toc-collapsed="1"] body #toc-toggle {
   background-color: var(--color-base-300);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }

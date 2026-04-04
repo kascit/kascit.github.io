@@ -1,6 +1,6 @@
 +++
 title = "About"
-description = "Hey there! 👋 I'm Dhanur, a software developer who writes code and occasionally it works."
+description = "Hey there! I build things that are useful, curious, and occasionally a little dangerous."
 template = "section.html"
 sort_by = "date"
 transparent = true
@@ -11,9 +11,9 @@ enabled = false
 
 <div class="prose max-w-none prose-base-content lg:prose-lg mb-12">
 
-I'm a computer science graduate and backend developer, focusing mainly on Java, Spring Boot, and cloud infrastructure.
+I am a backend-leaning engineer with a soft spot for systems that behave under pressure and side projects that absolutely do not.
 
-My journey into software was not a prodigy story. I wanted to build useful things, started Googling aggressively, and learned through trial and error. These days I spend most of my time building scalable APIs and dealing with cloud deployments that only fail in the least convenient moments.
+Most days look like APIs, infra, and architecture decisions. Nights are for AI experiments, cryptography tangents, web3 skepticism, game application prototypes, and graphics rabbit holes that started as "just a quick test." Think coding adventures with better logging.
 
 </div>
 
@@ -29,28 +29,28 @@ My journey into software was not a prodigy story. I wanted to build useful thing
 				<div class="about-expertise-icon" aria-hidden="true"><i class="fa-solid fa-server text-sm"></i></div>
 				<div class="min-w-0 pt-0.5">
 					<span class="font-semibold text-base-content block mb-1">Backend Engineering</span>
-					<span class="text-sm text-base-content/65 leading-relaxed">Designing APIs and services in Java, Spring Boot, and Go with reliability in mind.</span>
+					<span class="text-sm text-base-content/65 leading-relaxed">Designing services that stay calm under load, mostly in Java, Spring Boot, and Go.</span>
 				</div>
 			</li>
 			<li class="flex gap-3.5 items-start">
 				<div class="about-expertise-icon" aria-hidden="true"><i class="fa-solid fa-cloud text-sm"></i></div>
 				<div class="min-w-0 pt-0.5">
 					<span class="font-semibold text-base-content block mb-1">Cloud Infrastructure</span>
-					<span class="text-sm text-base-content/65 leading-relaxed">Building containerized and serverless deployments on AWS and GCP with practical ops hygiene.</span>
+					<span class="text-sm text-base-content/65 leading-relaxed">Deploying across cloud stacks with enough observability to sleep at night.</span>
 				</div>
 			</li>
 			<li class="flex gap-3.5 items-start">
 				<div class="about-expertise-icon" aria-hidden="true"><i class="fa-solid fa-terminal text-sm"></i></div>
 				<div class="min-w-0 pt-0.5">
 					<span class="font-semibold text-base-content block mb-1">System Programming</span>
-					<span class="text-sm text-base-content/65 leading-relaxed">Low-level and performance-focused coding in C and C++ for tools and competitive programming.</span>
+					<span class="text-sm text-base-content/65 leading-relaxed">Low-level experiments, performance tuning, and occasional graphics-heavy detours.</span>
 				</div>
 			</li>
 			<li class="flex gap-3.5 items-start">
 				<div class="about-expertise-icon" aria-hidden="true"><i class="fa-solid fa-code-branch text-sm"></i></div>
 				<div class="min-w-0 pt-0.5">
 					<span class="font-semibold text-base-content block mb-1">Automation and DevOps</span>
-					<span class="text-sm text-base-content/65 leading-relaxed">Improving release confidence with CI/CD, Docker, and infrastructure-as-code practices.</span>
+					<span class="text-sm text-base-content/65 leading-relaxed">Automation pipelines that reduce surprises and keep releases boring (the good kind).</span>
 				</div>
 			</li>
 		</ul>
@@ -68,7 +68,7 @@ My journey into software was not a prodigy story. I wanted to build useful thing
 				<div class="flex flex-wrap gap-2">
 					{{ tag_chip(name="Java") }}
 					{{ tag_chip(name="Python") }}
-					{{ tag_chip(name="Go") }}
+					{{ tag_chip(name="Go", label="Go language") }}
 					{{ tag_chip(name="C / C++") }}
 					{{ tag_chip(name="JavaScript") }}
 					{{ tag_chip(name="TypeScript") }}
@@ -105,6 +105,10 @@ My journey into software was not a prodigy story. I wanted to build useful thing
 					{{ tag_chip(name="Arch Linux") }}
 					{{ tag_chip(name="Terraform") }}
 					{{ tag_chip(name="Postman") }}
+					{{ tag_chip(name="AI") }}
+					{{ tag_chip(name="Cryptography") }}
+					{{ tag_chip(name="Web3") }}
+					{{ tag_chip(name="Computer Graphics", label="Graphics") }}
 				</div>
 			</div>
 		</div>
@@ -115,11 +119,11 @@ My journey into software was not a prodigy story. I wanted to build useful thing
 
 ## What Keeps Me Going
 
-I enjoy solving complex problems and making systems simpler for the next person who has to touch them. I care about readability, repeatability, and reducing operational surprise.
+I like building things that feel inevitable after they are done, even if they looked impossible at the whiteboard stage. Clean systems, sharp interfaces, fewer 3 AM mysteries.
 
 ## Off the Keyboard
 
-When I am not writing code, I am usually on strategy games, sci-fi, or tweaking my editor setup one plugin too far.
+When I am not coding, I am usually on strategy games, sci-fi, or watching tsoding/sebastian-style engineering deep dives and pretending I will "just watch one." 
 
 ## Keep In Touch
 

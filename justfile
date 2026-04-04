@@ -13,6 +13,8 @@ set dotenv-filename := "versions.env"
 os  := os()
 css_in  := "src/main.css"
 css_out := "static/css/main.css"
+dui_css_in  := "src/dui-export.css"
+dui_css_out := "static/css/dui.css"
 
 tailwind := if os == "windows" { "tools/tailwindcss.exe" } else { "tools/tailwindcss" }
 
@@ -38,6 +40,40 @@ default:
 [group('setup')]
 setup: _dl-tailwind _dl-daisyui _dl-fontawesome _dl-katex
     @echo "Setup complete. Run 'just dev' to start."
+
+[doc("Install minimal build deps required for CSS (Tailwind + DaisyUI)")]
+[group('setup')]
+setup-build-deps: _ensure-tailwind _ensure-daisyui
+
+[private, unix]
+_ensure-tailwind:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [ -f "{{ tailwind }}" ]; then
+      echo "Tailwind CSS binary already present."
+      exit 0
+    fi
+    just _dl-tailwind
+
+[private]
+[windows]
+_ensure-tailwind:
+    @if (Test-Path "{{ tailwind }}") { Write-Host "Tailwind CSS binary already present." } else { just _dl-tailwind }
+
+[private, unix]
+_ensure-daisyui:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [ -f "src/vendor/daisyui.js" ] && [ -f "src/vendor/daisyui-theme.js" ]; then
+      echo "DaisyUI vendor files already present."
+      exit 0
+    fi
+    just _dl-daisyui
+
+[private]
+[windows]
+_ensure-daisyui:
+    @if ((Test-Path "src/vendor/daisyui.js") -and (Test-Path "src/vendor/daisyui-theme.js")) { Write-Host "DaisyUI vendor files already present." } else { just _dl-daisyui }
 
 [private, unix]
 _dl-tailwind:
@@ -130,8 +166,9 @@ watch:
 
 [doc("Compile and minify CSS")]
 [group('build')]
-css:
+css: setup-build-deps
     @{{ tailwind }} -i {{ css_in }} -o {{ css_out }} --minify
+    @{{ tailwind }} -i {{ dui_css_in }} -o {{ dui_css_out }} --minify
 
 [unix]
 [doc("Remove all build artifacts")]
@@ -139,6 +176,7 @@ css:
 clean:
     rm -rf public
     rm -f {{ css_out }}
+    rm -f {{ dui_css_out }}
 
 [windows]
 [doc("Remove all build artifacts")]
@@ -146,11 +184,26 @@ clean:
 clean:
     @if (Test-Path "public") { Remove-Item "public" -Recurse -Force }
     @if (Test-Path "{{ css_out }}") { Remove-Item "{{ css_out }}" -Force }
+    @if (Test-Path "{{ dui_css_out }}") { Remove-Item "{{ dui_css_out }}" -Force }
 
-[doc("Full production build (clean + css + zola)")]
+[unix]
+[doc("Full production build (clean + generated content + css + zola)")]
 [group('build')]
 build: clean project-pages widget-data css
-    zola build
+        #!/usr/bin/env bash
+        set -euo pipefail
+        if [ -n "${ZOLA_BASE_URL:-}" ]; then
+            zola build --base-url "$ZOLA_BASE_URL"
+        else
+            zola build
+        fi
+        node scripts/clean-pagination-redirects.js
+
+[windows]
+[doc("Full production build (clean + generated content + css + zola)")]
+[group('build')]
+build: clean project-pages widget-data css
+    @if ($env:ZOLA_BASE_URL) { zola build --base-url "$env:ZOLA_BASE_URL" } else { zola build }
     node scripts/clean-pagination-redirects.js
 
 [doc("Generate project detail pages from centralized data/projects.json")]
@@ -163,6 +216,76 @@ project-pages:
 [group('build')]
 widget-data:
     node scripts/generate-latest-posts-widget.js
+
+[unix]
+[doc("Fail if generated content differs from committed files")]
+[group('ci')]
+verify-generated-clean: project-pages widget-data
+    #!/usr/bin/env bash
+    set -euo pipefail
+        if ! git diff --quiet -- content/projects static/widgets/latest-posts-data.json; then
+            echo "ERROR: Generated content is out of sync."
+            echo "Run 'just project-pages widget-data' and commit changes."
+            git --no-pager diff -- content/projects static/widgets/latest-posts-data.json
+      exit 1
+    fi
+
+[windows]
+[doc("Fail if generated content differs from committed files")]
+[group('ci')]
+verify-generated-clean: project-pages widget-data
+    @git diff --quiet -- content/projects static/widgets/latest-posts-data.json; if ($LASTEXITCODE -ne 0) { Write-Host "ERROR: Generated content is out of sync."; Write-Host "Run 'just project-pages widget-data' and commit changes."; git --no-pager diff -- content/projects static/widgets/latest-posts-data.json; exit 1 }
+
+[unix]
+[doc("Validate required output artifacts in public/")]
+[group('ci')]
+validate-public:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    [ -f public/index.html ] || { echo "ERROR: index.html missing"; exit 1; }
+    [ -f public/404.html ] || { echo "ERROR: 404.html missing"; exit 1; }
+    [ -d public/css ] || { echo "ERROR: css directory missing"; exit 1; }
+    file_count=$(find public -type f | wc -l)
+    echo "Generated ${file_count} files"
+    [ "$file_count" -gt 0 ] || { echo "ERROR: No files generated"; exit 1; }
+
+[windows]
+[doc("Validate required output artifacts in public/")]
+[group('ci')]
+validate-public:
+    @if (!(Test-Path "public/index.html")) { Write-Host "ERROR: index.html missing"; exit 1 }
+    @if (!(Test-Path "public/404.html")) { Write-Host "ERROR: 404.html missing"; exit 1 }
+    @if (!(Test-Path "public/css")) { Write-Host "ERROR: css directory missing"; exit 1 }
+    @$file_count = (Get-ChildItem public -Recurse -File | Measure-Object).Count; Write-Host "Generated $file_count files"; if ($file_count -le 0) { Write-Host "ERROR: No files generated"; exit 1 }
+
+[unix]
+[doc("CI pipeline: verify generated files, build, minify JS, validate output")]
+[group('ci')]
+ci-build: verify-generated-clean
+    #!/usr/bin/env bash
+    set -euo pipefail
+    just clean
+    just css
+    if [ -n "${ZOLA_BASE_URL:-}" ]; then
+      zola build --base-url "$ZOLA_BASE_URL"
+    else
+      zola build
+    fi
+    node scripts/clean-pagination-redirects.js
+    chmod +x scripts/minify-js.sh
+    ./scripts/minify-js.sh public
+    just validate-public
+
+[windows]
+[doc("CI pipeline: verify generated files, build, minify JS, validate output")]
+[group('ci')]
+ci-build: verify-generated-clean
+    @just clean
+    @just css
+    @if ($env:ZOLA_BASE_URL) { zola build --base-url "$env:ZOLA_BASE_URL" } else { zola build }
+    node scripts/clean-pagination-redirects.js
+    @bash scripts/minify-js.sh public
+    just validate-public
 
 # ---------------------------------------------------------------------------
 # Info

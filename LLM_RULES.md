@@ -2,6 +2,7 @@
 
 Non-negotiable rules for this repo.
 
+0. the terminal/shell is git bash in win 11
 1. Never commit secrets, tokens, credentials, or private keys.
 2. Do not add Node or npm tooling unless explicitly requested.
 3. Do not auto-format files in templates/.
@@ -26,3 +27,4 @@ Non-negotiable rules for this repo.
 22. `data/projects.json` is the source of truth for project detail content; run validator + sync (`just project-pages`) before builds and commit generated `content/projects/*.md` changes.
 23. `static/widgets/latest-posts-data.json` is generated content; refresh with `just widget-data` and commit drift.
 24. Keep 404 rendering template-driven via `templates/404.html`; do not replace it with a content page at `content/404.md` because it can produce a conflicting `public/404.html/` directory output.
+25. Keep CI/deploy build orchestration centralized in `justfile` (`just ci-build`) instead of duplicating build logic across workflow YAML steps.

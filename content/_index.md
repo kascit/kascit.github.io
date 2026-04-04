@@ -12,7 +12,7 @@ version = "v1.0"
 [extra.hero]
 title = "Hey, I'm Dhanur"
 # badge = "Tinkerer"
-description = "This is my public notebook for backend engineering, systems design, and the occasional operational war story. By day I build services and infrastructure, and by night I write about what worked, what failed, and what I learned while fixing both."
+description = "Part engineering journal, part sandbox, part controlled chaos. Expect backend systems, future-tech experiments, and notes from projects that were definitely supposed to be simpler."
 image = "/images/whood.png"
 # Optional: use different hero images per theme
 image_dark = "/images/whood.png"
@@ -28,36 +28,36 @@ cta_buttons = [
 # -----------------------------------------------------------------------------
 [extra.features_section]
 title = "What I Actually Do"
-description = "Most of my time goes into backend systems, cloud operations, and practical engineering work that survives production traffic."
+description = "Mostly building useful things, occasionally summoning weird things, and frequently pretending both were part of the same plan."
 
 [[extra.features_section.features]]
 title = "Backend Shenanigans"
-desc = "Making APIs that hopefully don't explode in production. Java, Spring Boot, and the occasional existential crisis when debugging race conditions at 2 AM. I promise my code works™ (most of the time)."
+desc = "APIs, distributed systems, and the usual dance between elegant architecture and panic-driven hotfixes. Mostly Java and Spring Boot, occasionally pure chaos."
 icon = "fa-solid fa-code"
 
 [[extra.features_section.features]]
 title = "Cloud Chaos Engineering"
-desc = "Spinning up servers faster than I can afford them. AWS bills that make me cry, Docker containers that refuse to die, and Kubernetes configs that work on my machine (your mileage may vary)."
+desc = "Cloud-native infrastructure, container choreography, and configs that are definitely deterministic until they meet reality. AWS, Docker, Kubernetes, and humble optimism."
 icon = "fa-solid fa-cloud"
 
 [[extra.features_section.features]]
-title = "Open Source Contributions"
-desc = "Contributing to projects I use and occasionally making tools that solve problems exactly three people have (including me). PRs welcome, judgment not included."
+title = "Future Tech Playground"
+desc = "AI experiments, cryptography rabbit holes, web3 prototypes, and game-adjacent ideas that start as jokes and end as weekend projects."
 icon = "fa-brands fa-github"
 
 [[extra.features_section.features]]
-title = "Linux Maximalism"
-desc = "Arch Linux is my religion and the terminal is my temple. I spend way too much time ricing my setup, writing bash scripts to automate tasks I do once a year, and pretending Vim is better than your IDE."
+title = "Graphics & Simulation Side Quests"
+desc = "From tiny rendering experiments to shader-curious detours and procedural graphics mischief. Sometimes this becomes a game application, sometimes just a very pretty bug."
 icon = "fa-brands fa-linux"
 
 [[extra.features_section.features]]
 title = "System Design"
-desc = "Drawing boxes and arrows until something looks scalable. Microservices, event-driven architectures, and late-night realizations that maybe I should've just used a monolith."
+desc = "Boxes, arrows, event streams, and scalability plans that survive contact with users. The monolith-vs-microservices debate remains respectfully unresolved."
 icon = "fa-solid fa-diagram-project"
 
 [[extra.features_section.features]]
-title = "Blog Procrastination"
-desc = "Writing about the stuff I break and occasionally fix. Think of it as blog posts, but with more memes and self-deprecating humor. Warning: contains traces of actual technical content."
+title = "Coding Adventures"
+desc = "A running log of builds, breaks, discoveries, and occasional tsoding/sebastian-inspired deep dives into whatever future-tech tangent looked fun at 1 AM."
 icon = "fa-solid fa-pen-nib"
 
 # -----------------------------------------------------------------------------
@@ -81,20 +81,20 @@ subtitle = "Dive into my work, thoughts, and technical journey"
 [[extra.showcase_section.tabs]]
 name = "Projects"
 title = "My Work & Creations"
-description = "A curated collection of my coding projects spanning from production-ready web applications to command-line utilities. Each project reflects my commitment to clean code, scalability, and real-world problem-solving. Explore Spring Boot microservices, Infrastructure as Code templates, DevOps automation scripts, and more."
+description = "A mixed bag of practical systems, odd prototypes, and experiments that drift between backend reliability and future-tech curiosity. Some are production-ready, some are clearly plot twists."
 # Note: You need to add an image at static/images/projects.jpg or remove this line
 # image = "/images/projects.jpg"
 
 [[extra.showcase_section.tabs]]
 name = "Blog"
 title = "Technical Writing & Insights"
-description = "Deep dives into software engineering, step-by-step tutorials on DevOps practices, algorithm explorations, and personal reflections on technology trends. Whether you're learning a new framework, troubleshooting deployments, or seeking architectural insights, you'll find valuable content here."
+description = "Notes from the field: architecture lessons, debugging stories, tooling detours, and occasional philosophical arguments with my own stack choices."
 # image = "/images/blog.jpg"
 
 [[extra.showcase_section.tabs]]
 name = "About"
 title = "Behind the Code"
-description = "Learn more about my background, technical journey, and what drives me as a developer. From my education and professional experience to my interests in competitive programming and open source contributions. Discover the story behind this site and how you can connect with me."
+description = "The human patch notes: where the ideas come from, what I am currently obsessing over, and why half my best projects began as 'this should be simple.'"
 # image = "/images/about.jpg"
 
 # -----------------------------------------------------------------------------
@@ -102,6 +102,6 @@ description = "Learn more about my background, technical journey, and what drive
 # -----------------------------------------------------------------------------
 [extra.final_cta_section]
 title = "Let's Connect"
-description = "Have a question or want to work together? I'm always open to interesting conversations, collaboration opportunities, or just geeking out about tech. Find all my social links and ways to reach me."
+description = "If you are building something ambitious, weird, useful, or suspiciously all three, I am probably interested."
 button = { text = "Contact Me", url = "/links" }
 +++

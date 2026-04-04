@@ -3,6 +3,7 @@ set -euo pipefail
 
 output_dir="${1:-public}"
 terser_version="${TERSER_VERSION:-5.31.6}"
+esbuild_version="${ESBUILD_VERSION:-0.24.2}"
 
 if ! command -v npx >/dev/null 2>&1; then
   echo "ERROR: npx is required for JS minification." >&2
@@ -20,13 +21,32 @@ if [[ ! -d "${output_dir}/js" ]]; then
   exit 0
 fi
 
-echo "Minifying JavaScript with terser@${terser_version} in '${output_dir}'..."
+echo "Optimizing JavaScript in '${output_dir}'..."
+
+# Bundle + minify the ESM entry to reduce initial request graph depth.
+if [[ -f "${output_dir}/js/main.js" ]]; then
+  echo "Bundling ${output_dir}/js/main.js with esbuild@${esbuild_version}..."
+  npx --yes "esbuild@${esbuild_version}" "${output_dir}/js/main.js" \
+    --bundle \
+    --format=esm \
+    --target=es2020 \
+    --minify \
+    --allow-overwrite \
+    --outfile="${output_dir}/js/main.js"
+fi
+
+echo "Minifying remaining JavaScript with terser@${terser_version}..."
 
 minified_count=0
 while IFS= read -r -d '' file; do
   rel="${file#${output_dir}/}"
 
-  if [[ "${rel}" == js/main.js || "${rel}" == js/modules/* ]]; then
+  if [[ "${rel}" == js/main.js ]]; then
+    # already handled by esbuild bundle step above
+    continue
+  fi
+
+  if [[ "${rel}" == js/modules/* ]]; then
     npx --yes "terser@${terser_version}" "${file}" --compress --mangle --module --ecma 2020 -o "${file}"
   else
     npx --yes "terser@${terser_version}" "${file}" --compress --mangle --ecma 2020 -o "${file}"

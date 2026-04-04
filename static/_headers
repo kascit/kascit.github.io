@@ -29,6 +29,11 @@ Access-Control-Allow-Origin: *
 Cache-Control: public, max-age=3600
 Access-Control-Allow-Origin: *
 
+# Shared shell export stylesheet is not content-hashed; keep cache short too
+/css/dui.css
+Cache-Control: public, max-age=3600
+Access-Control-Allow-Origin: *
+
 /js/*
 Cache-Control: public, max-age=31536000, immutable
 Access-Control-Allow-Origin: *

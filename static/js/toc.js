@@ -11,6 +11,22 @@
 
   const STORAGE_KEY = "toc-collapsed";
 
+  function safeStorageGet(key) {
+    try {
+      return localStorage.getItem(key);
+    } catch (_e) {
+      return null;
+    }
+  }
+
+  function safeStorageSet(key, value) {
+    try {
+      localStorage.setItem(key, value);
+    } catch (_e) {
+      // ignore storage failures (private mode / quota)
+    }
+  }
+
   function getTocToggleBtn() {
     return document.querySelector("[data-toc-toggle]") || document.getElementById("toc-toggle");
   }
@@ -22,6 +38,7 @@
   // --- 1. Toggle Logic ---
   function applyCollapsedState(collapsed) {
     document.body.classList.toggle("toc-collapsed", collapsed);
+    document.documentElement.setAttribute("data-toc-collapsed", collapsed ? "1" : "0");
     const btn = getTocToggleBtn();
     if (btn) {
       const showLabel = btn.getAttribute("data-show-label") || "Show table of contents";
@@ -40,8 +57,9 @@
     const btn = getTocToggleBtn();
     if (!btn) return;
 
-    // Load state
-    const isCollapsed = localStorage.getItem(STORAGE_KEY) === "1";
+    // Load state from prepaint attr first, then storage fallback.
+    const prepaintState = document.documentElement.getAttribute("data-toc-collapsed");
+    const isCollapsed = prepaintState === "1" || (prepaintState === null && safeStorageGet(STORAGE_KEY) === "1");
     applyCollapsedState(isCollapsed);
 
     // Click handler
@@ -49,7 +67,7 @@
       e.preventDefault();
       const nowCollapsed = !document.body.classList.contains("toc-collapsed");
       applyCollapsedState(nowCollapsed);
-      localStorage.setItem(STORAGE_KEY, nowCollapsed ? "1" : "0");
+      safeStorageSet(STORAGE_KEY, nowCollapsed ? "1" : "0");
     });
   }
 

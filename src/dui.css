@@ -1,0 +1,146 @@
+/* =========================================================================
+   DHANUR UI / Base Component Layer
+   =========================================================================
+   A semantic, utility-first component library abstracting Tailwind logic.
+   This guarantees perfect UI consistency across all dhanur.me subdomains.
+   ========================================================================= */
+
+/* --- 1. Surfaces & Layouts --- */
+.dui-surface {
+  @apply relative flex flex-col w-full rounded-box overflow-hidden shadow-sm transition-shadow duration-300;
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent);
+  background: color-mix(in oklab, var(--color-base-200) 50%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.dui-surface:hover {
+  @apply shadow-md;
+  border-color: color-mix(in oklab, var(--color-base-content) 16%, transparent);
+}
+
+.dui-surface-body {
+  @apply p-6 md:p-8 flex flex-col gap-4;
+}
+
+.dui-surface-header {
+  @apply flex flex-col items-center justify-center text-center mb-2;
+}
+
+.dui-surface-title {
+  @apply text-2xl font-bold tracking-tight text-base-content mt-3 mb-1;
+}
+
+.dui-surface-subtitle {
+  @apply text-[15px] font-medium text-base-content/60;
+}
+
+/* --- 2. Action Buttons --- */
+.dui-btn {
+  @apply inline-flex items-center justify-center gap-2 font-semibold text-sm rounded-lg px-4 transition-all duration-200 select-none;
+  height: 2.75rem;
+  border: 1px solid transparent;
+}
+
+.dui-btn:active {
+  transform: scale(0.97);
+}
+
+.dui-btn:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--color-primary) 30%, transparent);
+  outline-offset: 2px;
+}
+
+/* Primary Button */
+.dui-btn-primary {
+  @apply bg-base-content text-base-100 shadow-sm border-base-content;
+}
+
+.dui-btn-primary:hover {
+  opacity: 0.9;
+  @apply shadow-md;
+}
+
+/* Ghost / Secondary */
+.dui-btn-ghost {
+  @apply bg-base-200/50 text-base-content border-base-content/10;
+}
+
+.dui-btn-ghost:hover {
+  background: color-mix(in oklab, var(--color-base-content) 8%, transparent);
+  border-color: color-mix(in oklab, var(--color-base-content) 20%, transparent);
+}
+
+/* Provider Login Buttons */
+.dui-provider-btn {
+  @apply inline-flex items-center justify-center gap-3 w-full font-semibold text-[14.5px] rounded-lg px-5 transition-all duration-200 shadow-sm relative overflow-hidden;
+  height: 3rem;
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  background: color-mix(in oklab, var(--color-base-200) 70%, var(--color-base-100));
+  color: var(--color-base-content);
+}
+
+.dui-provider-btn:hover {
+  border-color: color-mix(in oklab, var(--color-base-content) 24%, transparent);
+  background: color-mix(in oklab, var(--color-base-content) 6%, transparent);
+  @apply shadow-md transform -translate-y-0.5;
+}
+
+.dui-provider-btn:active {
+  transform: scale(0.98);
+}
+
+.dui-provider-btn .provider-icon {
+  @apply text-lg flex-shrink-0;
+}
+
+/* Brand overrides for specific providers if needed */
+.dui-provider-google:hover   { border-color: #DB4437; color: #DB4437; }
+.dui-provider-github:hover   { border-color: color-mix(in oklab, var(--color-base-content) 80%, transparent); }
+.dui-provider-discord:hover  { border-color: #5865F2; color: #5865F2; }
+.dui-provider-linkedin:hover { border-color: #0A66C2; color: #0A66C2; }
+
+/* --- 3. Badges & Dividers --- */
+.dui-badge {
+  @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[11px] font-bold uppercase tracking-wider;
+  background: color-mix(in oklab, var(--color-success) 10%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-success) 20%, transparent);
+  color: var(--color-success);
+}
+
+.dui-divider {
+  @apply relative flex items-center w-full my-6;
+}
+
+.dui-divider::before, 
+.dui-divider::after {
+  content: "";
+  @apply flex-1 h-px transition-colors duration-200;
+  background: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+}
+
+.dui-divider-text {
+  @apply px-4 text-[10px] font-bold tracking-widest uppercase text-base-content/40 bg-transparent;
+}
+
+/* --- 4. Forms & Inputs --- */
+.dui-input-group {
+  @apply flex flex-col gap-1.5 w-full;
+}
+
+.dui-label {
+  @apply text-[12px] font-semibold tracking-wide uppercase text-base-content/60 px-1;
+}
+
+.dui-input {
+  @apply w-full h-[2.75rem] px-4 rounded-lg text-[14px] bg-base-100 border border-base-content/15 text-base-content outline-none transition-all duration-200 shadow-sm;
+}
+
+.dui-input::placeholder {
+  @apply text-base-content/30;
+}
+
+.dui-input:focus {
+  border-color: var(--color-info);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-info) 15%, transparent);
+}

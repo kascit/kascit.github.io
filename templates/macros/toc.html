@@ -1,11 +1,10 @@
 {% macro toc(page) %} {% if page.toc %}
 <!-- Table of Contents - Desktop only (lg breakpoint and up) -->
-<aside
+<nav
   id="toc-sidebar"
   data-toc-sidebar="true"
   class="hidden lg:block origin-right"
   data-toc-expand="false"
-  role="navigation"
   aria-label="Table of contents"
 >
   <div class="sticky top-20 px-4 py-2 border-l border-base-content/10">
@@ -16,7 +15,6 @@
         {% if h1.children %}
         <details class="toc-details">
           <summary
-            role="button"
             data-toc-href="{{ h1.permalink | safe }}"
             aria-label="{{ h1.title }}"
           >
@@ -41,5 +39,5 @@
       {% endfor %}
     </ul>
   </div>
-</aside>
+</nav>
 {% endif %} {% endmacro toc %}

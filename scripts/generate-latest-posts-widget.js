@@ -19,8 +19,8 @@ function readFileSafe(filePath) {
 
 function parseBaseUrl() {
   const configRaw = readFileSafe(CONFIG_FILE);
-  const m = configRaw.match(/^\s*base_url\s*=\s*"([^"]+)"\s*$/m);
-  const base = m ? m[1].trim() : "https://dhanur.me";
+  const m = configRaw.match(/^\s*base_url\s*=\s*(?:"([^"]+)"|'([^']+)')\s*$/m);
+  const base = m ? (m[1] || m[2]).trim() : "https://dhanur.me";
   return base.replace(/\/$/, "");
 }
 
@@ -87,16 +87,21 @@ function parseBlogPosts() {
 
 function buildPayload() {
   const baseUrl = parseBaseUrl();
-  const now = new Date();
-  const posts = parseBlogPosts().slice(0, 5).map((p) => ({
+  const sortedPosts = parseBlogPosts();
+  const posts = sortedPosts.slice(0, 5).map((p) => ({
     title: p.title,
     url: `${baseUrl}/blog/${p.slug}/`,
     description: p.description,
   }));
 
+  const latestParsed = sortedPosts.length > 0 ? sortedPosts[0].parsedDate : 0;
+  const timestamp = latestParsed > 0
+    ? new Date(latestParsed).toISOString()
+    : "1970-01-01T00:00:00.000Z";
+
   return {
-    updatedAt: now.toISOString(),
-    updatedAtHuman: now.toISOString().slice(0, 10),
+    updatedAt: timestamp,
+    updatedAtHuman: timestamp.slice(0, 10),
     posts,
   };
 }

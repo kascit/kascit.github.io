@@ -221,17 +221,16 @@
                         {% endif %}
                         {% endblock toc_sidebar %}
                         {% elif is_taxonomy_view %}
-                                                <aside
+                                                <nav
                                                     id="toc-sidebar"
                                                     data-toc-sidebar="true"
                                                     class="hidden lg:block origin-right"
-                                                    role="navigation"
                                                     aria-label="Tools rail"
                                                 >
                             <div class="sticky top-20 px-4 py-2 border-l border-base-content/10">
                                 {% block taxonomy_sidebar %}{% endblock taxonomy_sidebar %}
                             </div>
-                        </aside>
+                        </nav>
                         {% endif %}
                     </div>
                     {% endif %}

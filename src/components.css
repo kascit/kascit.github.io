@@ -54,7 +54,7 @@
   font-family: var(--code-block-font-family);
   line-height: var(--code-block-line-height);
   font-variant-numeric: tabular-nums;
-  color: color-mix(in oklab, var(--color-base-content) 46%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 62%, transparent);
   border-right: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent);
   background: color-mix(in oklab, var(--color-base-100) 60%, var(--color-base-200));
 }
@@ -636,7 +636,7 @@ footer.footer .social-icon {
 
 .project-card-lang {
   font-size: 0.7rem;
-  color: color-mix(in oklab, var(--color-base-content) 45%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 68%, transparent);
   margin-top: 0.125rem;
 }
 
@@ -737,27 +737,27 @@ footer.footer .social-icon {
 }
 
 .project-card-badge.badge-live {
-  background: rgba(52, 211, 153, 0.12);
-  border: 1px solid rgba(52, 211, 153, 0.3);
-  color: rgb(52, 211, 153);
+  background: rgba(34, 197, 94, 0.16);
+  border: 1px solid rgba(34, 197, 94, 0.38);
+  color: color-mix(in oklab, var(--color-base-content) 88%, rgb(22, 163, 74));
 }
 
 .project-card-badge.badge-academic {
-  background: rgba(251, 191, 36, 0.1);
-  border: 1px solid rgba(251, 191, 36, 0.25);
-  color: rgb(251, 191, 36);
+  background: rgba(245, 158, 11, 0.16);
+  border: 1px solid rgba(245, 158, 11, 0.38);
+  color: color-mix(in oklab, var(--color-base-content) 88%, rgb(180, 83, 9));
 }
 
 .project-card-badge.badge-archived {
   background: color-mix(in oklab, var(--color-base-content) 6%, transparent);
   border: 1px solid color-mix(in oklab, var(--color-base-content) 12%, transparent);
-  color: color-mix(in oklab, var(--color-base-content) 40%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 68%, transparent);
 }
 
 .project-card-badge.badge-wip {
-  background: rgba(96, 165, 250, 0.1);
-  border: 1px solid rgba(96, 165, 250, 0.25);
-  color: rgb(96, 165, 250);
+  background: rgba(59, 130, 246, 0.16);
+  border: 1px solid rgba(59, 130, 246, 0.38);
+  color: color-mix(in oklab, var(--color-base-content) 88%, rgb(30, 64, 175));
 }
 
 /* ─── Design Showcase Reset ───
@@ -1375,6 +1375,7 @@ main .design-showcase ol li {
 
 .about-panel {
   @apply rounded-box border border-base-content/10 bg-base-100 shadow-sm;
+  color: color-mix(in oklab, var(--color-base-content) 92%, transparent);
 }
 
 .about-panel .card-body {
@@ -1386,7 +1387,16 @@ main .design-showcase ol li {
 }
 
 .about-skill-heading {
-  @apply mt-0 font-semibold mb-2 text-xs uppercase tracking-wider text-base-content/55 flex items-center gap-2;
+  @apply mt-0 font-semibold mb-2 text-xs uppercase tracking-wider text-base-content/72 flex items-center gap-2;
+}
+
+/* Raise token contrast for scanner-reported classes while preserving overall palette. */
+:not(.mockup-code) > pre code .z-language-name,
+:not(.mockup-code) > pre code .z-variable.z-function,
+:not(.mockup-code) > pre code .z-variable.z-other,
+:not(.mockup-code) > pre code .z-string.z-quoted,
+:not(.mockup-code) > pre code .z-markup.z-raw.z-inline {
+  color: color-mix(in oklab, var(--color-base-content) 82%, transparent);
 }
 
 .about-stats-grid {

@@ -3,10 +3,25 @@ name: "CodeQL"
 on:
   push:
     branches: [ "main" ]
+    paths-ignore:
+      - "README.md"
+      - "LICENSE"
+      - "docs/**"
+      - "public/**"
   pull_request:
     branches: [ "main" ]
+    paths-ignore:
+      - "README.md"
+      - "LICENSE"
+      - "docs/**"
+      - "public/**"
   schedule:
     - cron: '20 4 * * 5'
+  workflow_dispatch:
+
+concurrency:
+  group: codeql-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 permissions:
   actions: read
@@ -17,6 +32,7 @@ jobs:
   analyze:
     name: Analyze
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     strategy:
       fail-fast: false
       matrix:
@@ -30,6 +46,8 @@ jobs:
       uses: github/codeql-action/init@5c8a8a642e79153f5d047b10ec1cba1d1cc65699 # v3
       with:
         languages: ${{ matrix.language }}
+        queries: security-extended,security-and-quality
+        config-file: ./.github/codeql/config.yml
 
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@5c8a8a642e79153f5d047b10ec1cba1d1cc65699 # v3

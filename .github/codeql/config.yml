@@ -1,0 +1,11 @@
+name: "CodeQL Config"
+
+paths-ignore:
+  - public/**
+  - static/js/*.min.js
+  - static/fuse.min.js
+  - static/elasticlunr.min.js
+  - static/css/**
+  - static/webfonts/**
+  - static/fonts/**
+  - tools/**

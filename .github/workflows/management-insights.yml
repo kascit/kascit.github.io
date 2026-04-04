@@ -1,0 +1,165 @@
+name: Management Insights
+
+on:
+  schedule:
+    - cron: "45 2 * * 1" # Weekly on Monday (UTC)
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  attestations: read
+  contents: read
+  deployments: read
+
+concurrency:
+  group: management-insights
+  cancel-in-progress: true
+
+jobs:
+  report:
+    name: Collect management metrics
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Collect cache, deployment, attestation, runner, and run metrics
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+
+          mkdir -p .tmp-metrics
+          REPO="${GITHUB_REPOSITORY}"
+          API_ROOT="https://api.github.com/repos/${REPO}"
+
+          api_get() {
+            local url="$1"
+            local out="$2"
+            local code
+            code="$(curl -sS -o "$out" -w "%{http_code}" \
+              -H "Authorization: Bearer ${GH_TOKEN}" \
+              -H "Accept: application/vnd.github+json" \
+              "${url}")"
+            echo "$code"
+          }
+
+          caches_code="$(api_get "${API_ROOT}/actions/caches?per_page=100" .tmp-metrics/caches.json)"
+          deploy_code="$(api_get "${API_ROOT}/deployments?per_page=20" .tmp-metrics/deployments.json)"
+          attest_code="$(api_get "${API_ROOT}/attestations?per_page=20" .tmp-metrics/attestations.json)"
+          runners_code="$(api_get "${API_ROOT}/actions/runners?per_page=100" .tmp-metrics/runners.json)"
+          runs_code="$(api_get "${API_ROOT}/actions/runs?per_page=100" .tmp-metrics/runs.json)"
+
+          {
+            echo "## Repository management insights"
+            echo
+            echo "- Generated at: $(date -u +"%Y-%m-%dT%H:%M:%SZ")"
+            echo "- Repository: ${REPO}"
+            echo
+
+            echo "### Caches"
+            if [ "$caches_code" = "200" ]; then
+              cache_count="$(jq -r '.total_count // 0' .tmp-metrics/caches.json)"
+              total_bytes="$(jq -r '[.actions_caches[]?.size_in_bytes] | add // 0' .tmp-metrics/caches.json)"
+              total_mb="$(( total_bytes / 1024 / 1024 ))"
+              echo "- Total cache entries: ${cache_count}"
+              echo "- Total cache size: ${total_mb} MB"
+              echo
+              echo "Top cache keys by size:"
+              echo
+              echo "| Key | Size (MB) | Last Accessed |"
+              echo "| --- | ---: | --- |"
+              jq -r '
+                [.actions_caches[]? | {key, size_in_bytes, last_accessed_at}]
+                | sort_by(.size_in_bytes)
+                | reverse
+                | .[:8][]
+                | "| \(.key) | \((.size_in_bytes/1024/1024|floor)) | \(.last_accessed_at) |"
+              ' .tmp-metrics/caches.json
+            else
+              echo "- Unable to read cache metrics (HTTP ${caches_code})."
+            fi
+            echo
+
+            echo "### Deployments"
+            if [ "$deploy_code" = "200" ]; then
+              dep_count="$(jq -r 'length' .tmp-metrics/deployments.json)"
+              echo "- Deployments returned: ${dep_count}"
+              echo
+              echo "Recent deployments:"
+              echo
+              echo "| ID | Ref | Environment | Created |"
+              echo "| ---: | --- | --- | --- |"
+              jq -r '.[] | "| \(.id) | \(.ref) | \(.environment // "n/a") | \(.created_at) |"' .tmp-metrics/deployments.json
+            else
+              echo "- Unable to read deployment metrics (HTTP ${deploy_code})."
+            fi
+            echo
+
+            echo "### Attestations"
+            if [ "$attest_code" = "200" ]; then
+              attest_count="$(jq -r '.total_count // (.attestations | length) // 0' .tmp-metrics/attestations.json)"
+              echo "- Attestations returned: ${attest_count}"
+            else
+              echo "- Unable to read attestation metrics (HTTP ${attest_code})."
+            fi
+            echo
+
+            echo "### Runners"
+            if [ "$runners_code" = "200" ]; then
+              runner_count="$(jq -r '.total_count // 0' .tmp-metrics/runners.json)"
+              online_count="$(jq -r '[.runners[]? | select(.status == "online")] | length' .tmp-metrics/runners.json)"
+              busy_count="$(jq -r '[.runners[]? | select(.busy == true)] | length' .tmp-metrics/runners.json)"
+              echo "- Total runners visible: ${runner_count}"
+              echo "- Online runners: ${online_count}"
+              echo "- Busy runners: ${busy_count}"
+            else
+              echo "- Unable to read runner metrics (HTTP ${runners_code})."
+            fi
+            echo
+
+            echo "### Usage and performance"
+            if [ "$runs_code" = "200" ]; then
+              completed="$(jq -r '[.workflow_runs[]? | select(.status == "completed")] | length' .tmp-metrics/runs.json)"
+              success="$(jq -r '[.workflow_runs[]? | select(.status == "completed" and .conclusion == "success")] | length' .tmp-metrics/runs.json)"
+
+              if [ "$completed" -gt 0 ]; then
+                success_pct="$(awk -v s="$success" -v c="$completed" 'BEGIN { printf "%.1f", (s/c)*100 }')"
+              else
+                success_pct="0.0"
+              fi
+
+              mapfile -t durations < <(jq -r '.workflow_runs[]? | select(.status == "completed") | [.created_at, .updated_at] | @tsv' .tmp-metrics/runs.json | \
+                while IFS=$'\t' read -r created updated; do
+                  c="$(date -d "$created" +%s 2>/dev/null || true)"
+                  u="$(date -d "$updated" +%s 2>/dev/null || true)"
+                  if [ -n "$c" ] && [ -n "$u" ] && [ "$u" -ge "$c" ]; then
+                    echo $((u-c))
+                  fi
+                done | sort -n)
+
+              if [ "${#durations[@]}" -gt 0 ]; then
+                n="${#durations[@]}"
+                p50_index="$(( (n-1) / 2 ))"
+                p90_index="$(( (9*(n-1)) / 10 ))"
+                p50="${durations[$p50_index]}"
+                p90="${durations[$p90_index]}"
+              else
+                p50=0
+                p90=0
+              fi
+
+              echo "- Completed runs sampled: ${completed}"
+              echo "- Success rate: ${success_pct}%"
+              echo "- p50 duration: ${p50}s"
+              echo "- p90 duration: ${p90}s"
+            else
+              echo "- Unable to read workflow usage/performance metrics (HTTP ${runs_code})."
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload raw metrics artifact
+        uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+        with:
+          name: management-insights-${{ github.run_id }}
+          path: .tmp-metrics
+          retention-days: 7

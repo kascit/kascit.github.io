@@ -1,5 +1,8 @@
 name: Deploy Zola Site to GitHub Pages
 
+# Intentionally no pull_request trigger: deployment checks do not gate PRs.
+# CI/Lint workflows handle PR validation, including Dependabot PRs.
+
 on:
   push:
     branches: [main]
@@ -17,6 +20,7 @@ on:
         type: boolean
 
 permissions:
+  attestations: write
   contents: read
   pages: write
   id-token: write
@@ -42,8 +46,12 @@ jobs:
           fetch-depth: 0
 
       - name: Load tool versions
+        id: versions
         run: |
           grep -vE '^(#|$)' versions.env >> "$GITHUB_ENV"
+          grep -vE '^(#|$)' versions.env | while IFS='=' read -r key value; do
+            echo "${key}=${value}" >> "$GITHUB_OUTPUT"
+          done
 
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
@@ -63,12 +71,12 @@ jobs:
         uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
           path: ~/.cargo/bin/zola
-          key: zola-${{ env.ZOLA_VERSION || '0.19.2' }}
+          key: zola-${{ steps.versions.outputs.ZOLA_VERSION }}
 
       - name: Install Zola
         uses: taiki-e/install-action@1ed3272338f573e042a2e6bca3893aa19f43b47a # v2
         with:
-          tool: zola@${{ env.ZOLA_VERSION || '0.19.2' }}
+          tool: zola@${{ steps.versions.outputs.ZOLA_VERSION }}
 
       - name: Verify Zola installation
         run: zola --version
@@ -80,12 +88,20 @@ jobs:
             tools/tailwindcss
             src/vendor/daisyui.js
             src/vendor/daisyui-theme.js
-          key: css-build-${{ env.TAILWIND_VERSION }}-${{ env.DAISYUI_VERSION }}
+          key: css-build-${{ steps.versions.outputs.TAILWIND_VERSION }}-${{ steps.versions.outputs.DAISYUI_VERSION }}
 
       - name: Build site via justfile
         env:
           ZOLA_BASE_URL: ${{ steps.pages.outputs.base_url }}
         run: just ci-build
+
+      - name: Create deploy archive for provenance
+        run: tar -czf site-deploy-${{ github.run_id }}.tar.gz public
+
+      - name: Generate deploy attestation
+        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
+        with:
+          subject-path: site-deploy-${{ github.run_id }}.tar.gz
 
       - name: Upload GitHub Pages artifact
         uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0

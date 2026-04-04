@@ -8,7 +8,7 @@ on:
       - "LICENSE"
       - "docs/**"
   push:
-    branches-ignore: [main]
+    branches-ignore: [main, dependabot/**]
     paths-ignore:
       - "README.md"
       - "LICENSE"
@@ -20,7 +20,9 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
+  attestations: write
   contents: read
+  id-token: write
 
 defaults:
   run:
@@ -39,8 +41,12 @@ jobs:
           fetch-depth: 0
 
       - name: Load tool versions
+        id: versions
         run: |
           grep -vE '^(#|$)' versions.env >> "$GITHUB_ENV"
+          grep -vE '^(#|$)' versions.env | while IFS='=' read -r key value; do
+            echo "${key}=${value}" >> "$GITHUB_OUTPUT"
+          done
 
       - name: Setup Node.js
         uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
@@ -56,12 +62,12 @@ jobs:
         uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
         with:
           path: ~/.cargo/bin/zola
-          key: zola-${{ env.ZOLA_VERSION || '0.19.2' }}
+          key: zola-${{ steps.versions.outputs.ZOLA_VERSION }}
 
       - name: Install Zola
         uses: taiki-e/install-action@1ed3272338f573e042a2e6bca3893aa19f43b47a # v2
         with:
-          tool: zola@${{ env.ZOLA_VERSION || '0.19.2' }}
+          tool: zola@${{ steps.versions.outputs.ZOLA_VERSION }}
 
       - name: Verify Zola installation
         run: zola --version
@@ -73,7 +79,7 @@ jobs:
             tools/tailwindcss
             src/vendor/daisyui.js
             src/vendor/daisyui-theme.js
-          key: css-build-${{ env.TAILWIND_VERSION }}-${{ env.DAISYUI_VERSION }}
+          key: css-build-${{ steps.versions.outputs.TAILWIND_VERSION }}-${{ steps.versions.outputs.DAISYUI_VERSION }}
 
       - name: Build site via justfile
         run: just ci-build
@@ -90,3 +96,11 @@ jobs:
           path: ./public
           retention-days: 1
           if-no-files-found: error
+
+      - name: Create build archive for provenance
+        run: tar -czf site-build-${{ github.run_id }}.tar.gz public
+
+      - name: Generate artifact attestation
+        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
+        with:
+          subject-path: site-build-${{ github.run_id }}.tar.gz

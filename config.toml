@@ -52,8 +52,7 @@ smart_punctuation = true
 render_emoji = true
 
 external_links_target_blank = true
-external_links_noopener = true      # Security best practice
-external_links_noreferrer = true
+external_links_no_referrer = true   # Security best practice
 
 # =============================================================================
 # LINK CHECKING (BUILD-TIME)

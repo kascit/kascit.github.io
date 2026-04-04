@@ -10,6 +10,7 @@ on:
       - ".prettierignore"
   workflow_dispatch:
     inputs:
+      # checkov:skip=CKV_GHA_7: Manual dispatch inputs are maintainer-controlled; deploy is boolean and zola_version is optional override only.
       zola_version:
         description: 'Zola version to use (keep in sync with versions.env)'
         required: false
@@ -52,6 +53,28 @@ jobs:
             echo "ZOLA_VERSION=${{ github.event.inputs.zola_version }}" >> "$GITHUB_ENV"
           fi
 
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "20"
+
+      - name: Sync generated content
+        run: |
+          set -euo pipefail
+          node scripts/validate-project-data.js
+          node scripts/sync-project-pages.js
+          node scripts/generate-latest-posts-widget.js
+
+      - name: Verify generated content is committed
+        run: |
+          set -euo pipefail
+          if ! git diff --quiet -- content/projects static/widgets/latest-posts-data.json; then
+            echo "ERROR: Generated content is out of sync."
+            echo "Run 'just project-pages widget-data' locally and commit the results."
+            git --no-pager diff -- content/projects static/widgets/latest-posts-data.json
+            exit 1
+          fi
+
       - name: Setup GitHub Pages
         id: pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
@@ -74,33 +97,34 @@ jobs:
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: |
-            tailwindcss
-            src/daisyui.js
-            src/daisyui-theme.js
+            tools/tailwindcss
+            src/vendor/daisyui.js
+            src/vendor/daisyui-theme.js
           key: css-build-${{ env.TAILWIND_VERSION }}-${{ env.DAISYUI_VERSION }}
 
       - name: Build CSS (Tailwind + DaisyUI)
         run: |
           set -euo pipefail
+          mkdir -p tools src/vendor
           
-          if [[ ! -f ./tailwindcss ]]; then
+          if [[ ! -f tools/tailwindcss ]]; then
             echo "Downloading Tailwind CSS v${TAILWIND_VERSION}"
-            curl -fsSL -o ./tailwindcss "https://github.com/tailwindlabs/tailwindcss/releases/download/v${TAILWIND_VERSION}/tailwindcss-linux-x64"
-            chmod +x ./tailwindcss
+            curl -fsSL -o tools/tailwindcss "https://github.com/tailwindlabs/tailwindcss/releases/download/v${TAILWIND_VERSION}/tailwindcss-linux-x64"
+            chmod +x tools/tailwindcss
           else
             echo "Using cached Tailwind CSS"
           fi
           
-          if [[ ! -f src/daisyui.js ]]; then
+          if [[ ! -f src/vendor/daisyui.js ]]; then
             echo "Downloading DaisyUI v${DAISYUI_VERSION}"
-            curl -fsSL -o src/daisyui.js "https://github.com/saadeghi/daisyui/releases/download/v${DAISYUI_VERSION}/daisyui.js"
-            curl -fsSL -o src/daisyui-theme.js "https://github.com/saadeghi/daisyui/releases/download/v${DAISYUI_VERSION}/daisyui-theme.js"
+            curl -fsSL -o src/vendor/daisyui.js "https://github.com/saadeghi/daisyui/releases/download/v${DAISYUI_VERSION}/daisyui.js"
+            curl -fsSL -o src/vendor/daisyui-theme.js "https://github.com/saadeghi/daisyui/releases/download/v${DAISYUI_VERSION}/daisyui-theme.js"
           else
             echo "Using cached DaisyUI"
           fi
           
           echo "Building CSS"
-          ./tailwindcss -i src/main.css -o static/css/main.css --minify
+          tools/tailwindcss -i src/main.css -o static/css/main.css --minify
 
       - name: Build site with Zola
         env:
@@ -109,10 +133,10 @@ jobs:
           echo "Building site with base URL: $ZOLA_BASE_URL"
           zola build --base-url "$ZOLA_BASE_URL"
 
-      - name: Setup Node.js for JS minification
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          node-version: "20"
+      - name: Remove page/1 redirect stubs
+        run: |
+          set -euo pipefail
+          node scripts/clean-pagination-redirects.js
 
       - name: Minify JS output (terser)
         run: |
@@ -124,6 +148,10 @@ jobs:
         run: |
           if [[ ! -f public/index.html ]]; then
             echo "ERROR: index.html not generated"
+            exit 1
+          fi
+          if [[ ! -f public/404.html ]]; then
+            echo "ERROR: 404.html not generated"
             exit 1
           fi
           echo "Site built successfully"

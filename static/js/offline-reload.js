@@ -2,11 +2,13 @@
 (function () {
   var el = document.querySelector('[data-offline-status]') || document.getElementById('offline-status');
   if (!el) return;
-  el.textContent = 'Waiting for connection\u2026';
+  el.textContent = 'Waiting for connection';
+  el.classList.add('status-pill', 'status-pill--pending');
 
   function goBack() {
-    el.textContent = 'Back online \u2014 reloading\u2026';
-    el.style.color = '#4ade80';
+    el.textContent = 'Back online - reloading';
+    el.classList.remove('status-pill--pending');
+    el.classList.add('status-pill--online');
     setTimeout(function () { window.location.reload(); }, 600);
   }
 

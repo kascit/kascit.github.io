@@ -9,7 +9,7 @@ Non-negotiable rules for this repo.
 5. Use just recipes for project tasks (dev, build, css, clean, doctor).
 6. Treat versions.env as the single source of truth for tool versions.
 7. Edit source files only (content/, templates/, src/, static/); do not manually edit public/.
-8. Never commit generated artifacts: public/, resources/, static/css/main.css, src/tailwindcss(.exe), src/daisyui*.js.
+8. Never commit generated artifacts: public/, resources/, static/css/main.css, tools/tailwindcss(.exe), src/vendor/daisyui*.js.
 9. Keep GitHub workflows reproducible: pin versions, avoid latest tags.
 10. If a convention changes, update this file in the same change.
 11. Do not combine DaisyUI tooltips (`data-tip`) with `title` attributes on the same control.
@@ -23,3 +23,6 @@ Non-negotiable rules for this repo.
 19. For reusable Tera helper logic, prefer separate imported macro files over deep same-file macro chaining.
 20. `dhanur.me` is the static Zola host; treat `shell.js` as integration runtime for non-static `*.dhanur.me` apps and keep it backward-compatible for embedded usage.
 21. Shell bootstrap network calls must be bounded (abort + timeout) so dynamic subdomain apps do not hang waiting on remote navbar fetches.
+22. `data/projects.json` is the source of truth for project detail content; run validator + sync (`just project-pages`) before builds and commit generated `content/projects/*.md` changes.
+23. `static/widgets/latest-posts-data.json` is generated content; refresh with `just widget-data` and commit drift.
+24. Keep 404 rendering template-driven via `templates/404.html`; do not replace it with a content page at `content/404.md` because it can produce a conflicting `public/404.html/` directory output.

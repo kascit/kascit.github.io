@@ -1,5 +1,26 @@
-{% extends "status.html" %}
+{% extends "page.html" %}
+{% import "macros/nav.html" as macros_nav %}
 
-{% set status_title = "404" %}
-{% set status_desc = "Page not found" %}
-{% set status_url = config.base_url ~ "/404.html" %}
+{% block layout_fit_class %}lg:w-fit{% endblock layout_fit_class %}
+{% block main_width_class %}max-w-prose{% endblock main_width_class %}
+
+{% block extra_head %}
+<meta name="robots" content="noindex, nofollow" />
+{% endblock extra_head %}
+
+{% block content %}
+<div class="mb-8 lg:mb-10 pb-6 border-b border-base-content/10">
+    <div class="flex flex-col gap-3">
+        <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-base-content m-0">404</h1>
+        <p class="text-base sm:text-lg text-base-content/70 m-0 leading-relaxed">The page you requested could not be found.</p>
+    </div>
+</div>
+
+<p>The link may be outdated, mistyped, or the page was moved.</p>
+{% endblock content %}
+
+{% block prev_link %}
+{{ macros_nav::render_button(url="/", title="Home", subtitle="Back to", direction="prev") }}
+{% endblock prev_link %}
+
+{% block next_link %}{% endblock next_link %}

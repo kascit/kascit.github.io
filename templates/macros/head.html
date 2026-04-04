@@ -28,11 +28,12 @@
 <html lang="{{ lang | default(value='en') }}"{% if is_rtl %} dir="rtl"{% endif %}>
 {% endmacro html_tag %}
 
-{% macro head(config, page, section, current_url) %}
+{% macro head(config, page, section, current_url, meta_title="", meta_description="", meta_type="") %}
     {# current_url이 정의되어 있지 않으면 기본값으로 설정 #}
     {% if current_url is not defined or current_url == "" %}
         {% set current_url = config.base_url %}
     {% endif %}
+    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -83,53 +84,58 @@
             </style>
         {% endif %}
 
-    {% if page %}
-        {% if page.description %}
-            <meta name="description" content="{{ page.description }}" />
-        {% elif config.description %}
-            <meta name="description" content="{{ config.description }}" />
-        {% endif %}
-    {% elif config.description %}
+    {% if meta_description != "" %}
+      <meta name="description" content="{{ meta_description }}" />
+    {% elif page %}
+      {% if page.description %}
+        <meta name="description" content="{{ page.description }}" />
+      {% elif config.description %}
         <meta name="description" content="{{ config.description }}" />
+      {% endif %}
+    {% elif config.description %}
+      <meta name="description" content="{{ config.description }}" />
+    {% endif %}
+
+    {% set site_title = config.title | default(value="Dhanur") %}
+    {% set resolved_title = site_title %}
+    {% if meta_title != "" %}
+      {% set resolved_title = meta_title %}
+    {% elif page and page.title %}
+      {% set resolved_title = page.title ~ " | " ~ site_title %}
+    {% elif section and section.title %}
+      {% set resolved_title = section.title ~ " | " ~ site_title %}
+    {% endif %}
+
+    {% set resolved_description = config.description | default(value="") %}
+    {% if meta_description != "" %}
+      {% set resolved_description = meta_description %}
+    {% elif page and page.description %}
+      {% set resolved_description = page.description %}
+    {% elif section and section.description %}
+      {% set resolved_description = section.description %}
+    {% endif %}
+
+    {% set resolved_meta_type = "website" %}
+    {% if page and page.path is starting_with("/blog/") %}
+      {% set resolved_meta_type = "article" %}
+    {% endif %}
+    {% if meta_type != "" %}
+      {% set resolved_meta_type = meta_type %}
     {% endif %}
 
     <title>
-      {%- if page and page.title -%}
-        {{ page.title }} | {{ config.title | default(value="Dhanur") }}
-      {%- elif section and section.title -%}
-        {{ section.title }} | {{ config.title | default(value="Dhanur") }}
-      {%- elif config.title -%}
-        {{ config.title }}
-      {%- else -%}
-        Dhanur
-      {%- endif -%}
+      {{ resolved_title }}
     </title>
+
+    <link rel="canonical" href="{{ current_url | safe }}" />
 
     {# Google Analytics and Sentry are loaded client-side only after cookie consent. #}
 
       <!-- SEO: Open Graph / Twitter Card -->
-      <meta property="og:title" content="
-        {%- if page and page.title -%}
-          {{ page.title }} | {{ config.title | default(value='Dhanur') }}
-        {%- elif section and section.title -%}
-          {{ section.title }} | {{ config.title | default(value='Dhanur') }}
-        {%- elif config.title -%}
-          {{ config.title }}
-        {%- else -%}
-          Dhanur
-        {%- endif -%}
-      " />
-      <meta property="og:description" content="
-        {%- if page and page.description -%}
-          {{ page.description }}
-        {%- elif section and section.description -%}
-          {{ section.description }}
-        {%- elif config.description -%}
-          {{ config.description }}
-        {%- endif -%}
-      " />
+      <meta property="og:title" content="{{ resolved_title }}" />
+      <meta property="og:description" content="{{ resolved_description }}" />
         <meta property="og:url" content="{{ current_url | safe }}" />
-        <meta property="og:type" content="website" />
+        <meta property="og:type" content="{{ resolved_meta_type }}" />
         {% if page is defined %}
           {% set resolved_thumb = page.extra.thumbnail_image | default(value=page.extra.thumbnail | default(value=page.extra.image | default(value=config.extra.default_thumbnail | default(value="")))) %}
           {% if resolved_thumb != "" %}
@@ -144,16 +150,8 @@
         {% endif %}
 
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content="{% if page %}{{ page.title }}{% else %}{{ config.title }}{% endif %}" />
-      <meta name="twitter:description" content="
-        {%- if page and page.description -%}
-          {{ page.description }}
-        {%- elif section and section.description -%}
-          {{ section.description }}
-        {%- elif config.description -%}
-          {{ config.description }}
-        {%- endif -%}
-      " />
+      <meta name="twitter:title" content="{{ resolved_title }}" />
+      <meta name="twitter:description" content="{{ resolved_description }}" />
       {# Twitter configuration with backward compatibility #}
       {# Priority: twitter.* (new) > twitter_* (legacy) #}
       {% if config.extra.twitter is defined %}

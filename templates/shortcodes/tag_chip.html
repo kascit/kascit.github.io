@@ -1,0 +1,6 @@
+{% set chip_name = name | default(value="") | trim %}
+{% if chip_name %}
+{% set chip_kind = kind | default(value="tags") %}
+{% set chip_variant = variant | default(value="tag") %}
+<a href="{{ get_taxonomy_url(kind=chip_kind, name=chip_name) }}" class="surface-chip-link taxonomy-chip taxonomy-chip--{{ chip_variant }}">{{ chip_name }}</a>
+{% endif %}

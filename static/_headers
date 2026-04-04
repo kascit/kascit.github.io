@@ -1,43 +1,37 @@
 # =============================================================================
-
 # SECURITY HEADERS - Applied to all pages
-
 # =============================================================================
-
-/_
+/*
 Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
-Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob: https://_.dhanur.me https://www.googletagmanager.com https://www.google-analytics.com https://giscus.app https://utteranc.es https://static.cloudflareinsights.com https://gist.github.com https://asciinema.org https://cdn.tailwindcss.com https://unpkg.com https://challenges.cloudflare.com https://_.cloudflare.com; style-src 'self' 'unsafe-inline' https://_.dhanur.me https://fonts.googleapis.com https://giscus.app; font-src 'self' data: https://_.dhanur.me https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https: wss:; frame-src 'self' https://giscus.app https://utteranc.es https://www.youtube.com https://codepen.io https://www.openstreetmap.org https://asciinema.org; frame-ancestors 'self'; worker-src 'self' https://_.dhanur.me; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests
-X-Frame-Options: SAMEORIGIN
+Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' blob: https://*.dhanur.me https://www.googletagmanager.com https://www.google-analytics.com https://giscus.app https://utteranc.es https://static.cloudflareinsights.com https://gist.github.com https://asciinema.org https://cdn.tailwindcss.com https://unpkg.com https://challenges.cloudflare.com https://*.cloudflare.com https://*.sentry-cdn.com; style-src 'self' 'unsafe-inline' https://*.dhanur.me https://fonts.googleapis.com https://giscus.app; font-src 'self' data: https://*.dhanur.me https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.dhanur.me https://*.sentry.io https://www.google-analytics.com https://stats.g.doubleclick.net; manifest-src 'self' https://*.dhanur.me; frame-src 'self' https://giscus.app https://utteranc.es https://www.youtube.com https://codepen.io https://www.openstreetmap.org https://asciinema.org https://challenges.cloudflare.com; frame-ancestors 'self' https://www.pwabuilder.com https://pwabuilder.com; worker-src 'self' blob: https://*.dhanur.me; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests;
 X-Content-Type-Options: nosniff
-X-XSS-Protection: 1; mode=block
+X-XSS-Protection: 0
 Referrer-Policy: strict-origin-when-cross-origin
-Permissions-Policy: geolocation=(), microphone=(), camera=(), payment=(), usb=(), magnetometer=(), gyroscope=(), accelerometer=()
+Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()
 
 # =============================================================================
-
-# CACHE HEADERS FOR STATIC ASSETS (Long Cache - 1 Year)
-
+# CACHE HEADERS FOR STATIC ASSETS 
 # =============================================================================
 
-/images/\*
+/images/*
 Cache-Control: public, max-age=31536000, immutable
 
-/fonts/\*
+/fonts/*
 Cache-Control: public, max-age=31536000, immutable
-Access-Control-Allow-Origin: \*
+Access-Control-Allow-Origin: *
 
-/css/\*
+/css/*
 Cache-Control: public, max-age=31536000, immutable
-Access-Control-Allow-Origin: \*
+Access-Control-Allow-Origin: *
 
 # Core app stylesheet is not content-hashed; keep cache short for safe rollouts
 /css/main.css
 Cache-Control: public, max-age=3600
 Access-Control-Allow-Origin: *
 
-/js/\*
+/js/*
 Cache-Control: public, max-age=31536000, immutable
-Access-Control-Allow-Origin: \*
+Access-Control-Allow-Origin: *
 
 # Core app entry + modules are not content-hashed; keep cache short for safe rollouts
 /js/main.js
@@ -53,30 +47,31 @@ Cache-Control: public, max-age=3600
 Access-Control-Allow-Origin: *
 
 # shell.js changes more often — short cache so subdomains pick up fixes
-
 /js/shell.js
 Cache-Control: public, max-age=3600
-Access-Control-Allow-Origin: \*
+Access-Control-Allow-Origin: *
 
-/webfonts/\*
+/webfonts/*
 Cache-Control: public, max-age=31536000, immutable
-Access-Control-Allow-Origin: \*
+Access-Control-Allow-Origin: *
 
-/icons/\*
+/icons/*
 Cache-Control: public, max-age=31536000, immutable
-Access-Control-Allow-Origin: \*
+Access-Control-Allow-Origin: *
 
 # =============================================================================
-
 # CACHE HEADERS FOR DYNAMIC CONTENT (Short Cache - 1 Hour)
-
 # =============================================================================
 
-/\*.html
+/*.html
 Cache-Control: public, max-age=3600
 
 /rss.xml
 Content-Type: application/rss+xml; charset=utf-8
+Cache-Control: public, max-age=3600
+
+/rss.xsl
+Content-Type: text/xsl; charset=utf-8
 Cache-Control: public, max-age=3600
 
 /sitemap.xml
@@ -87,12 +82,35 @@ Cache-Control: public, max-age=86400
 Cache-Control: public, max-age=3600
 
 # Service worker - NEVER cache this
-
 /sw.js
 Cache-Control: public, max-age=0, must-revalidate
 
 # Navbar export - fetchable by subdomains
-
 /navbar/
-Access-Control-Allow-Origin: \*
+Access-Control-Allow-Origin: *
 Cache-Control: public, max-age=3600
+
+
+# =============================================================================
+# CLOUDFLARE TRANSFORM RULES (Actual Implementation)
+# =============================================================================
+
+# Static Assets
+(http.host eq "dhanur.me") and ((starts_with(http.request.uri.path, "/images/")) or (starts_with(http.request.uri.path, "/css/")) or (starts_with(http.request.uri.path, "/js/")) or (starts_with(http.request.uri.path, "/fonts/")) or (ends_with(http.request.uri.path, ".css")) or (ends_with(http.request.uri.path, ".js")) or (ends_with(http.request.uri.path, ".jpg")) or (ends_with(http.request.uri.path, ".jpeg")) or (ends_with(http.request.uri.path, ".png")) or (ends_with(http.request.uri.path, ".webp")) or (ends_with(http.request.uri.path, ".svg")) or (ends_with(http.request.uri.path, ".ico")) or (ends_with(http.request.uri.path, ".woff")) or (ends_with(http.request.uri.path, ".woff2")) or (ends_with(http.request.uri.path, ".webmanifest")))
+-> Cache-Control = public, max-age=86400, stale-while-revalidate=604800
+
+# HTML & XML Cache
+(http.host eq "dhanur.me") and ((http.request.uri.path eq "/") or (ends_with(http.request.uri.path, "/")) or (ends_with(http.request.uri.path, ".html")) or (ends_with(http.request.uri.path, ".xml")) or (ends_with(http.request.uri.path, ".txt")))
+-> Cache-Control = public, max-age=3600
+
+# RSS Content Type (Requires Update)
+(http.request.uri.path eq "/rss.xml") 
+-> Content-Type = application/rss+xml
+
+# Sitemap Content Type
+(http.request.uri.path eq "/sitemap.xml") 
+-> Content-Type = application/xml; charset=utf-8
+
+# XSLT Content Type
+(ends_with(http.request.uri.path, ".xsl")) 
+-> Content-Type = text/xsl; charset=utf-8

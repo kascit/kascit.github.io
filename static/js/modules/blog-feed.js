@@ -61,24 +61,32 @@ export function initBlogFeed() {
   }
 
   function revealWhileNearBottom() {
-    let safety = 0;
-    while (hiddenItems().length > 0 && nearBottom() && safety < items.length) {
-      if (!revealNextBatch()) {
-        break;
-      }
-      safety += 1;
+    if (!nearBottom()) return;
+
+    const revealed = revealNextBatch();
+    if (revealed && hiddenItems().length > 0) {
+      requestAnimationFrame(revealWhileNearBottom);
     }
+  }
+
+  let revealRaf = null;
+  function scheduleRevealWhileNearBottom() {
+    if (revealRaf) return;
+    revealRaf = requestAnimationFrame(() => {
+      revealRaf = null;
+      revealWhileNearBottom();
+    });
   }
 
   scroller.addEventListener(
     "scroll",
     () => {
-      revealWhileNearBottom();
+      scheduleRevealWhileNearBottom();
     },
     { passive: true }
   );
 
-  window.addEventListener("resize", revealWhileNearBottom, { passive: true });
+  window.addEventListener("resize", scheduleRevealWhileNearBottom, { passive: true });
 
   sentinel.addEventListener("click", () => {
     if (hiddenItems().length > 0) {
@@ -87,5 +95,5 @@ export function initBlogFeed() {
   });
 
   // Ensure short viewports start with enough cards to enable in-panel scrolling.
-  revealWhileNearBottom();
+  scheduleRevealWhileNearBottom();
 }

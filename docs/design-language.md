@@ -21,7 +21,7 @@ Avoid making the navbar and sidebar pure `base-100` when the article is also `ba
 ## Themes
 
 - Themes: **`light`** and **`dark`** only.
-- Do **not** brand via hand-edited `daisyui.js` / `daisyui-theme.js` (CI overwrites them). Use [`src/theme-system.css`](../src/theme-system.css).
+- Do **not** brand via hand-edited `src/vendor/daisyui.js` / `src/vendor/daisyui-theme.js` (CI overwrites them). Use [`src/theme-system.css`](../src/theme-system.css).
 
 ### Light (GitHub-adjacent)
 

@@ -1,13 +1,14 @@
-{% extends "status.html" %}
+{% extends "page.html" %}
+{% import "macros/nav.html" as macros_nav %}
 
-{% set status_title = "Offline" %}
-{% set status_desc = "No internet connection" %}
-{% set status_url = config.base_url ~ "/offline/" %}
+{% block prev_link %}
+{{ macros_nav::render_button(url="/", title="Home", subtitle="Back to", direction="prev") }}
+{% endblock prev_link %}
 
-{% block status_content %}
-<p id="offline-status" data-offline-status="true" class="mt-4 text-sm text-base-content/50"></p>
-{% endblock status_content %}
+{% block next_link %}
+{% endblock next_link %}
 
-{% block status_scripts %}
-<script src="{{ get_url(path='js/offline-reload.js') | safe }}"></script>
-{% endblock status_scripts %}
+{% block js_body %}
+{{ super() }}
+<script defer src="{{ get_url(path='js/offline-reload.js') | safe }}"></script>
+{% endblock js_body %}

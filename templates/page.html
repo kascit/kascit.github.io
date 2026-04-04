@@ -9,27 +9,30 @@
 {% import "macros/utils.html" as macros_utils %}
 
 {% block header %}
-    {{ macros_header::header(config=config, lang=lang, page=page) }}
+    {{ macros_header::header(config=config, lang=lang, page=page|default(value=false)) }}
 {% endblock header %}
 
 {% block extra_head %}
 <!-- Structured Data for Blog Post (Schema.org JSON-LD) -->
+{% set is_blog_post = false %}
+{% if page is defined %}
 {% set is_blog_post = macros_utils::is_blog_post(page=page) | trim == "true" %}
+{% endif %}
 {% if is_blog_post %}
 {% set_global headline = macros_utils::json_escape(value=page.title) | trim %}
 {% set_global desc = macros_utils::json_escape(value=page.description | default(value='')) | trim %}
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "BlogPosting",
-    "headline": "{{ headline }}",
-    "description": "{{ desc }}",
+    "@type": "Article",
+        "headline": "{{ headline | safe }}",
+        "description": "{{ desc | safe }}",
   "author": {
     "@type": "Person",
     "name": "{{ config.author | default(value='Dhanur') }}"
   },
-    "datePublished": "{{ page.date | date(format='%Y-%m-%dT%H:%M:%S%z') }}",{% if page.updated %}
-    "dateModified": "{{ page.updated | date(format='%Y-%m-%dT%H:%M:%S%z') }}",{% endif %}
+        "datePublished": "{{ page.date | date(format='%+') }}",
+        "dateModified": "{{ page.updated | default(value=page.date) | date(format='%+') }}",
   "publisher": {
     "@type": "Organization",
     "name": "{{ config.title | default(value='Dhanur') }}",{% if config.extra.logo and config.extra.logo.image_path %}
@@ -43,8 +46,8 @@
     "@type": "WebPage",
     "@id": "{{ page.permalink | safe }}"
   },
-    "url": "{{ page.permalink | safe }}",{% set schema_thumb = page.extra.thumbnail_image | default(value=page.extra.thumbnail | default(value=page.extra.image | default(value=config.extra.default_thumbnail | default(value="")))) %}{% if schema_thumb != "" %}
-    "image": "{% if schema_thumb is starting_with("http://") or schema_thumb is starting_with("https://") %}{{ schema_thumb | safe }}{% else %}{{ get_url(path=schema_thumb) | safe }}{% endif %}",{% endif %}{% if page.taxonomies.tags %}
+        "url": "{{ page.permalink | safe }}",{% set schema_thumb = page.extra.thumbnail_image | default(value=page.extra.thumbnail | default(value=page.extra.image | default(value=config.extra.default_thumbnail | default(value="")))) %}{% if schema_thumb != "" %}
+        "image": ["{% if schema_thumb is starting_with("http://") or schema_thumb is starting_with("https://") %}{{ schema_thumb | safe }}{% else %}{{ get_url(path=schema_thumb) | safe }}{% endif %}"],{% endif %}{% if page.taxonomies.tags %}
   "keywords": "{{ page.taxonomies.tags | join(sep=', ') }}",{% endif %}
   "articleSection": "{{ page.taxonomies.categories | default(value=['Blog']) | first }}",
   "inLanguage": "{{ lang | default(value='en') }}",
@@ -56,6 +59,12 @@
 {% endblock extra_head %}
 
 {% block content %}
+{% set hide_page_meta = false %}
+{% set hide_page_actions = false %}
+{% if page.extra is defined %}
+{% set hide_page_meta = page.extra.hide_page_meta | default(value=false) %}
+{% set hide_page_actions = page.extra.hide_post_actions | default(value=false) %}
+{% endif %}
 <div class="mb-8 lg:mb-10 pb-6 border-b border-base-content/10">
     <div class="flex flex-col gap-3">
         <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-base-content m-0 flex items-center gap-3 flex-wrap">
@@ -71,6 +80,7 @@
         </p>
         {% endif %}
 
+        {% if not hide_page_meta %}
         <div class="mt-1 flex flex-wrap items-center gap-x-4 gap-y-1.5 text-sm font-medium text-base-content/62 min-w-0">
             {% if page.reading_time %}
             <div class="flex items-center gap-2">
@@ -93,6 +103,7 @@
             </div>
             {% endif %}
         </div>
+        {% endif %}
 
         {% if page.taxonomies and (page.taxonomies.categories or page.taxonomies.tags) %}
         <div class="mt-1 flex flex-wrap items-center gap-1.5 sm:gap-2 min-w-0">
@@ -131,16 +142,21 @@
     
     {{ page.content | safe }}
 
+    {% if not hide_page_actions %}
     {{ macros_article_meta::taxonomy_footer(page=page) }}
 
     {{ macros_content_footer::content_footer(config=config, item=page) }}
+    {% endif %}
 {% endblock content %}
 
 {% block js_body %}
     {{ super() }}
+    {% set is_blog_post = false %}
+    {% if page is defined %}
     {% set is_blog_post = macros_utils::is_blog_post(page=page) | trim == "true" %}
+    {% endif %}
     {% set show_notify_banner = is_blog_post %}
-    {% if page.extra.notify_banner is defined %}
+    {% if page is defined and page.extra.notify_banner is defined %}
         {% set show_notify_banner = page.extra.notify_banner %}
     {% endif %}
     {% if show_notify_banner %}
@@ -149,6 +165,18 @@
 {% endblock js_body %}
 
 {% block prev_link %}
+    {% set nav_back_url = "" %}
+    {% set nav_back_title = "" %}
+    {% set nav_back_subtitle = "Back to" %}
+    {% if page is defined and page.extra is defined %}
+        {% set nav_back_url = page.extra.back_url | default(value="") %}
+        {% set nav_back_title = page.extra.back_title | default(value="") %}
+        {% set nav_back_subtitle = page.extra.back_subtitle | default(value=nav_back_subtitle) %}
+    {% endif %}
+
+    {% if nav_back_url != "" and nav_back_title != "" %}
+        {{ macros_nav::render_button(url=nav_back_url, title=nav_back_title, subtitle=nav_back_subtitle, direction="prev") }}
+    {% elif page is defined %}
     {# Blog post navigation - only for blog posts #}
     {% set blog_section = get_section(path="blog/_index.md") %}
 
@@ -166,9 +194,11 @@
     {% elif current_index == 0 %}
         {{ macros_nav::render_button(url="/blog", title="Blog", subtitle="Back to", direction="prev") }}
     {% endif %}
+    {% endif %}
 {% endblock prev_link %}
 
 {% block next_link %}
+    {% if page is defined %}
     {# Blog post navigation - only for blog posts #}
     {% set blog_section = get_section(path="blog/_index.md") %}
 
@@ -185,5 +215,6 @@
         {{ macros_nav::render_button(url=next_post.permalink, title=next_post.title, subtitle="Next", direction="next") }}
     {% elif current_index >= 0 %}
         {{ macros_nav::render_button(url="/archive", title="Archive", subtitle="View All", direction="next") }}
+    {% endif %}
     {% endif %}
 {% endblock next_link %}

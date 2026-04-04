@@ -1,0 +1,66 @@
+{% set target_group = group | default(value="featured") %}
+{% set target_grid = grid_class | default(value="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12") %}
+{% set catalog = load_data(path="data/projects.json", format="json") %}
+
+<div class="not-prose {{ target_grid }}">
+{% for project in catalog.projects %}
+  {% if project.group == target_group %}
+  {% set project_live = project.live_url | default(value="") %}
+  {% set project_github = project.github_url | default(value="") %}
+  {% set project_url = project.url | default(value="") %}
+  {% set project_url_label = project.url_label | default(value="Visit") %}
+  {% set project_external = project.external | default(value=false) %}
+  {% set project_status = project.status | default(value="") %}
+  <article class="project-card">
+    <div class="project-card-header">
+      <div class="project-card-title-group">
+        {% if project.icon %}
+        <div class="project-card-icon-wrap">
+          <i class="{{ project.icon }}"></i>
+        </div>
+        {% endif %}
+        <div class="project-card-info">
+          <div class="project-card-title">
+            <a href="/projects/{{ project.slug }}/" class="no-underline hover:no-underline text-base-content hover:text-primary transition-colors duration-200">{{ project.title }}</a>
+          </div>
+          {% if project.lang %}
+          <div class="project-card-lang">{{ project.lang }}</div>
+          {% endif %}
+        </div>
+      </div>
+      {% if project_status == "live" %}<span class="project-card-badge badge-live">Live</span>
+      {% elif project_status == "academic" %}<span class="project-card-badge badge-academic">Academic</span>
+      {% elif project_status == "archived" %}<span class="project-card-badge badge-archived">Archived</span>
+      {% elif project_status == "wip" %}<span class="project-card-badge badge-wip">WIP</span>
+      {% endif %}
+    </div>
+
+    <div class="project-card-desc">{{ project.description }}</div>
+
+    {% if project.techs %}
+    <div class="project-card-techs">
+      {% for tech in project.techs %}
+      <a href="{{ get_taxonomy_url(kind='tags', name=tech) }}" class="surface-chip-link taxonomy-chip taxonomy-chip--tag">{{ tech }}</a>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="project-card-actions">
+      {% if project_live %}
+      <a href="{{ project_live }}" target="_blank" rel="noopener" class="project-card-btn btn-live"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live</a>
+      {% endif %}
+
+      {% if project_github %}
+      <a href="{{ project_github }}" target="_blank" rel="noopener" class="project-card-btn"><i class="fa-brands fa-github"></i> Code</a>
+      {% endif %}
+
+      {% if project_url %}
+      <a href="{{ project_url }}" {% if project_external %}target="_blank" rel="noopener"{% endif %} class="project-card-btn"><i class="fa-solid fa-link"></i> {{ project_url_label }}</a>
+      {% endif %}
+
+      <a href="/projects/{{ project.slug }}/" class="project-card-btn"><i class="fa-solid fa-book-open"></i> Details</a>
+    </div>
+  </article>
+  {% endif %}
+{% endfor %}
+</div>

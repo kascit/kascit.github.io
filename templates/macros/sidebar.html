@@ -41,8 +41,9 @@
                         {% set s1 = get_section(path=section_path) %}
                         {% if s1 %}
                             {% set is_active1 = normalized_current_path is starting_with(s1.path) %}
+                            {% set is_projects_root = section_key == "projects" or s1.path is ending_with("/projects/") %}
             <li>
-                {% if s1.subsections or s1.pages %}
+                {% if (s1.subsections or s1.pages) and not is_projects_root %}
                     <details {% if is_active1 %}open{% endif %}>
                         <summary>{{ s1.title }}</summary>
                             <ul>
@@ -136,8 +137,9 @@
             {% for s1_path in index.subsections %}
                 {% set s1 = get_section(path=s1_path) %}
                 {% set is_active1 = normalized_current_path is starting_with(s1.path) %}
+                {% set is_projects_root = s1.path is ending_with("/projects/") %}
                 <li>
-                    {% if s1.subsections or s1.pages %}
+                    {% if (s1.subsections or s1.pages) and not is_projects_root %}
                         <details {% if is_active1 %}open{% endif %}>
                             <summary {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>{{ s1.title }}</summary>
                             <ul>

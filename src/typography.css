@@ -35,7 +35,7 @@
     scroll-padding-top: 130px;
     scroll-behavior: smooth;
     /* Shell behind content pane (GitHub-style gray field) */
-    @apply bg-base-200 transition-colors duration-300;
+    @apply bg-base-200;
     scrollbar-color: var(--scrollbar-thumb-color) transparent;
     scrollbar-width: auto;
   }

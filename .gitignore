@@ -15,11 +15,13 @@ Desktop.ini
 *.swo
 
 # Build artifacts & dependencies (downloaded on setup)
-src/tailwindcss.exe
-src/tailwindcss
-src/daisyui.js
-src/daisyui-theme.js
+tools/tailwindcss.exe
+tools/tailwindcss
+src/vendor/daisyui.js
+src/vendor/daisyui-theme.js
 static/css/main.css
+content/projects/*.md
+!content/projects/_index.md
 
 # Temp/log files
 tmp*

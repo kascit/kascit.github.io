@@ -6,6 +6,18 @@ html {
   scrollbar-gutter: stable;
 }
 
+@supports (view-transition-name: root) {
+  @view-transition {
+    navigation: auto;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 160ms;
+    animation-timing-function: ease-out;
+  }
+}
+
 /* Landing page: hide prev/next navigation block */
 body.is-landing nav.mt-12 {
   display: none;
@@ -182,15 +194,15 @@ body.is-landing nav.mt-12 {
 }
 
 #sidebar .menu :where(li > a.menu-active, li > details > summary.menu-active) {
-  background: var(--sidebar-item-bg-active) !important;
-  color: var(--color-base-content) !important;
-  box-shadow: none !important;
+  background: var(--sidebar-item-bg-active);
+  color: var(--color-base-content);
+  box-shadow: none;
 }
 
 /* Neutralize legacy server-side active borders to prevent double bars */
 #sidebar .menu :where(li, a, summary)[class*="border-l-"] {
-  border-inline-start-width: 0 !important;
-  border-inline-start-color: transparent !important;
+  border-inline-start-width: 0;
+  border-inline-start-color: transparent;
 }
 
 #sidebar .menu :where(li > ul) {
@@ -837,7 +849,9 @@ body.is-landing nav.mt-12 {
   height: 100%;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  transition: opacity 300ms var(--motion-ease-standard);
+  transition: opacity 260ms var(--motion-ease-standard),
+              transform 260ms var(--motion-ease-standard);
+  transform: translateX(0);
 }
 
 #toc-sidebar::-webkit-scrollbar {
@@ -856,49 +870,81 @@ body.is-landing nav.mt-12 {
   display: none;
 }
 
+#blog-layout {
+  --toc-rail-width: 0px;
+  --toc-rail-padding-left: 0px;
+}
+
 /* --- TOC column: expanded state --- */
 #toc-column {
+  width: var(--toc-rail-width);
+  min-width: var(--toc-rail-width);
+  max-width: var(--toc-rail-width);
+  flex-basis: var(--toc-rail-width);
+  padding-left: var(--toc-rail-padding-left);
   /* overflow:visible so the inner sticky div works correctly */
   overflow: visible;
+  transform: translateX(0);
+  transition:
+    width 280ms var(--motion-ease-standard),
+    max-width 280ms var(--motion-ease-standard),
+    min-width 280ms var(--motion-ease-standard),
+    flex-basis 280ms var(--motion-ease-standard),
+    padding-left 260ms var(--motion-ease-standard),
+    margin 280ms var(--motion-ease-standard),
+    opacity 220ms var(--motion-ease-standard),
+    transform 280ms var(--motion-ease-standard);
+  will-change: width, max-width, min-width, flex-basis, padding-left, margin, opacity, transform;
 }
 
 /* --- TOC column: collapsed state --- */
 body.toc-collapsed #toc-column {
-  width: 0 !important;
-  max-width: 0 !important;
-  min-width: 0 !important;
-  flex-basis: 0 !important;
-  opacity: 0 !important;
+  width: 0;
+  max-width: 0;
+  min-width: 0;
+  flex-basis: 0;
+  opacity: 0;
   overflow: hidden;
-  margin: 0 !important;
-  padding-left: 0 !important;
+  margin: 0;
+  padding-left: 0;
   pointer-events: none;
+  transform: translateX(0.5rem);
 }
 
 body.toc-collapsed #toc-sidebar {
   opacity: 0;
   pointer-events: none;
+  transform: translateX(0.4rem);
 }
 
 /* --- Toggle button anchor --- */
 /* Kept visible so toggle button stays accessible when collapsed */
 #toc-toggle-anchor {
   z-index: 41;
-  width: 0 !important;
-  min-width: 0 !important;
-  max-width: 0 !important;
-  right: calc(-1 * var(--toc-toggle-offset, 0px)) !important;
+  width: 0;
+  min-width: 0;
+  max-width: 0;
+  right: calc(-1 * var(--toc-toggle-offset, 0px));
+  transition: right 280ms var(--motion-ease-standard);
 }
 
 @media (min-width: 1024px) {
   #blog-layout {
+    --toc-rail-width: 220px;
+    --toc-rail-padding-left: 1.5rem;
     --toc-toggle-offset: 1.5rem;
     --blog-layout-pad-right: 2.5rem;
+    transition: max-width 280ms var(--motion-ease-standard),
+                width 280ms var(--motion-ease-standard),
+                padding 280ms var(--motion-ease-standard),
+                margin 280ms var(--motion-ease-standard);
   }
 }
 
 @media (min-width: 1280px) {
   #blog-layout {
+    --toc-rail-width: 250px;
+    --toc-rail-padding-left: 2rem;
     --toc-toggle-offset: 2rem;
     --blog-layout-pad-right: 2.5rem;
   }
@@ -914,6 +960,11 @@ body.toc-collapsed #blog-layout {
   left: 0;
   transform: translateX(-50%);
   transition: transform 150ms ease, box-shadow 150ms ease, opacity 200ms ease, background-color 200ms ease;
+}
+
+#toc-toggle svg {
+  transition: transform 220ms var(--motion-ease-standard);
+  transform-origin: center;
 }
 
 #toc-toggle:hover {
@@ -934,6 +985,15 @@ body.toc-collapsed #toc-toggle svg {
 body.toc-collapsed #toc-toggle {
   background-color: var(--color-base-300);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #toc-column,
+  #toc-sidebar,
+  #toc-toggle,
+  #toc-toggle svg {
+    transition: none;
+  }
 }
 
 /* Mobile drawer polish */

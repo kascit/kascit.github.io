@@ -5,10 +5,6 @@
 
 {# taxonomy_list.html - List of terms for one taxonomy (e.g. /tags/, /categories/). #}
 
-{% block title %}
-    {{ taxonomy.name | capitalize }} - {{ config.title }}
-{% endblock title %}
-
 {% block content %}
 <section class="not-prose mb-12 pb-6 border-b border-base-content/15">
   <div class="flex items-center justify-between gap-4 mb-3">
@@ -27,7 +23,7 @@
   </p>
   {% else %}
   <p class="text-base sm:text-lg text-base-content/70 m-0">
-    Browse all {{ taxonomy.name }} used across blog posts.
+    Browse all {{ taxonomy.name }} used across site content.
   </p>
   {% endif %}
 

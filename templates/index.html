@@ -19,12 +19,70 @@
 <!DOCTYPE html>
 {{ macros_head::html_tag(config=config, lang=lang) }}
 <head>
+    {% set resolved_current_path = "/" %}
+    {% if current_path is defined and current_path != "" %}
+        {% set resolved_current_path = current_path %}
+    {% elif page is defined and page.path %}
+        {% set resolved_current_path = page.path %}
+    {% elif section is defined and section.path %}
+        {% set resolved_current_path = section.path %}
+    {% endif %}
+
+    {% set resolved_current_url = config.base_url %}
+    {% if current_url is defined and current_url != "" %}
+        {% set resolved_current_url = current_url %}
+    {% elif page is defined and page.permalink %}
+        {% set resolved_current_url = page.permalink %}
+    {% elif section is defined and section.permalink %}
+        {% set resolved_current_url = section.permalink %}
+    {% elif term is defined and term.permalink %}
+        {% set resolved_current_url = term.permalink %}
+    {% elif resolved_current_path != "" %}
+        {% set resolved_current_url = config.base_url ~ resolved_current_path %}
+    {% endif %}
+
+    {% set resolved_meta_title = "" %}
+    {% set resolved_meta_description = "" %}
+    {% set resolved_meta_type = "" %}
+    {% set site_title = config.title | default(value="Dhanur") %}
+
+    {% if term is defined and taxonomy is defined %}
+        {% set resolved_meta_type = "website" %}
+        {% set taxonomy_name_cap = taxonomy.name | capitalize %}
+        {% set term_page_count = term.pages | length %}
+        {% set resolved_meta_title = term.name ~ " · " ~ taxonomy_name_cap ~ " | " ~ site_title %}
+        {% if term_page_count == 1 %}
+            {% set resolved_meta_description = "1 post under " ~ term.name ~ " in " ~ taxonomy_name_cap ~ "." %}
+        {% else %}
+            {% set resolved_meta_description = term_page_count ~ " posts under " ~ term.name ~ " in " ~ taxonomy_name_cap ~ "." %}
+        {% endif %}
+    {% elif taxonomy is defined %}
+        {% set resolved_meta_type = "website" %}
+        {% set taxonomy_heading = taxonomy.config.title | default(value=taxonomy.name | capitalize) %}
+        {% set resolved_meta_title = taxonomy_heading ~ " | " ~ site_title %}
+        {% if taxonomy.config.description %}
+            {% set resolved_meta_description = taxonomy.config.description %}
+        {% else %}
+            {% set resolved_meta_description = "Browse all " ~ taxonomy.name ~ " across the site." %}
+        {% endif %}
+    {% endif %}
+
+    {% if meta_title is defined and meta_title != "" %}
+        {% set resolved_meta_title = meta_title %}
+    {% endif %}
+    {% if meta_description is defined and meta_description != "" %}
+        {% set resolved_meta_description = meta_description %}
+    {% endif %}
+    {% if meta_type is defined and meta_type != "" %}
+        {% set resolved_meta_type = meta_type %}
+    {% endif %}
+
     {% if page is defined %}
-        {{ macros_head::head(config=config, page=page, section=false, current_url=config.base_url) }}
+        {{ macros_head::head(config=config, page=page, section=false, current_url=resolved_current_url, meta_title=resolved_meta_title, meta_description=resolved_meta_description, meta_type=resolved_meta_type) }}
     {% elif section is defined %}
-        {{ macros_head::head(config=config, page=false, section=section, current_url=config.base_url) }}
+        {{ macros_head::head(config=config, page=false, section=section, current_url=resolved_current_url, meta_title=resolved_meta_title, meta_description=resolved_meta_description, meta_type=resolved_meta_type) }}
     {% else %}
-        {{ macros_head::head(config=config, page=false, section=false, current_url=config.base_url) }}
+        {{ macros_head::head(config=config, page=false, section=false, current_url=resolved_current_url, meta_title=resolved_meta_title, meta_description=resolved_meta_description, meta_type=resolved_meta_type) }}
     {% endif %}
     {% block extra_head %}{% endblock extra_head %}
 </head>
@@ -57,20 +115,48 @@
             </div>
             {% else %}
             {% set has_toc = false %}
+            {% set wide_content = false %}
             {% if page is defined %}
                 {% if page.toc | length > 0 %}
                     {% set has_toc = true %}
+                {% endif %}
+                {% if page.extra and page.extra.wide_content %}
+                    {% set wide_content = true %}
                 {% endif %}
             {% elif section is defined %}
                 {% if section.toc | length > 0 %}
                     {% set has_toc = true %}
                 {% endif %}
+                {% if section.extra and section.extra.wide_content %}
+                    {% set wide_content = true %}
+                {% endif %}
             {% endif %}
-            {% if current_path is defined and current_path == "/archive/" %}
+            {% if resolved_current_path == "/archive/" %}
                 {% set has_toc = true %}
             {% endif %}
             {% set is_taxonomy_view = taxonomy is defined %}
             {% set has_layout_rail = has_toc or is_taxonomy_view %}
+            {% set force_shell_fit = false %}
+            {% set force_compact_main = false %}
+            {% if shell_fit is defined %}
+                {% set force_shell_fit = shell_fit %}
+            {% endif %}
+            {% if compact_main is defined %}
+                {% set force_compact_main = compact_main %}
+            {% endif %}
+            {% if page is defined and page.extra %}
+                {% set force_shell_fit = page.extra.shell_fit | default(value=force_shell_fit) %}
+                {% set force_compact_main = page.extra.compact_main | default(value=force_compact_main) %}
+            {% endif %}
+            {% if section is defined and section.extra %}
+                {% set force_shell_fit = section.extra.shell_fit | default(value=force_shell_fit) %}
+                {% set force_compact_main = section.extra.compact_main | default(value=force_compact_main) %}
+            {% endif %}
+            {% if resolved_current_path == "/404.html" %}
+                {% set force_shell_fit = true %}
+                {% set force_compact_main = true %}
+            {% endif %}
+            {% set use_fit_shell = has_layout_rail or force_shell_fit %}
             {% set rail_hide_label = "Hide table of contents" %}
             {% set rail_show_label = "Show table of contents" %}
             {% if is_taxonomy_view and not has_toc %}
@@ -79,11 +165,11 @@
             {% endif %}
 
             <div class="p-4 md:p-8 w-full min-w-0 flex justify-center min-h-[calc(100dvh-4rem)]">
-                <div id="blog-layout" class="relative mx-auto w-full {% if has_layout_rail %}lg:w-fit{% endif %} min-w-0 max-w-7xl flex flex-row gap-0 rounded-box border border-base-content/5 bg-base-100 shadow-sm p-5 sm:p-6 md:p-8 lg:p-10 transition-[max-width,width,padding] duration-300 ease-in-out">
-                    <main class="relative prose min-w-0 w-full {% if has_toc %}max-w-prose{% elif is_taxonomy_view %}flex-1 max-w-prose lg:min-w-[65ch]{% else %}flex-1 max-w-prose{% endif %}">
+                <div id="blog-layout" class="relative mx-auto w-full {% block layout_fit_class %}{% if use_fit_shell %}lg:w-fit{% endif %}{% endblock layout_fit_class %} min-w-0 max-w-7xl flex flex-row gap-0 rounded-box border border-base-content/5 bg-base-100 shadow-sm p-5 sm:p-6 md:p-8 lg:p-10">
+                    <main class="relative prose min-w-0 w-full {% block main_width_class %}{% if has_toc %}{% if wide_content %}max-w-[76rem]{% else %}max-w-prose{% endif %}{% elif is_taxonomy_view %}flex-1 max-w-prose lg:min-w-[65ch]{% elif force_compact_main %}{% if wide_content %}max-w-[76rem]{% else %}max-w-prose{% endif %}{% else %}{% if wide_content %}flex-1 max-w-[76rem]{% else %}flex-1 max-w-prose{% endif %}{% endif %}{% endblock main_width_class %}">
                         {% if has_layout_rail %}
                         {# Toggle button anchor: Absolute so it takes zero flex space (no empty bar) #}
-                        <div id="toc-toggle-anchor" class="hidden lg:block absolute h-full top-0 right-0 w-0 z-50 pointer-events-none" aria-hidden="true">
+                        <div id="toc-toggle-anchor" class="hidden lg:block absolute h-full top-0 right-0 z-50 pointer-events-none">
                             <div class="sticky top-24 overflow-visible pointer-events-auto">
                                 <div class="tooltip tooltip-top" data-tip="{{ rail_hide_label }}">
                                         <button id="toc-toggle" data-toc-toggle="true"
@@ -124,7 +210,7 @@
 
                     {% if has_layout_rail %}
                     {# Shared rail column (TOC on content pages, tools rail on taxonomy pages). #}
-                    <div id="toc-column" class="hidden lg:flex flex-col flex-none w-[220px] xl:w-[250px] opacity-100 pl-4 lg:pl-6 xl:pl-8 transition-all duration-300 ease-in-out origin-right" style="will-change: width, opacity, padding-left;">
+                    <div id="toc-column" class="hidden lg:flex flex-col flex-none opacity-100 origin-right">
                         {% if has_toc %}
                         {% block toc_sidebar %}
                         {% if page is defined %}
@@ -138,7 +224,7 @@
                                                 <aside
                                                     id="toc-sidebar"
                                                     data-toc-sidebar="true"
-                                                    class="hidden lg:block transition-all duration-300 ease-out origin-right"
+                                                    class="hidden lg:block origin-right"
                                                     role="navigation"
                                                     aria-label="Tools rail"
                                                 >
@@ -159,9 +245,9 @@
         <div id="sidebar" data-sidebar-root="true" class="drawer-side pt-16 z-[60] lg:z-40 {% if is_landing %}lg:hidden{% endif %}">
             {{ macros_drawer::drawer_overlay() }}
             {% if section is defined %}
-                {{ macros_sidebar::sidebar(config=config, lang=lang, current_path=current_path, section=section) }}
+                {{ macros_sidebar::sidebar(config=config, lang=lang, current_path=resolved_current_path, section=section) }}
             {% else %}
-                {{ macros_sidebar::sidebar(config=config, lang=lang, current_path=current_path, section=false) }}
+                {{ macros_sidebar::sidebar(config=config, lang=lang, current_path=resolved_current_path, section=false) }}
             {% endif %}
         </div>
         
@@ -183,7 +269,15 @@
 
     {% block js_body %}
         {% set js_theme_colorset = macros_head::get_theme_colorset(config=config) | trim %}
+        {% set needs_toc_script = not is_landing and (
+            resolved_current_path == "/archive/"
+            or taxonomy is defined
+            or (page is defined and page.toc | length > 0)
+            or (section is defined and section.toc | length > 0)
+        ) %}
+        {% if needs_toc_script %}
         <script defer src="{{ get_url(path='js/toc.js') | safe }}"></script>
+        {% endif %}
         <script id="site-config" type="application/json">
         {
             "defaultColorset": "{{ js_theme_colorset }}",

@@ -39,6 +39,17 @@ just dev      # CSS build + Zola dev server
 just build    # Clean, CSS minify, Zola build
 ```
 
+### Generated Content Pipeline
+
+Project pages and widget data are generated artifacts tracked in this repo.
+
+```bash
+just project-pages   # Validate data/projects.json and sync content/projects/*.md
+just widget-data     # Regenerate static/widgets/latest-posts-data.json
+```
+
+CI and deploy workflows enforce that generated files are committed.
+
 ## Available Commands
 
 ```bash
@@ -73,7 +84,9 @@ just doctor   # Health check
 │   ├── main.css     # Tailwind entry point
 │   ├── layout.css   # Layout styles
 │   ├── components.css # Component styles
-│   └── daisyui.js   # DaisyUI plugin
+│   └── vendor/      # Cached DaisyUI plugin files (downloaded by setup/CI)
+├── data/            # Structured content sources (projects, etc.)
+├── scripts/         # Build and generation scripts
 ├── config.toml      # Zola configuration
 └── justfile         # Build automation
 ```

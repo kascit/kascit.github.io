@@ -29,6 +29,28 @@ jobs:
         run: |
           grep -vE '^(#|$)' versions.env >> "$GITHUB_ENV"
 
+      - name: Setup Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "20"
+
+      - name: Sync generated content
+        run: |
+          set -euo pipefail
+          node scripts/validate-project-data.js
+          node scripts/sync-project-pages.js
+          node scripts/generate-latest-posts-widget.js
+
+      - name: Verify generated content is committed
+        run: |
+          set -euo pipefail
+          if ! git diff --quiet -- content/projects static/widgets/latest-posts-data.json; then
+            echo "ERROR: Generated content is out of sync."
+            echo "Run 'just project-pages widget-data' locally and commit the results."
+            git --no-pager diff -- content/projects static/widgets/latest-posts-data.json
+            exit 1
+          fi
+
       - name: Cache Zola binary
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
@@ -47,39 +69,40 @@ jobs:
         uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
         with:
           path: |
-            tailwindcss
-            src/daisyui.js
-            src/daisyui-theme.js
+            tools/tailwindcss
+            src/vendor/daisyui.js
+            src/vendor/daisyui-theme.js
           key: css-build-${{ env.TAILWIND_VERSION }}-${{ env.DAISYUI_VERSION }}
 
       - name: Build CSS (Tailwind + DaisyUI)
         run: |
           set -euo pipefail
+          mkdir -p tools src/vendor
           
-          if [[ ! -f ./tailwindcss ]]; then
+          if [[ ! -f tools/tailwindcss ]]; then
             echo "Downloading Tailwind CSS v${TAILWIND_VERSION}"
-            curl -fsSL -o ./tailwindcss "https://github.com/tailwindlabs/tailwindcss/releases/download/v${TAILWIND_VERSION}/tailwindcss-linux-x64"
-            chmod +x ./tailwindcss
+            curl -fsSL -o tools/tailwindcss "https://github.com/tailwindlabs/tailwindcss/releases/download/v${TAILWIND_VERSION}/tailwindcss-linux-x64"
+            chmod +x tools/tailwindcss
           fi
           
-          if [[ ! -f src/daisyui.js ]]; then
+          if [[ ! -f src/vendor/daisyui.js ]]; then
             echo "Downloading DaisyUI v${DAISYUI_VERSION}"
-            curl -fsSL -o src/daisyui.js "https://github.com/saadeghi/daisyui/releases/download/v${DAISYUI_VERSION}/daisyui.js"
-            curl -fsSL -o src/daisyui-theme.js "https://github.com/saadeghi/daisyui/releases/download/v${DAISYUI_VERSION}/daisyui-theme.js"
+            curl -fsSL -o src/vendor/daisyui.js "https://github.com/saadeghi/daisyui/releases/download/v${DAISYUI_VERSION}/daisyui.js"
+            curl -fsSL -o src/vendor/daisyui-theme.js "https://github.com/saadeghi/daisyui/releases/download/v${DAISYUI_VERSION}/daisyui-theme.js"
           fi
           
           echo "Building CSS"
-          ./tailwindcss -i src/main.css -o static/css/main.css --minify
+          tools/tailwindcss -i src/main.css -o static/css/main.css --minify
 
       - name: Build site with Zola
         run: |
           echo "Building site..."
           zola build
 
-      - name: Setup Node.js for JS minification
-        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
-        with:
-          node-version: "20"
+      - name: Remove page/1 redirect stubs
+        run: |
+          set -euo pipefail
+          node scripts/clean-pagination-redirects.js
 
       - name: Minify JS output (terser)
         run: |
@@ -93,7 +116,7 @@ jobs:
           
           # Check critical files exist
           [[ -f public/index.html ]] || { echo "ERROR: index.html missing"; exit 1; }
-          [[ -f public/404.html ]] || echo "WARN: 404.html missing"
+          [[ -f public/404.html ]] || { echo "ERROR: 404.html missing"; exit 1; }
           [[ -d public/css ]] || { echo "ERROR: css directory missing"; exit 1; }
           
           # Check file count

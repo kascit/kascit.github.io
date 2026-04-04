@@ -1,10 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="/rss.xsl" type="text/xsl"?>
+<?xml-stylesheet href="{{ get_url(path='rss.xsl', trailing_slash=false) | safe }}" type="text/xsl"?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" version="2.0">
     <channel>
-      <title>{{ config.title }}</title>
-      <link>{{ config.base_url }}</link>
-      <description>{{ config.description }}</description>
+  {% set channel_title = "RSS Feed | " ~ config.title %}
+      {% set channel_description = config.description %}
+      {% set channel_link = config.base_url %}
+      {% if title is defined and title != "" %}
+        {% set channel_title = title %}
+      {% endif %}
+      {% if description is defined and description != "" %}
+        {% set channel_description = description %}
+      {% endif %}
+      {% if feed_url is defined and (feed_url is containing("/tags/")) %}
+        {% set tag_name = feed_url | replace(from=config.base_url ~ "/tags/", to="") | replace(from="/rss.xml", to="") %}
+        {% if tag_name != "" and not (tag_name is containing("http")) %}
+          {% set channel_title = "Tag: " ~ tag_name ~ " | " ~ config.title %}
+          {% set channel_description = "Posts tagged with " ~ tag_name ~ "." %}
+        {% endif %}
+      {% endif %}
+      {% if feed_url is defined and (feed_url is containing("/categories/")) %}
+        {% set category_name = feed_url | replace(from=config.base_url ~ "/categories/", to="") | replace(from="/rss.xml", to="") %}
+        {% if category_name != "" and not (category_name is containing("http")) %}
+          {% set channel_title = "Category: " ~ category_name ~ " | " ~ config.title %}
+          {% set channel_description = "Posts in " ~ category_name ~ "." %}
+        {% endif %}
+      {% endif %}
+      {% if current_url is defined and current_url != "" %}
+        {% set channel_link = current_url %}
+      {% elif feed_url is defined and feed_url != "" %}
+        {% set channel_link = feed_url | replace(from="rss.xml", to="") %}
+      {% endif %}
+      <title>{{ channel_title }}</title>
+      <link>{{ channel_link }}</link>
+      <description>{{ channel_description }}</description>
       <generator>Zola</generator>
       <language>{{ config.default_language }}</language>
         <atom:link href="{{ feed_url }}" rel="self" type="application/rss+xml"/>
@@ -16,7 +44,7 @@
           <author>{{ config.author }}</author>
           <link>{{ page.permalink }}</link>
           <guid>{{ page.permalink }}</guid>
-          <description xml:base="{{ page.permalink }}"><![CDATA[{{ page.content }}]]></description>
+          <description xml:base="{{ page.permalink }}"><![CDATA[{% if page.summary %}{{ page.summary | safe }}{% elif page.description %}{{ page.description }}{% else %}{{ page.content }}{% endif %}]]></description>
       </item>
       {% endfor %}
     </channel>

@@ -66,11 +66,18 @@
 
     let currentActiveId = null;
     let clickLockUntil = 0;
+    let headingOffsets = [];
+    let pendingRebuild = false;
+    let activeOffsetPx = 96;
 
-    function getActiveOffsetPx() {
+    function recomputeActiveOffset() {
       const rootStyle = window.getComputedStyle(document.documentElement);
       const scrollPaddingTop = parseFloat(rootStyle.scrollPaddingTop || "0") || 0;
-      return Math.max(96, scrollPaddingTop + 18);
+      activeOffsetPx = Math.max(96, scrollPaddingTop + 18);
+    }
+
+    function getActiveOffsetPx() {
+      return activeOffsetPx;
     }
 
     const CLICK_LOCK_MS = 1200;
@@ -79,6 +86,21 @@
       return (window.performance && typeof window.performance.now === "function")
         ? window.performance.now()
         : Date.now();
+    }
+
+    function rebuildHeadingOffsets() {
+      const scrollY = window.scrollY || window.pageYOffset || 0;
+      headingOffsets = headings.map((heading) => ({
+        id: heading.id,
+        top: heading.getBoundingClientRect().top + scrollY,
+      }));
+      pendingRebuild = false;
+    }
+
+    function scheduleRebuildHeadingOffsets() {
+      if (pendingRebuild) return;
+      pendingRebuild = true;
+      requestAnimationFrame(rebuildHeadingOffsets);
     }
 
     function getTocLink(id) {
@@ -126,36 +148,40 @@
     }
 
     function findActiveHeadingFromScroll() {
+      if (headingOffsets.length === 0) {
+        rebuildHeadingOffsets();
+      }
+
       const scrollY = window.scrollY || window.pageYOffset || 0;
       const viewportBottom = scrollY + window.innerHeight;
-      const docHeight = document.documentElement.scrollHeight;
+      const lastHeading = headingOffsets[headingOffsets.length - 1];
 
       // Keep the final heading active when user reaches the bottom of page.
-      if (viewportBottom >= docHeight - 2) {
-        return headings[headings.length - 1].id;
+      if (lastHeading && viewportBottom >= lastHeading.top - 2) {
+        return lastHeading.id;
       }
 
       const activationLine = scrollY + getActiveOffsetPx();
-      let best = headings[0].id;
-      let bestTop = headings[0].getBoundingClientRect().top + scrollY;
-      let nextTop = null;
-      let nextId = null;
+      let low = 0;
+      let high = headingOffsets.length - 1;
+      let bestIndex = 0;
 
-      for (let i = 0; i < headings.length; i++) {
-        const top = headings[i].getBoundingClientRect().top + scrollY;
-        if (top <= activationLine + 1) {
-          best = headings[i].id;
-          bestTop = top;
+      while (low <= high) {
+        const mid = Math.floor((low + high) / 2);
+        if (headingOffsets[mid].top <= activationLine + 1) {
+          bestIndex = mid;
+          low = mid + 1;
         } else {
-          nextTop = top;
-          nextId = headings[i].id;
-          break;
+          high = mid - 1;
         }
       }
 
+      const best = headingOffsets[bestIndex].id;
+      const next = headingOffsets[bestIndex + 1] || null;
+
       // Prevent a persistent "one heading behind" state around anchor landings.
-      if (nextId && nextTop !== null && (nextTop - activationLine) <= 28) {
-        return nextId;
+      if (next && (next.top - activationLine) <= 28) {
+        return next.id;
       }
 
       return best;
@@ -174,7 +200,10 @@
       if (!document.getElementById(id)) return;
       clickLockUntil = nowMs() + CLICK_LOCK_MS;
       setActive(id);
-      window.setTimeout(syncActiveFromScroll, CLICK_LOCK_MS + 120);
+      window.setTimeout(function () {
+        scheduleRebuildHeadingOffsets();
+        syncActiveFromScroll();
+      }, CLICK_LOCK_MS + 120);
     }
 
     let scrollRaf = null;
@@ -187,7 +216,31 @@
     }
 
     window.addEventListener("scroll", scheduleSyncFromScroll, { passive: true });
-    window.addEventListener("resize", scheduleSyncFromScroll, { passive: true });
+    window.addEventListener("resize", function () {
+      recomputeActiveOffset();
+      scheduleRebuildHeadingOffsets();
+      scheduleSyncFromScroll();
+    }, { passive: true });
+    window.addEventListener("load", function () {
+      recomputeActiveOffset();
+      scheduleRebuildHeadingOffsets();
+      scheduleSyncFromScroll();
+    });
+    window.addEventListener("pageshow", function () {
+      recomputeActiveOffset();
+      scheduleRebuildHeadingOffsets();
+      scheduleSyncFromScroll();
+    });
+
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () {
+        recomputeActiveOffset();
+        scheduleRebuildHeadingOffsets();
+        scheduleSyncFromScroll();
+      });
+    }
+
+    recomputeActiveOffset();
 
     tocSidebar.addEventListener("click", function (event) {
       const target = event.target.closest(".toc-link");
@@ -218,6 +271,8 @@
         setActiveFromIdWithLock(id);
       }
     });
+
+    rebuildHeadingOffsets();
 
     // Handle initial hash or scroll position.
     const initialHash = location.hash ? decodeURIComponent(location.hash.slice(1)) : "";

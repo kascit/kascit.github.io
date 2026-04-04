@@ -34,14 +34,14 @@
 /* Landing page hero section: opacity-{{ value }} (supports TailwindCSS opacity scale) */
 @source inline("opacity-0 opacity-5 opacity-10 opacity-15 opacity-20 opacity-25 opacity-30 opacity-35 opacity-40 opacity-45 opacity-50 opacity-55 opacity-60 opacity-65 opacity-70 opacity-75 opacity-80 opacity-85 opacity-90 opacity-95 opacity-100");
 
-@plugin "./daisyui.js" {
+@plugin "./vendor/daisyui.js" {
   themes:
     light --default,
     dark;
 }
 
 /* Optional for custom themes – Docs: https://daisyui.com/docs/themes/#how-to-add-a-new-custom-theme */
-@plugin "./daisyui-theme.js" {
+@plugin "./vendor/daisyui-theme.js" {
 }
 
 /* Modular CSS Architecture */

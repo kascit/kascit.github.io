@@ -38,9 +38,12 @@
   var colorset = window.__resolveColorset(rawColorset);
   var themeMap = { dark: 'dark', light: 'light' };
   var themeName = themeMap[colorset] || colorset;
+  var prepaintBgMap = { dark: '#010409', light: '#f6f8fa' };
+  var prepaintBg = prepaintBgMap[colorset] || prepaintBgMap.dark;
 
   // Set data-theme SYNCHRONOUSLY so DaisyUI applies correct colors before first paint
   document.documentElement.setAttribute('data-theme', themeName);
+  document.documentElement.style.backgroundColor = prepaintBg;
 
   if (colorset === 'dark') {
     document.documentElement.classList.add('dark');

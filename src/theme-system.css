@@ -70,3 +70,39 @@ html[data-theme="light"] {
   --scrollbar-thumb-color-hover: rgba(156, 163, 175, 0.5);
   --scrollbar-thumb-color-strong: rgba(156, 163, 175, 0.8);
 }
+
+/* Theme switch smoothing: opt-in only during JS-triggered mode changes. */
+html.is-theme-switching,
+html.is-theme-switching body,
+html.is-theme-switching #blog-layout,
+html.is-theme-switching .site-topbar::after,
+html.is-theme-switching .feature-card,
+html.is-theme-switching .testimonial-card,
+html.is-theme-switching .catalog-card {
+  transition-property: background-color, color, border-color, box-shadow;
+  transition-duration: 220ms;
+  transition-timing-function: var(--motion-ease-standard, cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+html.is-theme-switching .logo-dark,
+html.is-theme-switching .logo-light,
+html.is-theme-switching .hero-dark,
+html.is-theme-switching .hero-light {
+  transition: opacity 220ms var(--motion-ease-standard, cubic-bezier(0.4, 0, 0.2, 1));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.is-theme-switching,
+  html.is-theme-switching body,
+  html.is-theme-switching #blog-layout,
+  html.is-theme-switching .site-topbar::after,
+  html.is-theme-switching .feature-card,
+  html.is-theme-switching .testimonial-card,
+  html.is-theme-switching .catalog-card,
+  html.is-theme-switching .logo-dark,
+  html.is-theme-switching .logo-light,
+  html.is-theme-switching .hero-dark,
+  html.is-theme-switching .hero-light {
+    transition: none !important;
+  }
+}

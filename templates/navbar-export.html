@@ -4,10 +4,27 @@
 {%- import "macros/head.html" as macros_head -%}
 
 {%- set theme_colorset = macros_head::get_theme_colorset(config=config) | trim -%}
+{%- set current_url = config.base_url ~ "/navbar/" -%}
+{%- set site_title = config.title | default(value="Dhanur") -%}
 
+<!doctype html>
+{{ macros_head::html_tag(config=config, lang=lang) }}
+<head>
+    {{ macros_head::head(
+        config=config,
+        page=false,
+        section=false,
+        current_url=current_url,
+        meta_title="Navbar | " ~ site_title,
+        meta_description="Export-only shell markup used by shared navigation consumers.",
+        meta_type="website"
+    ) }}
+</head>
+<body>
 <div class="drawer site-nav-shell" data-default-colorset="{{ theme_colorset }}">
     <input id="my-drawer-2" data-drawer-checkbox="true" type="checkbox" class="drawer-toggle" autocomplete="off" />
     <div class="drawer-content flex flex-col min-w-0 pt-16">
+        <h1 class="sr-only">Site Navigation Shell</h1>
         {{ macros_header::header(config=config, lang=lang, is_export=true, show_mobile_menu=true) }}
         <div class="site-nav-slot"></div>
     </div>
@@ -16,3 +33,5 @@
         {{ macros_sidebar::sidebar(config=config, lang=lang, current_path="/", section=false, is_export=true) }}
     </div>
 </div>
+</body>
+</html>

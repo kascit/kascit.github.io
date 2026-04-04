@@ -2,8 +2,8 @@
 
 {% macro render(post, default_thumb="") %}
 {% set card_thumb = post.extra.thumbnail_image | default(value=post.extra.thumbnail | default(value=post.extra.image | default(value=""))) %}
-<article class="not-prose relative flex flex-col p-4 sm:p-5 border border-base-content/10 rounded-box bg-base-100 transition-colors duration-200 hover:border-base-content/20 hover:shadow-md group">
-    <a href="{{ post.permalink | safe }}" class="absolute inset-0 z-10"><span class="sr-only">Read {{ post.title }}</span></a>
+<article class="not-prose relative flex flex-col p-4 sm:p-5 border border-base-content/10 rounded-box bg-base-200/40 shadow-sm transition-colors duration-200 hover:border-base-content/20 hover:shadow-md hover:bg-base-200/80 group">
+    <a href="{{ post.permalink | safe }}" class="absolute inset-0 z-10 block"><span class="sr-only">Read {{ post.title }}</span></a>
 
     {% if card_thumb != "" %}
     {% if card_thumb is starting_with("http://") or card_thumb is starting_with("https://") %}
@@ -32,7 +32,7 @@
         {% endif %}
         
         <div class="flex items-center justify-between mt-0.5">
-            <div class="flex items-center gap-3 text-xs font-medium text-base-content/50">
+            <div class="flex items-center gap-3 text-xs font-medium text-base-content/65">
                 {% if post.date %}
                 <time datetime="{{ post.date }}" class="font-mono">{{ post.date | date(format="%Y-%m-%d") }}</time>
                 {% endif %}

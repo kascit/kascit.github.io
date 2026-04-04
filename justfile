@@ -14,7 +14,7 @@ os  := os()
 css_in  := "src/main.css"
 css_out := "static/css/main.css"
 
-tailwind := if os == "windows" { "src/tailwindcss.exe" } else { "src/tailwindcss" }
+tailwind := if os == "windows" { "tools/tailwindcss.exe" } else { "tools/tailwindcss" }
 
 # Versions — sourced from versions.env via set dotenv-load
 tailwind_version := env_var("TAILWIND_VERSION")
@@ -62,14 +62,15 @@ _dl-daisyui:
     #!/usr/bin/env bash
     set -euo pipefail
     echo "Installing DaisyUI v${DAISYUI_VERSION}..."
-    curl -fsSL "https://github.com/saadeghi/daisyui/releases/download/v${DAISYUI_VERSION}/daisyui.js" -o src/daisyui.js
-    curl -fsSL "https://github.com/saadeghi/daisyui/releases/download/v${DAISYUI_VERSION}/daisyui-theme.js" -o src/daisyui-theme.js
+    mkdir -p src/vendor
+    curl -fsSL "https://github.com/saadeghi/daisyui/releases/download/v${DAISYUI_VERSION}/daisyui.js" -o src/vendor/daisyui.js
+    curl -fsSL "https://github.com/saadeghi/daisyui/releases/download/v${DAISYUI_VERSION}/daisyui-theme.js" -o src/vendor/daisyui-theme.js
     echo "  done."
 
 [private]
 [windows]
 _dl-daisyui:
-    @echo "Installing DaisyUI v$env:DAISYUI_VERSION..."; Invoke-WebRequest -Uri "https://github.com/saadeghi/daisyui/releases/download/v$env:DAISYUI_VERSION/daisyui.js" -OutFile "src/daisyui.js"; Invoke-WebRequest -Uri "https://github.com/saadeghi/daisyui/releases/download/v$env:DAISYUI_VERSION/daisyui-theme.js" -OutFile "src/daisyui-theme.js"; echo "  done."
+    @echo "Installing DaisyUI v$env:DAISYUI_VERSION..."; if (!(Test-Path "src/vendor")) { New-Item -ItemType Directory -Path "src/vendor" | Out-Null }; Invoke-WebRequest -Uri "https://github.com/saadeghi/daisyui/releases/download/v$env:DAISYUI_VERSION/daisyui.js" -OutFile "src/vendor/daisyui.js"; Invoke-WebRequest -Uri "https://github.com/saadeghi/daisyui/releases/download/v$env:DAISYUI_VERSION/daisyui-theme.js" -OutFile "src/vendor/daisyui-theme.js"; echo "  done."
 
 [private, unix]
 _dl-fontawesome:
@@ -115,7 +116,7 @@ _dl-katex:
 
 [doc("Build CSS then start Zola dev server (blocking)")]
 [group('dev')]
-dev: widget-data css
+dev: project-pages widget-data css
     zola serve
 
 [doc("Watch CSS for changes (blocking)")]
@@ -148,8 +149,15 @@ clean:
 
 [doc("Full production build (clean + css + zola)")]
 [group('build')]
-build: clean widget-data css
+build: clean project-pages widget-data css
     zola build
+    node scripts/clean-pagination-redirects.js
+
+[doc("Generate project detail pages from centralized data/projects.json")]
+[group('build')]
+project-pages:
+    node scripts/validate-project-data.js
+    node scripts/sync-project-pages.js
 
 [doc("Generate latest-posts widget data from blog content")]
 [group('build')]
@@ -174,7 +182,7 @@ doctor:
         "zola ($(zola --version 2>/dev/null || echo not found))" "https://www.getzola.org/documentation/getting-started/installation/"
     check "$(test -f '{{ tailwind }}' && echo true || echo false)" \
         "tailwind cli v${TAILWIND_VERSION}" "run: just setup"
-    check "$(test -f src/daisyui.js && echo true || echo false)" \
+    check "$(test -f src/vendor/daisyui.js && echo true || echo false)" \
         "daisyui v${DAISYUI_VERSION}" "run: just setup"
     check "$(test -f static/css/font-awesome.min.css && echo true || echo false)" \
         "font awesome v${FA_VERSION}" "run: just setup"
@@ -194,7 +202,7 @@ doctor:
     @echo "---"
     @if (Get-Command zola -ErrorAction SilentlyContinue) { Write-Host "  [ok]  $(zola --version 2>&1 | Select-Object -First 1)" } else { Write-Host "  [!!]  zola -- https://www.getzola.org/documentation/getting-started/installation/" }
     @if (Test-Path "{{ tailwind }}") { Write-Host "  [ok]  tailwind cli v{{ tailwind_version }}" } else { Write-Host "  [!!]  tailwind cli -- run: just setup" }
-    @if (Test-Path "src/daisyui.js") { Write-Host "  [ok]  daisyui v{{ daisyui_version }}" } else { Write-Host "  [!!]  daisyui -- run: just setup" }
+    @if (Test-Path "src/vendor/daisyui.js") { Write-Host "  [ok]  daisyui v{{ daisyui_version }}" } else { Write-Host "  [!!]  daisyui -- run: just setup" }
     @if (Test-Path "static/css/font-awesome.min.css") { Write-Host "  [ok]  font awesome v{{ fa_version }}" } else { Write-Host "  [!!]  font awesome -- run: just setup" }
     @if (Test-Path "static/css/katex.min.css") { Write-Host "  [ok]  katex v{{ katex_version }}" } else { Write-Host "  [!!]  katex -- run: just setup" }
     @if (Test-Path "{{ css_out }}") { Write-Host "  [ok]  compiled css" } else { Write-Host "  [!!]  compiled css -- run: just css" }

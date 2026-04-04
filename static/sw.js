@@ -1,6 +1,6 @@
 // Service Worker with smart caching strategy
 // Cache versioning: Update CACHE_VERSION when assets change
-const CACHE_VERSION = "v9";
+const CACHE_VERSION = "v12";
 const CACHE_NAME = `kascit-${CACHE_VERSION}`;
 const META_CACHE = `kascit-meta-${CACHE_VERSION}`;
 const RUNTIME_META_CACHE = "kascit-runtime-meta-v1";
@@ -408,6 +408,11 @@ self.addEventListener("fetch", (event) => {
   const shouldCache = CACHEABLE_PATTERNS.some((pattern) =>
     pattern.test(url.pathname),
   );
+  const acceptsHtml = (request.headers.get("accept") || "").includes("text/html");
+  const isDocumentRequest =
+    request.mode === "navigate" ||
+    request.destination === "document" ||
+    acceptsHtml;
 
   if (shouldCache) {
     // Cache-first strategy for static assets
@@ -442,34 +447,51 @@ self.addEventListener("fetch", (event) => {
           });
       }),
     );
-  } else {
-    // Network-first strategy for documents (HTML, etc.)
+  } else if (isDocumentRequest) {
+    // Stale-while-revalidate for HTML navigations to keep route changes seamless.
     event.respondWith(
-      fetch(request)
-        .then((response) => {
-          // Cache successful HTML responses
-          if (response.status === 200 && request.destination === "document") {
-            const responseToCache = response.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(request, responseToCache);
-            });
-          }
-          return response;
-        })
-        .catch(() => {
-          // Return cached response if network fails
-          return caches.match(request).then((cachedResponse) => {
-            if (cachedResponse) return cachedResponse;
-            // Serve the offline page for document requests
-            if (request.destination === "document") {
-              return caches.match("/offline/");
+      (async () => {
+        const cache = await caches.open(CACHE_NAME);
+        const cachedResponse = await cache.match(request);
+
+        const networkFetch = fetch(request)
+          .then((response) => {
+            if (response && response.status === 200) {
+              cache.put(request, response.clone());
             }
-            return new Response("Offline", {
-              status: 503,
-              statusText: "Service Unavailable",
-            });
+            return response;
+          })
+          .catch(() => null);
+
+        if (cachedResponse) {
+          event.waitUntil(networkFetch);
+          return cachedResponse;
+        }
+
+        const networkResponse = await networkFetch;
+        if (networkResponse) {
+          return networkResponse;
+        }
+
+        return (await caches.match("/offline/")) ||
+          new Response("Offline", {
+            status: 503,
+            statusText: "Service Unavailable",
           });
-        }),
+      })(),
+    );
+  } else {
+    // Network-first for uncached non-document requests.
+    event.respondWith(
+      fetch(request).catch(() => {
+        return caches.match(request).then((cachedResponse) => {
+          if (cachedResponse) return cachedResponse;
+          return new Response("Offline", {
+            status: 503,
+            statusText: "Service Unavailable",
+          });
+        });
+      }),
     );
   }
 });

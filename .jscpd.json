@@ -1,0 +1,10 @@
+{
+  "threshold": 0,
+  "reporters": ["console"],
+  "ignore": [
+    "public/**",
+    "resources/**",
+    "static/fuse.min.js",
+    "static/elasticlunr.min.js"
+  ]
+}

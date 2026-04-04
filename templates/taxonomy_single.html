@@ -3,6 +3,10 @@
 {# taxonomy_single: pages for one taxonomy term #}
 
 {% block content %}
+    {% set term_name_lc = term.name | lower %}
+    {% set skill_terms = ["java", "python", "go", "c / c++", "javascript", "typescript", "sql", "bash", "spring boot", "node.js", "postgresql", "mongodb", "redis", "dynamodb", "aws", "gcp", "docker", "kubernetes", "ci/cd", "git", "neovim", "arch linux", "terraform", "postman"] %}
+    {% set is_skill_term = taxonomy.name == "tags" and (skill_terms is containing(term_name_lc)) %}
+
     <div class="not-prose mb-12 pb-6 border-b border-base-content/10">
         <div class="flex items-center justify-between gap-4 mb-3">
             <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-base-content m-0 flex items-center gap-3">
@@ -20,15 +24,21 @@
             <p class="text-base sm:text-lg text-base-content/70 mt-2 mb-0">
                 {{ term.pages | length }}
                 {% if term.pages | length == 1 %}
-                    post
+                    item
                 {% else %}
-                    posts
+                    items
                 {% endif %}
-                tagged with "{{ term.name }}"
+                in "{{ term.name }}"
             </p>
         {% else %}
             <p class="text-base sm:text-lg text-base-content/70 mt-2 mb-0">
-                No posts found for this term.
+                No items found for this term.
+            </p>
+        {% endif %}
+
+        {% if is_skill_term %}
+            <p class="text-sm text-base-content/75 mt-3 mb-0">
+                Skill context available on the <a href="/about/" class="font-medium">About page</a>.
             </p>
         {% endif %}
     </div>

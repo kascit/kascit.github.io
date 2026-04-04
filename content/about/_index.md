@@ -66,45 +66,45 @@ My journey into software was not a prodigy story. I wanted to build useful thing
 			<div>
 				<h3 class="about-skill-heading"><i class="fa-solid fa-code text-[11px]" aria-hidden="true"></i> Languages</h3>
 				<div class="flex flex-wrap gap-2">
-					<span class="surface-chip">Java</span>
-					<span class="surface-chip">Python</span>
-					<span class="surface-chip">Go</span>
-					<span class="surface-chip">C / C++</span>
-					<span class="surface-chip">JavaScript</span>
-					<span class="surface-chip">TypeScript</span>
-					<span class="surface-chip">SQL</span>
-					<span class="surface-chip">Bash</span>
+					{{ tag_chip(name="Java") }}
+					{{ tag_chip(name="Python") }}
+					{{ tag_chip(name="Go") }}
+					{{ tag_chip(name="C / C++") }}
+					{{ tag_chip(name="JavaScript") }}
+					{{ tag_chip(name="TypeScript") }}
+					{{ tag_chip(name="SQL") }}
+					{{ tag_chip(name="Bash") }}
 				</div>
 			</div>
 			<div>
 				<h3 class="about-skill-heading"><i class="fa-solid fa-cubes text-[11px]" aria-hidden="true"></i> Frameworks and DBs</h3>
 				<div class="flex flex-wrap gap-2">
-					<span class="surface-chip">Spring Boot</span>
-					<span class="surface-chip">Node.js</span>
-					<span class="surface-chip">PostgreSQL</span>
-					<span class="surface-chip">MongoDB</span>
-					<span class="surface-chip">Redis</span>
-					<span class="surface-chip">DynamoDB</span>
+					{{ tag_chip(name="Spring Boot") }}
+					{{ tag_chip(name="Node.js") }}
+					{{ tag_chip(name="PostgreSQL") }}
+					{{ tag_chip(name="MongoDB") }}
+					{{ tag_chip(name="Redis") }}
+					{{ tag_chip(name="DynamoDB") }}
 				</div>
 			</div>
 			<div>
 				<h3 class="about-skill-heading"><i class="fa-solid fa-cloud-arrow-up text-[11px]" aria-hidden="true"></i> Cloud and DevOps</h3>
 				<div class="flex flex-wrap gap-2">
-					<span class="surface-chip">AWS</span>
-					<span class="surface-chip">GCP</span>
-					<span class="surface-chip">Docker</span>
-					<span class="surface-chip">Kubernetes</span>
-					<span class="surface-chip">CI/CD</span>
-					<span class="surface-chip">Git</span>
+					{{ tag_chip(name="AWS") }}
+					{{ tag_chip(name="GCP") }}
+					{{ tag_chip(name="Docker") }}
+					{{ tag_chip(name="Kubernetes") }}
+					{{ tag_chip(name="CI/CD") }}
+					{{ tag_chip(name="Git") }}
 				</div>
 			</div>
 			<div>
 				<h3 class="about-skill-heading"><i class="fa-solid fa-wrench text-[11px]" aria-hidden="true"></i> Tools</h3>
 				<div class="flex flex-wrap gap-2">
-					<span class="surface-chip">Neovim</span>
-					<span class="surface-chip">Arch Linux</span>
-					<span class="surface-chip">Terraform</span>
-					<span class="surface-chip">Postman</span>
+					{{ tag_chip(name="Neovim") }}
+					{{ tag_chip(name="Arch Linux") }}
+					{{ tag_chip(name="Terraform") }}
+					{{ tag_chip(name="Postman") }}
 				</div>
 			</div>
 		</div>

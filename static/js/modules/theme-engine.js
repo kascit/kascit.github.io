@@ -6,9 +6,12 @@ import { readCookie, writeCookie } from './cookie-utils.js';
 
 const THEME_MAP = { dark: "dark", light: "light" };
 const MODE_CYCLE = ["auto", "light", "dark"];
+const THEME_CANVAS_MAP = { dark: "#010409", light: "#f6f8fa" };
+const THEME_TRANSITION_MS = 240;
 
 let _currentMode = "auto";
 let _mediaQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+let _themeTransitionTimer = null;
 
 function getCookie() {
   if (window.__getThemeCookie) return window.__getThemeCookie();
@@ -37,6 +40,7 @@ function resolveColorset(val) {
 function applyTheme(resolvedTheme) {
   const daisyTheme = THEME_MAP[resolvedTheme] || resolvedTheme;
   document.documentElement.setAttribute("data-theme", daisyTheme);
+  document.documentElement.style.backgroundColor = THEME_CANVAS_MAP[resolvedTheme] || THEME_CANVAS_MAP.dark;
   
   if (resolvedTheme === "dark") {
     document.documentElement.classList.add("dark");
@@ -47,14 +51,32 @@ function applyTheme(resolvedTheme) {
     document.documentElement.classList.remove("dark");
     document.documentElement.style.colorScheme = "light";
   }
-  document.documentElement.style.backgroundColor = "";
+  function setVisualState(selector, visible) {
+    document.querySelectorAll(selector).forEach((el) => {
+      el.classList.remove("hidden", "invisible");
+      el.style.opacity = visible ? "1" : "0";
+      el.style.visibility = visible ? "visible" : "hidden";
+      el.style.pointerEvents = visible ? "" : "none";
+    });
+  }
 
-  document.querySelectorAll(".logo-dark").forEach(el => el.classList.toggle("invisible", resolvedTheme !== "dark"));
-  document.querySelectorAll(".logo-light").forEach(el => el.classList.toggle("invisible", resolvedTheme !== "light"));
+  // Crossfade logo and hero theme variants instead of hard hide/show.
+  setVisualState(".logo-dark", resolvedTheme === "dark");
+  setVisualState(".logo-light", resolvedTheme === "light");
+  setVisualState(".hero-dark", resolvedTheme === "dark");
+  setVisualState(".hero-light", resolvedTheme === "light");
+}
 
-  // Hero images (landing page)
-  document.querySelectorAll(".hero-dark").forEach(el => el.classList.toggle("hidden", resolvedTheme !== "dark"));
-  document.querySelectorAll(".hero-light").forEach(el => el.classList.toggle("hidden", resolvedTheme !== "light"));
+function beginThemeTransition() {
+  const root = document.documentElement;
+  root.classList.add("is-theme-switching");
+  if (_themeTransitionTimer) {
+    window.clearTimeout(_themeTransitionTimer);
+  }
+  _themeTransitionTimer = window.setTimeout(() => {
+    root.classList.remove("is-theme-switching");
+    _themeTransitionTimer = null;
+  }, THEME_TRANSITION_MS);
 }
 
 function updateToggleUI() {
@@ -78,6 +100,7 @@ function updateToggleUI() {
 function setMode(mode) {
   _currentMode = mode;
   setCookie(mode);
+  beginThemeTransition();
   const resolved = resolveColorset(mode);
   applyTheme(resolved);
   updateToggleUI();
@@ -105,6 +128,7 @@ export function initTheme(rootElement = document) {
   if (_mediaQuery) {
     const osChangeHandler = () => {
       if (_currentMode === "auto") {
+        beginThemeTransition();
         const resolvedAuto = resolveColorset("auto");
         applyTheme(resolvedAuto);
         updateToggleUI();

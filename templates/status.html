@@ -1,12 +1,25 @@
 {% import "macros/head.html" as macros_head %}
+{% import "macros/search.html" as macros_search %}
 {% import "macros/header.html" as macros_header %}
 {% import "macros/sidebar.html" as macros_sidebar %}
 {% import "macros/drawer.html" as macros_drawer %}
 {% import "macros/cookie_consent.html" as macros_cookie_consent %}
 
-{% set status_title = status_title | default(value='Status') %}
-{% set status_desc = status_desc | default(value='') %}
-{% set status_url = status_url | default(value=config.base_url) %}
+{% set status_title = "Status" %}
+{% set status_desc = "System status and route diagnostics." %}
+{% set status_path = "/status/" %}
+{% if page is defined and page.title %}
+    {% set status_title = page.title %}
+{% endif %}
+{% if page is defined and page.description %}
+    {% set status_desc = page.description %}
+{% endif %}
+{% if current_path is defined and current_path != "" %}
+    {% set status_path = current_path %}
+{% endif %}
+{% set site_title = config.title | default(value="Dhanur") %}
+{% set status_meta_title = status_title ~ " | " ~ site_title %}
+{% set status_url = config.base_url ~ status_path %}
 
 <!DOCTYPE html>
 {{ macros_head::html_tag(config=config, lang=config.default_language) }}
@@ -15,31 +28,40 @@
         config=config,
         page=false,
         section=false,
-        current_url=status_url
+        current_url=status_url,
+        meta_title=status_meta_title,
+        meta_description=status_desc,
+        meta_type="website"
     ) }}
-    <title>{{ status_title }}</title>
-    <meta name="description" content="{{ status_desc }}">
-    <meta property="og:title" content="{{ status_title }}">
-    <meta property="og:description" content="{{ status_desc }}">
-    <meta property="og:url" content="{{ status_url }}">
 </head>
 <body>
+    {{ macros_search::search(config=config) }}
+
     <div class="drawer lg:drawer-open">
         <input id="my-drawer-2" data-drawer-checkbox="true" type="checkbox" class="drawer-toggle" autocomplete="off" />
         <div class="drawer-content flex flex-col min-w-0 pt-16 bg-base-200">
             {{ macros_header::header(config=config, lang=config.default_language) }}
-            <div class="p-8 w-full max-w-3xl mx-auto flex flex-col justify-center items-center min-h-[60vh]">
-                <main class="flex flex-auto flex-col items-center justify-center px-4 text-center sm:flex-row">
-                    <h1 class="text-3xl font-extrabold tracking-tight text-base-content sm:mr-6 sm:border-r sm:border-base-content/15 sm:pr-6 md:text-4xl">{{ status_title }}</h1>
-                    <h2 class="mt-2 text-lg text-base-content/70 sm:mt-0">{{ status_desc }}</h2>
-                </main>
-                {% block status_content %}{% endblock status_content %}
+            <div class="p-4 md:p-8 w-full min-w-0 flex justify-center min-h-[calc(100dvh-4rem)]">
+                <div class="relative mx-auto w-full min-w-0 max-w-7xl rounded-box border border-base-content/5 bg-base-100 shadow-sm p-5 sm:p-6 md:p-8 lg:p-10">
+                    <main class="prose min-w-0 w-full max-w-prose mx-auto">
+                        <section class="not-prose mb-8 lg:mb-10 pb-6 border-b border-base-content/10">
+                            <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-base-content m-0">{{ status_title }}</h1>
+                            <p class="text-base sm:text-lg text-base-content/70 mt-3 mb-0 leading-relaxed">{{ status_desc }}</p>
+                        </section>
+
+                        <section class="not-prose rounded-2xl border border-base-content/10 bg-base-200/30 p-4 sm:p-5 md:p-6">
+                            {% block status_content %}
+                            <p class="m-0 text-sm text-base-content/70">This page reports a route-level status.</p>
+                            {% endblock status_content %}
+                        </section>
+                    </main>
+                </div>
             </div>
         </div>
 
         <div id="sidebar" data-sidebar-root="true" class="drawer-side pt-16 z-[60] lg:z-40">
             {{ macros_drawer::drawer_overlay() }}
-            {{ macros_sidebar::sidebar(config=config, lang=config.default_language, current_path='/', section=false) }}
+            {{ macros_sidebar::sidebar(config=config, lang=config.default_language, current_path=status_path, section=false) }}
         </div>
     </div>
 
@@ -57,6 +79,12 @@
     }
     </script>
     <script type="module" src="{{ get_url(path='js/main.js') | safe }}"></script>
+    {% if config.build_search_index %}
+    <script defer src="{{ get_url(path='js/search-loader.js') | safe }}"
+            data-lang="{{ config.default_language }}"
+            data-fuse="{{ get_url(path='fuse.min.js') | safe }}"
+            data-search-index="{{ get_url(path='search_index.' ~ config.default_language ~ '.js') | safe }}"></script>
+    {% endif %}
     {% block status_scripts %}{% endblock status_scripts %}
 </body>
 </html>

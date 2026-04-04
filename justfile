@@ -19,6 +19,7 @@ dui_css_out := "static/css/dui.css"
 tailwind := if os == "windows" { "tools/tailwindcss.exe" } else { "tools/tailwindcss" }
 
 # Versions — sourced from versions.env via set dotenv-load
+zola_version     := env_var("ZOLA_VERSION")
 tailwind_version := env_var("TAILWIND_VERSION")
 daisyui_version  := env_var("DAISYUI_VERSION")
 fa_version       := env_var("FA_VERSION")
@@ -44,6 +45,28 @@ setup: _dl-tailwind _dl-daisyui _dl-fontawesome _dl-katex
 [doc("Install minimal build deps required for CSS (Tailwind + DaisyUI)")]
 [group('setup')]
 setup-build-deps: _ensure-tailwind _ensure-daisyui
+
+[private, unix]
+_assert-zola-version:
+        #!/usr/bin/env bash
+        set -euo pipefail
+        if ! command -v zola >/dev/null 2>&1; then
+            echo "ERROR: zola is not installed."
+            echo "Install zola v${ZOLA_VERSION} (see CI and versions.env)."
+            exit 1
+        fi
+        installed="$(zola --version | awk '{print $2}')"
+        if [ "$installed" != "${ZOLA_VERSION}" ]; then
+            echo "ERROR: zola version mismatch. installed=$installed required=${ZOLA_VERSION}."
+            echo "Update local zola to match versions.env so local and CI behave identically."
+            exit 1
+        fi
+
+[private]
+[windows]
+_assert-zola-version:
+        @if (!(Get-Command zola -ErrorAction SilentlyContinue)) { Write-Host "ERROR: zola is not installed."; Write-Host "Install zola v{{ zola_version }} (see CI and versions.env)."; exit 1 }
+        @$installed = (zola --version 2>&1 | Select-Object -First 1).Split(' ')[1]; if ($installed -ne "{{ zola_version }}") { Write-Host "ERROR: zola version mismatch. installed=$installed required={{ zola_version }}."; Write-Host "Update local zola to match versions.env so local and CI behave identically."; exit 1 }
 
 [private, unix]
 _ensure-tailwind:
@@ -277,7 +300,7 @@ validate-public:
 [unix]
 [doc("CI pipeline: verify generated files, build, minify JS, validate output")]
 [group('ci')]
-ci-build: verify-generated-clean
+ci-build: _assert-zola-version verify-generated-clean
     #!/usr/bin/env bash
     set -euo pipefail
     just clean
@@ -295,7 +318,7 @@ ci-build: verify-generated-clean
 [windows]
 [doc("CI pipeline: verify generated files, build, minify JS, validate output")]
 [group('ci')]
-ci-build: verify-generated-clean
+ci-build: _assert-zola-version verify-generated-clean
     @just clean
     @just css
     @if ($env:ZOLA_BASE_URL) { zola build --base-url "$env:ZOLA_BASE_URL" } else { zola build }

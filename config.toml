@@ -46,13 +46,16 @@ anchors = "on"
 # MARKDOWN RENDERING
 # =============================================================================
 [markdown]
-highlight_code = true
-highlight_theme = "css"             # Use CSS classes (best for theming)
 smart_punctuation = true
 render_emoji = true
 
 external_links_target_blank = true
 external_links_no_referrer = true   # Security best practice
+
+[markdown.highlighting]
+style = "inline"                   # Latest Zola-compatible highlighting without generated giallo source files
+light_theme = "github-light"
+dark_theme = "github-dark"
 
 # =============================================================================
 # LINK CHECKING (BUILD-TIME)

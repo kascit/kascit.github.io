@@ -13,6 +13,9 @@ Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), m
 # CACHE HEADERS FOR STATIC ASSETS 
 # =============================================================================
 
+# Build output fingerprints all static assets and removes original non-fingerprinted files.
+# All static asset classes below can safely be immutable.
+
 /images/*
 Cache-Control: public, max-age=31536000, immutable
 
@@ -24,36 +27,13 @@ Access-Control-Allow-Origin: *
 Cache-Control: public, max-age=31536000, immutable
 Access-Control-Allow-Origin: *
 
-# Core app stylesheet is not content-hashed; keep cache short for safe rollouts
-/css/main.css
-Cache-Control: public, max-age=3600
-Access-Control-Allow-Origin: *
-
-# Shared shell export stylesheet is not content-hashed; keep cache short too
-/css/dui.css
-Cache-Control: public, max-age=3600
-Access-Control-Allow-Origin: *
-
 /js/*
 Cache-Control: public, max-age=31536000, immutable
 Access-Control-Allow-Origin: *
 
-# Core app entry + modules are not content-hashed; keep cache short for safe rollouts
-/js/main.js
-Cache-Control: public, max-age=3600
-Access-Control-Allow-Origin: *
-
-/js/modules/*
-Cache-Control: public, max-age=3600
-Access-Control-Allow-Origin: *
-
-/js/notify-banner.js
-Cache-Control: public, max-age=3600
-Access-Control-Allow-Origin: *
-
-# shell.js changes more often — short cache so subdomains pick up fixes
+# Stable loader endpoint for external shell embedding
 /js/shell.js
-Cache-Control: public, max-age=3600
+Cache-Control: public, max-age=300, must-revalidate
 Access-Control-Allow-Origin: *
 
 /webfonts/*
@@ -100,9 +80,17 @@ Cache-Control: public, max-age=3600
 # CLOUDFLARE TRANSFORM RULES (Actual Implementation)
 # =============================================================================
 
-# Static Assets
-(http.host eq "dhanur.me") and ((starts_with(http.request.uri.path, "/images/")) or (starts_with(http.request.uri.path, "/css/")) or (starts_with(http.request.uri.path, "/js/")) or (starts_with(http.request.uri.path, "/fonts/")) or (ends_with(http.request.uri.path, ".css")) or (ends_with(http.request.uri.path, ".js")) or (ends_with(http.request.uri.path, ".jpg")) or (ends_with(http.request.uri.path, ".jpeg")) or (ends_with(http.request.uri.path, ".png")) or (ends_with(http.request.uri.path, ".webp")) or (ends_with(http.request.uri.path, ".svg")) or (ends_with(http.request.uri.path, ".ico")) or (ends_with(http.request.uri.path, ".woff")) or (ends_with(http.request.uri.path, ".woff2")) or (ends_with(http.request.uri.path, ".webmanifest")))
--> Cache-Control = public, max-age=86400, stale-while-revalidate=604800
+# Stable loader endpoints (set these rules above generic static-asset rules)
+(http.host eq "dhanur.me") and (http.request.uri.path eq "/js/shell.js")
+-> Cache-Control = public, max-age=300, must-revalidate
+
+# Service worker loader (always revalidate)
+(http.host eq "dhanur.me") and (http.request.uri.path eq "/sw.js")
+-> Cache-Control = public, max-age=0, must-revalidate
+
+# Static Assets (fingerprinted build output)
+(http.host eq "dhanur.me") and (http.request.uri.path.extension in {"css" "js" "jpg" "jpeg" "png" "webp" "svg" "ico" "woff" "woff2" "webmanifest"} or starts_with(http.request.uri.path, "/images/") or starts_with(http.request.uri.path, "/fonts/") or starts_with(http.request.uri.path, "/css/") or starts_with(http.request.uri.path, "/js/"))
+-> Cache-Control = public, max-age=31536000, immutable
 
 # HTML & XML Cache
 (http.host eq "dhanur.me") and ((http.request.uri.path eq "/") or (ends_with(http.request.uri.path, "/")) or (ends_with(http.request.uri.path, ".html")) or (ends_with(http.request.uri.path, ".xml")) or (ends_with(http.request.uri.path, ".txt")))

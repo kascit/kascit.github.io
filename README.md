@@ -31,6 +31,7 @@ just dev      # Starts dev server with hot-reload
 
 ```bash
 just dev      # CSS build + Zola dev server
+just dev-fast # Faster loop (skips generated-content refresh)
 ```
 
 ### Build for Production
@@ -56,14 +57,17 @@ Both workflows now execute the same build path via `just ci-build`.
 
 ```bash
 just          # List all commands
+just help     # Curated command center with grouped workflow hints
 
 # Development
 just dev      # Full dev mode (CSS + Zola server)
+just dev-fast # Fast dev mode (no generated-content refresh)
 just watch    # CSS watch mode
 
 # Build & Deploy
 just build    # Production build (clean + CSS + Zola)
 just ci-build # CI/deploy build pipeline with validation and JS optimization
+just check    # Quick local quality checks (generated drift + zola check)
 just clean    # Remove build artifacts
 
 # Maintenance
@@ -114,6 +118,21 @@ just doctor   # Health check
 - Periodic content sync
 - Web app installable
 - Notification support (user-initiated)
+
+## Stable Loader Endpoints (Fingerprint-Compatible)
+
+Build output fingerprints static assets and keeps stable loader entrypoints for external integration.
+
+- Stable shell loader: [/js/shell.js](js/shell.js)
+- Stable service worker loader: [/sw.js](sw.js)
+
+External integration:
+
+```html
+<script type="module" src="https://dhanur.me/js/shell.js"></script>
+```
+
+The stable loader file stays constant while it imports the current hashed runtime bundle.
 
 ## License
 

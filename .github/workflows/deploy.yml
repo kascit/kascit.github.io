@@ -58,6 +58,14 @@ jobs:
         with:
           node-version: "20"
 
+      - name: Cache npm downloads
+        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+        with:
+          path: ~/.npm
+          key: npm-tools-${{ runner.os }}-${{ steps.versions.outputs.TERSER_VERSION }}-${{ steps.versions.outputs.ESBUILD_VERSION }}
+          restore-keys: |
+            npm-tools-${{ runner.os }}-
+
       - name: Install just
         uses: taiki-e/install-action@1ed3272338f573e042a2e6bca3893aa19f43b47a # v2
         with:
@@ -94,6 +102,16 @@ jobs:
         env:
           ZOLA_BASE_URL: ${{ steps.pages.outputs.base_url }}
         run: just ci-build
+
+      - name: Build summary
+        run: |
+          set -euo pipefail
+          file_count=$(find public -type f | wc -l | tr -d ' ')
+          hashed_count=$(find public -type f | grep -E '\\.[a-f0-9]{12}\\.' | wc -l | tr -d ' ' || true)
+          echo "### Deploy Build Summary" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Files in public/: ${file_count}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Fingerprinted assets: ${hashed_count}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Pages base URL: ${{ steps.pages.outputs.base_url }}" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Create deploy archive for provenance
         run: tar -czf site-deploy-${{ github.run_id }}.tar.gz public

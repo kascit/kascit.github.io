@@ -31,6 +31,63 @@ katex_version    := env_var("KATEX_VERSION")
 
 [doc("List available commands")]
 default:
+    @just help
+
+[unix]
+[doc("Show curated command guide with grouped workflows")]
+[group('info')]
+help:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    cyan='\033[36m'; green='\033[32m'; yellow='\033[33m'; reset='\033[0m'
+    echo -e "${cyan}kascit build command center${reset}"
+    echo -e "${yellow}quick start${reset}"
+    echo "  just setup        # install/update vendored tool assets"
+    echo "  just dev          # full dev (sync generated + css + zola serve)"
+    echo "  just dev-fast     # faster dev (skip generated content refresh)"
+    echo ""
+    echo -e "${yellow}quality gates${reset}"
+    echo "  just check        # zola syntax + generated content verification"
+    echo "  just ci-build     # full CI-equivalent pipeline"
+    echo ""
+    echo -e "${yellow}build and release${reset}"
+    echo "  just build        # production build + fingerprinted assets"
+    echo "  just clean        # remove build artifacts"
+    echo ""
+    echo -e "${yellow}data pipelines${reset}"
+    echo "  just sync-generated   # refresh project pages, about tags, widget data"
+    echo "  just project-pages    # regenerate project markdown pages"
+    echo "  just about-skill-tags # regenerate about skill taxonomy seed + data"
+    echo "  just widget-data      # regenerate latest-posts widget data"
+    echo ""
+    echo -e "${green}full command list:${reset}"
+    just --list
+
+[windows]
+[doc("Show curated command guide with grouped workflows")]
+[group('info')]
+help:
+    @Write-Host "kascit build command center" -ForegroundColor Cyan
+    @Write-Host "quick start" -ForegroundColor Yellow
+    @Write-Host "  just setup        # install/update vendored tool assets"
+    @Write-Host "  just dev          # full dev (sync generated + css + zola serve)"
+    @Write-Host "  just dev-fast     # faster dev (skip generated content refresh)"
+    @Write-Host ""
+    @Write-Host "quality gates" -ForegroundColor Yellow
+    @Write-Host "  just check        # zola syntax + generated content verification"
+    @Write-Host "  just ci-build     # full CI-equivalent pipeline"
+    @Write-Host ""
+    @Write-Host "build and release" -ForegroundColor Yellow
+    @Write-Host "  just build        # production build + fingerprinted assets"
+    @Write-Host "  just clean        # remove build artifacts"
+    @Write-Host ""
+    @Write-Host "data pipelines" -ForegroundColor Yellow
+    @Write-Host "  just sync-generated   # refresh project pages, about tags, widget data"
+    @Write-Host "  just project-pages    # regenerate project markdown pages"
+    @Write-Host "  just about-skill-tags # regenerate about skill taxonomy seed + data"
+    @Write-Host "  just widget-data      # regenerate latest-posts widget data"
+    @Write-Host ""
+    @Write-Host "full command list:" -ForegroundColor Green
     @just --list
 
 # ---------------------------------------------------------------------------
@@ -40,7 +97,7 @@ default:
 [doc("Download or update all third-party dependencies")]
 [group('setup')]
 setup: _dl-tailwind _dl-daisyui _dl-fontawesome _dl-katex
-    @echo "Setup complete. Run 'just dev' to start."
+    @node scripts/just-log.js ok "Dependency setup complete. Run 'just dev' to start."
 
 [doc("Install minimal build deps required for CSS (Tailwind + DaisyUI)")]
 [group('setup')]
@@ -191,13 +248,25 @@ _dl-katex:
 
 [doc("Build CSS then start Zola dev server (blocking)")]
 [group('dev')]
-dev: project-pages about-skill-tags widget-data css
-    zola serve
+dev:
+    @node scripts/just-log.js step "Development pipeline"
+    @node scripts/just-run.js "sync-generated" -- just --quiet sync-generated
+    @node scripts/just-run.js "css build" -- just --quiet css
+    @node scripts/just-log.js ok "Starting Zola dev server at http://127.0.0.1:1111"
+    @zola serve
+
+[doc("Fast dev server: skip generated-content refresh")]
+[group('dev')]
+dev-fast: css
+    @node scripts/just-log.js warn "Fast mode enabled: generated content refresh skipped"
+    @node scripts/just-log.js ok "Starting Zola dev server at http://127.0.0.1:1111"
+    @zola serve
 
 [doc("Watch CSS for changes (blocking)")]
 [group('dev')]
 watch:
-    {{ tailwind }} -i {{ css_in }} -o {{ css_out }} --watch
+    @node scripts/just-log.js info "Watching CSS changes"
+    @{{ tailwind }} -i {{ css_in }} -o {{ css_out }} --watch
 
 # ---------------------------------------------------------------------------
 # Build
@@ -206,8 +275,11 @@ watch:
 [doc("Compile and minify CSS")]
 [group('build')]
 css: setup-build-deps
-    @{{ tailwind }} -i {{ css_in }} -o {{ css_out }} --minify
-    @{{ tailwind }} -i {{ dui_css_in }} -o {{ dui_css_out }} --minify
+    @node scripts/just-log.js info "Compiling main CSS bundle"
+    @node scripts/just-run.js "compile main css" -- {{ tailwind }} -i {{ css_in }} -o {{ css_out }} --minify
+    @node scripts/just-log.js info "Compiling shell CSS bundle"
+    @node scripts/just-run.js "compile shell css" -- {{ tailwind }} -i {{ dui_css_in }} -o {{ dui_css_out }} --minify
+    @node scripts/just-log.js ok "CSS build complete"
 
 [unix]
 [doc("Remove all build artifacts")]
@@ -221,7 +293,7 @@ clean:
 [doc("Remove all build artifacts")]
 [group('build')]
 clean:
-    @if (Test-Path "public") { Remove-Item "public" -Recurse -Force }
+    @if (Test-Path "public") { cmd /c rmdir /s /q public }
     @if (Test-Path "{{ css_out }}") { Remove-Item "{{ css_out }}" -Force }
     @if (Test-Path "{{ dui_css_out }}") { Remove-Item "{{ dui_css_out }}" -Force }
 
@@ -231,35 +303,63 @@ clean:
 build: clean project-pages about-skill-tags widget-data css
         #!/usr/bin/env bash
         set -euo pipefail
+        node scripts/just-log.js step "Production build"
         if [ -n "${ZOLA_BASE_URL:-}" ]; then
-            zola build --base-url "$ZOLA_BASE_URL"
+            node scripts/just-log.js info "Building site with custom base URL"
+            node scripts/just-run.js "zola build" -- zola build --base-url "$ZOLA_BASE_URL"
         else
-            zola build
+            node scripts/just-log.js info "Building site"
+            node scripts/just-run.js "zola build" -- zola build
         fi
-        node scripts/clean-pagination-redirects.js
+        node scripts/just-log.js info "Cleaning Zola pagination redirect stubs"
+        node scripts/just-run.js "clean pagination redirects" -- node scripts/clean-pagination-redirects.js
+        node scripts/just-log.js info "Fingerprinting static assets"
+        node scripts/just-run.js "fingerprint assets" -- node scripts/fingerprint-assets.js public
+        node scripts/just-log.js ok "Production build complete"
 
 [windows]
 [doc("Full production build (clean + generated content + css + zola)")]
 [group('build')]
 build: clean project-pages about-skill-tags widget-data css
-    @if ($env:ZOLA_BASE_URL) { zola build --base-url "$env:ZOLA_BASE_URL" } else { zola build }
-    node scripts/clean-pagination-redirects.js
+    @node scripts/just-log.js step "Production build"
+    @if ($env:ZOLA_BASE_URL) { node scripts/just-run.js "zola build" -- zola build --base-url "$env:ZOLA_BASE_URL" } else { node scripts/just-run.js "zola build" -- zola build }
+    @node scripts/just-log.js info "Cleaning Zola pagination redirect stubs"
+    @node scripts/just-run.js "clean pagination redirects" -- node scripts/clean-pagination-redirects.js
+    @node scripts/just-log.js info "Fingerprinting static assets"
+    @node scripts/just-run.js "fingerprint assets" -- node scripts/fingerprint-assets.js public
+    @node scripts/just-log.js ok "Production build complete"
 
 [doc("Generate project detail pages from centralized data/projects.json")]
 [group('build')]
 project-pages:
-    node scripts/validate-project-data.js
-    node scripts/sync-project-pages.js
+    @node scripts/just-log.js info "Validating project catalog"
+    @node scripts/just-run.js "validate project catalog" -- node scripts/validate-project-data.js
+    @node scripts/just-log.js info "Syncing project markdown pages"
+    @node scripts/just-run.js "sync project pages" -- node scripts/sync-project-pages.js
+    @node scripts/just-log.js ok "Project pages refreshed"
+
+[doc("Refresh all generated content artifacts")]
+[group('build')]
+sync-generated:
+    @node scripts/just-log.js step "Refreshing generated content"
+    @node scripts/just-run.js "project pages" -- just --quiet project-pages
+    @node scripts/just-run.js "about skill tags" -- just --quiet about-skill-tags
+    @node scripts/just-run.js "widget data" -- just --quiet widget-data
+    @node scripts/just-log.js ok "Generated content is up to date"
 
 [doc("Generate latest-posts widget data from blog content")]
 [group('build')]
 widget-data:
-    node scripts/generate-latest-posts-widget.js
+    @node scripts/just-log.js info "Generating latest-posts widget data"
+    @node scripts/just-run.js "generate widget data" -- node scripts/generate-latest-posts-widget.js
+    @node scripts/just-log.js ok "Widget data refreshed"
 
 [doc("Generate taxonomy seed entries for About-page skill chips")]
 [group('build')]
 about-skill-tags:
-    node scripts/sync-about-skill-tags.js
+    @node scripts/just-log.js info "Syncing About skill tags"
+    @node scripts/just-run.js "sync about skill tags" -- node scripts/sync-about-skill-tags.js
+    @node scripts/just-log.js ok "About skill tag artifacts refreshed"
 
 [unix]
 [doc("Fail if generated content differs from committed files")]
@@ -308,28 +408,65 @@ validate-public:
 ci-build: _assert-zola-version verify-generated-clean
     #!/usr/bin/env bash
     set -euo pipefail
-    just clean
-    just css
+    node scripts/just-log.js step "CI build pipeline"
+    node scripts/just-log.js info "Cleaning workspace"
+    node scripts/just-run.js "clean" -- just clean
+    node scripts/just-log.js info "Compiling CSS"
+    node scripts/just-run.js "css build" -- just css
     if [ -n "${ZOLA_BASE_URL:-}" ]; then
-      zola build --base-url "$ZOLA_BASE_URL"
+      node scripts/just-log.js info "Building site with custom base URL"
+      node scripts/just-run.js "zola build" -- zola build --base-url "$ZOLA_BASE_URL"
     else
-      zola build
+      node scripts/just-log.js info "Building site"
+      node scripts/just-run.js "zola build" -- zola build
     fi
-    node scripts/clean-pagination-redirects.js
+    node scripts/just-log.js info "Cleaning Zola pagination redirect stubs"
+    node scripts/just-run.js "clean pagination redirects" -- node scripts/clean-pagination-redirects.js
+    node scripts/just-log.js info "Optimizing JavaScript"
     chmod +x scripts/minify-js.sh
-    ./scripts/minify-js.sh public
-    just validate-public
+    node scripts/just-run.js "minify javascript" -- ./scripts/minify-js.sh public
+    node scripts/just-log.js info "Fingerprinting static assets"
+    node scripts/just-run.js "fingerprint assets" -- node scripts/fingerprint-assets.js public
+    node scripts/just-log.js info "Validating public output"
+    node scripts/just-run.js "validate public output" -- just validate-public
+    node scripts/just-log.js ok "CI build pipeline complete"
 
 [windows]
 [doc("CI pipeline: verify generated files, build, minify JS, validate output")]
 [group('ci')]
 ci-build: _assert-zola-version verify-generated-clean
-    @just clean
-    @just css
-    @if ($env:ZOLA_BASE_URL) { zola build --base-url "$env:ZOLA_BASE_URL" } else { zola build }
-    node scripts/clean-pagination-redirects.js
-    @bash scripts/minify-js.sh public
-    just validate-public
+    @node scripts/just-log.js step "CI build pipeline"
+    @node scripts/just-log.js info "Cleaning workspace"
+    @node scripts/just-run.js "clean" -- just clean
+    @node scripts/just-log.js info "Compiling CSS"
+    @node scripts/just-run.js "css build" -- just css
+    @node scripts/just-log.js info "Building site"
+    @if ($env:ZOLA_BASE_URL) { node scripts/just-run.js "zola build" -- zola build --base-url "$env:ZOLA_BASE_URL" } else { node scripts/just-run.js "zola build" -- zola build }
+    @node scripts/just-log.js info "Cleaning Zola pagination redirect stubs"
+    @node scripts/just-run.js "clean pagination redirects" -- node scripts/clean-pagination-redirects.js
+    @node scripts/just-log.js info "Optimizing JavaScript"
+    @node scripts/just-run.js "minify javascript" -- bash scripts/minify-js.sh public
+    @node scripts/just-log.js info "Fingerprinting static assets"
+    @node scripts/just-run.js "fingerprint assets" -- node scripts/fingerprint-assets.js public
+    @node scripts/just-log.js info "Validating public output"
+    @node scripts/just-run.js "validate public output" -- just validate-public
+    @node scripts/just-log.js ok "CI build pipeline complete"
+
+[unix]
+[doc("Quick local quality checks (generated drift + zola check)")]
+[group('ci')]
+check: _assert-zola-version verify-generated-clean
+    @node scripts/just-log.js info "Running zola check"
+    @node scripts/just-run.js "zola check" -- zola check
+    @node scripts/just-log.js ok "Checks passed"
+
+[windows]
+[doc("Quick local quality checks (generated drift + zola check)")]
+[group('ci')]
+check: _assert-zola-version verify-generated-clean
+    @node scripts/just-log.js info "Running zola check"
+    @node scripts/just-run.js "zola check" -- zola check
+    @node scripts/just-log.js ok "Checks passed"
 
 # ---------------------------------------------------------------------------
 # Info

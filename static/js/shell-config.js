@@ -1,4 +1,4 @@
-window.SiteNavConfig = {
+export const SHELL_CONFIG_DEFAULTS = {
   // Design-language shell defaults
   shellPath: "/navbar/",
   favicon: true,
@@ -12,3 +12,10 @@ window.SiteNavConfig = {
   showAccountButton: true,
   showThemeToggle: false,
 };
+
+if (typeof window !== "undefined") {
+  window.SiteNavConfig = {
+    ...SHELL_CONFIG_DEFAULTS,
+    ...(window.SiteNavConfig || {}),
+  };
+}

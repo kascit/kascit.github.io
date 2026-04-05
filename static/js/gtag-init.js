@@ -1,12 +1,35 @@
-(function () {
-  "use strict";
-  var e = document.currentScript;
-  if (!e) return;
-  var t = (e.dataset && e.dataset.gtagId) || "";
-  if (!t) return;
+/**
+ * Google Analytics bootstrap helper.
+ *
+ * Supports both:
+ * - ES module usage via initGtag(gtagId)
+ * - legacy script-tag auto init with data-gtag-id
+ */
+
+export function initGtag(gtagId) {
+  var id = String(gtagId || "").trim();
+  if (!id) return false;
+
   window.dataLayer = window.dataLayer || [];
-  function a() {
-    dataLayer.push(arguments);
+  window.gtag = window.gtag || function gtag() {
+    window.dataLayer.push(arguments);
+  };
+
+  window.gtag("js", new Date());
+  window.gtag("config", id);
+  return true;
+}
+
+function autoInitFromScriptTag() {
+  var script = document.currentScript;
+  if (!script || !script.dataset) return;
+
+  var gtagId = script.dataset.gtagId || "";
+  if (gtagId) {
+    initGtag(gtagId);
   }
-  a("js", new Date()), a("config", t);
-})();
+}
+
+if (typeof document !== "undefined" && typeof window !== "undefined") {
+  autoInitFromScriptTag();
+}

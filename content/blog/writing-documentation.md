@@ -4,7 +4,7 @@ date = 2026-03-12
 description = "How to write docs that stay useful after launch, based on years of fixing stale and unread documentation"
 
 [taxonomies]
-tags = ["documentation", "writing", "technical", "communication", "best-practices"]
+tags = ["Technical Writing", "Documentation", "Developer Experience", "Communication", "Best Practices"]
 categories = ["Development"]
 
 [extra]

@@ -33,7 +33,7 @@
     {% endif %}
     <!-- Logo (centered on mobile) -->
     <div class="flex-1 flex justify-center items-center lg:flex lg:justify-start">
-        <a href="/" class="btn btn-ghost hover:bg-transparent hover:border-transparent normal-case text-xl font-bold text-base-content logo-firefly site-logo-link">
+        <a href="/" data-keybind="d h" data-keybind-action="click" data-tooltip-label="Go to home" data-tooltip-shortcut="d h" data-tooltip-position="bottom" class="btn btn-ghost hover:bg-transparent hover:border-transparent normal-case text-xl font-bold text-base-content logo-firefly site-logo-link tooltip tooltip-bottom">
             {% if has_theme_specific_logos %}
                 {# Theme-specific logos stacked in same space to prevent layout shift on switch #}
                 {% set dark_logo_src = logo_dark_image_path %}
@@ -166,7 +166,7 @@
             {# Apps grid (Google Apps-style project launcher) #}
             <li data-nav-chrome="apps" class="ml-1">
                 <div class="relative p-0" data-dropdown="apps">
-                    <div tabindex="0" role="button" class="btn btn-ghost btn-square tooltip tooltip-bottom" data-tip="Apps" aria-label="Apps">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-square tooltip tooltip-bottom" data-tooltip-label="Apps" data-tooltip-position="bottom" aria-label="Apps">
                         {{ macros_icons::svg_apps_grid() }}
                     </div>
                     <div class="dropdown-panel z-50 mt-2 p-4 bg-base-100 border border-base-content/10 rounded-box w-64 right-0 mr-2 md:mr-4">
@@ -178,7 +178,7 @@
             {# Account & Theme Dropdown #}
             <li data-nav-chrome="account" class="ml-1">
                 <div class="relative p-0" data-dropdown="account">
-                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle tooltip tooltip-bottom" data-tip="Account" aria-label="Account">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle tooltip tooltip-bottom" data-tooltip-label="Account" data-tooltip-position="bottom" aria-label="Account">
                         <div data-auth="nav-guest-avatar" class="w-9 h-9 rounded-full bg-base-300 flex items-center justify-center">
                             <i class="fa-solid fa-user text-base-content/50 text-sm"></i>
                         </div>

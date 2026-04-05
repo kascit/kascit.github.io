@@ -5,7 +5,18 @@
 {% if url is starting_with("/") or url is starting_with("http://") or url is starting_with("https://") %}
     {% set nav_url = url %}
 {% endif %}
-<a class="nav-button nav-button-{{ direction }} group" href="{{ nav_url | safe }}">
+{% set tooltip_shortcut = "d arrowright" %}
+{% if direction == "prev" %}
+    {% set tooltip_shortcut = "d arrowleft" %}
+{% endif %}
+<a
+    class="nav-button nav-button-{{ direction }} group tooltip tooltip-top"
+    href="{{ nav_url | safe }}"
+    data-tooltip-key-only="1"
+    data-tooltip-shortcut="{{ tooltip_shortcut }}"
+    data-tooltip-position="top"
+    {% if nav_url != "#" %}data-keybind="{{ tooltip_shortcut }}" data-keybind-action="click"{% endif %}
+>
     <div class="nav-button-content">
         <div class="nav-button-direction">
             {% if direction == "prev" %}

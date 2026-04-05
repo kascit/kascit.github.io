@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="3.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:atom="http://www.w3.org/2005/Atom">
-  <xsl:output method="html" version="1.0" encoding="UTF-8" indent="yes"/>
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:atom="http://www.w3.org/2005/Atom">
+  <xsl:output method="html" encoding="UTF-8" indent="yes" doctype-system="about:legacy-compat"/>
   <xsl:template match="/">
     <html lang="en">
       <head>
@@ -13,8 +13,78 @@
         <script src="/js/boot.js" data-default-colorset="auto"></script>
         
         <style>
-          /* Basic resets just in case XSLT strips some defaults */
+          <xsl:text disable-output-escaping="yes"><![CDATA[
           .copy-btn:active { transform: scale(0.95); }
+
+          .rss-header-link {
+            gap: 0.7rem;
+            transition: transform 180ms ease;
+          }
+
+          .rss-header-link:hover {
+            transform: translateY(-1px);
+          }
+
+          .rss-header-icon {
+            width: 2.35rem;
+            height: 2.35rem;
+            border-radius: 0.8rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid color-mix(in oklab, var(--color-primary) 28%, transparent);
+            background: color-mix(in oklab, var(--color-primary) 11%, var(--color-base-100));
+            color: color-mix(in oklab, var(--color-primary) 76%, var(--color-base-content));
+            box-shadow: 0 10px 20px -18px color-mix(in oklab, var(--color-primary) 55%, transparent);
+          }
+
+          .rss-subscribe-card {
+            border-color: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+            box-shadow: 0 14px 26px -24px color-mix(in oklab, var(--color-base-content) 45%, transparent);
+            background: linear-gradient(
+              180deg,
+              color-mix(in oklab, var(--color-base-100) 96%, var(--color-base-200)) 0%,
+              var(--color-base-100) 100%
+            );
+          }
+
+          .rss-item-card {
+            border-color: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+            box-shadow: 0 10px 20px -22px color-mix(in oklab, var(--color-base-content) 44%, transparent);
+            transition: border-color 180ms ease, box-shadow 200ms ease, transform 200ms ease;
+          }
+
+          .rss-item-card:hover {
+            border-color: color-mix(in oklab, var(--color-base-content) 20%, transparent);
+            box-shadow: 0 20px 30px -28px color-mix(in oklab, var(--color-base-content) 52%, transparent);
+            transform: translateY(-1px);
+          }
+
+          .rss-item-meta {
+            letter-spacing: 0.01em;
+          }
+
+          .rss-return-link {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            border: 1px solid color-mix(in oklab, var(--color-base-content) 18%, transparent);
+            border-radius: 999px;
+            padding: 0.52rem 0.9rem;
+            color: color-mix(in oklab, var(--color-base-content) 74%, transparent);
+            text-decoration: none;
+            background: color-mix(in oklab, var(--color-base-100) 92%, var(--color-base-200));
+            box-shadow: 0 10px 18px -18px color-mix(in oklab, var(--color-base-content) 55%, transparent);
+            transition: transform 170ms ease, border-color 170ms ease, color 170ms ease, box-shadow 170ms ease;
+          }
+
+          .rss-return-link:hover {
+            transform: translateY(-1px);
+            border-color: color-mix(in oklab, var(--color-base-content) 32%, transparent);
+            color: var(--color-base-content);
+            box-shadow: 0 16px 24px -20px color-mix(in oklab, var(--color-base-content) 60%, transparent);
+          }
 
           #rss-scroll-top {
             position: fixed;
@@ -32,11 +102,13 @@
             pointer-events: auto;
             transform: translateY(0);
           }
+          ]]></xsl:text>
         </style>
         
         <script>
+          <xsl:text disable-output-escaping="yes"><![CDATA[
           function writeToClipboard(text) {
-            if (navigator.clipboard &amp;&amp; navigator.clipboard.writeText) {
+            if (navigator.clipboard && navigator.clipboard.writeText) {
               return navigator.clipboard.writeText(text);
             }
 
@@ -87,7 +159,7 @@
             try {
               if (document.referrer) {
                 var previous = new URL(document.referrer);
-                if (previous.origin === window.location.origin &amp;&amp; window.history.length &gt; 1) {
+                if (previous.origin === window.location.origin && window.history.length > 1) {
                   window.history.back();
                   return;
                 }
@@ -95,7 +167,6 @@
             } catch (e) {
               // ignore and fallback to home
             }
-
             window.location.href = "/";
           }
 
@@ -116,7 +187,7 @@
             var scrollTopBtn = document.getElementById("rss-scroll-top");
             if (scrollTopBtn) {
               var syncScrollTopState = function() {
-                if (window.scrollY &gt; 300) {
+                if (window.scrollY > 300) {
                   scrollTopBtn.classList.add("is-visible");
                 } else {
                   scrollTopBtn.classList.remove("is-visible");
@@ -131,6 +202,7 @@
               });
             }
           });
+          ]]></xsl:text>
         </script>
       </head>
       
@@ -145,12 +217,11 @@
             </button>
           </div>
           
-          <!-- Header section -->
           <header class="mb-7 md:mb-8 text-center flex flex-col items-center">
-            <a href="/" class="group flex items-center justify-center gap-3 mb-4 transition-transform hover:scale-105">
-               <div class="w-12 h-12 bg-primary text-primary-content rounded-xl flex items-center justify-center shadow-lg shadow-primary/20">
-                 <i class="fa-solid fa-rss text-2xl"></i>
-               </div>
+            <a href="/" class="rss-header-link group flex items-center justify-center mb-4">
+               <span class="rss-header-icon" aria-hidden="true">
+                 <i class="fa-solid fa-rss text-lg"></i>
+               </span>
                <h1 class="text-2xl md:text-3xl font-bold tracking-tight m-0 text-base-content group-hover:text-primary transition-colors"><xsl:value-of select="/rss/channel/title"/></h1>
             </a>
             <p class="text-base md:text-lg text-base-content/72 max-w-xl mx-auto leading-relaxed">
@@ -158,9 +229,7 @@
             </p>
           </header>
 
-          <!-- Subscribe Action Box -->
-          <div class="bg-base-100 border border-base-content/12 shadow-xl rounded-2xl p-6 md:p-7 mb-10 relative overflow-hidden">
-            <!-- Decorative background blob -->
+          <div class="rss-subscribe-card bg-base-100 border rounded-2xl p-6 md:p-7 mb-10 relative overflow-hidden">
             <div class="absolute top-0 right-0 -mr-16 -mt-16 w-32 h-32 rounded-full bg-primary/10 blur-3xl pointer-events-none"></div>
             
             <h2 class="text-lg md:text-xl font-bold mb-3 flex items-center gap-2 text-base-content">
@@ -171,7 +240,6 @@
               This is a standard web feed (RSS). If you have a news reader app installed, you can use the direct buttons below. Otherwise, copy the URL to subscribe in your favorite reader.
             </p>
             
-            <!-- Quick Actions -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-6 relative z-10">
               <a href="{/rss/channel/atom:link[@rel='self']/@href}" class="btn btn-primary shadow-lg shadow-primary/20 flex gap-2">
                 <i class="fa-solid fa-window-maximize"></i> Open in App
@@ -184,9 +252,8 @@
               </a>
             </div>
             
-            <!-- URL Copy Field -->
             <div class="form-control w-full relative z-10">
-              <label class="label pt-0 pb-1">
+              <label class="label pt-0 pb-1" for="feed-url">
                 <span class="label-text text-xs text-base-content/62 font-semibold uppercase tracking-wider">Feed URL</span>
               </label>
               <div class="join w-full shadow-sm">
@@ -200,7 +267,6 @@
           
           <div class="divider mb-9 border-base-content/12"></div>
           
-          <!-- Recent Posts List -->
           <div>
             <h2 class="text-xl md:text-2xl font-bold mb-5 flex items-center gap-3 text-base-content">
               <i class="fa-regular fa-newspaper text-base-content/55"></i>
@@ -209,8 +275,8 @@
             
             <div class="flex flex-col gap-4">
               <xsl:for-each select="/rss/channel/item">
-                <a href="{link}" class="group bg-base-100 border border-base-content/10 rounded-xl p-5 md:p-6 transition duration-200 hover:shadow-md hover:border-base-content/22 flex flex-col gap-2">
-                  <div class="flex items-center gap-3 text-[11px] text-base-content/60 font-medium mb-1">
+                <a href="{link}" class="rss-item-card group bg-base-100 border rounded-xl p-5 md:p-6 flex flex-col gap-2">
+                  <div class="rss-item-meta flex items-center gap-3 text-[11px] text-base-content/60 font-medium mb-1">
                     <i class="fa-regular fa-calendar"></i>
                     <xsl:value-of select="substring(pubDate, 1, 16)"/>
                   </div>
@@ -229,7 +295,7 @@
           </div>
           
           <footer class="mt-14 text-center text-sm text-base-content/55 pb-6">
-            <a href="/" class="hover:underline flex items-center justify-center gap-2">
+            <a href="/" class="rss-return-link">
               <i class="fa-solid fa-arrow-left"></i> Return to site
             </a>
           </footer>

@@ -47,6 +47,7 @@ help:
     echo "  just dev-fast     # faster dev (skip generated content refresh)"
     echo ""
     echo -e "${yellow}quality gates${reset}"
+    echo "  just quality      # strict JS/CSS/XML-XSL/Tera validation"
     echo "  just check        # zola syntax + generated content verification"
     echo "  just ci-build     # full CI-equivalent pipeline"
     echo ""
@@ -57,7 +58,7 @@ help:
     echo -e "${yellow}data pipelines${reset}"
     echo "  just sync-generated   # refresh project pages, about tags, widget data"
     echo "  just project-pages    # regenerate project markdown pages"
-    echo "  just about-skill-tags # regenerate about skill taxonomy seed + data"
+    echo "  just about-skill-tags # sync About taxonomy tags from tag chips"
     echo "  just widget-data      # regenerate latest-posts widget data"
     echo ""
     echo -e "${green}full command list:${reset}"
@@ -74,6 +75,7 @@ help:
     @Write-Host "  just dev-fast     # faster dev (skip generated content refresh)"
     @Write-Host ""
     @Write-Host "quality gates" -ForegroundColor Yellow
+    @Write-Host "  just quality      # strict JS/CSS/XML-XSL/Tera validation"
     @Write-Host "  just check        # zola syntax + generated content verification"
     @Write-Host "  just ci-build     # full CI-equivalent pipeline"
     @Write-Host ""
@@ -84,7 +86,7 @@ help:
     @Write-Host "data pipelines" -ForegroundColor Yellow
     @Write-Host "  just sync-generated   # refresh project pages, about tags, widget data"
     @Write-Host "  just project-pages    # regenerate project markdown pages"
-    @Write-Host "  just about-skill-tags # regenerate about skill taxonomy seed + data"
+    @Write-Host "  just about-skill-tags # sync About taxonomy tags from tag chips"
     @Write-Host "  just widget-data      # regenerate latest-posts widget data"
     @Write-Host ""
     @Write-Host "full command list:" -ForegroundColor Green
@@ -250,17 +252,21 @@ _dl-katex:
 [group('dev')]
 dev:
     @node scripts/just-log.js step "Development pipeline"
+    @node scripts/just-run.js "clean public output" -- just --quiet clean-public
     @node scripts/just-run.js "sync-generated" -- just --quiet sync-generated
     @node scripts/just-run.js "css build" -- just --quiet css
-    @node scripts/just-log.js ok "Starting Zola dev server at http://127.0.0.1:1111"
-    @zola serve
+    @node scripts/just-log.js ok "Starting Zola dev server (use the URL printed by Zola below)"
+    @zola serve --interface 127.0.0.1 --port 1111
 
 [doc("Fast dev server: skip generated-content refresh")]
 [group('dev')]
-dev-fast: css
+dev-fast:
+    @node scripts/just-log.js step "Fast development pipeline"
+    @node scripts/just-run.js "clean public output" -- just --quiet clean-public
+    @node scripts/just-run.js "css build" -- just --quiet css
     @node scripts/just-log.js warn "Fast mode enabled: generated content refresh skipped"
-    @node scripts/just-log.js ok "Starting Zola dev server at http://127.0.0.1:1111"
-    @zola serve
+    @node scripts/just-log.js ok "Starting Zola dev server (use the URL printed by Zola below)"
+    @zola serve --interface 127.0.0.1 --port 1111
 
 [doc("Watch CSS for changes (blocking)")]
 [group('dev')]
@@ -296,6 +302,18 @@ clean:
     @if (Test-Path "public") { cmd /c rmdir /s /q public }
     @if (Test-Path "{{ css_out }}") { Remove-Item "{{ css_out }}" -Force }
     @if (Test-Path "{{ dui_css_out }}") { Remove-Item "{{ dui_css_out }}" -Force }
+
+[unix]
+[doc("Remove only generated public output")]
+[group('build')]
+clean-public:
+    rm -rf public
+
+[windows]
+[doc("Remove only generated public output")]
+[group('build')]
+clean-public:
+    @if (Test-Path "public") { cmd /c rmdir /s /q public }
 
 [unix]
 [doc("Full production build (clean + generated content + css + zola)")]
@@ -354,12 +372,12 @@ widget-data:
     @node scripts/just-run.js "generate widget data" -- node scripts/generate-latest-posts-widget.js
     @node scripts/just-log.js ok "Widget data refreshed"
 
-[doc("Generate taxonomy seed entries for About-page skill chips")]
+[doc("Sync About-page taxonomy tags from tag_chip entries")]
 [group('build')]
 about-skill-tags:
     @node scripts/just-log.js info "Syncing About skill tags"
     @node scripts/just-run.js "sync about skill tags" -- node scripts/sync-about-skill-tags.js
-    @node scripts/just-log.js ok "About skill tag artifacts refreshed"
+    @node scripts/just-log.js ok "About taxonomy tags refreshed"
 
 [unix]
 [doc("Fail if generated content differs from committed files")]
@@ -367,10 +385,10 @@ about-skill-tags:
 verify-generated-clean: project-pages about-skill-tags widget-data
     #!/usr/bin/env bash
     set -euo pipefail
-        if ! git diff --quiet -- content/projects content/about/_skill-tags-seed.md data/about-skill-tags.json static/widgets/latest-posts-data.json; then
+        if ! git diff --quiet -- content/projects content/about.md static/widgets/latest-posts-data.json; then
             echo "ERROR: Generated content is out of sync."
             echo "Run 'just project-pages about-skill-tags widget-data' and commit changes."
-            git --no-pager diff -- content/projects content/about/_skill-tags-seed.md data/about-skill-tags.json static/widgets/latest-posts-data.json
+            git --no-pager diff -- content/projects content/about.md static/widgets/latest-posts-data.json
       exit 1
     fi
 
@@ -378,7 +396,7 @@ verify-generated-clean: project-pages about-skill-tags widget-data
 [doc("Fail if generated content differs from committed files")]
 [group('ci')]
 verify-generated-clean: project-pages about-skill-tags widget-data
-    @git diff --quiet -- content/projects content/about/_skill-tags-seed.md data/about-skill-tags.json static/widgets/latest-posts-data.json; if ($LASTEXITCODE -ne 0) { Write-Host "ERROR: Generated content is out of sync."; Write-Host "Run 'just project-pages about-skill-tags widget-data' and commit changes."; git --no-pager diff -- content/projects content/about/_skill-tags-seed.md data/about-skill-tags.json static/widgets/latest-posts-data.json; exit 1 }
+    @git diff --quiet -- content/projects content/about.md static/widgets/latest-posts-data.json; if ($LASTEXITCODE -ne 0) { Write-Host "ERROR: Generated content is out of sync."; Write-Host "Run 'just project-pages about-skill-tags widget-data' and commit changes."; git --no-pager diff -- content/projects content/about.md static/widgets/latest-posts-data.json; exit 1 }
 
 [unix]
 [doc("Validate required output artifacts in public/")]
@@ -413,6 +431,8 @@ ci-build: _assert-zola-version verify-generated-clean
     node scripts/just-run.js "clean" -- just clean
     node scripts/just-log.js info "Compiling CSS"
     node scripts/just-run.js "css build" -- just css
+    node scripts/just-log.js info "Running integrated quality checks"
+    node scripts/just-run.js "quality checks" -- node scripts/run-quality-checks.js
     if [ -n "${ZOLA_BASE_URL:-}" ]; then
       node scripts/just-log.js info "Building site with custom base URL"
       node scripts/just-run.js "zola build" -- zola build --base-url "$ZOLA_BASE_URL"
@@ -440,6 +460,8 @@ ci-build: _assert-zola-version verify-generated-clean
     @node scripts/just-run.js "clean" -- just clean
     @node scripts/just-log.js info "Compiling CSS"
     @node scripts/just-run.js "css build" -- just css
+    @node scripts/just-log.js info "Running integrated quality checks"
+    @node scripts/just-run.js "quality checks" -- node scripts/run-quality-checks.js
     @node scripts/just-log.js info "Building site"
     @if ($env:ZOLA_BASE_URL) { node scripts/just-run.js "zola build" -- zola build --base-url "$env:ZOLA_BASE_URL" } else { node scripts/just-run.js "zola build" -- zola build }
     @node scripts/just-log.js info "Cleaning Zola pagination redirect stubs"
@@ -452,20 +474,23 @@ ci-build: _assert-zola-version verify-generated-clean
     @node scripts/just-run.js "validate public output" -- just validate-public
     @node scripts/just-log.js ok "CI build pipeline complete"
 
-[unix]
-[doc("Quick local quality checks (generated drift + zola check)")]
+[doc("Run strict integrated quality checks (JS/CSS/XML/XSL/Tera)")]
 [group('ci')]
-check: _assert-zola-version verify-generated-clean
-    @node scripts/just-log.js info "Running zola check"
-    @node scripts/just-run.js "zola check" -- zola check
+quality: _assert-zola-version verify-generated-clean
+    @node scripts/just-log.js info "Running integrated quality checks"
+    @node scripts/just-run.js "quality checks" -- node scripts/run-quality-checks.js
+    @node scripts/just-log.js ok "Integrated quality checks passed"
+
+[unix]
+[doc("Quick local quality checks (delegates to integrated quality recipe)")]
+[group('ci')]
+check: quality
     @node scripts/just-log.js ok "Checks passed"
 
 [windows]
-[doc("Quick local quality checks (generated drift + zola check)")]
+[doc("Quick local quality checks (delegates to integrated quality recipe)")]
 [group('ci')]
-check: _assert-zola-version verify-generated-clean
-    @node scripts/just-log.js info "Running zola check"
-    @node scripts/just-run.js "zola check" -- zola check
+check: quality
     @node scripts/just-log.js ok "Checks passed"
 
 # ---------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 
 {% macro render(post, default_thumb="") %}
 {% set card_thumb = post.extra.thumbnail_image | default(value=post.extra.thumbnail | default(value=post.extra.image | default(value=""))) %}
-<article class="not-prose relative flex flex-col p-4 sm:p-5 border border-base-content/10 rounded-box bg-base-200/40 shadow-sm transition-colors duration-200 hover:border-base-content/20 hover:shadow-md hover:bg-base-200/80 group">
+<article class="not-prose relative flex flex-col p-4 sm:p-5 border border-base-content/10 rounded-box bg-base-200/40 shadow-sm transition-all duration-300 ease-out hover:border-base-content/18 hover:shadow-lg hover:bg-base-200/75 hover:-translate-y-px group">
     <a href="{{ post.permalink | safe }}" class="absolute inset-0 z-10 block"><span class="sr-only">Read {{ post.title }}</span></a>
 
     {% if card_thumb != "" %}
@@ -11,10 +11,10 @@
     {% else %}
         {% set card_thumb_url = get_url(path=card_thumb) | safe %}
     {% endif %}
-    <div class="not-prose mb-3 overflow-hidden rounded-lg border border-base-content/10 bg-base-200/25 relative z-20 post-card-thumb">
+    <div class="not-prose mb-3 overflow-hidden rounded-lg border border-base-content/10 bg-base-200/25 relative z-20 post-card-thumb transition-colors duration-300 group-hover:border-base-content/16">
         <img src="{{ card_thumb_url | safe }}"
              alt="{{ post.extra.thumbnail_alt | default(value=post.title) }}"
-             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-[1.015]"
+             class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
              loading="lazy"
              decoding="async" />
     </div>

@@ -5,7 +5,7 @@
 
 {%- set theme_colorset = macros_head::get_theme_colorset(config=config) | trim -%}
 {%- set current_url = config.base_url ~ "/navbar/" -%}
-{%- set site_title = config.title | default(value="Dhanur") -%}
+{%- set site_title = config.title | default(value="dhanur.me") -%}
 
 <!doctype html>
 {{ macros_head::html_tag(config=config, lang=lang) }}

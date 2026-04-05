@@ -7,6 +7,7 @@
 
 import { getConfig } from "./config.js";
 import { readCookie, writeCookie } from "./cookie-utils.js";
+import { initGtag } from "../gtag-init.js";
 
 const CONSENT_COOKIE_KEY = "site_cookie_consent_v1";
 const CONSENT_COOKIE_MAX_AGE = 60 * 60 * 24 * 180;
@@ -60,20 +61,6 @@ function appendScript({ src, async = true, defer = false, crossOrigin = "anonymo
   document.head.appendChild(script);
 }
 
-function initGtag(gtagId) {
-  if (!gtagId || window.__gtagInitialized) return;
-
-  window.dataLayer = window.dataLayer || [];
-  function gtag() {
-    window.dataLayer.push(arguments);
-  }
-  window.gtag = window.gtag || gtag;
-
-  gtag("js", new Date());
-  gtag("config", gtagId);
-  window.__gtagInitialized = true;
-}
-
 function loadGoogleAnalytics(gtagId) {
   if (!gtagId) return;
 
@@ -81,7 +68,12 @@ function loadGoogleAnalytics(gtagId) {
     src: `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gtagId)}`,
     async: true,
     crossOrigin: "anonymous",
-    onLoad: () => initGtag(gtagId),
+    onLoad: () => {
+      if (window.__gtagInitialized) return;
+      if (initGtag(gtagId)) {
+        window.__gtagInitialized = true;
+      }
+    },
   });
 }
 

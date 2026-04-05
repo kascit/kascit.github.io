@@ -9,6 +9,8 @@ import { initDropdowns } from "./modules/dropdowns.js";
 import { initDrawer } from "./modules/drawer.js";
 import { initServiceWorker } from "./modules/service-worker.js";
 import { initCookieConsent } from "./modules/cookie-consent.js";
+import { initWebMCP } from "./modules/webmcp.js";
+import { initTooltips } from "./modules/tooltips.js";
 
 function runSafely(task, label) {
   try {
@@ -73,7 +75,14 @@ function syncPrepaintLayoutState() {
 async function importAndInit(modulePath, exportName, args = []) {
   const mod = await import(modulePath);
   const fn = mod[exportName];
-  if (typeof fn === "function") fn(...args);
+  if (typeof fn === "function") {
+    return await fn(...args);
+  }
+  return undefined;
+}
+
+async function importModule(modulePath) {
+  return await import(modulePath);
 }
 
 function has(selector) {
@@ -90,10 +99,14 @@ function bootstrapSite() {
   // Align classes with prepaint attrs before transitions are enabled.
   runSafely(() => syncPrepaintLayoutState(), "prepaint layout sync");
 
+  // Expose WebMCP imperative APIs early for inspector/runtime detection.
+  runSafely(() => initWebMCP({ runtime: "main" }), "webmcp");
+
   // Keep key page-shell behavior eager to avoid flashes during navigation.
   runSafely(() => initTheme(document), "theme");
   runSafely(() => initDrawer(), "drawer");
   runSafely(() => initDropdowns(document), "dropdowns");
+  runSafely(() => initTooltips(document), "tooltips");
   runSafely(() => initCookieConsent(), "cookie consent");
   runSafely(() => initAuth(document), "auth");
 
@@ -105,6 +118,18 @@ function bootstrapSite() {
 
   // UX niceties after initial paint.
   runAfterFirstPaint(() => {
+    if (hasAny(["[data-toc-sidebar]", "[data-toc-toggle]"])) {
+      runSafely(() => importModule("./toc.js"), "toc");
+    }
+
+    if (has("[data-search-mount]")) {
+      runSafely(() => importModule("./search-loader.js"), "search loader");
+    }
+
+    if (has('input[name="showcase_tabs"]')) {
+      runSafely(() => importModule("./showcase-rotate.js"), "showcase rotate");
+    }
+
     if (has("pre > code")) {
       runSafely(() => importAndInit("./modules/code-blocks.js", "initCodeBlocks"), "code blocks");
     }
@@ -113,8 +138,12 @@ function bootstrapSite() {
       runSafely(() => importAndInit("./modules/clipboard.js", "initClipboard"), "clipboard");
     }
 
-    if (has("[data-shortcut]")) {
+    if (hasAny(["[data-shortcut]", "[data-desktop-only='true']"])) {
       runSafely(() => importAndInit("./modules/shortcuts.js", "initShortcuts"), "shortcuts");
+    }
+
+    if (has("[data-keybind]")) {
+      runSafely(() => importAndInit("./modules/keyboard-shortcuts.js", "initKeyboardShortcuts"), "keyboard shortcuts");
     }
 
     runSafely(() => importAndInit("./modules/scroll-top.js", "initScrollToTop"), "scroll top");
@@ -126,6 +155,10 @@ function bootstrapSite() {
 
   // Heavier/optional page features during idle time.
   runWhenIdle(() => {
+    if (has("[data-sidebar-toggle]") && has("[data-toc-toggle]")) {
+      runSafely(() => importAndInit("./modules/layout-recommendation.js", "initLayoutRecommendation"), "layout recommendation");
+    }
+
     if (hasAny(["[data-blog-feed]", "[data-blog-feed-mount]"])) {
       runSafely(() => importAndInit("./modules/blog-feed.js", "initBlogFeed"), "blog feed");
     }

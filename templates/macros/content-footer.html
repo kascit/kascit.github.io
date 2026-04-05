@@ -1,13 +1,14 @@
 {% macro content_footer(config, item) %} 
 <div class="mt-8 pt-6 border-t border-base-content/10">
   <div class="post-actions__row">
-    {% if config.extra.edit_url and item.path is starting_with("/blog/") %}
+    {% if config.extra.edit_url and item.path is starting_with("/blog/") and item.relative_path != "blog/_index.md" %}
     <a
       href="{{ config.extra.edit_url }}/content/{{ item.relative_path }}"
       target="_blank"
       rel="noopener noreferrer"
       class="post-action-btn tooltip tooltip-bottom"
-      data-tip="Fork & PR"
+      data-tooltip-label="Fork and PR"
+      data-tooltip-position="bottom"
     >
       <svg
         class="w-3.5 h-3.5"

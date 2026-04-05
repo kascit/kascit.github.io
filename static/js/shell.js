@@ -13,6 +13,7 @@ import { initResponsive } from './modules/responsive.js';
 import { initTheme } from './modules/theme-engine.js';
 import { initAuth } from './modules/auth-integration.js';
 import { initDropdowns } from './modules/dropdowns.js';
+import { SHELL_CONFIG_DEFAULTS } from './shell-config.js';
 
 window.__componentsJS = true;
 let _injected = false;
@@ -20,18 +21,10 @@ let _activeShellController = null;
 let _shellAbortHandlersBound = false;
 
 const DEFAULT_SHELL_CONFIG = {
-  shellPath: '/navbar/',
+  ...SHELL_CONFIG_DEFAULTS,
   shellFetchTimeoutMs: 10000,
   noCss: false,
-  favicon: true,
-  enablePwa: true,
-  swPath: '/sw.js',
   showNavbar: true,
-  showMobileMenu: true,
-  showLanguage: false,
-  showAppsGrid: true,
-  showAccountButton: true,
-  showThemeToggle: false,
 };
 
 function getShellRuntimeConfig() {

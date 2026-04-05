@@ -208,6 +208,7 @@ function main() {
   ensureDir(PROJECTS_DIR);
   removeLegacyGeneratedDir();
   removePreviouslyGeneratedPages(PROJECTS_DIR);
+  fs.rmSync(path.join(PROJECTS_DIR, "_skill-tags-seed.md"), { force: true });
 
   let written = 0;
   for (const project of projects) {

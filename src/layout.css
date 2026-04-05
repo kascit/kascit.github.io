@@ -11,7 +11,7 @@ html {
  */
 @supports (view-transition-name: root) {
   @view-transition {
-    navigation: auto;
+    navigation: none;
   }
 
   /* Keep fixed chrome out of root cross-fade snapshots to avoid rail/nav flash. */
@@ -263,6 +263,44 @@ body.is-landing nav.mt-12 {
   background: color-mix(in oklab, var(--color-primary) 72%, var(--color-base-content));
 }
 
+[data-apps-grid-sidebar] > summary .apps-grid-chevron {
+  transition: transform 180ms ease;
+}
+
+[data-apps-grid-sidebar][open] > summary .apps-grid-chevron {
+  transform: rotate(180deg);
+}
+
+[data-apps-grid-sidebar] > .apps-grid-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 220ms ease, opacity 180ms ease;
+}
+
+[data-apps-grid-sidebar] > .apps-grid-panel > .apps-grid-panel-inner {
+  overflow: hidden;
+  transform: translateY(-0.25rem);
+  transition: transform 220ms ease;
+}
+
+[data-apps-grid-sidebar][open] > .apps-grid-panel {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+[data-apps-grid-sidebar][open] > .apps-grid-panel > .apps-grid-panel-inner {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-apps-grid-sidebar] > summary .apps-grid-chevron,
+  [data-apps-grid-sidebar] > .apps-grid-panel,
+  [data-apps-grid-sidebar] > .apps-grid-panel > .apps-grid-panel-inner {
+    transition: none;
+  }
+}
+
 
 
 /* Sidebar search input */
@@ -485,7 +523,15 @@ body.is-landing nav.mt-12 {
 
 /* Hero background */
 .hero-background {
-  @apply bg-base-200/50;
+  @apply bg-base-200/20;
+}
+
+[data-theme="light"] .hero-background {
+  @apply bg-base-100/8;
+}
+
+[data-theme="dark"] .hero-background {
+  @apply bg-base-200/34;
 }
 
 /* Hero badge */

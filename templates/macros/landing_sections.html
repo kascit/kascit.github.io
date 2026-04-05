@@ -11,7 +11,7 @@
     <div class="absolute inset-0 hero-background"></div>
     {# Opacity values should be TailwindCSS compatible (0, 5, 10, 15, 20, 25,
     30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100) #}
-    {% set gradient_opacity = section.extra.hero.gradient_opacity | default(value=20) %}
+    {% set gradient_opacity = section.extra.hero.gradient_opacity | default(value=10) %}
     <div class="absolute inset-0 opacity-{{ gradient_opacity }}">
       <div
         class="absolute top-1/4 left-1/4 w-96 h-96 bg-gradient-to-r from-gray-500/10 to-slate-500/10 rounded-full filter blur-3xl animate-pulse"
@@ -22,7 +22,8 @@
     </div>
     {% set has_theme_hero = section.extra.hero.image_dark is defined or section.extra.hero.image_light is defined %}
     {% if has_theme_hero %}
-      {% set image_opacity = section.extra.hero.image_opacity | default(value=20) %}
+      {% set dark_image_opacity = section.extra.hero.image_opacity_dark | default(value=section.extra.hero.image_opacity | default(value=26)) %}
+      {% set light_image_opacity = section.extra.hero.image_opacity_light | default(value=section.extra.hero.image_opacity | default(value=42)) %}
       {% set dark_src = section.extra.hero.image_dark | default(value=section.extra.hero.image | default(value="")) %}
       {% set light_src = section.extra.hero.image_light | default(value=section.extra.hero.image | default(value="")) %}
       {% if dark_src != "" %}
@@ -38,7 +39,7 @@
               srcset="{{ get_url(path=d640) | safe }} 640w, {{ get_url(path=d1200) | safe }} 1200w, {{ get_url(path=d1920) | safe }} 1920w, {{ get_url(path=d2560) | safe }} 2560w, {{ get_url(path=d3840) | safe }} 3840w"
               sizes="100vw" />
             <img src="{{ d_fallback | safe }}" alt="Hero Background"
-              class="w-full h-full rounded-none object-cover object-center opacity-{{ image_opacity }}"
+              class="w-full h-full rounded-none object-cover object-center opacity-{{ dark_image_opacity }}"
               width="3840" height="2160" fetchpriority="high" decoding="async" />
           </picture>
         </div>
@@ -56,13 +57,13 @@
               srcset="{{ get_url(path=l640) | safe }} 640w, {{ get_url(path=l1200) | safe }} 1200w, {{ get_url(path=l1920) | safe }} 1920w, {{ get_url(path=l2560) | safe }} 2560w, {{ get_url(path=l3840) | safe }} 3840w"
               sizes="100vw" />
             <img src="{{ l_fallback | safe }}" alt="Hero Background"
-              class="w-full h-full rounded-none object-cover object-center opacity-{{ image_opacity }}"
+              class="w-full h-full rounded-none object-cover object-center opacity-{{ light_image_opacity }}"
               width="3840" height="2160" fetchpriority="high" decoding="async" />
           </picture>
         </div>
       {% endif %}
     {% elif section.extra.hero.image %}
-      {% set image_opacity = section.extra.hero.image_opacity | default(value=20) %}
+      {% set image_opacity = section.extra.hero.image_opacity | default(value=34) %}
       {% set _hero = section.extra.hero.image %}
       {% set hero_640 = _hero | replace(from=".png", to="-640.webp") | replace(from=".jpg", to="-640.webp") %}
       {% set hero_1200 = _hero | replace(from=".png", to="-1200.webp") | replace(from=".jpg", to="-1200.webp") %}
@@ -343,7 +344,6 @@
     {% endif %}
   </div>
 </div>
-<script defer src="{{ get_url(path='js/showcase-rotate.js') | safe }}"></script>
 {% endif %}
 {% endmacro render_showcase %}
 

@@ -4,7 +4,7 @@ date = 2026-01-15
 description = "A journey of pain, frustration, and eventual productivity with terminal-based editors"
 
 [taxonomies]
-tags = ["editor", "neovim", "vscode", "productivity", "tools"]
+tags = ["Neovim", "VS Code", "Developer Productivity", "Tooling", "Workflow"]
 categories = ["Development"]
 +++
 

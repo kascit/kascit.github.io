@@ -4,7 +4,7 @@ date = 2025-12-29
 description = "A walkthrough of my Arch Linux setup, or: how I learned to stop worrying and love the terminal"
 
 [taxonomies]
-tags = ["linux", "arch", "development", "productivity", "tools"]
+tags = ["Linux", "Arch Linux", "Developer Environment", "Productivity", "Tooling"]
 categories = ["Personal"]
 +++
 

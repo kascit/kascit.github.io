@@ -7,6 +7,22 @@ import { isMobile } from './responsive.js';
 const SIDEBAR_KEY = "sidebar-collapsed";
 const APPS_KEY = "apps_collapsed";
 
+function readStorageFlag(key) {
+  try {
+    return localStorage.getItem(key) === "1";
+  } catch (_error) {
+    return false;
+  }
+}
+
+function writeStorageFlag(key, enabled) {
+  try {
+    localStorage.setItem(key, enabled ? "1" : "0");
+  } catch (_error) {
+    // Ignore storage write failures.
+  }
+}
+
 function getDrawerCheckbox() {
   return document.querySelector("[data-drawer-checkbox]") || document.getElementById("my-drawer-2");
 }
@@ -52,8 +68,6 @@ function initSidebarToggle() {
   const drawer = toggleBtn.closest(".drawer");
   if (!drawer) return;
 
-  const tooltipWrap = document.querySelector("[data-sidebar-toggle-wrapper]") || document.getElementById("sidebar-toggle-wrapper");
-
   const collapsedIcon = toggleBtn.querySelector(".sidebar-toggle-icon-collapsed");
   const expandedIcon = toggleBtn.querySelector(".sidebar-toggle-icon-expanded");
 
@@ -66,21 +80,22 @@ function initSidebarToggle() {
 
     const label = collapsed ? "Show sidebar" : "Hide sidebar";
     toggleBtn.setAttribute("aria-label", label);
-    toggleBtn.setAttribute("title", label);
-    if (tooltipWrap) {
-      tooltipWrap.setAttribute("data-tip", label);
-    }
+    toggleBtn.setAttribute("data-tooltip-label", label);
+    toggleBtn.removeAttribute("title");
+    document.dispatchEvent(new CustomEvent("tooltips:update", {
+      detail: { element: toggleBtn },
+    }));
   }
 
   // Restore persisted state
   const attrSaved = document.documentElement.getAttribute("data-sidebar-collapsed") === "1";
-  const saved = attrSaved || localStorage.getItem(SIDEBAR_KEY) === "1";
+  const saved = attrSaved || readStorageFlag(SIDEBAR_KEY);
   applyCollapsed(saved);
 
   toggleBtn.addEventListener("click", () => {
     const nowCollapsed = !drawer.classList.contains("sidebar-collapsed");
     applyCollapsed(nowCollapsed);
-    localStorage.setItem(SIDEBAR_KEY, nowCollapsed ? "1" : "0");
+    writeStorageFlag(SIDEBAR_KEY, nowCollapsed);
   });
 }
 
@@ -89,11 +104,11 @@ function initAppsGridCollapse() {
   if (!details) return;
 
   // Restore persisted state
-  const collapsed = localStorage.getItem(APPS_KEY) === "1";
+  const collapsed = readStorageFlag(APPS_KEY);
   details.open = !collapsed;
 
   details.addEventListener("toggle", () => {
-    localStorage.setItem(APPS_KEY, details.open ? "0" : "1");
+    writeStorageFlag(APPS_KEY, !details.open);
   });
 }
 

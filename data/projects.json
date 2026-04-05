@@ -22,7 +22,7 @@
       "lang": "C++ · Python",
       "status": "academic",
       "techs": ["AWS IoT", "Lambda", "Rekognition", "ESP32-CAM", "DynamoDB"],
-      "tags": ["C / C++", "Python", "AWS", "IoT", "Serverless"],
+      "tags": ["Computer Vision", "IoT", "AWS", "Serverless", "Python", "C / C++"],
       "github_url": "https://github.com/kascit/face-rekognition"
     },
     {
@@ -46,8 +46,8 @@
       "role": "Game UX Experiment",
       "lang": "JavaScript",
       "status": "live",
-      "techs": ["Vanilla JS", "CSS Animations", "LocalStorage", "Responsive"],
-      "tags": ["JavaScript", "Frontend", "Game Dev", "Animations"],
+      "techs": ["Browser Game Loop", "CSS Animations", "Client Storage", "Responsive UI"],
+      "tags": ["JavaScript", "Frontend Engineering", "Game Development", "Web Performance"],
       "github_url": "https://github.com/kascit/Beat.pe",
       "live_url": "https://kascit.github.io/Beat.pe/"
     },
@@ -70,7 +70,7 @@
       "lang": "Java",
       "status": "academic",
       "techs": ["Linked Lists", "File I/O", "CLI", "OOP"],
-      "tags": ["Java", "CLI", "Data Structures", "Algorithms"],
+      "tags": ["Java", "CLI Applications", "Data Structures", "Algorithms"],
       "github_url": "https://github.com/kascit/listly"
     },
     {
@@ -92,36 +92,7 @@
       "lang": "Zola",
       "status": "live",
       "techs": ["Zola", "TailwindCSS", "DaisyUI", "GitHub Pages"],
-      "tags": [
-        "Zola",
-        "TailwindCSS",
-        "DaisyUI",
-        "GitHub Pages",
-        "Java",
-        "Python",
-        "Go",
-        "C / C++",
-        "JavaScript",
-        "TypeScript",
-        "SQL",
-        "Bash",
-        "Spring Boot",
-        "Node.js",
-        "PostgreSQL",
-        "MongoDB",
-        "Redis",
-        "DynamoDB",
-        "AWS",
-        "GCP",
-        "Docker",
-        "Kubernetes",
-        "CI/CD",
-        "Git",
-        "Neovim",
-        "Arch Linux",
-        "Terraform",
-        "Postman"
-      ],
+      "tags": ["Zola", "Static Site Engineering", "TailwindCSS", "DaisyUI", "GitHub Pages"],
       "github_url": "https://github.com/kascit/kascit.github.io",
       "url": "/",
       "url_label": "Visit"
@@ -140,8 +111,8 @@
         "Interview-style problem progression"
       ],
       "lang": "Java",
-      "techs": ["Algorithms", "DSA", "Problem Solving"],
-      "tags": ["Java", "Algorithms", "DSA"],
+      "techs": ["Algorithms", "Data Structures", "Problem Solving"],
+      "tags": ["Java", "Algorithms", "Data Structures", "Problem Solving"],
       "github_url": "https://github.com/kascit/leetcode-solutions",
       "url": "https://leetcode.com/u/kascit/",
       "url_label": "Profile",
@@ -162,7 +133,7 @@
       ],
       "lang": "Java",
       "techs": ["Data Structures", "Algorithms", "Collections"],
-      "tags": ["Java", "DSA", "Algorithms", "Backend"],
+      "tags": ["Java", "Data Structures", "Algorithms", "Backend Engineering"],
       "github_url": "https://github.com/kascit/java-data-structures-and-algorithms"
     },
     {
@@ -180,8 +151,8 @@
       ],
       "lang": "Python",
       "status": "archived",
-      "techs": ["Selenium", "Automation", "Browser"],
-      "tags": ["Python", "Selenium", "Automation", "QA"],
+      "techs": ["Selenium", "Test Automation", "Browser Automation"],
+      "tags": ["Python", "Selenium", "Test Automation", "QA"],
       "github_url": "https://github.com/kascit/coursera-automata"
     },
     {
@@ -199,8 +170,8 @@
       ],
       "lang": "JavaScript",
       "status": "archived",
-      "techs": ["JavaScript", "Game Loop", "DOM"],
-      "tags": ["JavaScript", "Frontend", "Game Dev"],
+      "techs": ["JavaScript", "Game State Management", "DOM Interactions"],
+      "tags": ["JavaScript", "Frontend Engineering", "Game Development"],
       "github_url": "https://github.com/kascit/tic-tac-toe"
     },
     {
@@ -217,8 +188,8 @@
         "Automation-first developer workflow"
       ],
       "lang": "JavaScript",
-      "techs": ["AWS", "CLI", "Automation"],
-      "tags": ["JavaScript", "AWS", "CLI", "DevOps"],
+      "techs": ["AWS", "CLI Tools", "Automation"],
+      "tags": ["AWS", "CLI Tools", "Automation", "DevOps"],
       "github_url": "https://github.com/kascit/toAWS"
     },
     {
@@ -236,8 +207,8 @@
       ],
       "lang": "Coming Soon",
       "status": "wip",
-      "techs": ["Word Game", "Frontend", "WIP"],
-      "tags": ["JavaScript", "Frontend", "Game Dev", "WIP"],
+      "techs": ["Word Game Mechanics", "Frontend Prototyping", "Rapid Iteration"],
+      "tags": ["JavaScript", "Frontend Engineering", "Game Development", "Prototype"],
       "github_url": "https://github.com/kascit/wallowords"
     }
   ]

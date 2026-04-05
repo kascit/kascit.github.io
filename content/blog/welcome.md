@@ -4,7 +4,7 @@ date = 2025-12-28
 description = "First post vibes - what this blog is about and why I'm probably gonna abandon it in three months"
 
 [taxonomies]
-tags = ["personal", "meta"]
+tags = ["Site Updates", "Personal Notes"]
 categories = ["General"]
 +++
 

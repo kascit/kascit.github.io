@@ -1,14 +1,24 @@
 +++
 title = "About"
 description = "Hey there! I build things that are useful, curious, and occasionally a little dangerous."
-template = "section.html"
-sort_by = "date"
-transparent = true
+template = "page.html"
+
+[extra]
+hide_page_meta = true
+hide_page_taxonomies = true
+back_url = "/"
+back_title = "Home"
+back_subtitle = "Back to"
+next_url = "/projects/"
+next_title = "Projects"
+next_subtitle = "Next"
 
 [extra.comments]
 enabled = false
-+++
 
+[taxonomies]
+tags = ["Java", "Python", "Go", "C / C++", "JavaScript", "Lua", "SQL", "Bash", "Spring Boot", "Node.js", "PostgreSQL", "MongoDB", "Redis", "DynamoDB", "AWS", "GCP", "Docker", "Kubernetes", "CI/CD", "Terraform", "Neovim", "Linux", "Git", "Postman", "AI Systems", "Applied Cryptography", "Computer Graphics"]
++++
 <div class="prose max-w-none prose-base-content lg:prose-lg mb-12">
 
 I am a backend-leaning engineer with a soft spot for systems that behave under pressure and side projects that absolutely do not.
@@ -71,13 +81,13 @@ Most days look like APIs, infra, and architecture decisions. Nights are for AI e
 					{{ tag_chip(name="Go", label="Go language") }}
 					{{ tag_chip(name="C / C++") }}
 					{{ tag_chip(name="JavaScript") }}
-					{{ tag_chip(name="TypeScript") }}
+					{{ tag_chip(name="Lua") }}
 					{{ tag_chip(name="SQL") }}
 					{{ tag_chip(name="Bash") }}
 				</div>
 			</div>
 			<div>
-				<h3 class="about-skill-heading"><i class="fa-solid fa-cubes text-[11px]" aria-hidden="true"></i> Frameworks and DBs</h3>
+				<h3 class="about-skill-heading"><i class="fa-solid fa-cubes text-[11px]" aria-hidden="true"></i> Frameworks and Datastores</h3>
 				<div class="flex flex-wrap gap-2">
 					{{ tag_chip(name="Spring Boot") }}
 					{{ tag_chip(name="Node.js") }}
@@ -95,19 +105,18 @@ Most days look like APIs, infra, and architecture decisions. Nights are for AI e
 					{{ tag_chip(name="Docker") }}
 					{{ tag_chip(name="Kubernetes") }}
 					{{ tag_chip(name="CI/CD") }}
-					{{ tag_chip(name="Git") }}
+					{{ tag_chip(name="Terraform") }}
 				</div>
 			</div>
 			<div>
-				<h3 class="about-skill-heading"><i class="fa-solid fa-wrench text-[11px]" aria-hidden="true"></i> Tools</h3>
+				<h3 class="about-skill-heading"><i class="fa-solid fa-wrench text-[11px]" aria-hidden="true"></i> Tools and Domains</h3>
 				<div class="flex flex-wrap gap-2">
 					{{ tag_chip(name="Neovim") }}
-					{{ tag_chip(name="Arch Linux") }}
-					{{ tag_chip(name="Terraform") }}
+					{{ tag_chip(name="Linux") }}
+					{{ tag_chip(name="Git") }}
 					{{ tag_chip(name="Postman") }}
-					{{ tag_chip(name="AI") }}
-					{{ tag_chip(name="Cryptography") }}
-					{{ tag_chip(name="Web3") }}
+					{{ tag_chip(name="AI Systems") }}
+					{{ tag_chip(name="Applied Cryptography") }}
 					{{ tag_chip(name="Computer Graphics", label="Graphics") }}
 				</div>
 			</div>

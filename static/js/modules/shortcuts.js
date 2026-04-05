@@ -3,11 +3,50 @@
  */
 import { isMobile } from './responsive.js';
 
+let desktopOnlyVisibilityBound = false;
+let desktopOnlyResizeTimer = null;
+
 export function initShortcuts() {
+  applyDesktopOnlyVisibility();
   document.querySelectorAll("[data-shortcut]").forEach(renderShortcut);
+
+  if (!desktopOnlyVisibilityBound) {
+    desktopOnlyVisibilityBound = true;
+    window.addEventListener("resize", () => {
+      if (desktopOnlyResizeTimer) {
+        window.clearTimeout(desktopOnlyResizeTimer);
+      }
+      desktopOnlyResizeTimer = window.setTimeout(() => {
+        desktopOnlyResizeTimer = null;
+        applyDesktopOnlyVisibility();
+      }, 120);
+    });
+  }
+}
+
+function applyDesktopOnlyVisibility() {
+  const hideDesktopOnly = isMobile();
+  document.querySelectorAll('[data-desktop-only="true"]').forEach((el) => {
+    const hadStyle = el.hasAttribute("data-desktop-only-style");
+    if (!hadStyle) {
+      el.setAttribute("data-desktop-only-style", el.style.display || "");
+    }
+
+    if (hideDesktopOnly) {
+      el.style.display = "none";
+      el.setAttribute("aria-hidden", "true");
+      return;
+    }
+
+    const previousDisplay = el.getAttribute("data-desktop-only-style") || "";
+    el.style.display = previousDisplay;
+    el.removeAttribute("aria-hidden");
+  });
 }
 
 function renderShortcut(el) {
+  if (el.getAttribute("data-shortcut-ready") === "1") return;
+
   const spec = el.getAttribute("data-shortcut");
   if (!spec) return;
 
@@ -33,9 +72,19 @@ function renderShortcut(el) {
     return key.length === 1 ? key.toUpperCase() : key;
   });
 
-  el.innerHTML = parts.map(k => `<kbd class="kbd">${k}</kbd>`).join("");
+  el.textContent = "";
+  parts.forEach((part, index) => {
+    const kbd = document.createElement("kbd");
+    kbd.className = "kbd";
+    kbd.textContent = part;
+    el.appendChild(kbd);
+    if (index < parts.length - 1) {
+      el.appendChild(document.createTextNode(" "));
+    }
+  });
   el.classList.remove("hidden");
   el.style.display = "inline-flex";
   el.style.gap = "2px";
   el.classList.add("shortcut-hint-ready");
+  el.setAttribute("data-shortcut-ready", "1");
 }

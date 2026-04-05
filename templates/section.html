@@ -53,9 +53,7 @@
 </section>
 {% endif %}
 
-{% if section.path != "/blog/" %}
 {{ macros_content_footer::content_footer(config=config, item=section) }}
-{% endif %}
 {% endblock content %}
 
 {% block prev_link %}
@@ -66,8 +64,7 @@
     {{ macros_nav::render_button(url=index.permalink, title="Home", subtitle="Back to", direction="prev") }}
 {% elif section.path is starting_with("/projects/") %}
     {# Projects -> About #}
-    {% set prev_section = get_section(path="about/_index.md") %}
-    {{ macros_nav::render_button(url=prev_section.permalink, title=prev_section.title, subtitle="Previous", direction="prev") }}
+    {{ macros_nav::render_button(url="/about/", title="About", subtitle="Previous", direction="prev") }}
 {% elif section.path is starting_with("/links/") %}
     {# Links -> Projects #}
     {% set prev_section = get_section(path="projects/_index.md") %}

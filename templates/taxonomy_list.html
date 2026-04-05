@@ -72,9 +72,7 @@
   {% for term in terms %}
   {% set_global term_visible_count = 0 %}
   {% for page in term.pages %}
-    {% if not (page.permalink is containing("/about/skill-tags-seed/")) %}
-      {% set_global term_visible_count = term_visible_count + 1 %}
-    {% endif %}
+    {% set_global term_visible_count = term_visible_count + 1 %}
   {% endfor %}
   <article
     class="taxonomy-term-item"

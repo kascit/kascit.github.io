@@ -44,7 +44,7 @@
     {% set resolved_meta_title = "" %}
     {% set resolved_meta_description = "" %}
     {% set resolved_meta_type = "" %}
-    {% set site_title = config.title | default(value="Dhanur") %}
+    {% set site_title = config.title | default(value="dhanur.me") %}
 
     {% if term is defined and taxonomy is defined %}
         {% set resolved_meta_type = "website" %}
@@ -171,10 +171,13 @@
                         {# Toggle button anchor: Absolute so it takes zero flex space (no empty bar) #}
                         <div id="toc-toggle-anchor" class="hidden lg:block absolute h-full top-0 right-0 z-50 pointer-events-none">
                             <div class="sticky top-24 overflow-visible pointer-events-auto">
-                                <div class="tooltip tooltip-top" data-tip="{{ rail_hide_label }}">
-                                        <button id="toc-toggle" data-toc-toggle="true"
-                                            class="btn btn-ghost btn-circle btn-sm bg-base-200 border border-base-content/10 shadow-sm transition-all duration-200"
+                                <div>
+                                        <button id="toc-toggle" data-toc-toggle="true" data-keybind="d r" data-keybind-action="click"
+                                            class="btn btn-ghost btn-circle btn-sm bg-base-200 border border-base-content/10 shadow-sm transition-all duration-200 tooltip tooltip-top"
                                             aria-label="{{ rail_hide_label }}"
+                                            data-tooltip-label="{{ rail_hide_label }}"
+                                            data-tooltip-shortcut="d r"
+                                            data-tooltip-position="top"
                                             data-hide-label="{{ rail_hide_label }}"
                                             data-show-label="{{ rail_show_label }}">
                                         {% if has_toc %}
@@ -251,8 +254,8 @@
         </div>
         
         {% if not is_landing %}
-        <div id="sidebar-toggle-wrapper" data-sidebar-toggle-wrapper="true" class="tooltip tooltip-right hidden lg:flex fixed top-1/2 -translate-y-1/2 z-50" data-tip="Toggle sidebar">
-            <button id="sidebar-toggle" data-sidebar-toggle="true" class="btn btn-ghost btn-circle btn-sm bg-base-200 border border-base-content/10 shadow-sm transition-all duration-300 ease-out" aria-label="Toggle sidebar">
+        <div id="sidebar-toggle-wrapper" data-sidebar-toggle-wrapper="true" class="hidden lg:flex fixed top-1/2 -translate-y-1/2 z-50">
+            <button id="sidebar-toggle" data-sidebar-toggle="true" data-keybind="d s" data-keybind-action="click" class="btn btn-ghost btn-circle btn-sm bg-base-200 border border-base-content/10 shadow-sm transition-all duration-300 ease-out tooltip tooltip-right" aria-label="Toggle sidebar" data-tooltip-label="Toggle sidebar" data-tooltip-shortcut="d s" data-tooltip-position="right">
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sidebar-toggle-icon-collapsed hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                     <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
                 </svg>
@@ -268,33 +271,20 @@
 
     {% block js_body %}
         {% set js_theme_colorset = macros_head::get_theme_colorset(config=config) | trim %}
-        {% set needs_toc_script = not is_landing and (
-            resolved_current_path == "/archive/"
-            or taxonomy is defined
-            or (page is defined and page.toc | length > 0)
-            or (section is defined and section.toc | length > 0)
-        ) %}
-        {% if needs_toc_script %}
-        <script defer src="{{ get_url(path='js/toc.js') | safe }}"></script>
-        {% endif %}
         <script id="site-config" type="application/json">
         {
             "defaultColorset": "{{ js_theme_colorset }}",
             "katexCss": "{{ get_url(path='css/katex.min.css') | safe }}",
             "katexJs": "{{ get_url(path='js/katex.min.js') | safe }}",
             "mermaidJs": "{{ get_url(path='js/mermaid.min.js') | safe }}",
+            "fuseJs": "{{ get_url(path='fuse.min.js') | safe }}",
+            "searchIndexJs": "{{ get_url(path='search_index.' ~ lang ~ '.js') | safe }}",
             "swPath": "{{ get_url(path='sw.js') | safe }}",
             "gtagId": "{{ config.extra.gtag | default(value='') }}",
             "sentryScriptUrl": "https://js-de.sentry-cdn.com/76f095eb3818528a530b2347e1735e14.min.js"
         }
         </script>
         <script type="module" src="{{ get_url(path='js/main.js') | safe }}"></script>
-        {% if config.build_search_index %}
-        <script defer src="{{ get_url(path='js/search-loader.js') | safe }}"
-                data-lang="{{ lang | default(value='en') }}"
-                data-fuse="{{ get_url(path="fuse.min.js") | safe }}"
-                data-search-index="{{ get_url(path="search_index." ~ lang ~ ".js") | safe }}"></script>
-        {% endif %}
         
     {% endblock js_body %}
 </body>

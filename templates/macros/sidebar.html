@@ -24,7 +24,7 @@
         <div class="w-full flex items-center gap-2">
             <label for="search-modal" class="input w-full flex items-center justify-between text-left bg-base-100 cursor-pointer border-base-content/20 hover:border-base-content/40 hover:border-1 transition" aria-label="Search">
                 {{ macros_icons::svg_search() }}
-                <span class="text-base-content/75 shortcut-hint hidden" data-shortcut="primary+k" data-desktop-only="true"></span>
+                <span class="text-base-content/55 text-sm">Search</span>
             </label>
         </div>
     </div>
@@ -36,7 +36,11 @@
                 {% if nav_item.type == "url" and nav_item.url %}
                     {# Extract section path from URL (e.g., "/about/" -> "about/_index.md") #}
                     {% set section_key = nav_item.url | trim_start_matches(pat="/") | trim_end_matches(pat="/") %}
-                    {% if section_key != "" %}
+                    {% if section_key == "about" %}
+            <li>
+                <a {% if normalized_current_path is starting_with("/about/") %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %} href="{{ nav_item.url | safe }}">{{ nav_item.name | default(value="About") }}</a>
+            </li>
+                    {% elif section_key != "" %}
                         {% set section_path = section_key ~ "/_index.md" %}
                         {% set s1 = get_section(path=section_path) %}
                         {% if s1 %}
@@ -167,12 +171,14 @@
     <details class="lg:hidden border-t border-base-content/10" data-apps-grid-sidebar>
         <summary class="px-4 py-2 text-sm font-medium cursor-pointer hover:bg-base-200/50 transition-colors flex items-center justify-between">
             <span>Apps</span>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 apps-grid-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
             </svg>
         </summary>
-        <div class="px-4 py-3">
-            {{ macros_apps::apps_grid(context="mobile", config=config) }}
+        <div class="apps-grid-panel">
+            <div class="apps-grid-panel-inner px-4 py-3">
+                {{ macros_apps::apps_grid(context="mobile", config=config) }}
+            </div>
         </div>
     </details>
 

@@ -4,7 +4,7 @@ date = 2026-02-03
 description = "Why 'free' software often costs more than you think, and how to calculate the real price"
 
 [taxonomies]
-tags = ["saas", "business", "tools", "cost", "productivity"]
+tags = ["SaaS", "Product Strategy", "Pricing", "Cost Optimization", "Productivity Tools"]
 categories = ["Business"]
 +++
 

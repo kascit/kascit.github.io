@@ -17,7 +17,7 @@
 {% if current_path is defined and current_path != "" %}
     {% set status_path = current_path %}
 {% endif %}
-{% set site_title = config.title | default(value="Dhanur") %}
+{% set site_title = config.title | default(value="dhanur.me") %}
 {% set status_meta_title = status_title ~ " | " ~ site_title %}
 {% set status_url = config.base_url ~ status_path %}
 
@@ -73,18 +73,14 @@
         "katexCss": "{{ get_url(path='css/katex.min.css') | safe }}",
         "katexJs": "{{ get_url(path='js/katex.min.js') | safe }}",
         "mermaidJs": "{{ get_url(path='js/mermaid.min.js') | safe }}",
+        "fuseJs": "{{ get_url(path='fuse.min.js') | safe }}",
+        "searchIndexJs": "{{ get_url(path='search_index.' ~ config.default_language ~ '.js') | safe }}",
         "swPath": "{{ get_url(path='sw.js') | safe }}",
         "gtagId": "{{ config.extra.gtag | default(value='') }}",
         "sentryScriptUrl": "https://js-de.sentry-cdn.com/76f095eb3818528a530b2347e1735e14.min.js"
     }
     </script>
     <script type="module" src="{{ get_url(path='js/main.js') | safe }}"></script>
-    {% if config.build_search_index %}
-    <script defer src="{{ get_url(path='js/search-loader.js') | safe }}"
-            data-lang="{{ config.default_language }}"
-            data-fuse="{{ get_url(path='fuse.min.js') | safe }}"
-            data-search-index="{{ get_url(path='search_index.' ~ config.default_language ~ '.js') | safe }}"></script>
-    {% endif %}
     {% block status_scripts %}{% endblock status_scripts %}
 </body>
 </html>

@@ -4,7 +4,7 @@
 # Canonical base URL (no trailing slash).
 base_url = "https://dhanur.me"
 
-title = "Dhanur"
+title = "dhanur.me"
 description = "My cozy corner of the internet."
 author = "Dhanur"
 

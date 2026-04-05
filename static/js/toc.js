@@ -45,11 +45,11 @@
       const hideLabel = btn.getAttribute("data-hide-label") || "Hide table of contents";
       const label = collapsed ? showLabel : hideLabel;
       btn.setAttribute("aria-label", label);
+      btn.setAttribute("data-tooltip-label", label);
       btn.removeAttribute("title");
-      const tooltipWrap = btn.closest(".tooltip");
-      if (tooltipWrap) {
-        tooltipWrap.setAttribute("data-tip", label);
-      }
+      document.dispatchEvent(new CustomEvent("tooltips:update", {
+        detail: { element: btn },
+      }));
     }
   }
 

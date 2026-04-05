@@ -28,3 +28,4 @@ Non-negotiable rules for this repo.
 23. `static/widgets/latest-posts-data.json` is generated content; refresh with `just widget-data` and commit drift.
 24. Keep 404 rendering template-driven via `templates/404.html`; do not replace it with a content page at `content/404.md` because it can produce a conflicting `public/404.html/` directory output.
 25. Keep CI/deploy build orchestration centralized in `justfile` (`just ci-build`) instead of duplicating build logic across workflow YAML steps.
+26. Keep taxonomy simple: About tags are synced into `content/about.md` frontmatter from `tag_chip` entries, and Project tags live directly on generated `content/projects/*.md` pages from `data/projects.json`.

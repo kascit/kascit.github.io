@@ -11,6 +11,8 @@ const state = {
   listeners: new Set(),
 };
 
+let initialized = false;
+
 function updateResponsiveState() {
   const wasDesktop = state.isDesktop;
   state.isDesktop = state.mediaQueries.hoverCapable?.matches && state.mediaQueries.finePointer?.matches;
@@ -35,7 +37,10 @@ function notifyListeners() {
 }
 
 export function initResponsive() {
+  if (initialized) return;
   if (typeof window.matchMedia !== 'function') return;
+  initialized = true;
+
   state.mediaQueries.hoverCapable = window.matchMedia("(hover: hover)");
   state.mediaQueries.finePointer = window.matchMedia("(pointer: fine)");
   state.mediaQueries.largeScreen = window.matchMedia(`(min-width: ${BREAKPOINTS.LG}px)`);

@@ -3,15 +3,9 @@
 {# taxonomy_single: pages for one taxonomy term #}
 
 {% block content %}
-    {% set about_skill_data = load_data(path="data/about-skill-tags.json", format="json") %}
-    {% set term_name_lc = term.name | lower %}
-    {% set skill_terms = about_skill_data.skill_terms_lc | default(value=[]) %}
-    {% set is_skill_term = taxonomy.name == "tags" and (skill_terms is containing(term_name_lc)) %}
     {% set_global visible_page_count = 0 %}
     {% for page in term.pages %}
-        {% if not (page.permalink is containing("/about/skill-tags-seed/")) %}
-            {% set_global visible_page_count = visible_page_count + 1 %}
-        {% endif %}
+        {% set_global visible_page_count = visible_page_count + 1 %}
     {% endfor %}
 
     <div class="not-prose mb-12 pb-6 border-b border-base-content/10">
@@ -43,17 +37,11 @@
             </p>
         {% endif %}
 
-        {% if is_skill_term %}
-            <p class="text-sm text-base-content/75 mt-3 mb-0">
-                Skill context available on the <a href="/about/" class="font-medium">About page</a>.
-            </p>
-        {% endif %}
     </div>
 
     {% if visible_page_count > 0 %}
         <div class="not-prose grid grid-cols-1 xl:grid-cols-2 gap-6">
             {% for page in term.pages %}
-            {% if not (page.permalink is containing("/about/skill-tags-seed/")) %}
             <div
                 class="taxonomy-playlist-post"
                 data-taxonomy-playlist-post
@@ -72,7 +60,6 @@
                 </button>
                 {{ post_macro::render(post=page, default_thumb=config.extra.default_thumbnail | default(value="")) }}
             </div>
-            {% endif %}
             {% endfor %}
         </div>
     {% endif %}

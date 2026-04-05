@@ -1,9 +1,12 @@
 {% extends "index.html" %}
 {% import "macros/landing_sections.html" as landing_sections %}
+{% import "macros/nav.html" as macros_nav %}
 
 {% block extra_head %}{% endblock extra_head %}
 {% block prev_link %}{% endblock prev_link %}
-{% block next_link %}{% endblock next_link %}
+{% block next_link %}
+{{ macros_nav::render_button(url="/about/", title="About", subtitle="Next", direction="next") }}
+{% endblock next_link %}
 
 {% block content %}
 

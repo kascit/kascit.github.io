@@ -13,14 +13,23 @@ let _currentMode = "auto";
 let _mediaQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
 let _themeTransitionTimer = null;
 
+function normalizeThemeMode(value, fallback = "auto") {
+  const normalized = String(value || "").trim().toLowerCase();
+  if (MODE_CYCLE.includes(normalized)) return normalized;
+  if (normalized.includes("dark")) return "dark";
+  if (normalized.includes("light")) return "light";
+  return fallback;
+}
+
 function getCookie() {
-  if (window.__getThemeCookie) return window.__getThemeCookie();
-  return readCookie("theme") || null;
+  const raw = window.__getThemeCookie ? window.__getThemeCookie() : (readCookie("theme") || null);
+  return normalizeThemeMode(raw, "auto");
 }
 
 function setCookie(val) {
-  if (window.__setThemeCookie) { window.__setThemeCookie(val); return; }
-  writeCookie("theme", val, {
+  const normalized = normalizeThemeMode(val, "auto");
+  if (window.__setThemeCookie) { window.__setThemeCookie(normalized); return; }
+  writeCookie("theme", normalized, {
     maxAgeSeconds: 31536000,
     domain: COOKIE_DOMAIN || undefined,
     path: "/",
@@ -30,11 +39,12 @@ function setCookie(val) {
 }
 
 function resolveColorset(val) {
-  if (window.__resolveColorset) return window.__resolveColorset(val);
-  if (val === "auto") {
+  const mode = normalizeThemeMode(val, "auto");
+  if (window.__resolveColorset) return window.__resolveColorset(mode);
+  if (mode === "auto") {
     return (_mediaQuery && _mediaQuery.matches) ? "dark" : "light";
   }
-  return val;
+  return mode;
 }
 
 function applyTheme(resolvedTheme) {
@@ -107,9 +117,38 @@ function setMode(mode) {
   document.dispatchEvent(new CustomEvent("themeChanged", { detail: resolved }));
 }
 
+export function getThemeMode() {
+  return _currentMode;
+}
+
+export function getResolvedTheme() {
+  const mode = normalizeThemeMode(_currentMode, "auto");
+  return resolveColorset(mode);
+}
+
+export function setThemeMode(mode) {
+  const normalized = String(mode || "").trim().toLowerCase();
+  if (!MODE_CYCLE.includes(normalized)) {
+    throw new Error(`Unsupported theme mode: ${mode}`);
+  }
+
+  if (normalized !== _currentMode) {
+    setMode(normalized);
+  }
+
+  return _currentMode;
+}
+
+export function cycleThemeMode() {
+  const currentIndex = MODE_CYCLE.indexOf(_currentMode);
+  const safeIndex = currentIndex < 0 ? 0 : currentIndex;
+  const nextMode = MODE_CYCLE[(safeIndex + 1) % MODE_CYCLE.length];
+  setMode(nextMode);
+  return _currentMode;
+}
+
 export function initTheme(rootElement = document) {
-  _currentMode = getCookie() || "auto";
-  if (!MODE_CYCLE.includes(_currentMode)) _currentMode = "auto";
+  _currentMode = normalizeThemeMode(getCookie(), "auto");
 
   const resolved = resolveColorset(_currentMode);
   applyTheme(resolved);

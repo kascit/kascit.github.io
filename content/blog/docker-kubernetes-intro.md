@@ -4,7 +4,7 @@ date = 2025-12-30
 description = "Learning containers and orchestration without losing your sanity (probably impossible)"
 
 [taxonomies]
-tags = ["docker", "kubernetes", "devops", "containers", "tutorial"]
+tags = ["Docker", "Kubernetes", "DevOps", "Containers", "Cloud Infrastructure"]
 categories = ["DevOps"]
 +++
 

@@ -107,10 +107,10 @@ just doctor   # Health check
 
 ## Security
 
-- Content Security Policy (CSP) hardened
+- Content Security Policy (CSP) uses meta-tag hand-off fallback + strict nonce Worker policy
 - HSTS + X-Frame-Options enabled
-- No unsafe-inline scripts
 - All external resources allowlisted
+- Worker source for strict CSP injection: tools/cloudflare/csp-meta-handoff-worker.js
 
 ## PWA
 
@@ -133,6 +133,35 @@ External integration:
 ```
 
 The stable loader file stays constant while it imports the current hashed runtime bundle.
+
+## WebMCP Runtime
+
+WebMCP is available in the main site runtime:
+
+- Main site runtime (`/js/main.js`)
+
+Direct API:
+
+```js
+await window.WebMCP.call("theme.set", { mode: "dark" });
+const state = window.WebMCP.getState();
+const tools = window.WebMCP.listTools();
+```
+
+Spec-aligned imperative API exposure (for WebMCP inspectors):
+
+- `navigator.modelContext.registerTool(...)`
+- `navigator.modelContextTesting.listTools()`
+- `navigator.modelContextTesting.executeTool(...)`
+
+postMessage API protocol: `dhanur.webmcp.v1`
+
+- `webmcp.call` -> tool execution
+- `webmcp.list` -> list available tools
+- `webmcp.state` -> fetch app state snapshot
+
+High-level tool groups include navigation, theme, search, TOC/sidebar controls,
+content helpers, playlist navigation, and PWA status.
 
 ## License
 

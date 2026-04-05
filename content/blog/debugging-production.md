@@ -4,7 +4,7 @@ date = 2026-02-28
 description = "A systematic approach to finding and fixing bugs when you can't reproduce the issue locally"
 
 [taxonomies]
-tags = ["debugging", "production", "troubleshooting", "systematic", "methodology"]
+tags = ["Debugging", "Production Systems", "Incident Response", "Troubleshooting", "Reliability"]
 categories = ["Development"]
 +++
 

@@ -12,13 +12,29 @@
 (function () {
   "use strict";
   var el = document.currentScript;
-  if (!el) return;
-  var data = el.dataset || {};
+  var data = (el && el.dataset) || {};
   var fuseSrc = data.fuse || "";
   var indexSrc = data.searchIndex || "";
 
+  function readSiteConfig() {
+    var node = document.getElementById("site-config");
+    if (!node) return {};
+    try {
+      return JSON.parse(node.textContent || "{}");
+    } catch (_error) {
+      return {};
+    }
+  }
+
+  if (!fuseSrc || !indexSrc) {
+    var siteConfig = readSiteConfig();
+    fuseSrc = fuseSrc || siteConfig.fuseJs || "";
+    indexSrc = indexSrc || siteConfig.searchIndexJs || "";
+  }
+
   var searchLoaded = false;
   var searchReady = false;
+  var loadingPromise = null;
 
   function getSearchMount() {
     return document.querySelector("[data-search-mount]") || document.querySelector(".modal");
@@ -32,6 +48,40 @@
   function getSearchInput() {
     var mount = getSearchMount();
     return (mount && mount.querySelector("[data-search-input]")) || document.getElementById("search");
+  }
+
+  function getSearchOpenTriggers() {
+    return Array.prototype.slice.call(
+      document.querySelectorAll('[for="search-modal"], [data-search-open]')
+    );
+  }
+
+  function setSearchInputState(state) {
+    var searchInput = getSearchInput();
+    if (!searchInput) return;
+
+    if (state === "loading") {
+      searchInput.placeholder = "Loading search...";
+      searchInput.disabled = true;
+      return;
+    }
+
+    if (state === "error") {
+      searchInput.placeholder = "Search unavailable. Retry...";
+      searchInput.disabled = false;
+      return;
+    }
+
+    searchInput.placeholder = "Search posts...";
+    searchInput.disabled = false;
+  }
+
+  function isEditableTarget(target) {
+    if (!target) return false;
+    if (target.isContentEditable) return true;
+    var tag = target.tagName ? target.tagName.toLowerCase() : "";
+    if (tag === "input" || tag === "textarea" || tag === "select") return true;
+    return !!target.closest("input, textarea, select, [contenteditable=''], [contenteditable='true']");
   }
 
   // ── Debounce util ────────────────────────────────────────────────────
@@ -272,10 +322,11 @@
       var items = $searchResultsItems.querySelectorAll(".search-result-item");
       items.forEach(function (item, index) {
         var link = item.querySelector(".search-result-link");
+        if (!link) return;
         if (index === selectedIndex) {
-          link.classList.add("border");
+          link.classList.add("search-result-selected");
         } else {
-          link.classList.remove("border");
+          link.classList.remove("search-result-selected");
         }
       });
       if (selectedIndex >= 0 && items[selectedIndex]) {
@@ -283,7 +334,7 @@
       }
     }
 
-    $searchInput.addEventListener("keyup", debounce(function () {
+    $searchInput.addEventListener("input", debounce(function () {
       var term = $searchInput.value.trim();
       if (term === currentTerm || !fuse) return;
       $searchResultsItems.innerHTML = "";
@@ -326,7 +377,7 @@
 
     if (modalBackdrop) {
       modalBackdrop.addEventListener("click", function (e) {
-        if (e.target === modalBackdrop && searchModal.checked) {
+        if (searchModal && e.target === modalBackdrop && searchModal.checked) {
           searchModal.checked = false;
         }
       });
@@ -334,7 +385,10 @@
 
     $searchInput.addEventListener("keydown", function (e) {
       var items = $searchResultsItems.querySelectorAll(".search-result-item");
-      if (e.key === "Escape") { searchModal.checked = false; return; }
+      if (e.key === "Escape") {
+        if (searchModal) searchModal.checked = false;
+        return;
+      }
       if (items.length === 0) return;
       if (e.key === "ArrowDown") {
         e.preventDefault();
@@ -356,58 +410,156 @@
   function loadSearchLibraries(callback) {
     if (searchReady && typeof Fuse !== "undefined" && window.searchIndex) {
       if (callback) callback();
-      return;
+      return Promise.resolve();
     }
 
-    if (searchLoaded) return;
+    if (!fuseSrc || !indexSrc) {
+      return Promise.reject(new Error("Search script sources missing"));
+    }
+
+    if (loadingPromise) {
+      if (callback) {
+        loadingPromise.then(function () { callback(); });
+      }
+      return loadingPromise;
+    }
+
     searchLoaded = true;
+    setSearchInputState("loading");
 
-    var searchInput = getSearchInput();
-    if (searchInput) {
-      searchInput.placeholder = "Loading search...";
-      searchInput.disabled = true;
+    function appendScript(src) {
+      return new Promise(function (resolve, reject) {
+        var existing = document.querySelector('script[src="' + src + '"]');
+        if (existing) {
+          var alreadyReady =
+            (src === fuseSrc && typeof Fuse !== "undefined") ||
+            (src === indexSrc && !!window.searchIndex);
+
+          if (alreadyReady) {
+            existing.setAttribute("data-loaded", "1");
+            resolve();
+            return;
+          }
+
+          if (existing.getAttribute("data-loaded") === "1") {
+            resolve();
+            return;
+          }
+          existing.addEventListener("load", function onLoad() {
+            existing.removeEventListener("load", onLoad);
+            existing.setAttribute("data-loaded", "1");
+            resolve();
+          });
+          existing.addEventListener("error", function onError() {
+            existing.removeEventListener("error", onError);
+            reject(new Error("Failed to load script: " + src));
+          });
+          return;
+        }
+
+        var script = document.createElement("script");
+        script.src = src;
+        script.async = true;
+        script.onload = function () {
+          script.setAttribute("data-loaded", "1");
+          resolve();
+        };
+        script.onerror = function () {
+          reject(new Error("Failed to load script: " + src));
+        };
+        document.body.appendChild(script);
+      });
     }
 
-    var fuseScript = document.createElement("script");
-    fuseScript.src = fuseSrc;
-    fuseScript.onload = function () {
-      var searchIndexScript = document.createElement("script");
-      searchIndexScript.src = indexSrc;
-      searchIndexScript.onload = function () {
-        if (searchInput) {
-          searchInput.placeholder = "Search posts...";
-          searchInput.disabled = false;
-          searchInput.focus();
-        }
+    loadingPromise = appendScript(fuseSrc)
+      .then(function () {
+        return appendScript(indexSrc);
+      })
+      .then(function () {
+        setSearchInputState("ready");
         initSearch();
         if (callback) callback();
-      };
-      document.body.appendChild(searchIndexScript);
-    };
-    document.body.appendChild(fuseScript);
+
+        var searchInput = getSearchInput();
+        if (searchInput) searchInput.focus();
+      })
+      .catch(function (error) {
+        console.error("[Search] Failed to load search libraries:", error);
+        searchLoaded = false;
+        setSearchInputState("error");
+        throw error;
+      })
+      .finally(function () {
+        loadingPromise = null;
+      });
+
+    return loadingPromise;
   }
 
   // ── Event wiring ─────────────────────────────────────────────────────
-  document.addEventListener("DOMContentLoaded", function () {
+  function bindSearchEvents() {
+    if (!getSearchMount()) return;
+
     var searchModal = getSearchModal();
+    var searchTriggers = getSearchOpenTriggers();
 
     // Lazy-load on modal open
     if (searchModal) {
       searchModal.addEventListener("change", function () {
-        if (this.checked) loadSearchLibraries();
+        if (this.checked) {
+          loadSearchLibraries().catch(function () {
+            // Keep modal usable even if search libraries fail to load.
+          });
+        }
       });
     }
 
+    // Prefetch on likely intent before modal open.
+    searchTriggers.forEach(function (trigger) {
+      trigger.addEventListener("mouseenter", function () {
+        loadSearchLibraries().catch(function () {
+          // Ignore prefetch errors here; active open handles user-visible state.
+        });
+      }, { once: true });
+
+      trigger.addEventListener("focus", function () {
+        loadSearchLibraries().catch(function () {
+          // Ignore prefetch errors here; active open handles user-visible state.
+        });
+      }, { once: true });
+
+      trigger.addEventListener("touchstart", function () {
+        loadSearchLibraries().catch(function () {
+          // Ignore prefetch errors here; active open handles user-visible state.
+        });
+      }, { once: true, passive: true });
+    });
+
     // Ctrl+K / ⌘K — toggle modal AND lazy-load
     document.addEventListener("keydown", function (e) {
-      if ((e.ctrlKey || e.metaKey) && e.key === "k") {
-        e.preventDefault();
-        if (searchModal) {
-          searchModal.checked = !searchModal.checked;
-          searchModal.dispatchEvent(new Event("change"));
-        }
-        loadSearchLibraries();
+      if (!(e.ctrlKey || e.metaKey) || String(e.key || "").toLowerCase() !== "k") {
+        return;
       }
+
+      if (isEditableTarget(e.target)) {
+        return;
+      }
+
+      e.preventDefault();
+      if (searchModal) {
+        searchModal.checked = !searchModal.checked;
+        searchModal.dispatchEvent(new Event("change"));
+      }
+      loadSearchLibraries().catch(function () {
+        // Error state is surfaced in input placeholder; avoid noisy rejections.
+      });
     });
-  });
+
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", bindSearchEvents, { once: true });
+  } else {
+    bindSearchEvents();
+  }
 })();

@@ -5,12 +5,27 @@ import { isMobile } from './responsive.js';
 
 export function initScrollToTop() {
   if (!isMobile()) return;
+  if (document.body.getAttribute("data-scroll-top-init") === "1") return;
+  document.body.setAttribute("data-scroll-top-init", "1");
 
   const btn = document.createElement("button");
   btn.id = "scroll-to-top";
   btn.className = "btn btn-circle btn-primary btn-lg";
   btn.setAttribute("aria-label", "Scroll to top");
-  btn.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" /></svg>';
+
+  const svgNs = "http://www.w3.org/2000/svg";
+  const icon = document.createElementNS(svgNs, "svg");
+  icon.setAttribute("class", "h-6 w-6");
+  icon.setAttribute("fill", "none");
+  icon.setAttribute("viewBox", "0 0 24 24");
+  icon.setAttribute("stroke", "currentColor");
+  const path = document.createElementNS(svgNs, "path");
+  path.setAttribute("stroke-linecap", "round");
+  path.setAttribute("stroke-linejoin", "round");
+  path.setAttribute("stroke-width", "2");
+  path.setAttribute("d", "M5 10l7-7m0 0l7 7m-7-7v18");
+  icon.appendChild(path);
+  btn.appendChild(icon);
   
   btn.style.cssText = "position: fixed; bottom: 1rem; right: 1rem; z-index: 40; opacity: 0; pointer-events: none; transition: opacity 0.3s ease, transform 0.3s ease; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); transform: translateY(20px);";
   document.body.appendChild(btn);

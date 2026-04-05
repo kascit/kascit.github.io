@@ -3,11 +3,35 @@
  * Handles Auth client loading and UI state syncing.
  */
 
+function getAuthClient() {
+  if (!window.AUTH || typeof window.AUTH !== "object") return null;
+  return window.AUTH;
+}
+
+function once(fn) {
+  let called = false;
+  return (...args) => {
+    if (called) return;
+    called = true;
+    fn(...args);
+  };
+}
+
 // Auto-inject auth-client.js from auth.dhanur.me
 function injectAuthSDK(callback) {
-  if (window.AUTH) { callback(); return; }
-  if (document.querySelector('script[src*="auth-client.js"]')) {
-    document.addEventListener("authReady", () => callback(), { once: true });
+  const done = once(callback);
+  if (getAuthClient()) {
+    done();
+    return;
+  }
+
+  const existingScript = document.querySelector('script[src*="auth-client.js"]');
+  if (existingScript) {
+    document.addEventListener("authReady", done, { once: true });
+    existingScript.addEventListener("load", done, { once: true });
+    window.setTimeout(() => {
+      if (getAuthClient()) done();
+    }, 2000);
     return;
   }
 
@@ -15,10 +39,11 @@ function injectAuthSDK(callback) {
   script.src = "https://auth.dhanur.me/auth-client.js";
   script.defer = true;
   script.onload = () => {
-    if (window.AUTH && typeof AUTH.onReady === "function") {
-      AUTH.onReady(() => callback());
+    const auth = getAuthClient();
+    if (auth && typeof auth.onReady === "function") {
+      auth.onReady(() => done());
     } else {
-      callback();
+      done();
     }
   };
   script.onerror = () => console.warn("[Auth] Could not load auth-client.js");
@@ -67,8 +92,12 @@ function hideCreditsUI(drawer) {
 }
 
 export function initAuth(drawerElement = document) {
+  if (drawerElement.__authIntegrationBound) return;
+  drawerElement.__authIntegrationBound = true;
+
   injectAuthSDK(() => {
-    if (typeof AUTH === "undefined" || !window.AUTH) return;
+    const auth = getAuthClient();
+    if (!auth) return;
 
     const navbarRoot = drawerElement.querySelector(".navbar");
     const sidebarRoot = drawerElement.querySelector("[data-sidebar-root]") || drawerElement.querySelector("#sidebar");
@@ -188,27 +217,37 @@ export function initAuth(drawerElement = document) {
       }
     }
 
-    if (typeof AUTH.onReady === "function") {
-      AUTH.onReady((auth) => updateUI(auth.status || auth));
+    if (typeof auth.onReady === "function") {
+      auth.onReady((payload) => updateUI(payload?.status || payload || auth.status || null));
+    } else if (auth.status) {
+      updateUI(auth.status);
     }
     
     document.addEventListener("authChanged", e => updateUI(e.detail));
     document.addEventListener("creditsChanged", e => updateCreditsUI(drawerElement, e.detail));
 
     drawerElement.querySelectorAll('[data-auth="login-btn"], [data-auth="sidebar-login-btn"]').forEach(btn => {
-      btn.addEventListener("click", e => { e.preventDefault(); AUTH.login && AUTH.login(); });
+      btn.addEventListener("click", e => {
+        e.preventDefault();
+        if (typeof auth.login === "function") auth.login();
+      });
     });
 
     drawerElement.querySelectorAll('[data-auth="logout-btn"], [data-auth="sidebar-logout-btn"]').forEach(btn => {
       btn.addEventListener("click", e => {
         e.preventDefault();
-        if (AUTH.logout) {
-          AUTH.logout()
-            .then(() => window.location.reload())
-            .catch((error) => {
-              console.warn("[Auth] Logout failed:", error);
-              window.location.reload();
-            });
+        if (typeof auth.logout === "function") {
+          const result = auth.logout();
+          if (result && typeof result.then === "function") {
+            result
+              .then(() => window.location.reload())
+              .catch((error) => {
+                console.warn("[Auth] Logout failed:", error);
+                window.location.reload();
+              });
+          } else {
+            window.location.reload();
+          }
         }
       });
     });

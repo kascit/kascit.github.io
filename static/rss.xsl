@@ -135,7 +135,6 @@
             var originalHtml = btn.innerHTML;
 
             writeToClipboard(urlField.value).then(function() {
-              // Using hex escapes to prevent XSLT parsing errors
               btn.innerHTML = '\x3Ci class="fa-solid fa-check"\x3E\x3C/i\x3E Copied!';
               btn.classList.add("btn-success");
               btn.setAttribute("data-tip", "Copied!");
@@ -291,7 +290,7 @@
             </div>
           </div>
           
-          <footer class="mt-20 text-center text-sm text-base-content/55 pb-6">
+          <footer class="mt-24 pt-8 text-center text-sm text-base-content/55 pb-6">
             <a href="/" class="rss-return-link">
               <i class="fa-solid fa-arrow-left"></i> Return to site
             </a>

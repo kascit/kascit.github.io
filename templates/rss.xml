@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="/rss.xsl" type="text/xsl"?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
-  <script src="/js/xslt-polyfill.min.js" xmlns="http://www.w3.org/1999/xhtml"></script>
-  
   <channel>
       {% set channel_title = config.title %}
       {% set channel_description = config.description %}
@@ -66,9 +64,9 @@
             <author>{{ config.author }}</author>
             <link>{{ page.permalink | safe }}</link>
             <guid isPermaLink="true">{{ page.permalink | safe }}</guid>
-            
+
             <description><![CDATA[{% if page.summary %}{{ page.summary | striptags | safe }}{% elif page.description %}{{ page.description | striptags | safe }}{% else %}{{ page.content | striptags | truncate(length=200) | safe }}{% endif %}]]></description>
-            
+
             <content:encoded><![CDATA[{{ page.content | safe }}]]></content:encoded>
         </item>
       {% endfor %}

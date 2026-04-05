@@ -20,6 +20,7 @@ const HOME_SELECTORS = [
 ];
 const PREV_SELECTORS = [".prev-nav-item a", "a[rel='prev']", "a[data-prev]"];
 const NEXT_SELECTORS = [".next-nav-item a", "a[rel='next']", "a[data-next]"];
+const HOME_FALLBACK_PATHS = new Set(["/", "/index.html"]);
 
 let shortcutsBound = false;
 let shortcutEntries = [];
@@ -232,6 +233,17 @@ function executeSelectorClick(selectors) {
   return true;
 }
 
+function executeNextShortcut() {
+  if (executeSelectorClick(NEXT_SELECTORS)) return true;
+
+  if (HOME_FALLBACK_PATHS.has(window.location.pathname)) {
+    window.location.assign("/about/");
+    return true;
+  }
+
+  return false;
+}
+
 function isElementLikelySameTabInternalLink(element) {
   if (!element || !element.isConnected) return false;
   if (String(element.tagName || "").toLowerCase() !== "a") return false;
@@ -252,9 +264,9 @@ function isElementLikelySameTabInternalLink(element) {
 
 function buildBuiltinShortcutEntries() {
   const specs = [
-    { keybind: "d h", selectors: HOME_SELECTORS },
-    { keybind: "d arrowleft", selectors: PREV_SELECTORS },
-    { keybind: "d arrowright", selectors: NEXT_SELECTORS },
+    { keybind: "d h", execute: () => executeSelectorClick(HOME_SELECTORS) },
+    { keybind: "d arrowleft", execute: () => executeSelectorClick(PREV_SELECTORS) },
+    { keybind: "d arrowright", execute: executeNextShortcut },
   ];
 
   return specs
@@ -265,7 +277,7 @@ function buildBuiltinShortcutEntries() {
       return {
         descriptors: [descriptor],
         persistAnchorAcrossNavigation: true,
-        execute: () => executeSelectorClick(item.selectors),
+        execute: item.execute,
       };
     })
     .filter(Boolean);

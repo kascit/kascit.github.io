@@ -93,6 +93,10 @@ function hasAny(selectors) {
   return selectors.some((selector) => has(selector));
 }
 
+function isHomeRoute() {
+  return window.location.pathname === "/" || window.location.pathname === "/index.html";
+}
+
 function bootstrapSite() {
   runSafely(() => initResponsive(), "responsive");
 
@@ -142,7 +146,7 @@ function bootstrapSite() {
       runSafely(() => importAndInit("./modules/shortcuts.js", "initShortcuts"), "shortcuts");
     }
 
-    if (has("[data-keybind]")) {
+    if (has("[data-keybind]") || isHomeRoute()) {
       runSafely(() => importAndInit("./modules/keyboard-shortcuts.js", "initKeyboardShortcuts"), "keyboard shortcuts");
     }
 

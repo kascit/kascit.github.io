@@ -12,7 +12,7 @@
         <link rel="stylesheet" href="/css/font-awesome.min.css"/>
         <script src="/js/boot.js" data-default-colorset="auto"></script>
         
-        <style><![CDATA[
+        <style><xsl:text disable-output-escaping="yes"><![CDATA[
           .copy-btn:active { transform: scale(0.95); }
 
           .rss-header-link {
@@ -101,9 +101,9 @@
             pointer-events: auto;
             transform: translateY(0);
           }
-        ]]></style>
+        ]]></xsl:text></style>
         
-        <script><![CDATA[
+        <script><xsl:text disable-output-escaping="yes"><![CDATA[
           function writeToClipboard(text) {
             if (navigator.clipboard && navigator.clipboard.writeText) {
               return navigator.clipboard.writeText(text);
@@ -199,7 +199,7 @@
               });
             }
           });
-        ]]></script>
+        ]]></xsl:text></script>
       </head>
       
       <body class="bg-base-200 text-base-content min-w-0 font-sans antialiased selection:bg-primary selection:text-primary-content">
@@ -290,7 +290,7 @@
             </div>
           </div>
           
-          <footer class="mt-14 text-center text-sm text-base-content/55 pb-6">
+          <footer class="mt-20 text-center text-sm text-base-content/55 pb-6">
             <a href="/" class="rss-return-link">
               <i class="fa-solid fa-arrow-left"></i> Return to site
             </a>

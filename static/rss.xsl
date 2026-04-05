@@ -12,7 +12,7 @@
         <link rel="stylesheet" href="/css/font-awesome.min.css"/>
         <script src="/js/boot.js" data-default-colorset="auto"></script>
         
-        <style><xsl:text disable-output-escaping="yes"><![CDATA[
+        <style><![CDATA[
           .copy-btn:active { transform: scale(0.95); }
 
           .rss-header-link {
@@ -101,9 +101,9 @@
             pointer-events: auto;
             transform: translateY(0);
           }
-        ]]></xsl:text></style>
+        ]]></style>
         
-        <script><xsl:text disable-output-escaping="yes"><![CDATA[
+        <script><![CDATA[
           function writeToClipboard(text) {
             if (navigator.clipboard && navigator.clipboard.writeText) {
               return navigator.clipboard.writeText(text);
@@ -135,7 +135,8 @@
             var originalHtml = btn.innerHTML;
 
             writeToClipboard(urlField.value).then(function() {
-              btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+              // Using hex escapes to prevent XSLT parsing errors
+              btn.innerHTML = '\x3Ci class="fa-solid fa-check"\x3E\x3C/i\x3E Copied!';
               btn.classList.add("btn-success");
               btn.setAttribute("data-tip", "Copied!");
 
@@ -199,7 +200,7 @@
               });
             }
           });
-        ]]></xsl:text></script>
+        ]]></script>
       </head>
       
       <body class="bg-base-200 text-base-content min-w-0 font-sans antialiased selection:bg-primary selection:text-primary-content">

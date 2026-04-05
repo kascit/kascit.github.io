@@ -80,7 +80,7 @@ function initSidebarToggle() {
 
     const label = collapsed ? "Show sidebar" : "Hide sidebar";
     toggleBtn.setAttribute("aria-label", label);
-    toggleBtn.setAttribute("data-tooltip-label", label);
+    toggleBtn.setAttribute("data-tooltip-label", "Toggle sidebar");
     toggleBtn.removeAttribute("title");
     document.dispatchEvent(new CustomEvent("tooltips:update", {
       detail: { element: toggleBtn },

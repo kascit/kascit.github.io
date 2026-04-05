@@ -7,10 +7,6 @@ let globalListenersBound = false;
 function closeAllOpenDropdowns() {
   document.querySelectorAll("[data-dropdown][data-open]").forEach((dd) => {
     dd.removeAttribute("data-open");
-    const btn = dd.querySelector('[role="button"]');
-    if (btn && dd.getAttribute("data-dropdown-tooltip") === "1") {
-      btn.classList.add("tooltip");
-    }
   });
 }
 
@@ -36,10 +32,6 @@ function positionPanel(dd) {
 function openPanel(dd) {
   closeAllOpenDropdowns();
   dd.setAttribute("data-open", "");
-  const btn = dd.querySelector('[role="button"]');
-  if (btn && dd.getAttribute("data-dropdown-tooltip") === "1") {
-    btn.classList.remove("tooltip");
-  }
   positionPanel(dd);
 }
 

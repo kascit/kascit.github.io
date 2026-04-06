@@ -86,7 +86,7 @@ jobs:
           sudo apt-get install --no-install-recommends -y libxml2-utils
 
       - name: Install just
-        uses: taiki-e/install-action@1ed3272338f573e042a2e6bca3893aa19f43b47a # v2
+        uses: taiki-e/install-action@7a562dfa955aa2e4d5b0fd6ebd57ff9715c07b0b # v2
         with:
           tool: just
 
@@ -101,7 +101,7 @@ jobs:
           key: zola-${{ steps.versions.outputs.ZOLA_VERSION }}
 
       - name: Install Zola
-        uses: taiki-e/install-action@1ed3272338f573e042a2e6bca3893aa19f43b47a # v2
+        uses: taiki-e/install-action@7a562dfa955aa2e4d5b0fd6ebd57ff9715c07b0b # v2
         with:
           tool: zola@${{ steps.versions.outputs.ZOLA_VERSION }}
 
@@ -136,7 +136,7 @@ jobs:
         run: tar -czf site-deploy-${{ github.run_id }}.tar.gz public
 
       - name: Generate deploy attestation
-        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
+        uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32 # v4.1.0
         with:
           subject-path: site-deploy-${{ github.run_id }}.tar.gz
 

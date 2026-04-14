@@ -7,6 +7,7 @@ const path = require("path");
 
 const PUBLIC_DIR = path.resolve(process.argv[2] || "public");
 const SITE_ORIGIN = "https://dhanur.me";
+const ALLOW_NON_PUBLIC_TARGET = process.env.ALLOW_NON_PUBLIC_FINGERPRINT === "1";
 
 const HASHED_SEGMENT_RE = /\.[a-f0-9]{12}\.[^.]+$/i;
 const FINGERPRINTABLE_EXTENSIONS = new Set([
@@ -197,6 +198,15 @@ function writeAssetManifest(mappings, stableLoaders) {
 function main() {
   if (!fs.existsSync(PUBLIC_DIR)) {
     console.error(`ERROR: public directory not found: ${PUBLIC_DIR}`);
+    process.exit(1);
+  }
+
+  const targetDirName = path.basename(PUBLIC_DIR).toLowerCase();
+  if (!ALLOW_NON_PUBLIC_TARGET && targetDirName !== "public") {
+    console.error(
+      `ERROR: refusing to fingerprint non-public directory '${PUBLIC_DIR}'. ` +
+      "Use output dir named 'public' or set ALLOW_NON_PUBLIC_FINGERPRINT=1 to override."
+    );
     process.exit(1);
   }
 

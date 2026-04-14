@@ -6,7 +6,7 @@ const path = require("path");
 
 const ROOT = path.resolve(__dirname, "..");
 const DATA_FILE = path.join(ROOT, "data", "projects.json");
-const ALLOWED_GROUPS = new Set(["featured", "learning", "experiments"]);
+const ALLOWED_GROUPS = new Set(["featured", "personal", "learning", "experiments"]);
 const ALLOWED_STATUS = new Set(["", "live", "academic", "archived", "wip"]);
 
 function readJson(filePath) {
@@ -63,7 +63,7 @@ function validateProject(project, index, seenSlugs, errors) {
 
   const group = String(project.group || "").trim();
   if (group && !ALLOWED_GROUPS.has(group)) {
-    errors.push(`${id} invalid group '${group}'. Allowed: featured, learning, experiments`);
+    errors.push(`${id} invalid group '${group}'. Allowed: ${Array.from(ALLOWED_GROUPS).join(", ")}`);
   }
 
   const status = String(project.status || "").trim().toLowerCase();

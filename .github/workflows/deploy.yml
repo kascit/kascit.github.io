@@ -90,7 +90,12 @@ jobs:
     name: Deploy to GitHub Pages
     runs-on: ubuntu-latest
     needs: build
-    if: github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy == 'true')
+    if: >
+      github.event_name == 'push' &&
+      github.actor != 'dependabot[bot]' &&
+      !startsWith(github.event.head_commit.message, 'chore: bump tool versions') &&
+      !startsWith(github.event.head_commit.message, 'chore(deps):') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.deploy == 'true')
     timeout-minutes: 5
 
     environment:

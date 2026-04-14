@@ -110,7 +110,10 @@ jobs:
           if git show-ref --verify --quiet "refs/remotes/origin/$BRANCH"; then
             git worktree add -B "$BRANCH" .raw-mirror-branch "origin/$BRANCH"
           else
-            git worktree add --orphan "$BRANCH" .raw-mirror-branch
+            git worktree add -d .raw-mirror-branch
+            cd .raw-mirror-branch
+            git switch --orphan "$BRANCH"
+            cd ..
           fi
 
           find .raw-mirror-branch -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +

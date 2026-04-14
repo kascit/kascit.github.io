@@ -76,12 +76,12 @@ jobs:
         run: tar -czf site-deploy-${{ github.run_id }}.tar.gz public
 
       - name: Generate deploy attestation
-        uses: actions/attest-build-provenance@977bb373ede98d70efdf65b84cb5f73e068dcc2a # v3
+        uses: actions/attest-build-provenance@a2bbfa25375fe432b6a289bc6b6cd05ecd0c4c32 # v4.1.0
         with:
           subject-path: site-deploy-${{ github.run_id }}.tar.gz
 
       - name: Upload GitHub Pages artifact
-        uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: ./public
           retention-days: 7

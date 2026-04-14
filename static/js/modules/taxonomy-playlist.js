@@ -153,8 +153,16 @@ function setNavSlot(slotSelector, direction, href, subtitle, title, onClick) {
 	slot.textContent = "";
 
 	const anchor = document.createElement("a");
-	anchor.className = `nav-button nav-button-${safeDirection} group`;
+	anchor.className = `nav-button nav-button-${safeDirection} group tooltip tooltip-top`;
 	anchor.setAttribute("href", safeHref);
+
+	/* Enable keyboard shortcut + tooltip (matches server-rendered nav buttons) */
+	const shortcut = safeDirection === "prev" ? "d arrowleft" : "d arrowright";
+	anchor.setAttribute("data-keybind", shortcut);
+	anchor.setAttribute("data-keybind-action", "click");
+	anchor.setAttribute("data-tooltip-key-only", "1");
+	anchor.setAttribute("data-tooltip-shortcut", shortcut);
+	anchor.setAttribute("data-tooltip-position", "top");
 
 	const content = document.createElement("div");
 	content.className = "nav-button-content";
@@ -188,6 +196,9 @@ function setNavSlot(slotSelector, direction, href, subtitle, title, onClick) {
 	if (typeof onClick === "function") {
 		anchor.addEventListener("click", onClick);
 	}
+
+	/* Notify tooltip system about the new element */
+	document.dispatchEvent(new CustomEvent("tooltips:update", { detail: { element: anchor } }));
 }
 
 function tryOverrideBlogNav(playlist) {

@@ -1,16 +1,11 @@
 #!/usr/bin/env node
 "use strict";
 
-const path = require("path");
 const { spawnSync } = require("child_process");
+const { createPackageRunner, requireEnvVar, ROOT } = require("./lib/shared");
 
-const ROOT = path.resolve(__dirname, "..");
-
-const PNPM_VERSION = process.env.PNPM_VERSION || "10.8.0";
-const ESLINT_VERSION = process.env.ESLINT_VERSION || "9.38.0";
-const STYLELINT_VERSION = process.env.STYLELINT_VERSION || "16.10.0";
-
-let packageRunner = "pnpm";
+const ESLINT_VERSION = requireEnvVar("ESLINT_VERSION");
+const STYLELINT_VERSION = requireEnvVar("STYLELINT_VERSION");
 
 function log(level, message) {
   const result = spawnSync("node", ["scripts/just-log.js", level, message], {
@@ -30,7 +25,7 @@ function run(command, args, label) {
   const result = spawnSync(command, args, {
     cwd: ROOT,
     stdio: "inherit",
-    shell: true
+    shell: true,
   });
 
   if (typeof result.status !== "number" || result.status !== 0) {
@@ -39,54 +34,10 @@ function run(command, args, label) {
   }
 }
 
-function canRun(command, args) {
-  const result = spawnSync(command, args, {
-    cwd: ROOT,
-    stdio: "ignore",
-    shell: true
-  });
-
-  return result.status === 0;
-}
-
-function ensurePnpm() {
-  if (canRun("pnpm", ["--version"])) {
-    packageRunner = "pnpm";
-    return;
-  }
-
-  if (canRun("corepack", ["--version"])) {
-    run("corepack", ["enable"], "Enable Corepack");
-    run("corepack", ["prepare", `pnpm@${PNPM_VERSION}`, "--activate"], "Activate pnpm version");
-
-    if (canRun("pnpm", ["--version"])) {
-      packageRunner = "pnpm";
-      return;
-    }
-  }
-
-  if (!canRun("npx", ["--version"])) {
-    log("error", "Neither pnpm/corepack nor npx is available.");
-    process.exit(1);
-  }
-
-  packageRunner = "npx";
-  log("warn", "pnpm unavailable locally; falling back to npx.");
-}
-
-function runPackageCommand(pnpmArgs, npxArgs, label) {
-  if (packageRunner === "pnpm") {
-    run("pnpm", pnpmArgs, label);
-    return;
-  }
-
-  run("npx", npxArgs, label);
-}
-
 function main() {
-  ensurePnpm();
+  const { runPkg } = createPackageRunner();
 
-  runPackageCommand(
+  runPkg(
     [
       "dlx",
       `eslint@${ESLINT_VERSION}`,
@@ -99,7 +50,7 @@ function main() {
       "static/js/boot.js",
       "static/js/search-loader.js",
       "static/js/notify-banner.js",
-      "static/js/offline-reload.js"
+      "static/js/offline-reload.js",
     ],
     [
       "--yes",
@@ -113,25 +64,25 @@ function main() {
       "static/js/boot.js",
       "static/js/search-loader.js",
       "static/js/notify-banner.js",
-      "static/js/offline-reload.js"
+      "static/js/offline-reload.js",
     ],
     "Lint JavaScript"
   );
 
-  runPackageCommand(
+  runPkg(
     [
       "dlx",
       `stylelint@${STYLELINT_VERSION}`,
       "--config",
       ".stylelintrc.json",
-      "src/**/*.css"
+      "src/**/*.css",
     ],
     [
       "--yes",
       `stylelint@${STYLELINT_VERSION}`,
       "--config",
       ".stylelintrc.json",
-      "src/**/*.css"
+      "src/**/*.css",
     ],
     "Lint CSS"
   );

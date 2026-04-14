@@ -41,73 +41,10 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Load tool versions
-        id: versions
-        run: |
-          grep -vE '^(#|$)' versions.env >> "$GITHUB_ENV"
-          grep -vE '^(#|$)' versions.env | while IFS='=' read -r key value; do
-            echo "${key}=${value}" >> "$GITHUB_OUTPUT"
-          done
-
-      - name: Setup Node.js
-        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build-env
         with:
-          node-version: "20"
-
-      - name: Enable Corepack
-        run: corepack enable
-
-      - name: Activate pnpm
-        run: corepack prepare pnpm@${{ steps.versions.outputs.PNPM_VERSION }} --activate
-
-      - name: Cache npm downloads
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
-        with:
-          path: ~/.npm
-          key: npm-tools-${{ runner.os }}-${{ steps.versions.outputs.TERSER_VERSION }}-${{ steps.versions.outputs.ESBUILD_VERSION }}
-          restore-keys: |
-            npm-tools-${{ runner.os }}-
-
-      - name: Cache pnpm store
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
-        with:
-          path: ~/.pnpm-store
-          key: pnpm-tools-${{ runner.os }}-${{ steps.versions.outputs.PNPM_VERSION }}-${{ steps.versions.outputs.ESLINT_VERSION }}-${{ steps.versions.outputs.STYLELINT_VERSION }}
-          restore-keys: |
-            pnpm-tools-${{ runner.os }}-
-
-      - name: Install xmllint and ImageMagick
-        run: |
-          sudo apt-get update
-          sudo apt-get install --no-install-recommends -y libxml2-utils imagemagick
-
-      - name: Install just
-        uses: taiki-e/install-action@1ed3272338f573e042a2e6bca3893aa19f43b47a # v2
-        with:
-          tool: just
-
-      - name: Cache Zola binary
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
-        with:
-          path: ~/.cargo/bin/zola
-          key: zola-${{ steps.versions.outputs.ZOLA_VERSION }}
-
-      - name: Install Zola
-        uses: taiki-e/install-action@1ed3272338f573e042a2e6bca3893aa19f43b47a # v2
-        with:
-          tool: zola@${{ steps.versions.outputs.ZOLA_VERSION }}
-
-      - name: Verify Zola installation
-        run: zola --version
-
-      - name: Cache CSS build dependencies
-        uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
-        with:
-          path: |
-            tools/tailwindcss
-            src/vendor/daisyui.js
-            src/vendor/daisyui-theme.js
-          key: css-build-${{ steps.versions.outputs.TAILWIND_VERSION }}-${{ steps.versions.outputs.DAISYUI_VERSION }}
+          install-imagemagick: "true"
 
       - name: Build site via justfile
         run: just ci-build
@@ -127,11 +64,6 @@ jobs:
           else
             echo "- Asset manifest: missing" >> "$GITHUB_STEP_SUMMARY"
           fi
-
-      - name: Check Zola syntax
-        run: |
-          echo "Checking Zola templates..."
-          zola check
 
       - name: Upload build artifact
         uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0

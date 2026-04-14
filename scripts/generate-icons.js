@@ -3,7 +3,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const { spawnSync } = require("child_process");
+const { resolveImageMagickCommand, runMagick } = require("./lib/shared");
 
 const ROOT_DIR = path.resolve(__dirname, "..");
 const OUTPUT_ROOT_ARG = process.argv[2] || "public";
@@ -23,32 +23,6 @@ const SHORTCUT_MASKABLE_GLYPH_SCALE = Number.parseInt(process.env.SHORTCUT_MASKA
 
 const WHITE_BG = "#ffffff";
 const BLACK_BG = "#000000";
-
-function runCapture(command, args) {
-  return spawnSync(command, args, {
-    cwd: ROOT_DIR,
-    stdio: "pipe",
-    shell: false,
-    encoding: "utf8",
-  });
-}
-
-function resolveImageMagickCommand() {
-  const magick = runCapture("magick", ["-version"]);
-  if (magick.status === 0) return "magick";
-
-  const convert = runCapture("convert", ["-version"]);
-  if (convert.status === 0) return "convert";
-
-  return "";
-}
-
-function runMagick(command, args) {
-  const result = runCapture(command, args);
-  if (result.status !== 0) {
-    throw new Error((result.stderr || result.stdout || "ImageMagick command failed").trim());
-  }
-}
 
 function ensureExists(filePath, label) {
   if (!fs.existsSync(filePath)) {

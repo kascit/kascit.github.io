@@ -3,9 +3,8 @@
 
 const fs = require("fs");
 const path = require("path");
-const { spawnSync } = require("child_process");
+const { resolveImageMagickCommand, runCapture, collectFiles, prettyBytes, ROOT } = require("./lib/shared");
 
-const ROOT = path.resolve(__dirname, "..");
 const outputDirArg = process.argv[2] || "public";
 const outputDir = path.resolve(ROOT, outputDirArg);
 
@@ -40,53 +39,9 @@ const OPTIMIZERS = {
   },
 };
 
-function runCapture(command, args) {
-  return spawnSync(command, args, {
-    cwd: ROOT,
-    stdio: "pipe",
-    shell: false,
-    encoding: "utf8",
-  });
-}
-
-function resolveImageMagickCommand() {
-  const magick = runCapture("magick", ["-version"]);
-  if (magick.status === 0) {
-    return "magick";
-  }
-
-  const convert = runCapture("convert", ["-version"]);
-  if (convert.status === 0) {
-    return "convert";
-  }
-
-  return "";
-}
-
-function collectImageFiles(rootDir) {
-  const files = [];
-  const stack = [rootDir];
-
-  while (stack.length > 0) {
-    const current = stack.pop();
-    const entries = fs.readdirSync(current, { withFileTypes: true });
-
-    for (const entry of entries) {
-      const abs = path.join(current, entry.name);
-      if (entry.isDirectory()) {
-        stack.push(abs);
-        continue;
-      }
-      if (!entry.isFile()) continue;
-
-      const ext = path.extname(entry.name).toLowerCase();
-      if (Object.prototype.hasOwnProperty.call(OPTIMIZERS, ext)) {
-        files.push(abs);
-      }
-    }
-  }
-
-  return files;
+function isOptimizableImage(_abs, entry) {
+  const ext = path.extname(entry.name).toLowerCase();
+  return Object.prototype.hasOwnProperty.call(OPTIMIZERS, ext);
 }
 
 function optimizeFile(filePath, command) {
@@ -128,12 +83,6 @@ function optimizeFile(filePath, command) {
   return { status: "unchanged", savedBytes: 0 };
 }
 
-function prettyBytes(value) {
-  if (value < 1024) return `${value} B`;
-  if (value < 1024 * 1024) return `${(value / 1024).toFixed(1)} KB`;
-  return `${(value / (1024 * 1024)).toFixed(2)} MB`;
-}
-
 function main() {
   if (!fs.existsSync(outputDir) || !fs.statSync(outputDir).isDirectory()) {
     console.error(`ERROR: Output directory '${outputDirArg}' does not exist.`);
@@ -146,7 +95,7 @@ function main() {
     return;
   }
 
-  const files = collectImageFiles(outputDir);
+  const files = collectFiles(outputDir, isOptimizableImage);
   if (files.length === 0) {
     console.log(`No raster image files found under '${outputDirArg}'.`);
     return;

@@ -293,6 +293,22 @@ h6:hover .copy-heading-link-button {
   @apply bg-orange-500/14 border-orange-500/35 text-orange-500;
 }
 
+.rss-action-btn--feedly {
+  @apply text-emerald-500 bg-emerald-500/5 border-emerald-500/20;
+}
+
+.rss-action-btn--feedly:hover {
+  @apply bg-emerald-500/14 border-emerald-500/35 text-emerald-500;
+}
+
+.rss-action-btn--inoreader {
+  @apply text-blue-500 bg-blue-500/5 border-blue-500/20;
+}
+
+.rss-action-btn--inoreader:hover {
+  @apply bg-blue-500/14 border-blue-500/35 text-blue-500;
+}
+
 .tooltip:has(> .tooltip-content[data-smart-tooltip='1']) {
   --tt-off: calc(100% + 0.35rem);
 }

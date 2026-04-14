@@ -3,8 +3,8 @@
 
 const fs = require("fs");
 const path = require("path");
+const { tomlString, tomlArray, compactUnique, ROOT } = require("./lib/shared");
 
-const ROOT = path.resolve(__dirname, "..");
 const DATA_FILE = path.join(ROOT, "data", "projects.json");
 const PROJECTS_DIR = path.join(ROOT, "content", "projects");
 const LEGACY_OUT_DIR = path.join(PROJECTS_DIR, "generated");
@@ -40,31 +40,6 @@ function removePreviouslyGeneratedPages(dirPath) {
       fs.rmSync(filePath, { force: true });
     }
   }
-}
-
-function tomlString(value) {
-  return `"${String(value).replace(/\\/g, "\\\\").replace(/\"/g, '\\"')}"`;
-}
-
-function tomlArray(values) {
-  if (!Array.isArray(values) || values.length === 0) return "[]";
-  return `[${values.map((v) => tomlString(v)).join(", ")}]`;
-}
-
-function compactUnique(values) {
-  const out = [];
-  const seen = new Set();
-
-  for (const value of values || []) {
-    const trimmed = String(value || "").trim();
-    if (!trimmed) continue;
-    const key = trimmed.toLowerCase();
-    if (seen.has(key)) continue;
-    seen.add(key);
-    out.push(trimmed);
-  }
-
-  return out;
 }
 
 function renderPage(project) {

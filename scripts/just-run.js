@@ -28,7 +28,7 @@ const argv = process.argv.slice(2);
 const delimiterIndex = argv.indexOf("--");
 if (delimiterIndex <= 0) usageAndExit();
 
-const label = String(argv[0] || "step").trim() || "step";
+const label = argv.slice(0, delimiterIndex).join(" ").trim() || "step";
 const commandTokens = argv.slice(delimiterIndex + 1);
 if (commandTokens.length === 0) usageAndExit();
 

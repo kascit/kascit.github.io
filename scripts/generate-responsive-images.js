@@ -3,9 +3,8 @@
 
 const fs = require("fs");
 const path = require("path");
-const { spawnSync } = require("child_process");
+const { resolveImageMagickCommand, runMagick, collectFiles, toPosixRel, ROOT } = require("./lib/shared");
 
-const ROOT = path.resolve(__dirname, "..");
 const sourceDirArg = process.argv[2] || "static/images";
 const sourceDir = path.resolve(ROOT, sourceDirArg);
 const TARGET_WIDTHS = [640, 1200, 1920, 2560, 3840];
@@ -13,57 +12,11 @@ const TARGET_WIDTHS = [640, 1200, 1920, 2560, 3840];
 const SOURCE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp"]);
 const GENERATED_RE = /-(640|1200|1920|2560|3840|fallback)\.(webp|jpe?g)$/i;
 
-function runCapture(command, args) {
-  return spawnSync(command, args, {
-    cwd: ROOT,
-    stdio: "pipe",
-    shell: false,
-    encoding: "utf8",
-  });
-}
-
-function resolveImageMagickCommand() {
-  const magick = runCapture("magick", ["-version"]);
-  if (magick.status === 0) return "magick";
-
-  const convert = runCapture("convert", ["-version"]);
-  if (convert.status === 0) return "convert";
-
-  return "";
-}
-
-function runMagick(command, args) {
-  const result = runCapture(command, args);
-  if (result.status !== 0) {
-    throw new Error((result.stderr || result.stdout || "ImageMagick command failed").trim());
-  }
-}
-
-function collectSourceFiles(rootDir) {
-  const files = [];
-  const stack = [rootDir];
-
-  while (stack.length > 0) {
-    const current = stack.pop();
-    const entries = fs.readdirSync(current, { withFileTypes: true });
-
-    for (const entry of entries) {
-      const abs = path.join(current, entry.name);
-      if (entry.isDirectory()) {
-        stack.push(abs);
-        continue;
-      }
-      if (!entry.isFile()) continue;
-
-      const ext = path.extname(entry.name).toLowerCase();
-      if (!SOURCE_EXTENSIONS.has(ext)) continue;
-      if (GENERATED_RE.test(entry.name)) continue;
-
-      files.push(abs);
-    }
-  }
-
-  return files;
+function isSourceImage(abs, entry) {
+  const ext = path.extname(entry.name).toLowerCase();
+  if (!SOURCE_EXTENSIONS.has(ext)) return false;
+  if (GENERATED_RE.test(entry.name)) return false;
+  return true;
 }
 
 function writeWebpVariant(command, sourcePath, outPath, width) {
@@ -118,10 +71,6 @@ function optimizeResponsiveSet(command, sourcePath) {
   return { generated };
 }
 
-function toWorkspaceRelative(filePath) {
-  return path.relative(ROOT, filePath).split(path.sep).join("/");
-}
-
 function main() {
   if (!fs.existsSync(sourceDir) || !fs.statSync(sourceDir).isDirectory()) {
     console.error(`ERROR: Source directory '${sourceDirArg}' does not exist.`);
@@ -134,7 +83,7 @@ function main() {
     return;
   }
 
-  const sourceFiles = collectSourceFiles(sourceDir);
+  const sourceFiles = collectFiles(sourceDir, isSourceImage);
   if (sourceFiles.length === 0) {
     console.log(`No source images found under '${sourceDirArg}'.`);
     return;
@@ -151,7 +100,7 @@ function main() {
       generatedCount += result.generated.length;
     } catch (error) {
       failed += 1;
-      console.warn(`WARN: Failed to generate responsive assets for ${toWorkspaceRelative(sourceFile)}: ${error.message}`);
+      console.warn(`WARN: Failed to generate responsive assets for ${toPosixRel(sourceFile)}: ${error.message}`);
     }
   }
 

@@ -1,11 +1,23 @@
 # Add labels based on modified file paths
 frontend:
   - changed-files:
-    - any-glob-to-any-file: ['src/**/*.js', 'src/**/*.css', 'tailwind.config.js']
+    - any-glob-to-any-file: ['static/js/**', 'static/css/**', 'src/**/*.css', 'src/**/*.js']
 
-backend:
+content:
   - changed-files:
-    - any-glob-to-any-file: ['api/**/*', 'server/**/*']
+    - any-glob-to-any-file: ['content/**/*', 'data/**/*']
+
+templates:
+  - changed-files:
+    - any-glob-to-any-file: ['templates/**/*']
+
+scripts:
+  - changed-files:
+    - any-glob-to-any-file: ['scripts/**/*', 'justfile']
+
+ci:
+  - changed-files:
+    - any-glob-to-any-file: ['.github/**/*']
 
 documentation:
   - changed-files:
@@ -13,4 +25,4 @@ documentation:
 
 dependencies:
   - changed-files:
-    - any-glob-to-any-file: ['package.json', 'package-lock.json', 'versions.env']
+    - any-glob-to-any-file: ['versions.env']

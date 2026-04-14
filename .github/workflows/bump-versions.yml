@@ -115,6 +115,9 @@ jobs:
             "fa": latest_tag("FortAwesome/Font-Awesome").lstrip("v"),
             "terser": latest_npm_version("terser"),
             "esbuild": latest_npm_version("esbuild"),
+            "pnpm": latest_npm_version("pnpm"),
+            "eslint": latest_npm_version("eslint"),
+            "stylelint": latest_npm_version("stylelint"),
           }
 
           out_path = os.environ["GITHUB_OUTPUT"]
@@ -136,6 +139,9 @@ jobs:
           sed -i -E "s/^KATEX_VERSION=.*/KATEX_VERSION=${{ steps.latest.outputs.katex }}/" "$file"
           sed -i -E "s/^TERSER_VERSION=.*/TERSER_VERSION=${{ steps.latest.outputs.terser }}/" "$file"
           sed -i -E "s/^ESBUILD_VERSION=.*/ESBUILD_VERSION=${{ steps.latest.outputs.esbuild }}/" "$file"
+          sed -i -E "s/^PNPM_VERSION=.*/PNPM_VERSION=${{ steps.latest.outputs.pnpm }}/" "$file"
+          sed -i -E "s/^ESLINT_VERSION=.*/ESLINT_VERSION=${{ steps.latest.outputs.eslint }}/" "$file"
+          sed -i -E "s/^STYLELINT_VERSION=.*/STYLELINT_VERSION=${{ steps.latest.outputs.stylelint }}/" "$file"
 
           echo "Updated versions.env:" 
           cat "$file"
@@ -155,6 +161,9 @@ jobs:
             - KaTeX: ${{ steps.latest.outputs.katex }}
             - Terser: ${{ steps.latest.outputs.terser }}
             - esbuild: ${{ steps.latest.outputs.esbuild }}
+            - pnpm: ${{ steps.latest.outputs.pnpm }}
+            - ESLint: ${{ steps.latest.outputs.eslint }}
+            - Stylelint: ${{ steps.latest.outputs.stylelint }}
           branch: chore/bump-tool-versions
           delete-branch: true
           labels: |

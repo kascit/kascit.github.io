@@ -3,30 +3,12 @@
 
 const fs = require("fs");
 const path = require("path");
+const { tomlString, tomlArray, compactUnique, ROOT } = require("./lib/shared");
 
-const ROOT = path.resolve(__dirname, "..");
 const ABOUT_FILE = path.join(ROOT, "content", "about.md");
 
 function readText(filePath) {
   return fs.readFileSync(filePath, "utf8");
-}
-
-function uniquePreserveOrder(values) {
-  const out = [];
-  const seen = new Set();
-
-  for (const value of values) {
-    const trimmed = String(value || "").trim();
-    if (!trimmed) continue;
-
-    const key = trimmed.toLowerCase();
-    if (seen.has(key)) continue;
-
-    seen.add(key);
-    out.push(trimmed);
-  }
-
-  return out;
 }
 
 function extractAboutSkillTags(raw) {
@@ -38,16 +20,7 @@ function extractAboutSkillTags(raw) {
     tags.push(match[1]);
   }
 
-  return uniquePreserveOrder(tags);
-}
-
-function tomlString(value) {
-  return `"${String(value).replace(/\\/g, "\\\\").replace(/"/g, '\\"')}"`;
-}
-
-function tomlArray(values) {
-  if (!values.length) return "[]";
-  return `[${values.map((value) => tomlString(value)).join(", ")}]`;
+  return compactUnique(tags);
 }
 
 function parseFrontMatter(raw) {

@@ -48,7 +48,6 @@ help:
     echo ""
     echo -e "${yellow}quality gates${reset}"
     echo "  just quality      # strict JS/CSS/XML-XSL/Tera validation"
-    echo "  just check        # zola syntax + generated content verification"
     echo "  just ci-build     # full CI-equivalent pipeline"
     echo ""
     echo -e "${yellow}build and release${reset}"
@@ -76,7 +75,6 @@ help:
     @Write-Host ""
     @Write-Host "quality gates" -ForegroundColor Yellow
     @Write-Host "  just quality      # strict JS/CSS/XML-XSL/Tera validation"
-    @Write-Host "  just check        # zola syntax + generated content verification"
     @Write-Host "  just ci-build     # full CI-equivalent pipeline"
     @Write-Host ""
     @Write-Host "build and release" -ForegroundColor Yellow
@@ -311,6 +309,25 @@ optimize-static:
     @node scripts/just-log.js info "Optimizing static image assets"
     @node scripts/just-run.js "optimize static assets" -- node scripts/optimize-static-assets.js public
 
+# Post-build pipeline: shared steps after zola build (used by build and ci-build).
+# All steps operate on public/ and are cross-platform (Node.js).
+[private]
+_post-build:
+    @node scripts/just-log.js info "Cleaning Zola pagination redirect stubs"
+    @node scripts/just-run.js "clean pagination redirects" -- node scripts/clean-pagination-redirects.js
+    @node scripts/just-log.js info "Generating responsive public image variants"
+    @node scripts/just-run.js "generate responsive images" -- node scripts/generate-responsive-images.js public/images
+    @node scripts/just-log.js info "Generating public icon assets"
+    @node scripts/just-run.js "generate icons" -- node scripts/generate-icons.js public public/icons/favicon.svg
+    @node scripts/just-log.js info "Injecting responsive image markup"
+    @node scripts/just-run.js "inject responsive image markup" -- node scripts/inject-responsive-image-markup.js public
+    @node scripts/just-log.js info "Optimizing static image assets"
+    @node scripts/just-run.js "optimize static assets" -- node scripts/optimize-static-assets.js public
+    @node scripts/just-log.js info "Optimizing JavaScript"
+    @node scripts/just-run.js "minify javascript" -- node scripts/minify-js.js public
+    @node scripts/just-log.js info "Fingerprinting static assets"
+    @node scripts/just-run.js "fingerprint assets" -- node scripts/fingerprint-assets.js public
+
 [unix]
 [doc("Remove all build artifacts")]
 [group('build')]
@@ -344,7 +361,7 @@ clean-public:
     @if (Test-Path "public") { Write-Host "ERROR: failed to remove public directory"; exit 1 }
 
 [unix]
-[doc("Full production build (clean + generated content + css + zola)")]
+[doc("Full production build (clean + generated content + css + zola + post-build)")]
 [group('build')]
 build: clean project-pages about-skill-tags widget-data css
         #!/usr/bin/env bash
@@ -357,38 +374,16 @@ build: clean project-pages about-skill-tags widget-data css
             node scripts/just-log.js info "Building site"
             node scripts/just-run.js "zola build" -- zola build
         fi
-        node scripts/just-log.js info "Cleaning Zola pagination redirect stubs"
-        node scripts/just-run.js "clean pagination redirects" -- node scripts/clean-pagination-redirects.js
-        node scripts/just-log.js info "Generating responsive public image variants"
-        node scripts/just-run.js "generate responsive images" -- node scripts/generate-responsive-images.js public/images
-        node scripts/just-log.js info "Generating public icon assets"
-        node scripts/just-run.js "generate icons" -- node scripts/generate-icons.js public public/icons/favicon.svg
-        node scripts/just-log.js info "Injecting responsive image markup"
-        node scripts/just-run.js "inject responsive image markup" -- node scripts/inject-responsive-image-markup.js public
-        node scripts/just-log.js info "Optimizing static image assets"
-        node scripts/just-run.js "optimize static assets" -- node scripts/optimize-static-assets.js public
-        node scripts/just-log.js info "Fingerprinting static assets"
-        node scripts/just-run.js "fingerprint assets" -- node scripts/fingerprint-assets.js public
+        just _post-build
         node scripts/just-log.js ok "Production build complete"
 
 [windows]
-[doc("Full production build (clean + generated content + css + zola)")]
+[doc("Full production build (clean + generated content + css + zola + post-build)")]
 [group('build')]
 build: clean project-pages about-skill-tags widget-data css
     @node scripts/just-log.js step "Production build"
     @if ($env:ZOLA_BASE_URL) { node scripts/just-run.js "zola build" -- zola build --base-url "$env:ZOLA_BASE_URL" } else { node scripts/just-run.js "zola build" -- zola build }
-    @node scripts/just-log.js info "Cleaning Zola pagination redirect stubs"
-    @node scripts/just-run.js "clean pagination redirects" -- node scripts/clean-pagination-redirects.js
-    @node scripts/just-log.js info "Generating responsive public image variants"
-    @node scripts/just-run.js "generate responsive images" -- node scripts/generate-responsive-images.js public/images
-    @node scripts/just-log.js info "Generating public icon assets"
-    @node scripts/just-run.js "generate icons" -- node scripts/generate-icons.js public public/icons/favicon.svg
-    @node scripts/just-log.js info "Injecting responsive image markup"
-    @node scripts/just-run.js "inject responsive image markup" -- node scripts/inject-responsive-image-markup.js public
-    @node scripts/just-log.js info "Optimizing static image assets"
-    @node scripts/just-run.js "optimize static assets" -- node scripts/optimize-static-assets.js public
-    @node scripts/just-log.js info "Fingerprinting static assets"
-    @node scripts/just-run.js "fingerprint assets" -- node scripts/fingerprint-assets.js public
+    @just _post-build
     @node scripts/just-log.js ok "Production build complete"
 
 [doc("Generate project detail pages from centralized data/projects.json")]
@@ -484,20 +479,7 @@ ci-build: _assert-zola-version verify-generated-clean
       node scripts/just-log.js info "Building site"
       node scripts/just-run.js "zola build" -- zola build
     fi
-    node scripts/just-log.js info "Cleaning Zola pagination redirect stubs"
-    node scripts/just-run.js "clean pagination redirects" -- node scripts/clean-pagination-redirects.js
-    node scripts/just-log.js info "Generating responsive public image variants"
-    node scripts/just-run.js "generate responsive images" -- node scripts/generate-responsive-images.js public/images
-    node scripts/just-log.js info "Generating public icon assets"
-    node scripts/just-run.js "generate icons" -- node scripts/generate-icons.js public public/icons/favicon.svg
-    node scripts/just-log.js info "Injecting responsive image markup"
-    node scripts/just-run.js "inject responsive image markup" -- node scripts/inject-responsive-image-markup.js public
-    node scripts/just-log.js info "Optimizing static image assets"
-    node scripts/just-run.js "optimize static assets" -- node scripts/optimize-static-assets.js public
-    node scripts/just-log.js info "Optimizing JavaScript"
-    node scripts/just-run.js "minify javascript" -- node scripts/minify-js.js public
-    node scripts/just-log.js info "Fingerprinting static assets"
-    node scripts/just-run.js "fingerprint assets" -- node scripts/fingerprint-assets.js public
+    just _post-build
     node scripts/just-log.js info "Validating public output"
     node scripts/just-run.js "validate public output" -- just validate-public
     node scripts/just-log.js ok "CI build pipeline complete"
@@ -515,20 +497,7 @@ ci-build: _assert-zola-version verify-generated-clean
     @node scripts/just-run.js "quality checks" -- node scripts/run-quality-checks.js
     @node scripts/just-log.js info "Building site"
     @if ($env:ZOLA_BASE_URL) { node scripts/just-run.js "zola build" -- zola build --base-url "$env:ZOLA_BASE_URL" } else { node scripts/just-run.js "zola build" -- zola build }
-    @node scripts/just-log.js info "Cleaning Zola pagination redirect stubs"
-    @node scripts/just-run.js "clean pagination redirects" -- node scripts/clean-pagination-redirects.js
-    @node scripts/just-log.js info "Generating responsive public image variants"
-    @node scripts/just-run.js "generate responsive images" -- node scripts/generate-responsive-images.js public/images
-    @node scripts/just-log.js info "Generating public icon assets"
-    @node scripts/just-run.js "generate icons" -- node scripts/generate-icons.js public public/icons/favicon.svg
-    @node scripts/just-log.js info "Injecting responsive image markup"
-    @node scripts/just-run.js "inject responsive image markup" -- node scripts/inject-responsive-image-markup.js public
-    @node scripts/just-log.js info "Optimizing static image assets"
-    @node scripts/just-run.js "optimize static assets" -- node scripts/optimize-static-assets.js public
-    @node scripts/just-log.js info "Optimizing JavaScript"
-    @node scripts/just-run.js "minify javascript" -- node scripts/minify-js.js public
-    @node scripts/just-log.js info "Fingerprinting static assets"
-    @node scripts/just-run.js "fingerprint assets" -- node scripts/fingerprint-assets.js public
+    @just _post-build
     @node scripts/just-log.js info "Validating public output"
     @node scripts/just-run.js "validate public output" -- just validate-public
     @node scripts/just-log.js ok "CI build pipeline complete"
@@ -538,19 +507,7 @@ ci-build: _assert-zola-version verify-generated-clean
 quality: _assert-zola-version verify-generated-clean
     @node scripts/just-log.js info "Running integrated quality checks"
     @node scripts/just-run.js "quality checks" -- node scripts/run-quality-checks.js
-    @node scripts/just-log.js ok "Integrated quality checks passed"
-
-[unix]
-[doc("Quick local quality checks (delegates to integrated quality recipe)")]
-[group('ci')]
-check: quality
-    @node scripts/just-log.js ok "Checks passed"
-
-[windows]
-[doc("Quick local quality checks (delegates to integrated quality recipe)")]
-[group('ci')]
-check: quality
-    @node scripts/just-log.js ok "Checks passed"
+    @node scripts/just-log.js ok "All quality checks passed"
 
 # ---------------------------------------------------------------------------
 # Info

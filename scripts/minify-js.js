@@ -3,88 +3,19 @@
 
 const fs = require("fs");
 const path = require("path");
-const { spawnSync } = require("child_process");
+const { createPackageRunner, requireEnvVar, collectFiles, ROOT } = require("./lib/shared");
 
-const ROOT = path.resolve(__dirname, "..");
 const outputDirArg = process.argv[2] || "public";
 const outputDir = path.resolve(ROOT, outputDirArg);
-const terserVersion = process.env.TERSER_VERSION || "5.31.6";
-const esbuildVersion = process.env.ESBUILD_VERSION || "0.24.2";
-const pnpmVersion = process.env.PNPM_VERSION || "10.8.0";
-
-let packageRunner = "pnpm";
-
-function run(command, args, label) {
-  if (label) console.log(label);
-  const result = spawnSync(command, args, {
-    cwd: ROOT,
-    stdio: "inherit",
-    shell: true,
-  });
-  if (typeof result.status !== "number" || result.status !== 0) {
-    process.exit(typeof result.status === "number" ? result.status : 1);
-  }
-}
-
-function canRun(command, args) {
-  const result = spawnSync(command, args, {
-    cwd: ROOT,
-    stdio: "ignore",
-    shell: true,
-  });
-  return result.status === 0;
-}
-
-function ensurePackageRunner() {
-  if (canRun("pnpm", ["--version"])) {
-    packageRunner = "pnpm";
-    return;
-  }
-
-  if (canRun("corepack", ["--version"])) {
-    run("corepack", ["enable"]);
-    run("corepack", ["prepare", `pnpm@${pnpmVersion}`, "--activate"]);
-    if (canRun("pnpm", ["--version"])) {
-      packageRunner = "pnpm";
-      return;
-    }
-  }
-
-  if (!canRun("npx", ["--version"])) {
-    console.error("ERROR: neither pnpm/corepack nor npx is available for JS minification.");
-    process.exit(1);
-  }
-
-  packageRunner = "npx";
-}
-
-function runPackageCommand(pnpmArgs, npxArgs) {
-  if (packageRunner === "pnpm") {
-    run("pnpm", pnpmArgs);
-    return;
-  }
-  run("npx", npxArgs);
-}
+const terserVersion = requireEnvVar("TERSER_VERSION");
+const esbuildVersion = requireEnvVar("ESBUILD_VERSION");
 
 function listJsFiles(dir) {
-  const out = [];
-  const stack = [dir];
-  while (stack.length > 0) {
-    const current = stack.pop();
-    const entries = fs.readdirSync(current, { withFileTypes: true });
-    for (const entry of entries) {
-      const full = path.join(current, entry.name);
-      if (entry.isDirectory()) {
-        stack.push(full);
-        continue;
-      }
-      if (!entry.isFile()) continue;
-      if (!entry.name.endsWith(".js")) continue;
-      if (entry.name.endsWith(".min.js")) continue;
-      out.push(full);
-    }
-  }
-  return out;
+  return collectFiles(dir, (_abs, entry) => {
+    if (!entry.name.endsWith(".js")) return false;
+    if (entry.name.endsWith(".min.js")) return false;
+    return true;
+  });
 }
 
 function main() {
@@ -99,14 +30,14 @@ function main() {
     return;
   }
 
-  ensurePackageRunner();
+  const { runPkg } = createPackageRunner();
 
   console.log(`Optimizing JavaScript in '${outputDirArg}'...`);
 
   const mainEntry = path.join(jsDir, "main.js");
   if (fs.existsSync(mainEntry)) {
     console.log(`Bundling ${outputDirArg}/js/main.js with esbuild@${esbuildVersion}...`);
-    runPackageCommand(
+    runPkg(
       [
         "dlx",
         `esbuild@${esbuildVersion}`,
@@ -173,13 +104,13 @@ function main() {
       npxArgs.splice(5, 0, "--module");
     }
 
-    runPackageCommand(pnpmArgs, npxArgs);
+    runPkg(pnpmArgs, npxArgs);
     minifiedCount += 1;
   }
 
   const swFile = path.join(outputDir, "sw.js");
   if (fs.existsSync(swFile) && fs.statSync(swFile).isFile()) {
-    runPackageCommand(
+    runPkg(
       [
         "dlx",
         `terser@${terserVersion}`,

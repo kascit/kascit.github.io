@@ -13,13 +13,29 @@ function renderConsentPlaceholder(mount) {
   const shell = document.createElement("div");
   shell.className = "comments-consent-block";
   shell.setAttribute("data-comments-consent", "true");
-  shell.innerHTML = `
-    <p class="comments-consent-block__text">Comments are disabled until optional cookies are enabled.</p>
-    <div class="comments-consent-block__actions">
-      <button type="button" class="cookie-consent-btn cookie-consent-btn--primary" data-cookie-consent-action="all">Allow All Cookies</button>
-      <a class="cookie-consent-btn cookie-consent-btn--quiet" href="/privacy/">Privacy settings</a>
-    </div>
-  `;
+
+  const text = document.createElement("p");
+  text.className = "comments-consent-block__text";
+  text.textContent = "Comments are disabled until optional cookies are enabled.";
+
+  const actions = document.createElement("div");
+  actions.className = "comments-consent-block__actions";
+
+  const allowBtn = document.createElement("button");
+  allowBtn.type = "button";
+  allowBtn.className = "cookie-consent-btn cookie-consent-btn--primary";
+  allowBtn.setAttribute("data-cookie-consent-action", "all");
+  allowBtn.textContent = "Allow All Cookies";
+
+  const privacyLink = document.createElement("a");
+  privacyLink.className = "cookie-consent-btn cookie-consent-btn--quiet";
+  privacyLink.href = "/privacy/";
+  privacyLink.textContent = "Privacy settings";
+
+  actions.appendChild(allowBtn);
+  actions.appendChild(privacyLink);
+  shell.appendChild(text);
+  shell.appendChild(actions);
   mount.appendChild(shell);
 }
 

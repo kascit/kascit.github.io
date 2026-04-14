@@ -24,7 +24,16 @@ export function initBlogFeed() {
 
   function doneState() {
     sentinel.classList.add("is-done");
-    sentinel.innerHTML = '<span>All caught up. <a href="/archive/" class="font-medium underline">Browse the archive</a>.</span>';
+    sentinel.textContent = "";
+    const span = document.createElement("span");
+    span.appendChild(document.createTextNode("All caught up. "));
+    const archiveLink = document.createElement("a");
+    archiveLink.href = "/archive/";
+    archiveLink.className = "font-medium underline";
+    archiveLink.textContent = "Browse the archive";
+    span.appendChild(archiveLink);
+    span.appendChild(document.createTextNode("."));
+    sentinel.appendChild(span);
   }
 
   function nearBottom() {

@@ -182,9 +182,10 @@ export function initTaxonomySubscribe() {
     if (!toggle) return;
 
     toggle.setAttribute("aria-pressed", isSelected ? "true" : "false");
-    toggle.innerHTML = isSelected
-      ? '<i class="fa-solid fa-check"></i>'
-      : '<i class="fa-solid fa-plus"></i>';
+    toggle.textContent = "";
+    const icon = document.createElement("i");
+    icon.className = isSelected ? "fa-solid fa-check" : "fa-solid fa-plus";
+    toggle.appendChild(icon);
   }
 
   function taxonomyIconClass(taxonomy) {
@@ -195,7 +196,7 @@ export function initTaxonomySubscribe() {
   }
 
   function renderSelected() {
-    selectedWrap.innerHTML = "";
+    selectedWrap.textContent = "";
 
     const values = Array.from(selected.values());
     const count = values.length;
@@ -217,7 +218,9 @@ export function initTaxonomySubscribe() {
       removeBtn.className = "taxonomy-subscribe-chip-remove";
       removeBtn.setAttribute("aria-label", `Remove ${term.name}`);
       removeBtn.setAttribute("data-remove-feed", term.feed);
-      removeBtn.innerHTML = '<i class="fa-solid fa-xmark"></i>';
+      const removeIcon = document.createElement("i");
+      removeIcon.className = "fa-solid fa-xmark";
+      removeBtn.appendChild(removeIcon);
 
       chip.appendChild(icon);
       chip.appendChild(text);

@@ -169,6 +169,8 @@ DDDDDDDDDDb·······················PDDDDDDDDDDDDDDDPP··�
       runSafely(() => importAndInit("./modules/keyboard-shortcuts.js", "initKeyboardShortcuts"), "keyboard shortcuts");
     }
 
+    runSafely(() => importAndInit("./modules/access-keys.js", "initAccessKeys"), "access keys");
+
     runSafely(() => importAndInit("./modules/scroll-top.js", "initScrollToTop"), "scroll top");
 
     if (hasAny([".katex-inline", ".katex-block", ".mermaid"])) {

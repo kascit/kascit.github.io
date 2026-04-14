@@ -49,9 +49,10 @@ function setButtonIcon(button, iconClass) {
 }
 
 function makeSvgFromMarkup(markup) {
-	const wrapper = document.createElement("span");
-	wrapper.innerHTML = markup;
-	return wrapper.firstElementChild;
+	const doc = new DOMParser().parseFromString(markup, "image/svg+xml");
+	const svg = doc.documentElement;
+	if (!svg || svg.nodeName === "parsererror") return null;
+	return document.importNode(svg, true);
 }
 
 function toBase64Url(value) {

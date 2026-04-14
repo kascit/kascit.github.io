@@ -1954,3 +1954,114 @@ html.light :not(.mockup-code) > pre code .z-markup.z-raw.z-inline {
 .privacy-consent-panel__actions {
   @apply mt-3 flex flex-wrap items-center gap-2;
 }
+
+/* ─── Access-Key Hint Badges ─── */
+
+/* Scrim overlay while hints are active */
+[data-access-keys-active="1"]::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 99998;
+  background: color-mix(in oklab, var(--color-base-100) 50%, transparent);
+  backdrop-filter: blur(1px);
+  -webkit-backdrop-filter: blur(1px);
+  pointer-events: none;
+  animation: access-key-scrim-in 120ms ease-out both;
+}
+
+:is([data-theme="dark"], html.dark) [data-access-keys-active="1"]::before {
+  background: color-mix(in oklab, var(--color-base-100) 60%, transparent);
+}
+
+/* Badge base */
+.access-key-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.2rem;
+  height: 1.2rem;
+  padding: 0 0.28rem;
+  border-radius: 0.22rem;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  font-size: 0.68rem;
+  font-weight: 700;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  animation: access-key-pop 90ms ease-out both;
+
+  /* Light mode: amber badge */
+  color: oklch(25% 0.04 80);
+  background: oklch(85% 0.17 85);
+  border: 1px solid oklch(72% 0.18 75);
+  box-shadow:
+    0 1px 4px -1px oklch(0% 0 0 / 0.22),
+    0 0 0 0.5px oklch(0% 0 0 / 0.08);
+
+  /* Transition for narrowing state changes */
+  transition: opacity 80ms ease, transform 80ms ease, background-color 80ms ease;
+}
+
+/* Dark mode badge colors */
+:is([data-theme="dark"], html.dark) .access-key-badge {
+  color: oklch(15% 0.04 80);
+  background: oklch(82% 0.16 85);
+  border-color: oklch(68% 0.16 78);
+  box-shadow:
+    0 1px 5px -1px oklch(0% 0 0 / 0.45),
+    0 0 0 0.5px oklch(0% 0 0 / 0.15);
+}
+
+/* Narrowed: matching hint badges get highlighted */
+.access-key-badge--active {
+  background: oklch(78% 0.2 80);
+  border-color: oklch(62% 0.2 70);
+  transform: scale(1.08);
+}
+
+:is([data-theme="dark"], html.dark) .access-key-badge--active {
+  background: oklch(76% 0.2 80);
+  border-color: oklch(58% 0.18 72);
+}
+
+/* Narrowed: non-matching badges dim out */
+.access-key-badge--dimmed {
+  opacity: 0.18;
+  transform: scale(0.92);
+}
+
+/* Animations */
+@keyframes access-key-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.65) translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes access-key-scrim-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .access-key-badge {
+    animation: none;
+    transition: none;
+  }
+
+  [data-access-keys-active="1"]::before {
+    animation: none;
+  }
+}

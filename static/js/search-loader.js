@@ -597,6 +597,13 @@
   var DOC_ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-base-content/50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>';
   var ARROW_ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-base-content/40" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>';
 
+  function parseSvgString(svgString) {
+    var doc = new DOMParser().parseFromString(svgString, "image/svg+xml");
+    var svg = doc.documentElement;
+    if (!svg || svg.nodeName === "parsererror") return null;
+    return document.importNode(svg, true);
+  }
+
   function sanitizeResultHref(rawHref) {
     if (typeof rawHref !== "string" || rawHref.trim() === "") return "#";
     var href = rawHref.trim();
@@ -689,7 +696,8 @@
 
     var iconWrap = document.createElement("div");
     iconWrap.className = "search-result-icon flex-shrink-0 mt-1";
-    iconWrap.innerHTML = DOC_ICON_SVG;
+    var docIcon = parseSvgString(DOC_ICON_SVG);
+    if (docIcon) iconWrap.appendChild(docIcon);
 
     var bodyWrap = document.createElement("div");
     bodyWrap.className = "flex-1 min-w-0";
@@ -708,7 +716,8 @@
 
     var arrow = document.createElement("div");
     arrow.className = "search-result-arrow flex-shrink-0 opacity-0 transition-opacity duration-150";
-    arrow.innerHTML = ARROW_ICON_SVG;
+    var arrowIcon = parseSvgString(ARROW_ICON_SVG);
+    if (arrowIcon) arrow.appendChild(arrowIcon);
 
     bodyWrap.appendChild(title);
     bodyWrap.appendChild(excerpt);
@@ -787,8 +796,8 @@
 
     function resetSearchUi() {
       $searchInput.value = "";
-      $searchResultsItems.innerHTML = "";
-      $searchResultsHeader.innerHTML = "";
+      $searchResultsItems.textContent = "";
+      $searchResultsHeader.textContent = "";
       currentTerm = "";
       selectedIndex = -1;
       syncSearchClearButton();
@@ -816,8 +825,8 @@
       var term = $searchInput.value.trim();
       syncSearchClearButton();
       if (term === currentTerm || !fuse) return;
-      $searchResultsItems.innerHTML = "";
-      $searchResultsHeader.innerHTML = "";
+      $searchResultsItems.textContent = "";
+      $searchResultsHeader.textContent = "";
       selectedIndex = -1;
 
       if (term === "") { currentTerm = ""; return; }

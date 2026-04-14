@@ -1,14 +1,14 @@
 // Auto-rotate showcase tabs on the landing page.
 (function () {
-  var tabs = Array.prototype.slice.call(document.querySelectorAll('input[name="showcase_tabs"]'));
+  const tabs = Array.from(document.querySelectorAll('input[name="showcase_tabs"]'));
   if (tabs.length < 2) return;
 
-  var ROTATION_MS = 20000;
-  var idx = tabs.findIndex(function (tab) { return tab.checked; });
+  const ROTATION_MS = 20000;
+  let idx = tabs.findIndex(function (tab) { return tab.checked; });
   if (idx < 0) idx = 0;
   tabs[idx].checked = true;
 
-  var timer = null;
+  let timer = null;
 
   function next() {
     idx = (idx + 1) % tabs.length;
@@ -28,7 +28,7 @@
   }
 
   start();
-  var container = tabs[0].closest('.tabs');
+  const container = tabs[0].closest('.tabs');
   if (container) {
     container.addEventListener('mouseenter', stop);
     container.addEventListener('mouseleave', start);

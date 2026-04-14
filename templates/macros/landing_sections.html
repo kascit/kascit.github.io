@@ -271,16 +271,15 @@
     </div>
 
     {% if section.extra.showcase_section.tabs %}
-    <div class="w-full">
+    <div class="w-full not-prose">
       <div class="tabs tabs-lift tabs-lg justify-center mb-0">
         {% for tab in section.extra.showcase_section.tabs %}
         <input
           type="radio"
           name="showcase_tabs"
           id="tab-{{ loop.index0 }}"
-          class="tab text-lg font-semibold{% if loop.index0 == 0 %} tab-active{% endif %}"
+          class="tab text-lg font-semibold"
           aria-label="{{ tab.name }}"
-          aria-selected="{% if loop.index0 == 0 %}true{% else %}false{% endif %}"
           {% if loop.index0 == 0 %}checked{% endif %}
         />
         <div

@@ -186,17 +186,24 @@ function createToolbar(languageLabel, copyText) {
   copyBtn.className = "codeblock-copy-btn";
   copyBtn.setAttribute("aria-label", "Copy code");
   copyBtn.setAttribute("title", "Copy code");
-  copyBtn.innerHTML = '<i class="fa-regular fa-clipboard"></i>';
+  function setIconClass(button, iconClass) {
+    button.textContent = "";
+    const icon = document.createElement("i");
+    icon.className = iconClass;
+    button.appendChild(icon);
+  }
+
+  setIconClass(copyBtn, "fa-regular fa-clipboard");
 
   copyBtn.addEventListener("click", () => {
     navigator.clipboard
       .writeText(copyText)
       .then(() => {
-        copyBtn.innerHTML = '<i class="fa-solid fa-check"></i>';
+        setIconClass(copyBtn, "fa-solid fa-check");
         copyBtn.classList.add("copied");
         copyBtn.setAttribute("title", "Copied!");
         window.setTimeout(() => {
-          copyBtn.innerHTML = '<i class="fa-regular fa-clipboard"></i>';
+          setIconClass(copyBtn, "fa-regular fa-clipboard");
           copyBtn.classList.remove("copied");
           copyBtn.setAttribute("title", "Copy code");
         }, 1400);

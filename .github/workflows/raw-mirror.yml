@@ -1,0 +1,134 @@
+name: Publish Raw Mirror Artifacts
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "content/**"
+      - "templates/**"
+      - "static/**"
+      - "data/**"
+      - "config.toml"
+      - ".github/raw-mirror-paths.txt"
+      - ".github/workflows/raw-mirror.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  mirror:
+    name: Refresh raw artifact mirror
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+
+      - name: Load tool versions
+        id: versions
+        run: |
+          grep -vE '^(#|$)' versions.env >> "$GITHUB_ENV"
+          grep -vE '^(#|$)' versions.env | while IFS='=' read -r key value; do
+            echo "${key}=${value}" >> "$GITHUB_OUTPUT"
+          done
+
+      - name: Install Zola
+        uses: taiki-e/install-action@1ed3272338f573e042a2e6bca3893aa19f43b47a # v2
+        with:
+          tool: zola@${{ steps.versions.outputs.ZOLA_VERSION }}
+
+      - name: Build site output
+        run: |
+          set -euo pipefail
+          zola build
+          test -f public/index.html
+
+      - name: Stage configured mirrored files
+        run: |
+          set -euo pipefail
+          MANIFEST_FILE=".github/raw-mirror-paths.txt"
+
+          rm -rf .raw-mirror-staging
+          mkdir -p .raw-mirror-staging
+
+          if [ ! -f "$MANIFEST_FILE" ]; then
+            echo "Missing manifest: $MANIFEST_FILE"
+            exit 1
+          fi
+
+          while IFS= read -r line || [ -n "$line" ]; do
+            path="${line%%#*}"
+            path="${path%$'\r'}"
+            path="${path#${path%%[![:space:]]*}}"
+            path="${path%${path##*[![:space:]]}}"
+
+            if [ -z "$path" ]; then
+              continue
+            fi
+
+            path="${path#/}"
+
+            case "$path" in
+              *".."*)
+                echo "Invalid path in manifest: $path"
+                exit 1
+                ;;
+            esac
+
+            source_file="public/$path"
+            if [ ! -f "$source_file" ]; then
+              echo "Missing built artifact: $source_file"
+              exit 1
+            fi
+
+            mkdir -p ".raw-mirror-staging/$(dirname "$path")"
+            cp "$source_file" ".raw-mirror-staging/$path"
+          done < "$MANIFEST_FILE"
+
+          find .raw-mirror-staging -type f | sort
+
+      - name: Publish mirror branch
+        run: |
+          set -euo pipefail
+          BRANCH="raw-mirror"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          git fetch origin "$BRANCH" || true
+
+          rm -rf .raw-mirror-branch
+          if git show-ref --verify --quiet "refs/remotes/origin/$BRANCH"; then
+            git worktree add -B "$BRANCH" .raw-mirror-branch "origin/$BRANCH"
+          else
+            git worktree add --orphan "$BRANCH" .raw-mirror-branch
+          fi
+
+          find .raw-mirror-branch -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -R .raw-mirror-staging/. .raw-mirror-branch/
+
+          cat > .raw-mirror-branch/README.md <<'EOF'
+          # Raw Mirror Branch
+
+          This branch stores selected build artifacts for direct raw.githubusercontent.com access.
+          Update `.github/raw-mirror-paths.txt` in `main` to add or remove mirrored files.
+          EOF
+
+          cd .raw-mirror-branch
+          git add .
+
+          if git diff --cached --quiet; then
+            echo "Raw mirror unchanged."
+            exit 0
+          fi
+
+          git commit -m "chore(raw-mirror): refresh mirrored artifacts [skip ci]"
+          git push origin "HEAD:$BRANCH"

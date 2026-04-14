@@ -1,0 +1,4 @@
+# Relative paths from public/ to mirror into the raw-mirror branch.
+# Keep one path per line.
+
+rss.xml

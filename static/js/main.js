@@ -11,6 +11,7 @@ import { initServiceWorker } from "./modules/service-worker.js";
 import { initCookieConsent } from "./modules/cookie-consent.js";
 import { initWebMCP } from "./modules/webmcp.js";
 import { initTooltips } from "./modules/tooltips.js";
+import { initExternalLinkUtm } from "./modules/external-link-utm.js";
 
 function runSafely(task, label) {
   try {
@@ -111,6 +112,7 @@ function bootstrapSite() {
   runSafely(() => initDrawer(), "drawer");
   runSafely(() => initDropdowns(document), "dropdowns");
   runSafely(() => initTooltips(document), "tooltips");
+  runSafely(() => initExternalLinkUtm(document), "external link utm");
   runSafely(() => initCookieConsent(), "cookie consent");
   runSafely(() => initAuth(document), "auth");
 

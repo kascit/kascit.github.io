@@ -3,6 +3,11 @@ title = "Terms of Service"
 description = "Terms of Service for dhanur.me and associated applications."
 template = "page.html"
 
+[extra]
+back_url = "/"
+back_title = "Home"
+back_subtitle = "Back to"
+
 [extra.comments]
 enabled = false
 +++

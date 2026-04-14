@@ -287,6 +287,30 @@ css: setup-build-deps
     @node scripts/just-run.js "compile shell css" -- {{ tailwind }} -i {{ dui_css_in }} -o {{ dui_css_out }} --minify
     @node scripts/just-log.js ok "CSS build complete"
 
+[doc("Generate responsive image variants inside built public/images")]
+[group('build')]
+generate-images:
+    @node scripts/just-log.js info "Generating responsive image variants"
+    @node scripts/just-run.js "generate responsive images" -- node scripts/generate-responsive-images.js public/images
+
+[doc("Generate favicon and shortcut icon assets inside built public/")]
+[group('build')]
+generate-icons:
+    @node scripts/just-log.js info "Generating icon assets"
+    @node scripts/just-run.js "generate icons" -- node scripts/generate-icons.js public public/icons/favicon.svg
+
+[doc("Attach responsive srcset attributes to generated HTML img tags")]
+[group('build')]
+inject-responsive-markup:
+    @node scripts/just-log.js info "Injecting responsive image markup"
+    @node scripts/just-run.js "inject responsive image markup" -- node scripts/inject-responsive-image-markup.js public
+
+[doc("Optimize static raster assets in built output")]
+[group('build')]
+optimize-static:
+    @node scripts/just-log.js info "Optimizing static image assets"
+    @node scripts/just-run.js "optimize static assets" -- node scripts/optimize-static-assets.js public
+
 [unix]
 [doc("Remove all build artifacts")]
 [group('build')]
@@ -299,7 +323,9 @@ clean:
 [doc("Remove all build artifacts")]
 [group('build')]
 clean:
-    @if (Test-Path "public") { cmd /c rmdir /s /q public }
+    @if (Test-Path "public") { for ($i = 0; $i -lt 5 -and (Test-Path "public"); $i++) { cmd /c rmdir /s /q public 2>$null } }
+    @if (Test-Path "public") { Remove-Item "public" -Recurse -Force -ErrorAction SilentlyContinue }
+    @if (Test-Path "public") { Write-Host "ERROR: failed to remove public directory"; exit 1 }
     @if (Test-Path "{{ css_out }}") { Remove-Item "{{ css_out }}" -Force }
     @if (Test-Path "{{ dui_css_out }}") { Remove-Item "{{ dui_css_out }}" -Force }
 
@@ -313,7 +339,9 @@ clean-public:
 [doc("Remove only generated public output")]
 [group('build')]
 clean-public:
-    @if (Test-Path "public") { cmd /c rmdir /s /q public }
+    @if (Test-Path "public") { for ($i = 0; $i -lt 5 -and (Test-Path "public"); $i++) { cmd /c rmdir /s /q public 2>$null } }
+    @if (Test-Path "public") { Remove-Item "public" -Recurse -Force -ErrorAction SilentlyContinue }
+    @if (Test-Path "public") { Write-Host "ERROR: failed to remove public directory"; exit 1 }
 
 [unix]
 [doc("Full production build (clean + generated content + css + zola)")]
@@ -331,6 +359,14 @@ build: clean project-pages about-skill-tags widget-data css
         fi
         node scripts/just-log.js info "Cleaning Zola pagination redirect stubs"
         node scripts/just-run.js "clean pagination redirects" -- node scripts/clean-pagination-redirects.js
+        node scripts/just-log.js info "Generating responsive public image variants"
+        node scripts/just-run.js "generate responsive images" -- node scripts/generate-responsive-images.js public/images
+        node scripts/just-log.js info "Generating public icon assets"
+        node scripts/just-run.js "generate icons" -- node scripts/generate-icons.js public public/icons/favicon.svg
+        node scripts/just-log.js info "Injecting responsive image markup"
+        node scripts/just-run.js "inject responsive image markup" -- node scripts/inject-responsive-image-markup.js public
+        node scripts/just-log.js info "Optimizing static image assets"
+        node scripts/just-run.js "optimize static assets" -- node scripts/optimize-static-assets.js public
         node scripts/just-log.js info "Fingerprinting static assets"
         node scripts/just-run.js "fingerprint assets" -- node scripts/fingerprint-assets.js public
         node scripts/just-log.js ok "Production build complete"
@@ -343,6 +379,14 @@ build: clean project-pages about-skill-tags widget-data css
     @if ($env:ZOLA_BASE_URL) { node scripts/just-run.js "zola build" -- zola build --base-url "$env:ZOLA_BASE_URL" } else { node scripts/just-run.js "zola build" -- zola build }
     @node scripts/just-log.js info "Cleaning Zola pagination redirect stubs"
     @node scripts/just-run.js "clean pagination redirects" -- node scripts/clean-pagination-redirects.js
+    @node scripts/just-log.js info "Generating responsive public image variants"
+    @node scripts/just-run.js "generate responsive images" -- node scripts/generate-responsive-images.js public/images
+    @node scripts/just-log.js info "Generating public icon assets"
+    @node scripts/just-run.js "generate icons" -- node scripts/generate-icons.js public public/icons/favicon.svg
+    @node scripts/just-log.js info "Injecting responsive image markup"
+    @node scripts/just-run.js "inject responsive image markup" -- node scripts/inject-responsive-image-markup.js public
+    @node scripts/just-log.js info "Optimizing static image assets"
+    @node scripts/just-run.js "optimize static assets" -- node scripts/optimize-static-assets.js public
     @node scripts/just-log.js info "Fingerprinting static assets"
     @node scripts/just-run.js "fingerprint assets" -- node scripts/fingerprint-assets.js public
     @node scripts/just-log.js ok "Production build complete"
@@ -442,6 +486,14 @@ ci-build: _assert-zola-version verify-generated-clean
     fi
     node scripts/just-log.js info "Cleaning Zola pagination redirect stubs"
     node scripts/just-run.js "clean pagination redirects" -- node scripts/clean-pagination-redirects.js
+    node scripts/just-log.js info "Generating responsive public image variants"
+    node scripts/just-run.js "generate responsive images" -- node scripts/generate-responsive-images.js public/images
+    node scripts/just-log.js info "Generating public icon assets"
+    node scripts/just-run.js "generate icons" -- node scripts/generate-icons.js public public/icons/favicon.svg
+    node scripts/just-log.js info "Injecting responsive image markup"
+    node scripts/just-run.js "inject responsive image markup" -- node scripts/inject-responsive-image-markup.js public
+    node scripts/just-log.js info "Optimizing static image assets"
+    node scripts/just-run.js "optimize static assets" -- node scripts/optimize-static-assets.js public
     node scripts/just-log.js info "Optimizing JavaScript"
     node scripts/just-run.js "minify javascript" -- node scripts/minify-js.js public
     node scripts/just-log.js info "Fingerprinting static assets"
@@ -465,6 +517,14 @@ ci-build: _assert-zola-version verify-generated-clean
     @if ($env:ZOLA_BASE_URL) { node scripts/just-run.js "zola build" -- zola build --base-url "$env:ZOLA_BASE_URL" } else { node scripts/just-run.js "zola build" -- zola build }
     @node scripts/just-log.js info "Cleaning Zola pagination redirect stubs"
     @node scripts/just-run.js "clean pagination redirects" -- node scripts/clean-pagination-redirects.js
+    @node scripts/just-log.js info "Generating responsive public image variants"
+    @node scripts/just-run.js "generate responsive images" -- node scripts/generate-responsive-images.js public/images
+    @node scripts/just-log.js info "Generating public icon assets"
+    @node scripts/just-run.js "generate icons" -- node scripts/generate-icons.js public public/icons/favicon.svg
+    @node scripts/just-log.js info "Injecting responsive image markup"
+    @node scripts/just-run.js "inject responsive image markup" -- node scripts/inject-responsive-image-markup.js public
+    @node scripts/just-log.js info "Optimizing static image assets"
+    @node scripts/just-run.js "optimize static assets" -- node scripts/optimize-static-assets.js public
     @node scripts/just-log.js info "Optimizing JavaScript"
     @node scripts/just-run.js "minify javascript" -- node scripts/minify-js.js public
     @node scripts/just-log.js info "Fingerprinting static assets"

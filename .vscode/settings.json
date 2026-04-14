@@ -16,5 +16,35 @@
   "yaml.schemas": {
     "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
   },
-  "yaml.validate": false
+  "yaml.validate": false,
+  "cSpell.words": [
+    "Baeldung",
+    "daisyui",
+    "Dhanur",
+    "dotenv",
+    "Duolingo",
+    "fontawesome",
+    "hikari",
+    "Honeybadger",
+    "isnt",
+    "Justfile",
+    "kascit",
+    "katex",
+    "magick",
+    "nums",
+    "nvim",
+    "overengineered",
+    "overengineers",
+    "pacman",
+    "Pageable",
+    "paru",
+    "pipefail",
+    "rofi",
+    "springframework",
+    "Tera",
+    "topbar",
+    "trainwrecks",
+    "wallowords",
+    "webfonts"
+  ]
 }

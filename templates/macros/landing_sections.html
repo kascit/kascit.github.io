@@ -20,66 +20,34 @@
         class="absolute top-3/4 right-1/4 w-80 h-80 bg-gradient-to-r from-slate-500/10 to-gray-400/10 rounded-full filter blur-3xl animate-pulse delay-2000"
       ></div>
     </div>
-    {% set has_theme_hero = section.extra.hero.image_dark is defined or section.extra.hero.image_light is defined %}
-    {% if has_theme_hero %}
-      {% set dark_image_opacity = section.extra.hero.image_opacity_dark | default(value=section.extra.hero.image_opacity | default(value=26)) %}
-      {% set light_image_opacity = section.extra.hero.image_opacity_light | default(value=section.extra.hero.image_opacity | default(value=42)) %}
-      {% set dark_src = section.extra.hero.image_dark | default(value=section.extra.hero.image | default(value="")) %}
-      {% set light_src = section.extra.hero.image_light | default(value=section.extra.hero.image | default(value="")) %}
-      {% if dark_src != "" %}
-        {% set d640 = dark_src | replace(from=".png", to="-640.webp") | replace(from=".jpg", to="-640.webp") %}
-        {% set d1200 = dark_src | replace(from=".png", to="-1200.webp") | replace(from=".jpg", to="-1200.webp") %}
-        {% set d1920 = dark_src | replace(from=".png", to="-1920.webp") | replace(from=".jpg", to="-1920.webp") %}
-        {% set d2560 = dark_src | replace(from=".png", to="-2560.webp") | replace(from=".jpg", to="-2560.webp") %}
-        {% set d3840 = dark_src | replace(from=".png", to="-3840.webp") | replace(from=".jpg", to="-3840.webp") %}
-        {% set d_fallback = dark_src | replace(from=".jpg", to="-fallback.jpg") | replace(from=".png", to="-fallback.jpg") %}
-        <div class="hero-dark absolute inset-0">
-          <picture>
-            <source type="image/webp"
-              srcset="{{ get_url(path=d640) | safe }} 640w, {{ get_url(path=d1200) | safe }} 1200w, {{ get_url(path=d1920) | safe }} 1920w, {{ get_url(path=d2560) | safe }} 2560w, {{ get_url(path=d3840) | safe }} 3840w"
-              sizes="100vw" />
-            <img src="{{ d_fallback | safe }}" alt="Hero Background"
-              class="w-full h-full rounded-none object-cover object-center opacity-{{ dark_image_opacity }}"
-              width="3840" height="2160" fetchpriority="high" decoding="async" />
-          </picture>
-        </div>
-      {% endif %}
-      {% if light_src != "" %}
-        {% set l640 = light_src | replace(from=".png", to="-640.webp") | replace(from=".jpg", to="-640.webp") %}
-        {% set l1200 = light_src | replace(from=".png", to="-1200.webp") | replace(from=".jpg", to="-1200.webp") %}
-        {% set l1920 = light_src | replace(from=".png", to="-1920.webp") | replace(from=".jpg", to="-1920.webp") %}
-        {% set l2560 = light_src | replace(from=".png", to="-2560.webp") | replace(from=".jpg", to="-2560.webp") %}
-        {% set l3840 = light_src | replace(from=".png", to="-3840.webp") | replace(from=".jpg", to="-3840.webp") %}
-        {% set l_fallback = light_src | replace(from=".jpg", to="-fallback.jpg") | replace(from=".png", to="-fallback.jpg") %}
-        <div class="hero-light hidden absolute inset-0">
-          <picture>
-            <source type="image/webp"
-              srcset="{{ get_url(path=l640) | safe }} 640w, {{ get_url(path=l1200) | safe }} 1200w, {{ get_url(path=l1920) | safe }} 1920w, {{ get_url(path=l2560) | safe }} 2560w, {{ get_url(path=l3840) | safe }} 3840w"
-              sizes="100vw" />
-            <img src="{{ l_fallback | safe }}" alt="Hero Background"
-              class="w-full h-full rounded-none object-cover object-center opacity-{{ light_image_opacity }}"
-              width="3840" height="2160" fetchpriority="high" decoding="async" />
-          </picture>
-        </div>
-      {% endif %}
-    {% elif section.extra.hero.image %}
-      {% set image_opacity = section.extra.hero.image_opacity | default(value=34) %}
-      {% set _hero = section.extra.hero.image %}
-      {% set hero_640 = _hero | replace(from=".png", to="-640.webp") | replace(from=".jpg", to="-640.webp") %}
-      {% set hero_1200 = _hero | replace(from=".png", to="-1200.webp") | replace(from=".jpg", to="-1200.webp") %}
-      {% set hero_1920 = _hero | replace(from=".png", to="-1920.webp") | replace(from=".jpg", to="-1920.webp") %}
-      {% set hero_2560 = _hero | replace(from=".png", to="-2560.webp") | replace(from=".jpg", to="-2560.webp") %}
-      {% set hero_3840 = _hero | replace(from=".png", to="-3840.webp") | replace(from=".jpg", to="-3840.webp") %}
-      {% set hero_fallback = _hero | replace(from=".jpg", to="-fallback.jpg") | replace(from=".png", to="-fallback.jpg") %}
-      <picture>
-        <source type="image/webp"
-          srcset="{{ get_url(path=hero_640) | safe }} 640w, {{ get_url(path=hero_1200) | safe }} 1200w, {{ get_url(path=hero_1920) | safe }} 1920w, {{ get_url(path=hero_2560) | safe }} 2560w, {{ get_url(path=hero_3840) | safe }} 3840w"
-          sizes="100vw" />
-        <img src="{{ hero_fallback | safe }}" alt="Hero Background"
-          class="w-full h-full rounded-none object-cover object-center opacity-{{ image_opacity }}"
+    {% set image_opacity = section.extra.hero.image_opacity | default(value=34) %}
+    {% set dark_image_opacity = section.extra.hero.image_opacity_dark | default(value=image_opacity) %}
+    {% set light_image_opacity = section.extra.hero.image_opacity_light | default(value=image_opacity) %}
+    {% set dark_src = section.extra.hero.image_dark | default(value=section.extra.hero.image | default(value="")) %}
+    {% set light_src = section.extra.hero.image_light | default(value=section.extra.hero.image | default(value="")) %}
+
+    {% if dark_src != "" and light_src != "" %}
+      <div class="hero-dark absolute inset-0">
+        <img src="{{ get_url(path=dark_src) | safe }}" alt="Hero Background Dark"
+          class="w-full h-full rounded-none object-cover object-center opacity-{{ dark_image_opacity }}"
           width="3840" height="2160" fetchpriority="high" decoding="async" />
-      </picture>
+      </div>
+
+      <div class="hero-light hidden absolute inset-0">
+        <img src="{{ get_url(path=light_src) | safe }}" alt="Hero Background Light"
+          class="w-full h-full rounded-none object-cover object-center opacity-{{ light_image_opacity }}"
+          width="3840" height="2160" fetchpriority="high" decoding="async" />
+      </div>
+    {% elif dark_src != "" %}
+      <img src="{{ get_url(path=dark_src) | safe }}" alt="Hero Background"
+        class="w-full h-full rounded-none object-cover object-center opacity-{{ dark_image_opacity }}"
+        width="3840" height="2160" fetchpriority="high" decoding="async" />
+    {% elif light_src != "" %}
+      <img src="{{ get_url(path=light_src) | safe }}" alt="Hero Background"
+        class="w-full h-full rounded-none object-cover object-center opacity-{{ light_image_opacity }}"
+        width="3840" height="2160" fetchpriority="high" decoding="async" />
     {% endif %}
+
   </div>
   <div class="relative z-10 p-8 max-w-6xl mx-auto">
     {% if section.extra.hero.badge %}
@@ -310,23 +278,31 @@
           type="radio"
           name="showcase_tabs"
           id="tab-{{ loop.index0 }}"
-          class="tab text-lg font-semibold"
+          class="tab text-lg font-semibold{% if loop.index0 == 0 %} tab-active{% endif %}"
           aria-label="{{ tab.name }}"
+          aria-selected="{% if loop.index0 == 0 %}true{% else %}false{% endif %}"
           {% if loop.index0 == 0 %}checked{% endif %}
         />
         <div
-          class="tab-content rounded-box p-8 md:p-12"
+          class="tab-content rounded-box p-8 md:p-12{% if tab.image %} showcase-tab-content--image{% endif %}"
           role="tabpanel"
           aria-labelledby="tab-{{ loop.index0 }}"
         >
           {% if tab.image %}
           {# Show only image when image is provided #}
           <div class="flex justify-center">
-            <img
-              src="{{ tab.image | safe }}"
-              alt="{{ tab.title }}"
-              class="rounded-box shadow-lg w-[1024px] h-auto object-cover border border-base-content/15"
-            />
+            <div
+              class="showcase-image-frame rounded-box shadow-lg border border-base-content/15"
+              style="--showcase-image: url('{{ tab.image | safe }}');"
+            >
+              <div class="showcase-image-bg" aria-hidden="true"></div>
+              <div class="showcase-image-bg showcase-image-bg--expanded" aria-hidden="true"></div>
+              <img
+                src="{{ tab.image | safe }}"
+                alt="{{ tab.title }}"
+                class="showcase-image-main"
+              />
+            </div>
           </div>
           {% else %}
           {# Show only text when no image is provided #}

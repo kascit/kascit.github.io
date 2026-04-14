@@ -3,7 +3,7 @@
     {
       "slug": "face-rekognition",
       "title": "Face Rekognition",
-      "group": "featured",
+      "group": "learning",
       "icon": "fa-solid fa-microchip",
       "description": "IoT-powered automated attendance system using ESP32-CAM, AWS IoT Core, Lambda, and AWS Rekognition. Serverless architecture with face detection and real-time processing.",
       "extended_description": "Built as an academic production-grade prototype, this project focused on low-latency recognition events, robust event ingestion, and auditable attendance records across unreliable network conditions.",
@@ -16,7 +16,7 @@
         "DynamoDB persistence for attendance timeline",
         "Serverless architecture optimized for low ops overhead"
       ],
-      "thumbnail_image": "/images/default_thumbnail.jpg",
+      "thumbnail_image": "/images/thumbs/default_thumbnail.jpg",
       "thumbnail_alt": "Face Rekognition project preview",
       "role": "Academic Prototype",
       "lang": "C++ · Python",
@@ -28,7 +28,7 @@
     {
       "slug": "beat-pe",
       "title": "Beat.pe",
-      "group": "featured",
+      "group": "learning",
       "icon": "fa-solid fa-drum",
       "description": "A web-based rhythm game where timing is everything. Built entirely from scratch with vanilla JavaScript and CSS animations.",
       "extended_description": "This was a deliberate exercise in browser performance, deterministic timing, and responsive game UX without framework abstractions.",
@@ -41,7 +41,7 @@
         "Persistent score/session data with localStorage",
         "Responsive layout tuned for laptop and mobile"
       ],
-      "thumbnail_image": "/images/default_thumbnail.jpg",
+      "thumbnail_image": "/images/thumbs/default_thumbnail.jpg",
       "thumbnail_alt": "Beat.pe project preview",
       "role": "Game UX Experiment",
       "lang": "JavaScript",
@@ -54,7 +54,7 @@
     {
       "slug": "listly",
       "title": "Listly",
-      "group": "featured",
+      "group": "learning",
       "icon": "fa-solid fa-music",
       "description": "Terminal-based music playlist manager built from scratch using custom doubly linked lists. Features persistent file storage and an ANSI-colored CLI.",
       "extended_description": "Listly was designed as a data-structure-first project to practice writing maintainable core logic before polishing interface ergonomics.",
@@ -64,7 +64,7 @@
         "Colorized CLI flows for usability",
         "Clear separation between model and command actions"
       ],
-      "thumbnail_image": "/images/default_thumbnail.jpg",
+      "thumbnail_image": "/images/thumbs/default_thumbnail.jpg",
       "thumbnail_alt": "Listly terminal app preview",
       "role": "CLI Product Build",
       "lang": "Java",
@@ -86,7 +86,7 @@
         "Tailwind + DaisyUI component styling with custom polish",
         "Automated project page sync integrated into build pipeline"
       ],
-      "thumbnail_image": "/images/default_thumbnail.jpg",
+      "thumbnail_image": "/images/thumbs/default_thumbnail.jpg",
       "thumbnail_alt": "dhanur.me project preview",
       "role": "Personal Platform",
       "lang": "Zola",
@@ -96,6 +96,25 @@
       "github_url": "https://github.com/kascit/kascit.github.io",
       "url": "/",
       "url_label": "Visit"
+    },
+    {
+      "slug": "stuff",
+      "title": "stuff",
+      "group": "featured",
+      "icon": "fa-solid fa-toolbox",
+      "description": "A whole lot of personal utility tools and experiments bundled in one repo.",
+      "extended_description": "This is my practical junk drawer: tiny CLIs, helper scripts, and quality-of-life automations I keep building whenever something feels repetitive.",
+      "role": "Personal Utility Suite",
+      "lang": "TypeScript · Shell",
+      "status": "wip",
+      "highlights": [
+        "Personal tools focused on daily workflow friction",
+        "Small utilities designed for fast iteration",
+        "Actively evolving with new scripts over time"
+      ],
+      "techs": ["TypeScript", "Node.js", "Shell Scripting", "Automation"],
+      "tags": ["Developer Tools", "Automation", "CLI", "Productivity", "TypeScript"],
+      "github_url": "https://github.com/kascit/stuff"
     },
     {
       "slug": "leetcode-solutions",
@@ -139,7 +158,7 @@
     {
       "slug": "selenium-automata",
       "title": "Selenium Automata",
-      "group": "learning",
+      "group": "personal",
       "icon": "fa-solid fa-robot",
       "description": "Web automation scripts for exploring browser workflows and routine UI-driven tasks.",
       "extended_description": "Created to test repeatable browser workflows and sharpen reliability instincts around UI automation.",
@@ -158,7 +177,7 @@
     {
       "slug": "tic-tac-toe",
       "title": "Tic-Tac-Toe",
-      "group": "experiments",
+      "group": "learning",
       "icon": "fa-solid fa-gamepad",
       "description": "Because every developer has to build one eventually.",
       "extended_description": "A compact frontend experiment for state updates, event handling, and small-game loop thinking.",
@@ -195,7 +214,7 @@
     {
       "slug": "wallowords",
       "title": "WalloWords",
-      "group": "experiments",
+      "group": "personal",
       "icon": "fa-solid fa-spell-check",
       "description": "A word-based experiment actively in development.",
       "extended_description": "Currently evolving as a lightweight idea sandbox for word mechanics, interaction rhythm, and UI feel.",

@@ -76,10 +76,10 @@ jobs:
           restore-keys: |
             pnpm-tools-${{ runner.os }}-
 
-      - name: Install xmllint
+      - name: Install xmllint and ImageMagick
         run: |
           sudo apt-get update
-          sudo apt-get install --no-install-recommends -y libxml2-utils
+          sudo apt-get install --no-install-recommends -y libxml2-utils imagemagick
 
       - name: Install just
         uses: taiki-e/install-action@1ed3272338f573e042a2e6bca3893aa19f43b47a # v2

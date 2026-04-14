@@ -22,6 +22,16 @@ src/vendor/daisyui-theme.js
 static/css/main.css
 content/projects/*.md
 !content/projects/_index.md
+static/images/**/*-640.webp
+static/images/**/*-1200.webp
+static/images/**/*-1920.webp
+static/images/**/*-2560.webp
+static/images/**/*-3840.webp
+static/images/**/*-fallback.jpg
+static/icons/*
+static/icons/.gen/
+!static/icons/favicon.svg
+!static/icons/site.webmanifest
 
 # Temp/log files
 .tmp*

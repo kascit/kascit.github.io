@@ -15,7 +15,13 @@ This section highlights the projects that best represent how I think about engin
 
 {{ projects_grid(group="featured", grid_class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12") }}
 
-## Learning & Practice
+## Personal
+
+Personal projects are where I build for curiosity first, then refine toward something people might actually use.
+
+{{ projects_grid(group="personal", grid_class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12") }}
+
+## Academic & Learning
 
 These repositories are where I deliberately practice fundamentals, test ideas, and sharpen instincts outside of production deadlines.
 

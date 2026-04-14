@@ -7,28 +7,42 @@
   --code-block-inner-pad-y: 0.75rem;
   --code-block-pad-y: 1rem;
   --code-block-pad-x: 1rem;
+  --cb-shell-bg: color-mix(in oklab, var(--color-base-200) 35%, var(--color-base-100));
+  --cb-code-bg: color-mix(in oklab, var(--color-base-100) 88%, var(--color-base-200));
+  --cb-toolbar-bg: color-mix(in oklab, var(--color-base-100) 76%, var(--color-base-200));
+  --cb-gutter-bg: color-mix(in oklab, var(--color-base-100) 60%, var(--color-base-200));
+  --cb-border: color-mix(in oklab, var(--color-base-content) 14%, transparent);
+  --cb-divider: color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  --cb-gutter-fg: color-mix(in oklab, var(--color-base-content) 62%, transparent);
+}
+
+:is([data-theme="dark"], html.dark) :not(.mockup-code) > pre {
+  --cb-shell-bg: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--color-base-100) 95%, var(--color-base-200)) 0%,
+    color-mix(in oklab, var(--color-base-100) 90%, var(--color-base-200)) 100%
+  );
+  --cb-code-bg: color-mix(in oklab, var(--color-base-100) 96%, var(--color-base-200));
+  --cb-toolbar-bg: color-mix(in oklab, var(--color-base-100) 92%, var(--color-base-200));
+  --cb-gutter-bg: color-mix(in oklab, var(--color-base-100) 89%, var(--color-base-200));
+  --cb-border: color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  --cb-divider: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+  --cb-gutter-fg: color-mix(in oklab, var(--color-base-content) 58%, transparent);
 }
 
 :not(.mockup-code) > pre.codeblock-enhanced {
   display: grid;
   grid-template-columns: max-content minmax(0, 1fr);
-  background: color-mix(in oklab, var(--color-base-200) 35%, var(--color-base-100)) !important;
+  background: var(--cb-shell-bg) !important;
+  border-color: var(--cb-border);
   box-shadow: none;
-}
-
-html.dark :not(.mockup-code) > pre.codeblock-enhanced {
-  background: color-mix(in oklab, var(--color-base-300) 66%, var(--color-base-100)) !important;
 }
 
 .codeblock-toolbar {
   grid-column: 1 / -1;
   @apply flex items-center justify-between gap-2 px-3 py-2;
-  border-bottom: 1px solid color-mix(in oklab, var(--color-base-content) 12%, transparent);
-  background: color-mix(in oklab, var(--color-base-100) 76%, var(--color-base-200));
-}
-
-html.dark .codeblock-toolbar {
-  background: color-mix(in oklab, var(--color-base-300) 72%, var(--color-base-100));
+  border-bottom: 1px solid var(--cb-divider);
+  background: var(--cb-toolbar-bg);
 }
 
 .codeblock-lang-tag {
@@ -44,6 +58,18 @@ html.dark .codeblock-toolbar {
 
 .codeblock-copy-btn:hover {
   @apply border-base-content/24 text-base-content bg-base-100;
+}
+
+:is([data-theme="dark"], html.dark) .codeblock-copy-btn {
+  border-color: color-mix(in oklab, var(--color-base-content) 22%, transparent);
+  background: color-mix(in oklab, var(--color-base-100) 62%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 72%, transparent);
+}
+
+:is([data-theme="dark"], html.dark) .codeblock-copy-btn:hover {
+  border-color: color-mix(in oklab, var(--color-base-content) 32%, transparent);
+  background: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 94%, transparent);
 }
 
 .codeblock-copy-btn:focus-visible {
@@ -63,13 +89,9 @@ html.dark .codeblock-toolbar {
   font-family: var(--code-block-font-family);
   line-height: var(--code-block-line-height);
   font-variant-numeric: tabular-nums;
-  color: color-mix(in oklab, var(--color-base-content) 62%, transparent);
-  border-right: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent);
-  background: color-mix(in oklab, var(--color-base-100) 60%, var(--color-base-200));
-}
-
-html.dark .codeblock-gutter {
-  background: color-mix(in oklab, var(--color-base-300) 70%, var(--color-base-100));
+  color: var(--cb-gutter-fg);
+  border-right: 1px solid var(--cb-divider);
+  background: var(--cb-gutter-bg);
 }
 
 .codeblock-line-number {
@@ -93,8 +115,27 @@ html.dark .codeblock-gutter {
   border: none;
 }
 
+/* Prevent browser/default link colors from overriding syntax token colors in code. */
+:not(.mockup-code) > pre code a,
+:not(.mockup-code) > pre code a:any-link {
+  color: inherit !important;
+}
+
+/* Giallo embeds inline light-dark() colors. Force branch selection to current theme
+ * so token colors do not flip to the wrong contrast set. */
+:is([data-theme="light"], html.light) :not(.mockup-code) > pre.giallo,
+:is([data-theme="light"], html.light) :not(.mockup-code) > pre[style*="light-dark("] {
+  color-scheme: light !important;
+}
+
+:is([data-theme="dark"], html.dark) :not(.mockup-code) > pre.giallo,
+:is([data-theme="dark"], html.dark) :not(.mockup-code) > pre[style*="light-dark("] {
+  color-scheme: dark !important;
+}
+
 :not(.mockup-code) > pre.codeblock-enhanced > code {
   padding-block: var(--code-block-inner-pad-y);
+  background: var(--cb-code-bg) !important;
 }
 
 /* Zola's ayu theme applies background-color to markdown-context tokens (z-markup.*,
@@ -107,7 +148,6 @@ html.dark .codeblock-gutter {
 :not(.mockup-code) > pre code * {
   background-color: transparent !important;
 }
-
 
 /* Reset DaisyUI prose pre background */
 .prose pre {
@@ -124,13 +164,13 @@ html.dark .codeblock-gutter {
   color: inherit;
 }
 
-html.dark .katex,
-html.dark .katex-display {
+:is([data-theme="dark"], html.dark) .katex,
+:is([data-theme="dark"], html.dark) .katex-display {
   color: color-mix(in oklab, var(--color-base-content) 96%, transparent);
 }
 
-html.light .katex,
-html.light .katex-display {
+:is([data-theme="light"], html.light) .katex,
+:is([data-theme="light"], html.light) .katex-display {
   color: color-mix(in oklab, var(--color-base-content) 95%, transparent);
 }
 
@@ -328,9 +368,43 @@ h6:hover .copy-heading-link-button {
 }
 
 /* Thumbnail helpers */
-.post-hero-thumb img {
-  max-height: min(48vh, 520px);
-  aspect-ratio: 16 / 9;
+.post-hero-thumb {
+  --post-thumb-blur: 14px;
+  position: relative;
+  isolation: isolate;
+}
+
+.post-hero-thumb__bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  filter: blur(var(--post-thumb-blur));
+  transform: scale(1.03);
+  opacity: 0.52;
+}
+
+.post-hero-thumb__bg--expanded {
+  inset: calc(-1 * var(--post-thumb-blur));
+  opacity: 0.38;
+}
+
+.post-hero-thumb__img {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+@media (max-width: 768px) {
+  .post-hero-thumb {
+    --post-thumb-blur: 10px;
+  }
 }
 
 .post-card-thumb {
@@ -480,8 +554,8 @@ h6:hover .copy-heading-link-button {
   -webkit-box-orient: vertical;
 }
 
-.search-result-excerpt b {
-  @apply font-semibold text-base-content/50;
+.search-result-excerpt mark.search-result-highlight {
+  @apply font-medium;
 }
 
 .search-footer {
@@ -1538,12 +1612,12 @@ main .design-showcase ol li {
   @apply mt-0 font-semibold mb-2 text-xs uppercase tracking-wider text-base-content/72 flex items-center gap-2;
 }
 
-/* Raise token contrast for scanner-reported classes while preserving overall palette. */
-:not(.mockup-code) > pre code .z-language-name,
-:not(.mockup-code) > pre code .z-variable.z-function,
-:not(.mockup-code) > pre code .z-variable.z-other,
-:not(.mockup-code) > pre code .z-string.z-quoted,
-:not(.mockup-code) > pre code .z-markup.z-raw.z-inline {
+/* Keep scanner-reported token contrast tweak scoped to light mode only. */
+html.light :not(.mockup-code) > pre code .z-language-name,
+html.light :not(.mockup-code) > pre code .z-variable.z-function,
+html.light :not(.mockup-code) > pre code .z-variable.z-other,
+html.light :not(.mockup-code) > pre code .z-string.z-quoted,
+html.light :not(.mockup-code) > pre code .z-markup.z-raw.z-inline {
   color: color-mix(in oklab, var(--color-base-content) 82%, transparent);
 }
 

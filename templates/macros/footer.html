@@ -3,15 +3,18 @@
   class="w-full border-t border-base-content/10 px-4 py-3 mt-auto flex justify-center"
 >
   <p class="text-xs text-base-content/75 leading-relaxed text-center">
-    © {{ now() | date(format="%Y") }} {{ config.extra.footer_html |
-    default(value='Powered by
-    <a
+    © {{ now() | date(format="%Y") }} {{ config.extra.footer_html | default(value="Dhanur") | safe }}
+    • <a href="/privacy" class="hover:text-base-content/70 transition-colors">Privacy</a>
+    • <a href="/tos" class="hover:text-base-content/70 transition-colors">Terms</a>
+    • <a href="/appreciation" class="hover:text-base-content/70 transition-colors">Appreciation</a>
+    • <a href="/links" class="hover:text-base-content/70 transition-colors">Links</a>
+    • Powered by <a
       href="https://www.getzola.org"
       class="hover:text-base-content/70 transition-colors"
       target="_blank"
       rel="noopener"
       >Zola</a
-    >') | safe }}
+    >
   </p>
 </div>
 {% endmacro footer %}

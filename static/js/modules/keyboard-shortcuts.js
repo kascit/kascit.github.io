@@ -267,6 +267,14 @@ function buildBuiltinShortcutEntries() {
     { keybind: "d h", execute: () => executeSelectorClick(HOME_SELECTORS) },
     { keybind: "d arrowleft", execute: () => executeSelectorClick(PREV_SELECTORS) },
     { keybind: "d arrowright", execute: executeNextShortcut },
+    {
+      keybind: "d f",
+      persistAnchorAcrossNavigation: false,
+      execute: () => {
+        window.dispatchEvent(new CustomEvent("pagefind:toggle"));
+        return true;
+      },
+    },
   ];
 
   return specs
@@ -276,7 +284,7 @@ function buildBuiltinShortcutEntries() {
 
       return {
         descriptors: [descriptor],
-        persistAnchorAcrossNavigation: true,
+        persistAnchorAcrossNavigation: item.persistAnchorAcrossNavigation !== false,
         execute: item.execute,
       };
     })

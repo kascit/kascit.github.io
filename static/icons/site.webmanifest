@@ -2,7 +2,7 @@
   "id": "/?source=pwa",
   "name": "dhanur.me",
   "short_name": "dhanur.me",
-  "description": "Unified progressive web application for portfolio, links, projects, and blog.",
+  "description": "Unified progressive web application for all that is dhanur.me",
   "start_url": "/?source=pwa",
   "scope": "/",
   "display": "standalone",
@@ -10,11 +10,17 @@
     "window-controls-overlay",
     "tabbed",
     "standalone",
-    "minimal-ui"
+    "minimal-ui",
+    "fullscreen",
+    "browser"
   ],
+  "lang": "en",
+  "dir": "ltr",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
   "orientation": "portrait-primary",
+  "prefer_related_applications": false,
+  "related_applications": [],
   "icons": [
     {
       "src": "/icons/icon-192x192-transparent.png",
@@ -405,9 +411,19 @@
     }
   ],
   "categories": [
+    "developer",
     "productivity",
     "education",
-    "developer"
+    "books",
+    "fitness",
+    "games",
+    "health",
+    "lifestyle",
+    "magazines",
+    "music",
+    "news",
+    "personalization",
+    "politics"
   ],
   "edge_side_panel": {
     "preferred_width": 400
@@ -454,7 +470,5 @@
         }
       ]
     }
-  ],
-  "related_applications": [],
-  "prefer_related_applications": false
+  ]
 }

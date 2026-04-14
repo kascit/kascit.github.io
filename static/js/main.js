@@ -99,6 +99,23 @@ function isHomeRoute() {
 }
 
 function bootstrapSite() {
+    console.log(`\x1b[1m
+···························································
+··············qpppu········································
+·······)pDDDDDDDDDDDDDDbpu······················)DDDDDDDDDD
+·····pDDDDDDDDDDDDDDDDDDDDDbu···················)DDDDDDDDDD
+···pDDDDDDDDDDDDDDDDDDDDDDDDDbp·················)DDDDDDDDDD
+·)DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDp···············)DDDDDDDDDD
+·DDDDDDDDDDDP·······PDDDDDDDDDDDDb··············QDDDDDDDDDD
+(DDDDDDDDDDP··········(DDDDDDDDDDDDb···········)DDDDDDDDDDP
+QDDDDDDDDDP·············PDDDDDDDDDDDDDp······)pDDDDDDDDDDD·
+DDDDDDDDDDb···············)QDDDDDDDDDDDDDDDDDDDDDDDDDDDDDP·
+DDDDDDDDDDb·················)DDDDDDDDDDDDDDDDDDDDDDDDDDP···
+DDDDDDDDDDb···················)DDDDDDDDDDDDDDDDDDDDDDPP····
+DDDDDDDDDDb·······················PDDDDDDDDDDDDDDDPP·······
+······································c(·PPPP(c············
+···························································
+\x1b[0m`);
   runSafely(() => initResponsive(), "responsive");
 
   // Align classes with prepaint attrs before transitions are enabled.

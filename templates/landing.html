@@ -10,6 +10,14 @@
 
 {% block content %}
 
+<div class="landing-starfield" aria-hidden="true">
+  <div class="landing-starfield__layer landing-starfield__layer--sm"></div>
+  <div class="landing-starfield__layer landing-starfield__layer--md"></div>
+  <div class="landing-starfield__layer landing-starfield__layer--lg"></div>
+</div>
+
+<div class="relative z-10">
+
 {# Default section order for backward compatibility #}
 {% set default_order = ["hero", "features", "trust", "easy_command", "showcase", "social_proof", "final_cta"] %}
 
@@ -60,6 +68,12 @@
     >
     •
     <a
+      href="/appreciation"
+      class="font-bold text-base-content/70 hover:text-base-content transition-colors duration-200"
+      >Appreciation</a
+    >
+    •
+    <a
       href="{{ config.base_url }}/rss.xml"
       target="_blank"
       rel="noopener noreferrer"
@@ -70,7 +84,7 @@
     <a
       href="/links"
       class="font-bold text-base-content/70 hover:text-base-content transition-colors duration-200"
-      >Link Tree</a
+      >Links</a
     >
     • Powered by
     <a
@@ -82,5 +96,7 @@
     >
   </p>
 </footer>
+
+</div>
 
 {% endblock content %}

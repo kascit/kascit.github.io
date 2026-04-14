@@ -80,7 +80,7 @@ include_content = true
 # THEME CONFIGURATION
 # =============================================================================
 [extra]
-default_thumbnail = "images/whood-light.jpg"
+default_thumbnail = "images/thumbs/default_thumbnail.jpg"
 
 # Analytics (leave empty to disable cleanly)
 gtag = "G-BY8SPYYYYR"
@@ -114,10 +114,10 @@ nav = [
 # =============================================================================
 [extra.logo]
 text = "~/dhanur"
-image_path = "images/favi-dark.png"
+image_path = "images/branding/favi-dark.png"
 image_padding = "15px"
-dark_image_path = "images/logo-light.png"
-light_image_path = "images/logo-dark.png"
+dark_image_path = "images/branding/logo-light.png"
+light_image_path = "images/branding/logo-dark.png"
 
 # =============================================================================
 # THEME COLORS & TOGGLE

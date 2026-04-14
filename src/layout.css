@@ -4,6 +4,11 @@
 
 html {
   scrollbar-gutter: stable;
+  overflow-x: clip;
+}
+
+body {
+  overflow-x: clip;
 }
 
 /* Disable automatic cross-document view transitions.
@@ -86,7 +91,8 @@ body.is-landing nav.mt-12 {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100vw;
+    right: 0;
+    width: auto;
     height: 4rem;
     pointer-events: none;
     z-index: 0;
@@ -308,6 +314,47 @@ body.is-landing nav.mt-12 {
   @apply border-base-content/20 bg-base-200/50 text-base-content focus:border-base-content/40 focus:ring-0;
 }
 
+#sidebar .sidebar-search-trigger {
+  --sidebar-item-radius: 0.55rem;
+  --sidebar-item-bg-hover: color-mix(in oklab, var(--color-base-content) 7%, transparent);
+  --sidebar-item-bg-active: color-mix(in oklab, var(--color-primary) 12%, transparent);
+  border-radius: var(--sidebar-item-radius);
+  border-color: color-mix(in oklab, var(--color-base-content) 16%, transparent);
+  background: color-mix(in oklab, var(--color-base-100) 84%, var(--color-base-200));
+  color: color-mix(in oklab, var(--color-base-content) 78%, transparent);
+  padding: 0.52rem 0.7rem;
+  min-height: 0;
+  line-height: 1.35;
+}
+
+#sidebar .sidebar-search-trigger:hover,
+#sidebar .sidebar-search-trigger:focus-visible {
+  background: var(--sidebar-item-bg-hover);
+  color: var(--color-base-content);
+}
+
+#sidebar .sidebar-search-trigger:focus-visible {
+  outline: none;
+}
+
+#sidebar .sidebar-search-trigger:active {
+  background: color-mix(in oklab, var(--color-base-content) 11%, transparent);
+}
+
+#sidebar .sidebar-search-trigger .sidebar-search-label {
+  @apply font-medium;
+}
+
+#sidebar .sidebar-search-trigger .sidebar-search-shortcut {
+  opacity: 0.82;
+}
+
+#sidebar .sidebar-search-trigger .sidebar-search-shortcut .kbd {
+  @apply h-4 min-h-4 rounded px-1 text-[9px] font-medium;
+  border-color: color-mix(in oklab, var(--color-base-content) 22%, transparent);
+  background: color-mix(in oklab, var(--color-base-content) 7%, transparent);
+}
+
 /* Drawer sidebar: column flex so inner shell can fill; full viewport paint on mobile */
 .drawer-side-panel {
   display: flex;
@@ -510,15 +557,165 @@ body.is-landing nav.mt-12 {
 
 /* Hero background */
 .hero-background {
-  @apply bg-base-200/20;
+  background: radial-gradient(ellipse at bottom, var(--hero-sky-top) 0%, var(--hero-sky-bottom) 100%);
 }
 
 [data-theme="light"] .hero-background {
-  @apply bg-base-100/8;
+  background: radial-gradient(ellipse at bottom, var(--hero-sky-top) 0%, var(--hero-sky-bottom) 100%);
 }
 
 [data-theme="dark"] .hero-background {
-  @apply bg-base-200/34;
+  background: radial-gradient(ellipse at bottom, var(--hero-sky-top) 0%, var(--hero-sky-bottom) 100%);
+}
+
+:root,
+[data-theme] {
+  --hero-sky-top: oklch(30% 0.04 255);
+  --hero-sky-bottom: oklch(18% 0.02 260);
+  --landing-star-color: color-mix(in oklab, var(--color-base-content) 72%, transparent);
+  --landing-stars-opacity: 0.32;
+}
+
+[data-theme="dark"] {
+  --hero-sky-top: oklch(30% 0.04 255);
+  --hero-sky-bottom: oklch(14% 0.02 260);
+  --landing-star-color: color-mix(in oklab, var(--color-base-content) 78%, transparent);
+  --landing-stars-opacity: 0.4;
+}
+
+[data-theme="light"] {
+  --hero-sky-top: oklch(92% 0.015 245);
+  --hero-sky-bottom: oklch(80% 0.02 255);
+  --landing-star-color: color-mix(in oklab, var(--color-base-content) 64%, transparent);
+  --landing-stars-opacity: 0.24;
+}
+
+.landing-starfield {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: var(--landing-stars-opacity);
+}
+
+.landing-starfield__layer {
+  position: absolute;
+  inset: 0;
+  background-repeat: repeat;
+  animation-name: landingStarScroll;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  will-change: background-position;
+}
+
+.landing-starfield__layer--sm {
+  background-size: 320px 320px;
+  animation-duration: 70s;
+  opacity: 0.5;
+  background-image:
+    radial-gradient(circle at 22px 31px, var(--landing-star-color) 1px, transparent 1.6px),
+    radial-gradient(circle at 68px 142px, var(--landing-star-color) 1px, transparent 1.6px),
+    radial-gradient(circle at 146px 71px, var(--landing-star-color) 1px, transparent 1.6px),
+    radial-gradient(circle at 219px 204px, var(--landing-star-color) 1px, transparent 1.6px),
+    radial-gradient(circle at 287px 114px, var(--landing-star-color) 1px, transparent 1.6px),
+    radial-gradient(circle at 101px 275px, var(--landing-star-color) 1px, transparent 1.6px),
+    radial-gradient(circle at 268px 23px, var(--landing-star-color) 1px, transparent 1.6px);
+}
+
+.landing-starfield__layer--md {
+  background-size: 440px 440px;
+  animation-duration: 110s;
+  opacity: 0.4;
+  background-image:
+    radial-gradient(circle at 38px 36px, var(--landing-star-color) 1.5px, transparent 2.3px),
+    radial-gradient(circle at 127px 201px, var(--landing-star-color) 1.5px, transparent 2.3px),
+    radial-gradient(circle at 236px 102px, var(--landing-star-color) 1.5px, transparent 2.3px),
+    radial-gradient(circle at 318px 307px, var(--landing-star-color) 1.5px, transparent 2.3px),
+    radial-gradient(circle at 403px 177px, var(--landing-star-color) 1.5px, transparent 2.3px),
+    radial-gradient(circle at 210px 398px, var(--landing-star-color) 1.5px, transparent 2.3px);
+}
+
+.landing-starfield__layer--lg {
+  background-size: 620px 620px;
+  animation-duration: 150s;
+  opacity: 0.28;
+  background-image:
+    radial-gradient(circle at 56px 118px, var(--landing-star-color) 2.1px, transparent 3.1px),
+    radial-gradient(circle at 219px 56px, var(--landing-star-color) 2.1px, transparent 3.1px),
+    radial-gradient(circle at 371px 249px, var(--landing-star-color) 2.1px, transparent 3.1px),
+    radial-gradient(circle at 536px 131px, var(--landing-star-color) 2.1px, transparent 3.1px);
+}
+
+@keyframes landingStarScroll {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: 0 -2000px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-starfield__layer {
+    animation: none;
+  }
+}
+
+.showcase-image-frame {
+  --showcase-blur: 16px;
+  position: relative;
+  width: 100%;
+  max-width: 1024px;
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  isolation: isolate;
+  background-color: color-mix(in oklab, var(--color-base-200) 70%, var(--color-base-100));
+}
+
+.showcase-image-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background-image: var(--showcase-image);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+  filter: blur(var(--showcase-blur));
+  transform: scale(1.02);
+  opacity: 0.58;
+}
+
+.showcase-image-bg--expanded {
+  width: calc(100% + var(--showcase-blur) * 2);
+  height: calc(100% + var(--showcase-blur) * 2);
+  margin: calc(-1 * var(--showcase-blur));
+  opacity: 0.42;
+}
+
+.showcase-image-main {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.showcase-tab-content--image {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+  background: transparent;
+  border: 0;
+}
+
+@media (max-width: 768px) {
+  .showcase-image-frame {
+    --showcase-blur: 12px;
+  }
 }
 
 /* Hero badge */
@@ -829,13 +1026,113 @@ body.is-landing nav.mt-12 {
   @apply relative;
 }
 
+.search-modal-root {
+  backdrop-filter: blur(4px);
+}
+
+.search-modal-shell {
+  position: relative;
+  overflow: hidden;
+  border-radius: 0.95rem;
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--color-base-100) 92%, var(--color-base-200)) 0%,
+    var(--color-base-100) 72%
+  );
+  box-shadow:
+    0 20px 48px -34px color-mix(in oklab, var(--color-base-content) 24%, transparent),
+    0 1px 0 color-mix(in oklab, var(--color-base-content) 8%, transparent) inset;
+}
+
+html.dark .search-modal-shell {
+  box-shadow:
+    0 14px 36px -30px color-mix(in oklab, #000 58%, transparent),
+    0 1px 0 color-mix(in oklab, var(--color-base-content) 12%, transparent) inset;
+}
+
+.search-modal-close {
+  @apply inline-flex items-center justify-center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 0.45rem;
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 14%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 72%, transparent);
+  background: color-mix(in oklab, var(--color-base-100) 72%, transparent);
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+}
+
+.search-modal-close.search-modal-close-inline {
+  position: absolute;
+  right: 0.45rem;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 2;
+}
+
+.search-modal-close:hover {
+  background: color-mix(in oklab, var(--color-base-content) 9%, transparent);
+  border-color: color-mix(in oklab, var(--color-base-content) 22%, transparent);
+  color: var(--color-base-content);
+}
+
+.search-modal-close:focus-visible {
+  outline: none;
+  border-color: color-mix(in oklab, var(--color-primary) 36%, transparent);
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-primary) 24%, transparent);
+}
+
+.search-modal-close:active {
+  transform: translateY(1px);
+}
+
+.search-modal-close.search-modal-close-inline:active {
+  transform: translateY(calc(-50% + 1px));
+}
+
 .search-input-container {
+  @apply relative;
+  background: color-mix(in oklab, var(--color-base-200) 42%, transparent);
+}
+
+.search-input-wrap {
   @apply relative;
 }
 
 .search-input {
   @apply text-base;
   font-size: 16px;
+  border-radius: 0.55rem;
+}
+
+.search-clear-btn {
+  @apply inline-flex items-center justify-center;
+  position: absolute;
+  right: 2.65rem;
+  top: 50%;
+  transform: translateY(-50%);
+  min-height: 1.6rem;
+  height: 1.6rem;
+  padding: 0 0.52rem;
+  border-radius: 0.44rem;
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 16%, transparent);
+  background: color-mix(in oklab, var(--color-base-100) 72%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 72%, transparent);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
+}
+
+.search-clear-btn:hover {
+  background: color-mix(in oklab, var(--color-base-content) 9%, transparent);
+  color: var(--color-base-content);
+  border-color: color-mix(in oklab, var(--color-base-content) 24%, transparent);
+}
+
+.search-clear-btn[hidden] {
+  display: none;
 }
 
 .search-input:focus {
@@ -847,13 +1144,29 @@ body.is-landing nav.mt-12 {
 }
 
 /* Remove default search input styling */
-.search-input::-webkit-search-cancel-button {
+.search-input::-webkit-search-cancel-button,
+.page-find-input::-webkit-search-cancel-button {
   @apply appearance-none;
+  display: none;
+}
+
+.search-input::-ms-clear,
+.search-input::-ms-reveal,
+.page-find-input::-ms-clear,
+.page-find-input::-ms-reveal {
+  display: none;
 }
 
 .search-results-container {
+  --search-item-radius: 0.55rem;
+  --search-item-bg-hover: color-mix(in oklab, var(--color-base-content) 7%, transparent);
+  --search-item-bg-active: color-mix(in oklab, var(--color-primary) 12%, transparent);
   scrollbar-width: thin;
   scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
+}
+
+.search-results__items {
+  @apply px-1;
 }
 
 .search-results-container::-webkit-scrollbar {
@@ -878,7 +1191,198 @@ body.is-landing nav.mt-12 {
 
 .search-result-link {
   @apply cursor-pointer;
+  position: relative;
+  border-radius: var(--search-item-radius);
+  border: 1px solid transparent;
+  color: var(--color-base-content);
   text-decoration: none;
+  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+}
+
+.search-result-link:hover,
+.search-result-link:focus-visible {
+  background: var(--search-item-bg-hover);
+  color: var(--color-base-content);
+  outline: none;
+}
+
+.search-result-link:active {
+  background: color-mix(in oklab, var(--color-base-content) 11%, transparent);
+}
+
+.search-result-link.search-result-selected {
+  background: var(--search-item-bg-active);
+  color: var(--color-base-content);
+  border-color: color-mix(in oklab, var(--color-primary) 28%, transparent);
+  box-shadow: 0 8px 20px -18px color-mix(in oklab, var(--color-primary) 56%, transparent);
+}
+
+.search-result-link.search-result-selected::before {
+  content: "";
+  position: absolute;
+  left: -0.42rem;
+  top: 0.42rem;
+  bottom: 0.42rem;
+  width: 2px;
+  border-radius: 999px;
+  background: color-mix(in oklab, var(--color-primary) 72%, var(--color-base-content));
+}
+
+.search-result-link:hover .search-result-arrow,
+.search-result-link:focus-visible .search-result-arrow,
+.search-result-link.search-result-selected .search-result-arrow {
+  opacity: 1;
+}
+
+.search-result-title {
+  @apply overflow-hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+}
+
+.search-result-excerpt {
+  @apply overflow-hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.search-result-highlight {
+  padding: 0.03em 0.19em;
+  border-radius: 0.24rem;
+  background: color-mix(in oklab, var(--color-primary) 26%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 92%, transparent);
+  font-weight: 500;
+}
+
+.search-result-link.search-result-selected .search-result-title {
+  color: var(--color-base-content);
+  font-weight: 700;
+}
+
+.search-result-link.search-result-selected .search-result-excerpt {
+  color: color-mix(in oklab, var(--color-base-content) 74%, transparent);
+}
+
+.search-result-link.search-result-selected .search-result-highlight {
+  background: color-mix(in oklab, var(--color-primary) 34%, transparent);
+  color: var(--color-base-content);
+}
+
+.page-find-panel {
+  position: fixed;
+  top: 4.6rem;
+  left: 50%;
+  z-index: 80;
+  width: min(34rem, calc(100vw - 1.25rem));
+  transform: translate(-50%, -0.7rem);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 180ms var(--motion-ease-standard), opacity 180ms var(--motion-ease-standard);
+}
+
+.page-find-panel.is-open {
+  opacity: 1;
+  transform: translate(-50%, 0);
+  pointer-events: auto;
+}
+
+.page-find-shell {
+  @apply flex items-center gap-2 rounded-box px-3 py-2;
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 14%, transparent);
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--color-base-100) 94%, var(--color-base-200)) 0%,
+    var(--color-base-100) 78%
+  );
+  box-shadow:
+    0 16px 36px -24px color-mix(in oklab, var(--color-base-content) 30%, transparent),
+    0 1px 0 color-mix(in oklab, var(--color-base-content) 8%, transparent) inset;
+}
+
+.page-find-icon {
+  color: color-mix(in oklab, var(--color-base-content) 56%, transparent);
+  flex-shrink: 0;
+}
+
+.page-find-input {
+  @apply input input-ghost input-sm;
+  flex: 1;
+  min-width: 7rem;
+  border: 0;
+  padding-inline: 0.25rem;
+  box-shadow: none;
+  background: transparent;
+}
+
+.page-find-input:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.page-find-count {
+  @apply text-xs font-medium;
+  min-width: 3.25rem;
+  text-align: center;
+  color: color-mix(in oklab, var(--color-base-content) 64%, transparent);
+}
+
+.page-find-btn,
+.page-find-clear {
+  @apply inline-flex items-center justify-center;
+  min-height: 1.7rem;
+  height: 1.7rem;
+  padding: 0 0.52rem;
+  border-radius: 0.45rem;
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 16%, transparent);
+  background: color-mix(in oklab, var(--color-base-100) 70%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 74%, transparent);
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.page-find-btn {
+  width: 1.7rem;
+  padding: 0;
+}
+
+.page-find-close {
+  font-size: 0.85rem;
+  line-height: 1;
+}
+
+.page-find-btn:hover,
+.page-find-clear:hover {
+  background: color-mix(in oklab, var(--color-base-content) 7%, transparent);
+  border-color: color-mix(in oklab, var(--color-base-content) 24%, transparent);
+  color: var(--color-base-content);
+}
+
+.page-find-clear:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+[data-page-find-scope] mark.page-find-hit {
+  padding: 0.03em 0.14em;
+  border-radius: 0.22rem;
+  background: color-mix(in oklab, var(--color-warning) 34%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 90%, transparent);
+}
+
+[data-page-find-scope] mark.page-find-hit.page-find-hit-active {
+  background: color-mix(in oklab, var(--color-primary) 36%, transparent);
+  color: var(--color-base-content);
+  box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-primary) 38%, transparent);
+}
+
+@media (max-width: 1023px) {
+  .page-find-panel {
+    top: 4.15rem;
+    width: min(34rem, calc(100vw - 0.85rem));
+  }
 }
 
 /* -------------------------------------

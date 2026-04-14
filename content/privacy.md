@@ -3,6 +3,11 @@ title = "Privacy Policy"
 description = "Privacy policy for dhanur.me"
 template = "page.html"
 
+[extra]
+back_url = "/"
+back_title = "Home"
+back_subtitle = "Back to"
+
 [extra.comments]
 enabled = false
 +++

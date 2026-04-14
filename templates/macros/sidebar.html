@@ -22,9 +22,22 @@
     {% if config.build_search_index and not is_export %}
     <div class="px-2 pt-4 pb-0 flex flex-col items-center gap-2">
         <div class="w-full flex items-center gap-2">
-            <label for="search-modal" class="input w-full flex items-center justify-between text-left bg-base-100 cursor-pointer border-base-content/20 hover:border-base-content/40 hover:border-1 transition" aria-label="Search">
-                {{ macros_icons::svg_search() }}
-                <span class="text-base-content/55 text-sm">Search</span>
+            <label
+                for="search-modal"
+                class="sidebar-search-trigger input w-full flex items-center justify-between gap-3 text-left cursor-pointer transition"
+                aria-label="Search"
+                data-search-open="true"
+                data-keybind="d k"
+                data-keybind-action="click"
+            >
+                <span class="inline-flex min-w-0 items-center gap-2.5">
+                    {{ macros_icons::svg_search() }}
+                    <span class="sidebar-search-label text-sm">Search</span>
+                </span>
+                <span class="sidebar-search-shortcut hidden lg:inline-flex items-center gap-1" aria-hidden="true">
+                    <kbd class="kbd kbd-xs">D</kbd>
+                    <kbd class="kbd kbd-xs">K</kbd>
+                </span>
             </label>
         </div>
     </div>

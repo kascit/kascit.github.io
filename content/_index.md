@@ -13,10 +13,8 @@ version = "v1.0"
 title = "Hey, I'm Dhanur"
 # badge = "Tinkerer"
 description = "Part engineering journal, part sandbox, part controlled chaos. Expect backend systems, future-tech experiments, and notes from projects that were definitely supposed to be simpler."
-image = "/images/whood.png"
-# Optional: use different hero images per theme
-image_dark = "/images/whood.png"
-image_light = "/images/whood-light.jpg"
+image_dark = "/images/landing/whood.jpg"
+image_light = "/images/landing/whood-light.jpg"
 
 cta_buttons = [
     { text = "View Projects", url = "/projects", style = "primary" },

@@ -41,15 +41,15 @@ jobs:
             echo "${key}=${value}" >> "$GITHUB_OUTPUT"
           done
 
-      - name: Install Zola
-        uses: taiki-e/install-action@1ed3272338f573e042a2e6bca3893aa19f43b47a # v2
+      - name: Setup build environment
+        uses: ./.github/actions/setup-build-env
         with:
-          tool: zola@${{ steps.versions.outputs.ZOLA_VERSION }}
+          install-imagemagick: "true"
 
       - name: Build site output
         run: |
           set -euo pipefail
-          zola build
+          just ci-build
           test -f public/index.html
 
       - name: Stage configured mirrored files

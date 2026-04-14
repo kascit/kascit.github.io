@@ -58,7 +58,7 @@ runs:
     - name: Install ImageMagick
       if: inputs.install-imagemagick == 'true'
       shell: bash
-      run: sudo apt-get install --no-install-recommends -y imagemagick
+      run: sudo apt-get install --no-install-recommends -y imagemagick librsvg2-bin
 
     - name: Install just
       uses: taiki-e/install-action@1ed3272338f573e042a2e6bca3893aa19f43b47a # v2

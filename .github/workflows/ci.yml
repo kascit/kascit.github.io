@@ -1,3 +1,4 @@
+---
 name: CI - Build & Test
 
 on:
@@ -115,10 +116,12 @@ jobs:
         run: |
           set -euo pipefail
           file_count=$(find public -type f | wc -l | tr -d ' ')
-          hashed_count=$(find public -type f | grep -E '\\.[a-f0-9]{12}\\.' | wc -l | tr -d ' ' || true)
-          echo "### CI Build Summary" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Files in public/: ${file_count}" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Fingerprinted assets: ${hashed_count}" >> "$GITHUB_STEP_SUMMARY"
+          hashed_count=$(find public -type f -print | grep -Ec '\\.[a-f0-9]{12}\\.' || true)
+          {
+            echo "### CI Build Summary"
+            echo "- Files in public/: ${file_count}"
+            echo "- Fingerprinted assets: ${hashed_count}"
+          } >> "$GITHUB_STEP_SUMMARY"
           if [ -f public/asset-manifest.json ]; then
             echo "- Asset manifest: present" >> "$GITHUB_STEP_SUMMARY"
           else

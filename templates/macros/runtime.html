@@ -1,0 +1,21 @@
+{% import "macros/head.html" as macros_head %}
+
+{% macro site_config(config, lang) %}
+    <script id="site-config" type="application/json">
+    {
+        "defaultColorset": "{{ macros_head::get_theme_colorset(config=config) | trim }}",
+        "katexCss": "{{ get_url(path='css/katex.min.css') | safe }}",
+        "katexJs": "{{ get_url(path='js/katex.min.js') | safe }}",
+        "mermaidJs": "{{ get_url(path='js/mermaid.min.js') | safe }}",
+        "fuseJs": "{{ get_url(path='fuse.min.js') | safe }}",
+        "searchIndexJs": "{{ get_url(path='search_index.' ~ lang ~ '.js') | safe }}",
+        "swPath": "{{ get_url(path='sw.js') | safe }}",
+        "gtagId": "{{ config.extra.gtag | default(value='') }}",
+        "sentryScriptUrl": "https://js-de.sentry-cdn.com/76f095eb3818528a530b2347e1735e14.min.js"
+    }
+    </script>
+{% endmacro site_config %}
+
+{% macro app_main_script() %}
+    <script type="module" src="{{ get_url(path='js/main.js') | safe }}"></script>
+{% endmacro app_main_script %}

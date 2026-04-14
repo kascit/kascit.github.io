@@ -2,38 +2,7 @@
  * Lazy loading for KaTeX and Mermaid.js
  */
 import { getConfig } from './config.js';
-
-function appendStylesheetOnce(href) {
-  if (!href) return;
-  if (document.querySelector(`link[rel="stylesheet"][href="${href}"]`)) return;
-  const link = document.createElement("link");
-  link.rel = "stylesheet";
-  link.href = href;
-  document.head.appendChild(link);
-}
-
-function appendScriptOnce(src, onLoad) {
-  if (!src) return;
-  const existing = document.querySelector(`script[src="${src}"]`);
-  if (existing) {
-    if (typeof onLoad === "function") {
-      if (existing.getAttribute("data-loaded") === "1") {
-        onLoad();
-      } else {
-        existing.addEventListener("load", onLoad, { once: true });
-      }
-    }
-    return;
-  }
-
-  const script = document.createElement("script");
-  script.src = src;
-  script.addEventListener("load", () => {
-    script.setAttribute("data-loaded", "1");
-    if (typeof onLoad === "function") onLoad();
-  }, { once: true });
-  document.head.appendChild(script);
-}
+import { appendScriptOnce, appendStylesheetOnce } from './resource-loader.js';
 
 function renderKatex(katexInlineElements, katexBlockElements) {
   if (typeof window.katex === "undefined") return;
@@ -62,7 +31,11 @@ export function initLazyPlugins() {
     if (typeof window.katex !== "undefined") {
       renderKatex(katexInlineElements, katexBlockElements);
     } else {
-      appendScriptOnce(config.katexJs, () => renderKatex(katexInlineElements, katexBlockElements));
+      appendScriptOnce({
+        src: config.katexJs,
+        loadedAttribute: "data-loaded",
+        onLoad: () => renderKatex(katexInlineElements, katexBlockElements),
+      });
     }
   }
 
@@ -79,10 +52,14 @@ export function initLazyPlugins() {
   };
 
   if (hasMermaid && config.mermaidJs) {
-    appendScriptOnce(config.mermaidJs, () => {
-      if (typeof window.initMermaid === "function") {
-        window.initMermaid();
-      }
+    appendScriptOnce({
+      src: config.mermaidJs,
+      loadedAttribute: "data-loaded",
+      onLoad: () => {
+        if (typeof window.initMermaid === "function") {
+          window.initMermaid();
+        }
+      },
     });
   }
 }

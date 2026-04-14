@@ -8,7 +8,7 @@ tags = ["Technical Writing", "Documentation", "Developer Experience", "Communica
 categories = ["Development"]
 
 [extra]
-thumbnail_image = "images/whood-light.jpg"
+thumbnail_image = "images/thumbs/typing.jpg"
 +++
 
 Most documentation fails for a simple reason: it is written once, merged, and then abandoned while the product keeps changing. The first draft is usually good enough for the sprint demo, but not resilient enough for real users who arrive months later with different assumptions and different urgency.

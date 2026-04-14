@@ -8,6 +8,7 @@
 import { getConfig } from "./config.js";
 import { readCookie, writeCookie } from "./cookie-utils.js";
 import { initGtag } from "../gtag-init.js";
+import { appendScriptOnce } from "./resource-loader.js";
 
 const CONSENT_COOKIE_KEY = "site_cookie_consent_v1";
 const CONSENT_COOKIE_MAX_AGE = 60 * 60 * 24 * 180;
@@ -42,29 +43,10 @@ function clearAnalyticsCookies() {
   }
 }
 
-function appendScript({ src, async = true, defer = false, crossOrigin = "anonymous", onLoad }) {
-  if (!src) return;
-  const existing = document.querySelector(`script[src="${src}"]`);
-  if (existing) {
-    if (typeof onLoad === "function") onLoad();
-    return;
-  }
-
-  const script = document.createElement("script");
-  script.src = src;
-  script.async = async;
-  script.defer = defer;
-  if (crossOrigin) script.crossOrigin = crossOrigin;
-  if (typeof onLoad === "function") {
-    script.addEventListener("load", onLoad, { once: true });
-  }
-  document.head.appendChild(script);
-}
-
 function loadGoogleAnalytics(gtagId) {
   if (!gtagId) return;
 
-  appendScript({
+  appendScriptOnce({
     src: `https://www.googletagmanager.com/gtag/js?id=${encodeURIComponent(gtagId)}`,
     async: true,
     crossOrigin: "anonymous",
@@ -80,7 +62,7 @@ function loadGoogleAnalytics(gtagId) {
 function loadSentry(scriptUrl) {
   if (!scriptUrl || window.__sentryInitialized) return;
 
-  appendScript({
+  appendScriptOnce({
     src: scriptUrl,
     async: true,
     crossOrigin: "anonymous",

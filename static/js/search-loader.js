@@ -13,8 +13,35 @@
   "use strict";
   var el = document.currentScript;
   var data = (el && el.dataset) || {};
-  var fuseSrc = data.fuse || "";
-  var indexSrc = data.searchIndex || "";
+  var fuseSrc = "";
+  var indexSrc = "";
+
+  // Validate script URLs derived from DOM/JSON configuration.
+  function sanitizeScriptSrc(src) {
+    if (!src) return "";
+
+    var trimmed = String(src).trim();
+    if (!trimmed) return "";
+
+    if (/[\u0000-\u001f\u007f]/.test(trimmed)) return "";
+
+    var lower = trimmed.toLowerCase();
+    if (lower.startsWith("javascript:") || lower.startsWith("data:") || lower.startsWith("vbscript:")) {
+      return "";
+    }
+
+    try {
+      var parsed = new URL(trimmed, window.location.href);
+      if (parsed.origin !== window.location.origin) return "";
+      if (!parsed.pathname || !parsed.pathname.toLowerCase().endsWith(".js")) return "";
+      return parsed.pathname + parsed.search + parsed.hash;
+    } catch (_error) {
+      return "";
+    }
+  }
+
+  fuseSrc = sanitizeScriptSrc(data.fuse || "");
+  indexSrc = sanitizeScriptSrc(data.searchIndex || "");
 
   function readSiteConfig() {
     var node = document.getElementById("site-config");
@@ -28,8 +55,12 @@
 
   if (!fuseSrc || !indexSrc) {
     var siteConfig = readSiteConfig();
-    fuseSrc = fuseSrc || siteConfig.fuseJs || "";
-    indexSrc = indexSrc || siteConfig.searchIndexJs || "";
+    if (!fuseSrc && siteConfig.fuseJs) {
+      fuseSrc = sanitizeScriptSrc(siteConfig.fuseJs);
+    }
+    if (!indexSrc && siteConfig.searchIndexJs) {
+      indexSrc = sanitizeScriptSrc(siteConfig.searchIndexJs);
+    }
   }
 
   var searchLoaded = false;
@@ -429,11 +460,17 @@
 
     function appendScript(src) {
       return new Promise(function (resolve, reject) {
-        var existing = document.querySelector('script[src="' + src + '"]');
+        var safeSrc = sanitizeScriptSrc(src);
+        if (!safeSrc) {
+          reject(new Error("Invalid script URL: " + src));
+          return;
+        }
+
+        var existing = document.querySelector('script[src="' + safeSrc + '"]');
         if (existing) {
           var alreadyReady =
-            (src === fuseSrc && typeof Fuse !== "undefined") ||
-            (src === indexSrc && !!window.searchIndex);
+            (safeSrc === fuseSrc && typeof Fuse !== "undefined") ||
+            (safeSrc === indexSrc && !!window.searchIndex);
 
           if (alreadyReady) {
             existing.setAttribute("data-loaded", "1");
@@ -452,20 +489,20 @@
           });
           existing.addEventListener("error", function onError() {
             existing.removeEventListener("error", onError);
-            reject(new Error("Failed to load script: " + src));
+            reject(new Error("Failed to load script: " + safeSrc));
           });
           return;
         }
 
         var script = document.createElement("script");
-        script.src = src;
+        script.src = safeSrc;
         script.async = true;
         script.onload = function () {
           script.setAttribute("data-loaded", "1");
           resolve();
         };
         script.onerror = function () {
-          reject(new Error("Failed to load script: " + src));
+          reject(new Error("Failed to load script: " + safeSrc));
         };
         document.body.appendChild(script);
       });

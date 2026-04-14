@@ -6,6 +6,9 @@ description = "A journey of pain, frustration, and eventual productivity with te
 [taxonomies]
 tags = ["Neovim", "VS Code", "Developer Productivity", "Tooling", "Workflow"]
 categories = ["Development"]
+
+[extra]
+thumbnail_image = "images/thumbs/nerd.jpg"
 +++
 
 Let me start by saying this: I still love VS Code. It's an amazing editor that probably does 95% of what most developers need. But I switched to Neovim anyway, and here's why.

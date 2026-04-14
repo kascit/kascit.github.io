@@ -11,7 +11,7 @@ edit ONLY: content/, templates/, src/, static/.
 IGNORE generated: public/, resources/, static/css/main.css, tools/tailwindcss*, src/vendor/daisyui*.js.
 
 BUILD
-NO node/npm.
+use the best tool for the job, like pnpm instead of npm, if it isnt installed just ask the user to install.
 automation: `just` (dev, build, ci-build). ci logic stays in justfile.
 versions: versions.env = single source truth. pin versions, no `latest`.
 sync pipeline: 

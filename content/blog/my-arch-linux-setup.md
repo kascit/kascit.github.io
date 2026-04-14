@@ -6,6 +6,9 @@ description = "A walkthrough of my Arch Linux setup, or: how I learned to stop w
 [taxonomies]
 tags = ["Linux", "Arch Linux", "Developer Environment", "Productivity", "Tooling"]
 categories = ["Personal"]
+
+[extra]
+thumbnail_image = "images/thumbs/arch.jpg"
 +++
 
 Yes, I'm that person. I use Arch Linux. I will tell you about it. Repeatedly.

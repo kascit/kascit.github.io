@@ -1,3 +1,4 @@
+---
 name: Deploy Zola Site to GitHub Pages
 
 # Intentionally no pull_request trigger: deployment checks do not gate PRs.
@@ -126,11 +127,13 @@ jobs:
         run: |
           set -euo pipefail
           file_count=$(find public -type f | wc -l | tr -d ' ')
-          hashed_count=$(find public -type f | grep -E '\\.[a-f0-9]{12}\\.' | wc -l | tr -d ' ' || true)
-          echo "### Deploy Build Summary" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Files in public/: ${file_count}" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Fingerprinted assets: ${hashed_count}" >> "$GITHUB_STEP_SUMMARY"
-          echo "- Pages base URL: ${{ steps.pages.outputs.base_url }}" >> "$GITHUB_STEP_SUMMARY"
+          hashed_count=$(find public -type f -print | grep -Ec '\\.[a-f0-9]{12}\\.' || true)
+          {
+            echo "### Deploy Build Summary"
+            echo "- Files in public/: ${file_count}"
+            echo "- Fingerprinted assets: ${hashed_count}"
+            echo "- Pages base URL: ${{ steps.pages.outputs.base_url }}"
+          } >> "$GITHUB_STEP_SUMMARY"
 
       - name: Create deploy archive for provenance
         run: tar -czf site-deploy-${{ github.run_id }}.tar.gz public

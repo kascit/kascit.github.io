@@ -443,8 +443,7 @@ ci-build: _assert-zola-version verify-generated-clean
     node scripts/just-log.js info "Cleaning Zola pagination redirect stubs"
     node scripts/just-run.js "clean pagination redirects" -- node scripts/clean-pagination-redirects.js
     node scripts/just-log.js info "Optimizing JavaScript"
-    chmod +x scripts/minify-js.sh
-    node scripts/just-run.js "minify javascript" -- ./scripts/minify-js.sh public
+    node scripts/just-run.js "minify javascript" -- node scripts/minify-js.js public
     node scripts/just-log.js info "Fingerprinting static assets"
     node scripts/just-run.js "fingerprint assets" -- node scripts/fingerprint-assets.js public
     node scripts/just-log.js info "Validating public output"
@@ -467,7 +466,7 @@ ci-build: _assert-zola-version verify-generated-clean
     @node scripts/just-log.js info "Cleaning Zola pagination redirect stubs"
     @node scripts/just-run.js "clean pagination redirects" -- node scripts/clean-pagination-redirects.js
     @node scripts/just-log.js info "Optimizing JavaScript"
-    @node scripts/just-run.js "minify javascript" -- bash scripts/minify-js.sh public
+    @node scripts/just-run.js "minify javascript" -- node scripts/minify-js.js public
     @node scripts/just-log.js info "Fingerprinting static assets"
     @node scripts/just-run.js "fingerprint assets" -- node scripts/fingerprint-assets.js public
     @node scripts/just-log.js info "Validating public output"

@@ -6,6 +6,9 @@ description = "First post vibes - what this blog is about and why I'm probably g
 [taxonomies]
 tags = ["Site Updates", "Personal Notes"]
 categories = ["General"]
+
+[extra]
+thumbnail_image = "images/thumbs/wave.jpg"
 +++
 
 Welcome. This is the first entry in a blog that exists mainly so useful lessons do not die inside random local notes and terminal history.

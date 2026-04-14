@@ -3,6 +3,8 @@
  * Handles Auth client loading and UI state syncing.
  */
 
+import { appendScriptOnce } from "./resource-loader.js";
+
 function getAuthClient() {
   if (!window.AUTH || typeof window.AUTH !== "object") return null;
   return window.AUTH;
@@ -17,6 +19,32 @@ function once(fn) {
   };
 }
 
+function pickFirst(...nodes) {
+  return nodes.find(Boolean) || null;
+}
+
+function showElements(...elements) {
+  elements.forEach((el) => el?.classList.remove("hidden"));
+}
+
+function hideElements(...elements) {
+  elements.forEach((el) => el?.classList.add("hidden"));
+}
+
+function setText(el, value) {
+  if (el) el.textContent = value;
+}
+
+function setSrc(el, value) {
+  if (el) el.src = value;
+}
+
+function bindAll(root, selector, eventName, handler, options) {
+  root.querySelectorAll(selector).forEach((node) => {
+    node.addEventListener(eventName, handler, options);
+  });
+}
+
 // Auto-inject auth-client.js from auth.dhanur.me
 function injectAuthSDK(callback) {
   const done = once(callback);
@@ -25,29 +53,28 @@ function injectAuthSDK(callback) {
     return;
   }
 
-  const existingScript = document.querySelector('script[src*="auth-client.js"]');
-  if (existingScript) {
-    document.addEventListener("authReady", done, { once: true });
-    existingScript.addEventListener("load", done, { once: true });
-    window.setTimeout(() => {
-      if (getAuthClient()) done();
-    }, 2000);
-    return;
-  }
+  document.addEventListener("authReady", done, { once: true });
 
-  const script = document.createElement("script");
-  script.src = "https://auth.dhanur.me/auth-client.js";
-  script.defer = true;
-  script.onload = () => {
-    const auth = getAuthClient();
-    if (auth && typeof auth.onReady === "function") {
-      auth.onReady(() => done());
-    } else {
-      done();
-    }
-  };
-  script.onerror = () => console.warn("[Auth] Could not load auth-client.js");
-  document.head.appendChild(script);
+  appendScriptOnce({
+    src: "https://auth.dhanur.me/auth-client.js",
+    selector: 'script[src*="auth-client.js"]',
+    defer: true,
+    onLoad: () => {
+      const auth = getAuthClient();
+      if (auth && typeof auth.onReady === "function") {
+        auth.onReady(() => done());
+      } else {
+        done();
+      }
+    },
+    onError: () => {
+      console.warn("[Auth] Could not load auth-client.js");
+    },
+  });
+
+  window.setTimeout(() => {
+    if (getAuthClient()) done();
+  }, 2000);
 }
 
 function formatCreditsReset(periodEnd) {
@@ -102,40 +129,38 @@ export function initAuth(drawerElement = document) {
     const navbarRoot = drawerElement.querySelector(".navbar");
     const sidebarRoot = drawerElement.querySelector("[data-sidebar-root]") || drawerElement.querySelector("#sidebar");
     const sidebarAccountRoot = drawerElement.querySelector("[data-sidebar-account]");
-
-    const pick = (...nodes) => nodes.find(Boolean) || null;
     
     const r = {
-      navGuestAvatar: pick(
+      navGuestAvatar: pickFirst(
         drawerElement.querySelector('[data-auth="nav-guest-avatar"]'),
         navbarRoot?.querySelector('[data-dropdown="account"] .bg-base-300')
       ),
-      navAuthedAvatar: pick(
+      navAuthedAvatar: pickFirst(
         drawerElement.querySelector('[data-auth="nav-authed-avatar"]'),
         navbarRoot?.querySelector('[data-dropdown="account"] .ring-primary')
       ),
-      navAvatarImg: pick(
+      navAvatarImg: pickFirst(
         drawerElement.querySelector('[data-auth="nav-authed-avatar"] img'),
         navbarRoot?.querySelector('[data-dropdown="account"] .ring-primary img')
       ),
-      navAuthedHeader: pick(
+      navAuthedHeader: pickFirst(
         drawerElement.querySelector('[data-auth="nav-authed-header"]'),
         navbarRoot?.querySelector('.dropdown-panel [data-auth="nav-name"]')?.closest('.border-b')
       ),
-      navGuestHeader: pick(
+      navGuestHeader: pickFirst(
         drawerElement.querySelector('[data-auth="nav-guest-header"]'),
         navbarRoot?.querySelector('.dropdown-panel .fa-user')?.closest('.border-b')
       ),
       navAuthedHeaderImg: drawerElement.querySelector('[data-auth="nav-authed-header-avatar"]'),
-      navName: pick(
+      navName: pickFirst(
         drawerElement.querySelector('[data-auth="nav-name"]'),
         navbarRoot?.querySelector('[data-auth="name"]')
       ),
-      navEmail: pick(
+      navEmail: pickFirst(
         drawerElement.querySelector('[data-auth="nav-email"]'),
         navbarRoot?.querySelector('[data-auth="email"]')
       ),
-      navRole: pick(
+      navRole: pickFirst(
         drawerElement.querySelector('[data-auth="nav-role"]'),
         navbarRoot?.querySelector('[data-auth="role"]')
       ),
@@ -143,23 +168,23 @@ export function initAuth(drawerElement = document) {
       navAccountItem: navbarRoot?.querySelector('[data-auth="account-item"]') || null,
       navLogoutItem: navbarRoot?.querySelector('[data-auth="logout-item"]') || null,
       
-      sidebarGuestAvatar: pick(
+      sidebarGuestAvatar: pickFirst(
         drawerElement.querySelector('[data-auth="sidebar-guest-avatar"]'),
         sidebarAccountRoot?.querySelector('.bg-base-300')
       ),
-      sidebarAuthedAvatar: pick(
+      sidebarAuthedAvatar: pickFirst(
         drawerElement.querySelector('[data-auth="sidebar-authed-avatar"]'),
         sidebarAccountRoot?.querySelector('.ring-primary')
       ),
-      sidebarAvatarImg: pick(
+      sidebarAvatarImg: pickFirst(
         drawerElement.querySelector('[data-auth="sidebar-authed-avatar"] img'),
         sidebarAccountRoot?.querySelector('.ring-primary img')
       ),
-      sidebarName: pick(
+      sidebarName: pickFirst(
         drawerElement.querySelector('[data-auth="sidebar-name"]'),
         sidebarAccountRoot?.querySelector('.font-semibold')
       ),
-      sidebarEmail: pick(
+      sidebarEmail: pickFirst(
         drawerElement.querySelector('[data-auth="sidebar-email"]'),
         sidebarAccountRoot?.querySelector('.text-xs.opacity-60')
       ),
@@ -167,11 +192,6 @@ export function initAuth(drawerElement = document) {
       sidebarLogoutBtn: sidebarRoot?.querySelector('[data-auth="sidebar-logout-btn"]') || null,
       sidebarAccountBtn: sidebarRoot?.querySelector('[data-auth="sidebar-account-btn"]') || null
     };
-
-    const show = (...els) => els.forEach((el) => el?.classList.remove("hidden"));
-    const hide = (...els) => els.forEach((el) => el?.classList.add("hidden"));
-    const setText = (el, value) => { if (el) el.textContent = value; };
-    const setSrc = (el, value) => { if (el) el.src = value; };
 
     function updateUI(status) {
       if (!status) return;
@@ -181,8 +201,8 @@ export function initAuth(drawerElement = document) {
       const userName = user?.name || "User";
       
       if (authed && user) {
-        hide(r.navGuestAvatar, r.navGuestHeader, r.navLoginItem);
-        show(r.navAuthedAvatar, r.navAuthedHeader, r.navAccountItem, r.navLogoutItem);
+        hideElements(r.navGuestAvatar, r.navGuestHeader, r.navLoginItem);
+        showElements(r.navAuthedAvatar, r.navAuthedHeader, r.navAccountItem, r.navLogoutItem);
         setSrc(r.navAvatarImg, avatarUrl);
         
         setSrc(r.navAuthedHeaderImg, avatarUrl);
@@ -194,22 +214,22 @@ export function initAuth(drawerElement = document) {
           const role = status.role || "user";
           r.navRole.textContent = role.toUpperCase();
           r.navRole.className = role === "admin" ? "badge badge-sm badge-error" : "badge badge-sm badge-success";
-          show(r.navRole);
+          showElements(r.navRole);
         }
 
-        hide(r.sidebarGuestAvatar, r.sidebarLoginBtn);
-        show(r.sidebarAuthedAvatar, r.sidebarLogoutBtn, r.sidebarAccountBtn);
+        hideElements(r.sidebarGuestAvatar, r.sidebarLoginBtn);
+        showElements(r.sidebarAuthedAvatar, r.sidebarLogoutBtn, r.sidebarAccountBtn);
         setSrc(r.sidebarAvatarImg, avatarUrl);
         setText(r.sidebarName, userName);
         setText(r.sidebarEmail, user.email || "");
         
         updateCreditsUI(drawerElement, status.credits || null);
       } else {
-        show(r.navGuestAvatar, r.navGuestHeader, r.navLoginItem);
-        hide(r.navAuthedAvatar, r.navAuthedHeader, r.navRole, r.navAccountItem, r.navLogoutItem);
+        showElements(r.navGuestAvatar, r.navGuestHeader, r.navLoginItem);
+        hideElements(r.navAuthedAvatar, r.navAuthedHeader, r.navRole, r.navAccountItem, r.navLogoutItem);
 
-        show(r.sidebarGuestAvatar, r.sidebarLoginBtn);
-        hide(r.sidebarAuthedAvatar, r.sidebarLogoutBtn, r.sidebarAccountBtn);
+        showElements(r.sidebarGuestAvatar, r.sidebarLoginBtn);
+        hideElements(r.sidebarAuthedAvatar, r.sidebarLogoutBtn, r.sidebarAccountBtn);
         setText(r.sidebarName, "Guest");
         setText(r.sidebarEmail, "Not signed in");
 
@@ -226,15 +246,12 @@ export function initAuth(drawerElement = document) {
     document.addEventListener("authChanged", e => updateUI(e.detail));
     document.addEventListener("creditsChanged", e => updateCreditsUI(drawerElement, e.detail));
 
-    drawerElement.querySelectorAll('[data-auth="login-btn"], [data-auth="sidebar-login-btn"]').forEach(btn => {
-      btn.addEventListener("click", e => {
+    bindAll(drawerElement, '[data-auth="login-btn"], [data-auth="sidebar-login-btn"]', "click", (e) => {
         e.preventDefault();
         if (typeof auth.login === "function") auth.login();
       });
-    });
 
-    drawerElement.querySelectorAll('[data-auth="logout-btn"], [data-auth="sidebar-logout-btn"]').forEach(btn => {
-      btn.addEventListener("click", e => {
+    bindAll(drawerElement, '[data-auth="logout-btn"], [data-auth="sidebar-logout-btn"]', "click", (e) => {
         e.preventDefault();
         if (typeof auth.logout === "function") {
           const result = auth.logout();
@@ -250,7 +267,6 @@ export function initAuth(drawerElement = document) {
           }
         }
       });
-    });
 
   });
 }

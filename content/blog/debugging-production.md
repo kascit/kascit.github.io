@@ -6,6 +6,9 @@ description = "A systematic approach to finding and fixing bugs when you can't r
 [taxonomies]
 tags = ["Debugging", "Production Systems", "Incident Response", "Troubleshooting", "Reliability"]
 categories = ["Development"]
+
+[extra]
+thumbnail_image = "images/thumbs/code.jpg"
 +++
 
 It's 3 AM. You get a Slack notification: "The site is down." You check your local environment - everything works fine. You check staging - also works fine. But production is broken.

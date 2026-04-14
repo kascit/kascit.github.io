@@ -7,6 +7,7 @@
 {% import "macros/sidebar.html" as macros_sidebar %}
 {% import "macros/drawer.html" as macros_drawer %}
 {% import "macros/cookie_consent.html" as macros_cookie_consent %}
+{% import "macros/runtime.html" as macros_runtime %}
 
 {% set lang_root_path = "/" ~ lang ~ "/" %}
 {% if config.extra.sidebar is defined %}
@@ -270,21 +271,8 @@
     {{ macros_cookie_consent::banner() }}
 
     {% block js_body %}
-        {% set js_theme_colorset = macros_head::get_theme_colorset(config=config) | trim %}
-        <script id="site-config" type="application/json">
-        {
-            "defaultColorset": "{{ js_theme_colorset }}",
-            "katexCss": "{{ get_url(path='css/katex.min.css') | safe }}",
-            "katexJs": "{{ get_url(path='js/katex.min.js') | safe }}",
-            "mermaidJs": "{{ get_url(path='js/mermaid.min.js') | safe }}",
-            "fuseJs": "{{ get_url(path='fuse.min.js') | safe }}",
-            "searchIndexJs": "{{ get_url(path='search_index.' ~ lang ~ '.js') | safe }}",
-            "swPath": "{{ get_url(path='sw.js') | safe }}",
-            "gtagId": "{{ config.extra.gtag | default(value='') }}",
-            "sentryScriptUrl": "https://js-de.sentry-cdn.com/76f095eb3818528a530b2347e1735e14.min.js"
-        }
-        </script>
-        <script type="module" src="{{ get_url(path='js/main.js') | safe }}"></script>
+        {{ macros_runtime::site_config(config=config, lang=lang) }}
+        {{ macros_runtime::app_main_script() }}
         
     {% endblock js_body %}
 </body>

@@ -370,12 +370,7 @@ body.is-landing nav.mt-12 {
     will-change: margin-left, opacity;
   }
 
-  .drawer.sidebar-collapsed #sidebar {
-    margin-left: calc(-1 * var(--sidebar-width));
-    opacity: 0;
-    pointer-events: none;
-  }
-
+  .drawer.sidebar-collapsed #sidebar,
   html[data-sidebar-collapsed="1"] .drawer #sidebar {
     margin-left: calc(-1 * var(--sidebar-width));
     opacity: 0;
@@ -392,11 +387,7 @@ body.is-landing nav.mt-12 {
     will-change: left, right, transform;
   }
 
-  .drawer.sidebar-collapsed #sidebar-toggle-wrapper {
-    left: calc(-0.6 * var(--toggle-half-width));;
-    right: auto;
-  }
-
+  .drawer.sidebar-collapsed #sidebar-toggle-wrapper,
   html[data-sidebar-collapsed="1"] .drawer #sidebar-toggle-wrapper {
     left: calc(-0.6 * var(--toggle-half-width));
     right: auto;
@@ -423,11 +414,7 @@ body.is-landing nav.mt-12 {
     transition-duration: 100ms;
   }
 
-  #sidebar-toggle.sidebar-toggle--collapsed {
-    background-color: var(--color-base-300);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  }
-
+  #sidebar-toggle.sidebar-toggle--collapsed,
   html[data-sidebar-collapsed="1"] #sidebar-toggle {
     background-color: var(--color-base-300);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);

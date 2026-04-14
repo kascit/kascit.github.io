@@ -6,6 +6,9 @@ description = "Learning containers and orchestration without losing your sanity 
 [taxonomies]
 tags = ["Docker", "Kubernetes", "DevOps", "Containers", "Cloud Infrastructure"]
 categories = ["DevOps"]
+
+[extra]
+thumbnail_image = "images/thumbs/ship.jpg"
 +++
 
 So you want to learn about containers and orchestration? Buckle up, because you're about to enter a world where "it works on my machine" becomes both your mantra and your nightmare.

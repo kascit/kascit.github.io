@@ -4,6 +4,7 @@
 {% import "macros/sidebar.html" as macros_sidebar %}
 {% import "macros/drawer.html" as macros_drawer %}
 {% import "macros/cookie_consent.html" as macros_cookie_consent %}
+{% import "macros/runtime.html" as macros_runtime %}
 
 {% set status_title = "Status" %}
 {% set status_desc = "System status and route diagnostics." %}
@@ -67,20 +68,8 @@
 
     {{ macros_cookie_consent::banner() }}
 
-    <script id="site-config" type="application/json">
-    {
-        "defaultColorset": "{{ macros_head::get_theme_colorset(config=config) | trim }}",
-        "katexCss": "{{ get_url(path='css/katex.min.css') | safe }}",
-        "katexJs": "{{ get_url(path='js/katex.min.js') | safe }}",
-        "mermaidJs": "{{ get_url(path='js/mermaid.min.js') | safe }}",
-        "fuseJs": "{{ get_url(path='fuse.min.js') | safe }}",
-        "searchIndexJs": "{{ get_url(path='search_index.' ~ config.default_language ~ '.js') | safe }}",
-        "swPath": "{{ get_url(path='sw.js') | safe }}",
-        "gtagId": "{{ config.extra.gtag | default(value='') }}",
-        "sentryScriptUrl": "https://js-de.sentry-cdn.com/76f095eb3818528a530b2347e1735e14.min.js"
-    }
-    </script>
-    <script type="module" src="{{ get_url(path='js/main.js') | safe }}"></script>
+    {{ macros_runtime::site_config(config=config, lang=config.default_language) }}
+    {{ macros_runtime::app_main_script() }}
     {% block status_scripts %}{% endblock status_scripts %}
 </body>
 </html>

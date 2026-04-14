@@ -688,6 +688,10 @@ async function callTool(toolName, args = {}) {
     throw new Error(`Unknown tool: ${toolName}`);
   }
 
+  if (typeof tool !== "function") {
+    throw new Error(`Tool is not executable: ${toolName}`);
+  }
+
   return tool(args);
 }
 

@@ -6,6 +6,9 @@ description = "Why 'free' software often costs more than you think, and how to c
 [taxonomies]
 tags = ["SaaS", "Product Strategy", "Pricing", "Cost Optimization", "Productivity Tools"]
 categories = ["Business"]
+
+[extra]
+thumbnail_image = "images/thumbs/chain.jpg"
 +++
 
 We've all been there. You find a "free" tool that solves exactly the problem you're having. You sign up, start using it, and everything seems great. Six months later, you're paying $47/month for three different "freemium" tools that you can't live without.

@@ -19,7 +19,9 @@ This page is the clean index of where to find me online. If you need to reach me
 
 {{ link_card(url="https://dev.to/kascit", external=true, icon="fa-brands fa-dev", title="DEV Community", description="Articles and technical notes") }}
 
-## Algorithms & Problem Solving
+{{ link_card(url="https://codolio.com/profile/kascit", external=true, icon="fa-solid fa-code", title="Codolio", description="Where I go to feel inadequate") }}
+
+<!-- ## Algorithms & Problem Solving
 
 {{ link_card(url="https://leetcode.com/u/kascit/", external=true, icon="fa-solid fa-code", title="LeetCode", description="Where I go to feel inadequate") }}
 
@@ -27,7 +29,7 @@ This page is the clean index of where to find me online. If you need to reach me
 
 {{ link_card(url="https://www.codechef.com/users/kascit", external=true, icon="fa-solid fa-trophy", title="CodeChef", description="Contests and ratings") }}
 
-{{ link_card(url="https://codeforces.com/profile/kascit", external=true, icon="fa-solid fa-chart-line", title="Codeforces", description="Competitive programming") }}
+{{ link_card(url="https://codeforces.com/profile/kascit", external=true, icon="fa-solid fa-chart-line", title="Codeforces", description="Competitive programming") }} -->
 
 ## Socials & Communities
 

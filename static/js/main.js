@@ -13,6 +13,26 @@ import { initWebMCP } from "./modules/webmcp.js";
 import { initTooltips } from "./modules/tooltips.js";
 import { initExternalLinkUtm } from "./modules/external-link-utm.js";
 
+// Structural UX natively bundled
+import { initToc } from "./toc.js";
+import { initSearchLoader } from "./search-loader.js";
+import { initShowcaseRotate } from "./showcase-rotate.js";
+import { initCodeBlocks } from "./modules/code-blocks.js";
+import { initClipboard } from "./modules/clipboard.js";
+import { initShortcuts } from "./modules/shortcuts.js";
+import { initKeyboardShortcuts } from "./modules/keyboard-shortcuts.js";
+import { initAccessKeys } from "./modules/access-keys.js";
+import { initScrollToTop } from "./modules/scroll-top.js";
+import { initLazyPlugins } from "./modules/lazy-plugins.js";
+
+// Deferred UX & Heavy components natively bundled
+import { initLayoutRecommendation } from "./modules/layout-recommendation.js";
+import { initBlogFeed } from "./modules/blog-feed.js";
+import { initTaxonomyFilter } from "./modules/taxonomy-filter.js";
+import { initTaxonomySubscribe } from "./modules/taxonomy-subscribe.js";
+import { initTaxonomyPlaylist } from "./modules/taxonomy-playlist.js";
+import { initComments } from "./modules/comments.js";
+
 function runSafely(task, label) {
   try {
     const result = task();
@@ -73,18 +93,8 @@ function syncPrepaintLayoutState() {
   }
 }
 
-async function importAndInit(modulePath, exportName, args = []) {
-  const mod = await import(modulePath);
-  const fn = mod[exportName];
-  if (typeof fn === "function") {
-    return await fn(...args);
-  }
-  return undefined;
-}
 
-async function importModule(modulePath) {
-  return await import(modulePath);
-}
+
 
 function has(selector) {
   return !!document.querySelector(selector);
@@ -142,66 +152,66 @@ DDDDDDDDDDb·······················PDDDDDDDDDDDDDDDPP··�
   // UX niceties after initial paint.
   runAfterFirstPaint(() => {
     if (hasAny(["[data-toc-sidebar]", "[data-toc-toggle]"])) {
-      runSafely(() => importModule("./toc.js"), "toc");
+      runSafely(() => initToc(), "toc");
     }
 
     if (has("[data-search-mount]")) {
-      runSafely(() => importModule("./search-loader.js"), "search loader");
+      runSafely(() => initSearchLoader(), "search loader");
     }
 
     if (has('input[name="showcase_tabs"]')) {
-      runSafely(() => importModule("./showcase-rotate.js"), "showcase rotate");
+      runSafely(() => initShowcaseRotate(), "showcase rotate");
     }
 
     if (has("pre > code")) {
-      runSafely(() => importAndInit("./modules/code-blocks.js", "initCodeBlocks"), "code blocks");
+      runSafely(() => initCodeBlocks(), "code blocks");
     }
 
     if (hasAny(["[data-copy-url]", "main h1[id]", "main h2[id]", "main h3[id]", "main h4[id]", "main h5[id]", "main h6[id]"])) {
-      runSafely(() => importAndInit("./modules/clipboard.js", "initClipboard"), "clipboard");
+      runSafely(() => initClipboard(), "clipboard");
     }
 
     if (hasAny(["[data-shortcut]", "[data-desktop-only='true']"])) {
-      runSafely(() => importAndInit("./modules/shortcuts.js", "initShortcuts"), "shortcuts");
+      runSafely(() => initShortcuts(), "shortcuts");
     }
 
     if (has("[data-keybind]") || isHomeRoute()) {
-      runSafely(() => importAndInit("./modules/keyboard-shortcuts.js", "initKeyboardShortcuts"), "keyboard shortcuts");
+      runSafely(() => initKeyboardShortcuts(), "keyboard shortcuts");
     }
 
-    runSafely(() => importAndInit("./modules/access-keys.js", "initAccessKeys"), "access keys");
+    runSafely(() => initAccessKeys(), "access keys");
 
-    runSafely(() => importAndInit("./modules/scroll-top.js", "initScrollToTop"), "scroll top");
+    runSafely(() => initScrollToTop(), "scroll top");
 
     if (hasAny([".katex-inline", ".katex-block", ".mermaid"])) {
-      runSafely(() => importAndInit("./modules/lazy-plugins.js", "initLazyPlugins"), "lazy plugins");
+      runSafely(() => initLazyPlugins(), "lazy plugins");
     }
   });
 
-  // Heavier/optional page features during idle time.
+  // Heavier/optional page features during idle time natively bundled.
   runWhenIdle(() => {
     if (has("[data-sidebar-toggle]") && has("[data-toc-toggle]")) {
-      runSafely(() => importAndInit("./modules/layout-recommendation.js", "initLayoutRecommendation"), "layout recommendation");
+      runSafely(() => initLayoutRecommendation(), "layout recommendation");
     }
 
     if (hasAny(["[data-blog-feed]", "[data-blog-feed-mount]"])) {
-      runSafely(() => importAndInit("./modules/blog-feed.js", "initBlogFeed"), "blog feed");
+      runSafely(() => initBlogFeed(), "blog feed");
     }
 
     if (has("[data-taxonomy-filter]")) {
-      runSafely(() => importAndInit("./modules/taxonomy-filter.js", "initTaxonomyFilter"), "taxonomy filter");
+      runSafely(() => initTaxonomyFilter(), "taxonomy filter");
     }
 
     if (has("[data-taxonomy-subscribe]")) {
-      runSafely(() => importAndInit("./modules/taxonomy-subscribe.js", "initTaxonomySubscribe"), "taxonomy subscribe");
+      runSafely(() => initTaxonomySubscribe(), "taxonomy subscribe");
     }
 
     if (has("[data-taxonomy-playlist]") || new URLSearchParams(window.location.search).has("pl")) {
-      runSafely(() => importAndInit("./modules/taxonomy-playlist.js", "initTaxonomyPlaylist"), "taxonomy playlist");
+      runSafely(() => initTaxonomyPlaylist(), "taxonomy playlist");
     }
 
     if (has("[data-comments-mount]")) {
-      runSafely(() => importAndInit("./modules/comments.js", "initComments"), "comments");
+      runSafely(() => initComments(), "comments");
     }
   });
 

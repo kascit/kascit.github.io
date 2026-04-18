@@ -1,5 +1,4 @@
-// Auto-rotate showcase tabs on the landing page.
-(function () {
+export function initShowcaseRotate() {
   const tabs = Array.from(document.querySelectorAll('input[name="showcase_tabs"]'));
   if (tabs.length < 2) return;
 
@@ -38,4 +37,5 @@
       start();
     });
   }
-})();
+}
+

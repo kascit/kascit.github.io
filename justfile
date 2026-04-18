@@ -289,7 +289,7 @@ css: setup-build-deps
 [group('build')]
 generate-images:
     @node scripts/just-log.js info "Generating responsive image variants"
-    @node scripts/just-run.js "generate responsive images" -- node scripts/generate-responsive-images.js public/images
+    @node scripts/just-run.js "generate responsive images" -- node scripts/generate-responsive-images.js public
 
 [doc("Generate favicon and shortcut icon assets inside built public/")]
 [group('build')]
@@ -316,7 +316,7 @@ _post-build:
     @node scripts/just-log.js info "Cleaning Zola pagination redirect stubs"
     @node scripts/just-run.js "clean pagination redirects" -- node scripts/clean-pagination-redirects.js
     @node scripts/just-log.js info "Generating responsive public image variants"
-    @node scripts/just-run.js "generate responsive images" -- node scripts/generate-responsive-images.js public/images
+    @node scripts/just-run.js "generate responsive images" -- node scripts/generate-responsive-images.js public
     @node scripts/just-log.js info "Generating public icon assets"
     @node scripts/just-run.js "generate icons" -- node scripts/generate-icons.js public public/icons/favicon.svg
     @node scripts/just-log.js info "Injecting responsive image markup"

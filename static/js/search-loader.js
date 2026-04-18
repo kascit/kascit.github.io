@@ -9,8 +9,7 @@
  *   data-search-index  — URL to search_index.xx.js
  *   data-lang          — language code (default "en")
  */
-(function () {
-  "use strict";
+
   var el = document.currentScript;
   var data = (el && el.dataset) || {};
   var fuseSrc = "";
@@ -1136,13 +1135,8 @@
 
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", function () {
-      bindSearchEvents();
-      initPageFindEvents();
-    }, { once: true });
-  } else {
+  export function initSearchLoader() {
     bindSearchEvents();
     initPageFindEvents();
   }
-})();
+

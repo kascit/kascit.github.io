@@ -48,10 +48,11 @@
     {% set theme_colorset = self::get_theme_colorset(config=config) | trim %}
     <!-- Critical prepaint bootstrap lives in js/boot.js and must run synchronously. -->
     {%- set cookie_domain = config.base_url | replace(from="https://", to="") | replace(from="http://", to="") -%}
-    <script src="{{ get_url(path='js/boot.js') | safe }}"
-            data-cookie-domain="{{ cookie_domain }}"
+    <script data-cookie-domain="{{ cookie_domain }}"
             data-default-colorset="{{ theme_colorset }}"
-            data-webmcp-compat="1"></script>
+            data-webmcp-compat="1">
+{{ load_data(path="static/js/boot.js") | safe }}
+    </script>
 
         {# Font configuration with backward compatibility #}
         {% if config.extra.font is defined %}

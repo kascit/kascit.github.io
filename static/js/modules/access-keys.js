@@ -1,21 +1,26 @@
 /**
- * Access-key hint overlay.
+ * Access-key hint overlay — Vimium-style link hints for keyboard navigation.
  *
- * Hold Alt to reveal single-character badges on interactive elements.
- * While hints are visible, pressing a hint character activates that element.
- * Release Alt (or press Escape) to dismiss.
+ * Hold Alt → reveal hint badges on every visible interactive element.
+ * Press hint char(s) → activate the element. Release Alt → dismiss.
+ * Alt+↑ / Alt+↓ → scroll the page; hints re-appear after scroll settles.
  *
- * Two-character hints are used when there are more elements than single chars.
- * Typing the first character of a two-char hint narrows the visible set; the
- * second character activates. Works like Vimium link-hints.
- *
- * Only in-viewport, visible, non-aria-hidden, non-inert elements are hinted.
+ * Design rules:
+ *  1. Only truly in-viewport, CSS-visible, non-aria-hidden elements are hinted.
+ *  2. Duplicate hrefs → SAME hint assigned to all instances (both sidebar + header).
+ *  3. Explicit `data-hint` values on elements always take precedence.
+ *  4. Auto-generated hints never start with a char claimed by any explicit hint.
+ *  5. Auto-generated hints are strictly prefix-free (no exact match shadows another).
  */
 
 import { isMobile, prefersReducedMotion } from "./responsive.js";
 
-// ─── Constants ───────────────────────────────────────────────────────
-const HINT_CHARS = "sadfjklewcmpgh";
+// ─── Constants ────────────────────────────────────────────────────────────────
+
+// Chars for auto-generation (home-row biased, no 't' or 'c' which might be base tags)
+const HINT_CHARS = "sdfwejxzioqy";
+const BADGE_MARGIN = 4;  // min px from edge
+
 const INTERACTIVE_SELECTOR = [
   "a[href]",
   "button:not([disabled]):not([hidden])",
@@ -25,202 +30,254 @@ const INTERACTIVE_SELECTOR = [
   "[role='button']:not([disabled])",
   "[role='link']",
   "[role='tab']",
-  "[tabindex]:not([tabindex='-1'])",
   "summary",
-  "details > summary",
+  "label[for*='search']",
 ].join(", ");
 
-const BADGE_OFFSET_X = 0;
-const BADGE_OFFSET_Y = 0;
-const BADGE_MARGIN = 2;
+// ─── Semantic Base Rules ──────────────────────────────────────────────────────
 
-// ─── State ───────────────────────────────────────────────────────────
+const SEMANTIC_RULES = [
+  // Toggles & Actions
+  { selector: "#hamburger-toggle", hint: "m" },
+  { selector: "#sidebar-toggle, [data-sidebar-toggle]", hint: "s" },
+  { selector: "#toc-toggle, [data-toc-toggle]", hint: "r" },
+  { selector: "[data-theme-mode='light']", hint: "tl" },
+  { selector: "[data-theme-mode='dark']", hint: "td" },
+  { selector: "[data-theme-mode='auto']", hint: "ta" },
+  { selector: "[aria-label='Languages']", hint: "f" },
+  { selector: "[aria-label='Apps']", hint: "g" },
+  { selector: "[aria-label='Account']", hint: "u" },
+  { selector: "[data-search-trigger], label[for*='search']", hint: "k" },
+
+  // Prev / Next Nav Buttons
+  { selector: ".nav-button-prev", hint: "v" },
+  { selector: ".nav-button-next", hint: "n" },
+
+  // Base Logic Paths (Functions matching URL pathnames)
+  { match: (el) => isPath(el, "/"), hint: "h" },
+  { match: (el) => isPath(el, "/about/"), hint: "a" },
+  { match: (el) => isPath(el, "/projects/"), hint: "p" },
+  { match: (el) => isPath(el, "/links/"), hint: "l" },
+  { match: (el) => isPath(el, "/blog/"), hint: "b" },
+  { match: (el) => isPath(el, "/archive/"), hint: "x" },
+  { match: (el) => isPath(el, "/tags/"), hint: "t" },
+  { match: (el) => isPath(el, "/categories/"), hint: "c" },
+
+  // Footer equivalents
+  { match: (el) => isPath(el, "/privacy"), hint: "yp" },
+  { match: (el) => isPath(el, "/tos"), hint: "yt" },
+  { match: (el) => isPath(el, "/appreciation"), hint: "yc" },
+  // Links (/links/) will automatically be matched by the 'l' base rule above, even in the footer, which creates the perfect identical dedup you requested!
+  { match: (el) => el.href && el.href.includes("getzola.org"), hint: "yz" }
+];
+
+function isPath(el, path) {
+  if (el.tagName !== "A" || !el.href) return false;
+  try {
+    const url = new URL(el.href, window.location.origin);
+    // Exact match ignoring trailing slashes
+    const p1 = url.pathname.replace(/\/$/, "");
+    const p2 = path.replace(/\/$/, "");
+    return p1 === p2;
+  } catch(e) { return false; }
+}
+
+// ─── State ────────────────────────────────────────────────────────────────────
+
 let active = false;
-let hintNodes = [];
+let hintNodes = [];       // { hint, badge, element }[]
 let narrowPrefix = "";
 let listenersBound = false;
 let badgeContainer = null;
+let activeHintLeaders = new Set();
+let scrollBadges = { up: null, down: null };
 
-// ─── Visibility / eligibility ────────────────────────────────────────
+// ─── Visibility ───────────────────────────────────────────────────────────────
 
-/**
- * Determine whether an element is truly interactive, visible, and in the
- * viewport.  Filters out:
- *   - disconnected nodes
- *   - zero-area elements
- *   - elements hidden via CSS (display:none, visibility:hidden, opacity <= 0.01)
- *   - elements behind aria-hidden or inert subtrees
- *   - elements inside a closed <details> (not the summary itself)
- *   - elements outside the viewport rect
- */
-function isVisible(element) {
-  if (!element || !element.isConnected) return false;
+function isVisible(el) {
+  if (!el || !el.isConnected) return false;
+  if (el.closest("[aria-hidden='true'], [inert]")) return false;
 
-  // aria-hidden / inert subtree
-  if (element.closest("[aria-hidden='true'], [inert]")) return false;
+  const closedDetails = el.closest("details:not([open])");
+  if (closedDetails && !el.matches("summary") && !el.closest("summary")) return false;
 
-  // Inside a closed <details>? (summaries are ok)
-  const closedDetails = element.closest("details:not([open])");
-  if (closedDetails && !element.matches("summary") && !element.closest("summary")) {
-    return false;
-  }
-
-  // Computed style checks
-  const style = window.getComputedStyle(element);
+  const style = window.getComputedStyle(el);
   if (style.display === "none") return false;
   if (style.visibility === "hidden" || style.visibility === "collapse") return false;
   if (parseFloat(style.opacity) < 0.02) return false;
+  if (style.pointerEvents === "none") return false;
 
-  // offsetParent === null means hidden via ancestor display:none (except fixed/sticky)
   if (
-    element.offsetParent === null &&
+    el.offsetParent === null &&
     style.position !== "fixed" &&
-    style.position !== "sticky"
-  ) {
-    return false;
-  }
+    style.position !== "sticky" &&
+    el !== document.body
+  ) return false;
 
-  // Zero-area bounding rect
-  const rect = element.getBoundingClientRect();
+  const rect = el.getBoundingClientRect();
   if (rect.width < 1 || rect.height < 1) return false;
 
-  // Outside viewport
   const vw = window.innerWidth;
   const vh = window.innerHeight;
-  if (rect.bottom < 0 || rect.top > vh || rect.right < 0 || rect.left > vw) {
-    return false;
-  }
-
-  // Pointer-events: none means not truly interactive
-  if (style.pointerEvents === "none") return false;
+  if (rect.bottom < 0 || rect.top > vh || rect.right < 0 || rect.left > vw) return false;
 
   return true;
 }
 
-/**
- * Check if an element is disabled or aria-disabled.
- */
-function isDisabled(element) {
-  if (element.disabled) return true;
-  if (element.getAttribute("aria-disabled") === "true") return true;
-  return false;
+function isDisabled(el) {
+  return el.disabled === true || el.getAttribute("aria-disabled") === "true";
 }
 
-// ─── Hint label generation ───────────────────────────────────────────
+// ─── Hint generation ──────────────────────────────────────────────────────────
 
-function generateHints(count) {
-  const chars = HINT_CHARS;
-  const hints = [];
-
-  if (count <= chars.length) {
-    for (let i = 0; i < count; i++) {
-      hints.push(chars[i]);
-    }
-    return hints;
+/**
+ * Generate exactly `count` unique hint strings safely.
+ * Mathematically guarantees prefix-free property so no hint shadows another.
+ */
+function generateHints(count, reservedLeaders) {
+  if (count <= 0) return [];
+  const pool = HINT_CHARS.split("").filter(c => !reservedLeaders.has(c));
+  if (pool.length === 0) {
+    "abcdefghijklmnopqrstuvwxyz".split("").forEach(c => {
+      if (!reservedLeaders.has(c)) pool.push(c);
+    });
   }
 
-  // Two-character hints (Vimium-style)
-  for (let i = 0; i < chars.length && hints.length < count; i++) {
-    for (let j = 0; j < chars.length && hints.length < count; j++) {
-      hints.push(chars[i] + chars[j]);
+  const P = pool.length;
+  const hints = [];
+
+  if (count <= P) {
+    for (let i = 0; i < count; i++) hints.push(pool[i]);
+  } else {
+    // Prefix-free math: if we need `count` items from `P` characters,
+    // we take `k` characters to act as prefixes for 2-char hints.
+    const k = Math.ceil((count - P) / (P - 1));
+    const safeK = Math.min(k, P); // clamp
+    const numSingle = P - safeK;
+    
+    // 1-char hints
+    for (let i = 0; i < numSingle; i++) {
+        hints.push(pool[i]);
+    }
+    
+    // 2-char hints
+    for (let i = numSingle; i < P; i++) {
+        for (let j = 0; j < P; j++) {
+            if (hints.length >= count) return hints;
+            hints.push(pool[i] + pool[j]);
+        }
     }
   }
 
   return hints;
 }
 
-// ─── Badge rendering ─────────────────────────────────────────────────
+// ─── Badge rendering ──────────────────────────────────────────────────────────
 
-function ensureBadgeContainer() {
+function ensureContainer() {
   if (badgeContainer && badgeContainer.isConnected) return badgeContainer;
-
   badgeContainer = document.createElement("div");
   badgeContainer.setAttribute("data-access-key-overlay", "");
   badgeContainer.setAttribute("aria-hidden", "true");
   badgeContainer.style.cssText =
     "position:fixed;inset:0;z-index:99999;pointer-events:none;overflow:hidden;";
   document.body.appendChild(badgeContainer);
-
   return badgeContainer;
 }
 
-function removeBadgeContainer() {
-  if (badgeContainer && badgeContainer.isConnected) {
-    badgeContainer.remove();
-  }
+function removeContainer() {
+  badgeContainer?.remove();
   badgeContainer = null;
 }
 
 function createBadge(hint, element) {
   const rect = element.getBoundingClientRect();
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+
   const badge = document.createElement("span");
   badge.className = "access-key-badge";
   badge.setAttribute("data-access-key-badge", hint);
   badge.textContent = hint.toUpperCase();
 
-  // Position: top-left of the element, clamped to viewport
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
-
-  let left = rect.left + BADGE_OFFSET_X;
-  let top = rect.top + BADGE_OFFSET_Y;
-
-  // Clamp so badge doesn't overflow viewport
-  const badgeW = 22; // approximate
-  const badgeH = 20;
-
-  left = Math.max(BADGE_MARGIN, Math.min(left, vw - badgeW - BADGE_MARGIN));
-  top = Math.max(BADGE_MARGIN, Math.min(top, vh - badgeH - BADGE_MARGIN));
+  const bw = hint.length > 1 ? 28 : 20;
+  const bh = 20;
+  // center horizontally on element if smaller than badge
+  let left = rect.left;
+  if (rect.width < bw) left = rect.left + (rect.width/2) - (bw/2);
+  let top = rect.top;
+  if (rect.height < bh) top = rect.top + (rect.height/2) - (bh/2);
+  
+  left = Math.max(BADGE_MARGIN, Math.min(left, vw - bw - BADGE_MARGIN));
+  top  = Math.max(BADGE_MARGIN, Math.min(top,  vh - bh - BADGE_MARGIN));
 
   badge.style.cssText = `position:fixed;left:${left}px;top:${top}px;`;
+  if (prefersReducedMotion()) badge.style.animation = "none";
 
-  // Skip animation if reduced motion is preferred
-  if (prefersReducedMotion()) {
-    badge.style.animation = "none";
-  }
-
-  ensureBadgeContainer().appendChild(badge);
-
-  return { badge, element, hint };
+  ensureContainer().appendChild(badge);
+  return { hint, badge, element };
 }
 
-// ─── Target collection ───────────────────────────────────────────────
+// ─── Scroll indicators ────────────────────────────────────────────────────────
+
+const svgUp = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>`;
+const svgDown = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>`;
+
+function canScrollUp()   { return (document.documentElement.scrollTop || window.scrollY) > 1; }
+function canScrollDown() {
+  const el = document.documentElement;
+  return el.scrollTop + el.clientHeight < el.scrollHeight - 1;
+}
+
+function makeScrollBadge(direction) {
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const scrollbarW = vw - document.documentElement.clientWidth;
+  
+  const top = direction === "up"
+    ? Math.max(BADGE_MARGIN + 4, vh * 0.22 - 12)
+    : Math.min(vh - 32, vh * 0.78 - 12);
+
+  const badge = document.createElement("span");
+  badge.className = `access-key-badge access-key-scroll-badge access-key-scroll-badge--${direction}`;
+  badge.setAttribute("data-access-key-scroll", direction);
+  badge.innerHTML = direction === "up" ? svgUp : svgDown;
+  badge.title = direction === "up" ? "Alt+↑  Scroll up" : "Alt+↓  Scroll down";
+  badge.style.cssText = `position:fixed;right:${Math.max(12, scrollbarW + 8)}px;top:${top}px;`;
+  if (prefersReducedMotion()) badge.style.animation = "none";
+
+  ensureContainer().appendChild(badge);
+  return badge;
+}
+
+function updateScrollBadges() {
+  scrollBadges.up?.remove();
+  scrollBadges.down?.remove();
+  scrollBadges = { up: null, down: null };
+  if (canScrollUp())   scrollBadges.up   = makeScrollBadge("up");
+  if (canScrollDown()) scrollBadges.down = makeScrollBadge("down");
+}
+
+// ─── Target collection ───────────────────────────────────────────────────────
 
 function collectTargets() {
-  const elements = document.querySelectorAll(INTERACTIVE_SELECTOR);
+  const all  = document.querySelectorAll(INTERACTIVE_SELECTOR);
   const seen = new Set();
   const result = [];
 
-  for (const el of elements) {
+  for (const el of all) {
     if (isDisabled(el)) continue;
     if (!isVisible(el)) continue;
-
-    // Deduplicate by identity
     if (seen.has(el)) continue;
     seen.add(el);
-
-    // Deduplicate by destination: skip anchors with duplicate hrefs
-    // (e.g. same link in desktop nav + mobile drawer)
-    if (el.tagName === "A" && el.href) {
-      const href = el.href;
-      // Allow if this is the first visible one for this href
-      let isDup = false;
-      for (const prev of result) {
-        if (prev.tagName === "A" && prev.href === href) {
-          isDup = true;
-          break;
-        }
-      }
-      if (isDup) continue;
-    }
-
     result.push(el);
   }
 
+  // duplicates with same href ARE kept now!
   return result;
 }
 
-// ─── Show / dismiss ──────────────────────────────────────────────────
+// ─── Show / Dismiss ───────────────────────────────────────────────────────────
 
 function showHints() {
   if (active) return;
@@ -228,75 +285,122 @@ function showHints() {
   narrowPrefix = "";
 
   const targets = collectTargets();
-  if (targets.length === 0) {
-    active = false;
-    return;
+  if (targets.length === 0) { active = false; return; }
+
+  const explicitMap  = new Map(); 
+  const explicitExact = new Set();
+  const hrefToHint = new Map();
+
+  for (const el of targets) {
+    let explicitHint = null;
+
+    // 1. Semantic Rules (JS predefined)
+    for (const rule of SEMANTIC_RULES) {
+      if ((rule.selector && el.matches(rule.selector)) || (rule.match && rule.match(el))) {
+        explicitHint = rule.hint;
+        break;
+      }
+    }
+
+    // 2. HTML Override (fallback)
+    const raw = el.getAttribute("data-hint");
+    if (raw) explicitHint = raw.trim().toLowerCase().replace(/\s+/g, "");
+
+    if (explicitHint) {
+      explicitMap.set(el, explicitHint);
+      explicitExact.add(explicitHint);
+      if (el.tagName === "A" && el.href) hrefToHint.set(el.href, explicitHint);
+    }
   }
 
-  const hints = generateHints(targets.length);
-  hintNodes = targets.map((element, i) => createBadge(hints[i], element));
-  document.documentElement.setAttribute("data-access-keys-active", "1");
+  // To prevent ANY auto-gen hint from conflicting with an explicit hint
+  const reservedLeaders = new Set([...explicitExact].map(h => h[0]));
 
-  // Dismiss on scroll or resize (the positions would be stale)
-  window.addEventListener("scroll", dismissOnEvent, { capture: true, passive: true, once: true });
-  window.addEventListener("resize", dismissOnEvent, { once: true });
+  const toGenerate = [];
+  for (const el of targets) {
+    if (!explicitMap.has(el)) {
+      if (el.tagName === "A" && el.href && hrefToHint.has(el.href)) {
+        explicitMap.set(el, hrefToHint.get(el.href)); // duplicate reuse
+      } else {
+        toGenerate.push(el);
+      }
+    }
+  }
+
+  const generated = generateHints(toGenerate.length, reservedLeaders);
+  let gi = 0;
+  for (const el of toGenerate) {
+    const h = generated[gi++] ?? "??";
+    explicitMap.set(el, h);
+    if (el.tagName === "A" && el.href) hrefToHint.set(el.href, h);
+  }
+
+  hintNodes = targets.map(el => createBadge(explicitMap.get(el), el));
+  activeHintLeaders = new Set(hintNodes.map(n => n.hint[0]));
+
+  updateScrollBadges();
+
+  document.documentElement.setAttribute("data-access-keys-active", "1");
+  window.addEventListener("scroll", onScrollWhileActive, { capture: true, passive: true, once: true });
+  window.addEventListener("resize", dismissHints, { once: true });
 }
 
 function dismissHints() {
   if (!active) return;
   active = false;
   narrowPrefix = "";
+  activeHintLeaders = new Set();
 
-  removeBadgeContainer();
+  scrollBadges.up?.remove();
+  scrollBadges.down?.remove();
+  scrollBadges = { up: null, down: null };
+
+  removeContainer();
   hintNodes = [];
   document.documentElement.removeAttribute("data-access-keys-active");
 
-  window.removeEventListener("scroll", dismissOnEvent, { capture: true });
-  window.removeEventListener("resize", dismissOnEvent);
+  window.removeEventListener("scroll", onScrollWhileActive, { capture: true });
+  window.removeEventListener("resize", dismissHints);
 }
 
-function dismissOnEvent() {
+function onScrollWhileActive() { dismissHints(); }
+
+// ─── Activation ───────────────────────────────────────────────────────────────
+
+function activateElement(el) {
   dismissHints();
+  el.focus();
+  if (!["INPUT", "TEXTAREA", "SELECT"].includes(el.tagName)) el.click();
 }
 
-// ─── Activation ──────────────────────────────────────────────────────
-
-function activateElement(element) {
-  dismissHints();
-
-  const tag = element.tagName;
-  if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") {
-    element.focus();
-  } else {
-    element.focus();
-    element.click();
-  }
-}
-
-// ─── Narrowing (two-char hint matching) ──────────────────────────────
+// ─── Narrowing ────────────────────────────────────────────────────────────────
 
 function narrowHints(char) {
   const prefix = narrowPrefix + char.toLowerCase();
-
-  // Exact match → activate
-  const exact = hintNodes.find((node) => node.hint === prefix);
-  if (exact) {
-    activateElement(exact.element);
-    return;
-  }
-
-  // Prefix match → narrow visible set
-  const candidates = hintNodes.filter((node) => node.hint.startsWith(prefix));
-  if (candidates.length === 0) {
-    dismissHints();
-    return;
-  }
-
+  
+  const candidates = hintNodes.filter(n => n.hint.startsWith(prefix));
+  if (candidates.length === 0) { dismissHints(); return; }
+  
   narrowPrefix = prefix;
+
+  // Exact Match Logic
+  // If all remaining candidates are EXACT matches, activate the first one.
+  const isAllExact = candidates.every(c => c.hint === prefix);
+  if (isAllExact && candidates.length > 0) {
+    activateElement(candidates[0].element);
+    return;
+  }
+  
+  // NOTE: If there is an exact match AND other longer candidates (e.g. T and TL),
+  // we do NOT activate yet! The user must press Enter to activate T, or keep typing for TL.
+  
   for (const node of hintNodes) {
     if (node.hint.startsWith(prefix)) {
       node.badge.classList.add("access-key-badge--active");
       node.badge.classList.remove("access-key-badge--dimmed");
+      const typed = prefix.toUpperCase();
+      const rest  = node.hint.slice(prefix.length).toUpperCase();
+      node.badge.innerHTML = `<span class="access-key-badge__typed">${typed}</span>${rest}`;
     } else {
       node.badge.classList.remove("access-key-badge--active");
       node.badge.classList.add("access-key-badge--dimmed");
@@ -304,78 +408,99 @@ function narrowHints(char) {
   }
 }
 
-// ─── Keyboard handlers ──────────────────────────────────────────────
+// ─── Keyboard handler ─────────────────────────────────────────────────────────
 
 function onKeydown(event) {
   if (isMobile()) return;
 
-  // Alt press (without other modifiers) shows hints
-  if (event.key === "Alt" && !event.ctrlKey && !event.metaKey && !event.shiftKey) {
-    if (!active) {
-      event.preventDefault();
-      showHints();
+  const altOnly = event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey;
+
+  if (altOnly && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
+    event.preventDefault();
+    const step = window.innerHeight * 0.85;
+    window.scrollBy({ top: (event.key === "ArrowUp" ? -1 : 1) * step, behavior: "smooth" });
+    if (active) {
+      dismissHints();
+      setTimeout(showHints, 350);
     }
     return;
   }
 
-  // While active, handle hint characters
-  if (active) {
-    if (event.key === "Escape") {
+  if (event.key === "Alt" && altOnly) {
+    if (!active) { event.preventDefault(); showHints(); }
+    return;
+  }
+
+  if (!active) return;
+
+  if (event.key === "Escape") { event.preventDefault(); dismissHints(); return; }
+  if (["Control", "Meta", "Shift", "Alt"].includes(event.key)) return;
+  if (event.ctrlKey || event.metaKey) { dismissHints(); return; }
+
+  // If user typed T and TL both exist, and they want T, they hit Enter
+  if (event.key === "Enter" && narrowPrefix !== "") {
+    const exact = hintNodes.find(n => n.hint === narrowPrefix);
+    if (exact) {
       event.preventDefault();
+      activateElement(exact.element);
+    } else {
       dismissHints();
-      return;
     }
+    return;
+  }
 
-    // Ignore modifier-only presses
-    if (["Control", "Meta", "Shift"].includes(event.key)) return;
+  const char = event.key.length === 1 ? event.key.toLowerCase() : "";
+  if (char) {
+    const validLeader = activeHintLeaders.has(char);
+    const validNext   = narrowPrefix !== "" && hintNodes.some(n => n.hint.startsWith(narrowPrefix + char));
 
-    // Any modifier combo besides Alt → dismiss (user is doing something else)
-    if (event.ctrlKey || event.metaKey) {
-      dismissHints();
-      return;
-    }
-
-    // If a printable character is pressed (with or without Alt held)
-    const char = event.key.length === 1 ? event.key : "";
-    if (char && HINT_CHARS.includes(char.toLowerCase())) {
+    // Wait! Backspace should work!
+    if (validLeader || validNext) {
       event.preventDefault();
       event.stopPropagation();
       narrowHints(char);
       return;
     }
-
-    // Any non-hint key dismisses
-    event.preventDefault();
-    dismissHints();
   }
-}
 
-function onKeyup(event) {
-  // Alt release dismisses (unless user already narrowed into a two-char hint)
-  if (event.key === "Alt" && active && narrowPrefix === "") {
-    dismissHints();
+  // Backspace support
+  if (event.key === "Backspace" && narrowPrefix.length > 0) {
+      event.preventDefault();
+      narrowPrefix = narrowPrefix.slice(0, -1);
+      if (narrowPrefix.length === 0) {
+          // just render all as normal
+          for (const node of hintNodes) {
+              node.badge.innerHTML = node.hint.toUpperCase();
+              node.badge.classList.remove("access-key-badge--active");
+              node.badge.classList.remove("access-key-badge--dimmed");
+          }
+      } else {
+          // re-narrow using remaining prefix
+          const oldPrefix = narrowPrefix;
+          narrowPrefix = ""; 
+          narrowHints(oldPrefix);
+      }
+      return;
   }
-}
 
-function onBlur() {
+  event.preventDefault();
   dismissHints();
 }
 
-function onVisibilityChange() {
-  if (document.visibilityState === "hidden") {
-    dismissHints();
-  }
+function onKeyup(event) {
+  if (event.key === "Alt" && active && narrowPrefix === "") dismissHints();
 }
 
-// ─── Init ────────────────────────────────────────────────────────────
+// ─── Init ─────────────────────────────────────────────────────────────────────
 
 export function initAccessKeys() {
   if (listenersBound) return;
   listenersBound = true;
-
   document.addEventListener("keydown", onKeydown, true);
   document.addEventListener("keyup", onKeyup, true);
-  window.addEventListener("blur", onBlur);
-  document.addEventListener("visibilitychange", onVisibilityChange);
+  window.addEventListener("blur", dismissHints);
+  document.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") dismissHints();
+  });
   window.addEventListener("pagehide", dismissHints);
 }

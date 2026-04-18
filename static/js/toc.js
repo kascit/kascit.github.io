@@ -85,25 +85,29 @@ function initTocSpyObserver() {
     link.scrollIntoView({ block: "nearest", behavior: "smooth" });
   }
 
-  // Use an IntersectionObserver map to track bounding intersections
-  let activeId = null;
+  // Optimize observer to track states robustly without reflowing layout
+  const headingStates = new Map();
   const observer = new IntersectionObserver((entries) => {
-    let topIntersecting = null;
-    for (const entry of entries) {
-      if (entry.isIntersecting) {
-        topIntersecting = entry.target;
+    entries.forEach(entry => {
+      headingStates.set(entry.target.id, entry.isIntersecting);
+    });
+
+    let topIntersectingId = null;
+    for (const heading of headings) {
+      if (headingStates.get(heading.id)) {
+        topIntersectingId = heading.id;
         break;
       }
     }
     
-    // If no explicit intersection happened but we scrolled past it, the browser deals with it generally, 
-    // but a reliable fallback is capturing rootMargin bounding crosses.
-    if (topIntersecting) {
-      setActive(topIntersecting.id);
+    // If no explicit intersection and scrolling fast, Fallback logic could be used,
+    // but a 0 threshold + generous rootMargin maps it 100% locally.
+    if (topIntersectingId) {
+      setActive(topIntersectingId);
     }
   }, {
-    rootMargin: "-96px 0px -60% 0px", // Trigger when heading comes near top
-    threshold: 1.0
+    rootMargin: "-20px 0px -60% 0px", // Trigger when heading comes into view
+    threshold: 0 // use 0 so it triggers as soon as 1px is in view
   });
 
   headings.forEach(heading => observer.observe(heading));

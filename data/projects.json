@@ -98,6 +98,46 @@
       "url_label": "Visit"
     },
     {
+      "slug": "tasks",
+      "title": "Tasks",
+      "group": "featured",
+      "icon": "fa-solid fa-check-double",
+      "description": "Minimal, high-contrast task manager designed for speed. Part of the Dhanur UI ecosystem.",
+      "extended_description": "Built as a production-grade demonstration of the centralized Dhanur UI component system. Incorporates seamless theming, robust keyboard shortcuts, and local workflow persistence.",
+      "role": "Productivity Tool",
+      "lang": "TypeScript · React",
+      "status": "live",
+      "highlights": [
+        "Keyboard-first navigation and shortcuts",
+        "Dhanur UI standardized design tokens",
+        "Instant local persistence"
+      ],
+      "techs": ["TypeScript", "TailwindCSS", "React"],
+      "tags": ["Frontend Engineering", "DUI", "Productivity"],
+      "github_url": "https://github.com/kascit/tasks",
+      "live_url": "https://tasks.dhanur.me"
+    },
+    {
+      "slug": "linkr",
+      "title": "Linkr",
+      "group": "featured",
+      "icon": "fa-solid fa-link",
+      "description": "Fast, privacy-focused link management and routing built for personal infrastructure.",
+      "extended_description": "Linkr provides robust sub-link routing for my personal domains. Features a slick UI built top to bottom with the new Dhanur UI component library.",
+      "role": "Infrastructure Service",
+      "lang": "TypeScript · React",
+      "status": "live",
+      "highlights": [
+        "Zero-friction link routing",
+        "Integrated with Dhanur UI styling",
+        "Fast programmatic redirects"
+      ],
+      "techs": ["TypeScript", "Routing", "Frontend"],
+      "tags": ["Infrastructure", "DUI", "Networking"],
+      "github_url": "https://github.com/kascit/linkr",
+      "live_url": "https://linkr.dhanur.me"
+    },
+    {
       "slug": "stuff",
       "title": "stuff",
       "group": "featured",

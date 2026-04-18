@@ -22,6 +22,11 @@ function isTrackableExternalLink(anchor) {
     return false;
   }
 
+  // Exempt all *.dhanur.me domains and dhanur.me itself
+  if (linkUrl.hostname === "dhanur.me" || linkUrl.hostname.endsWith(".dhanur.me")) {
+    return false;
+  }
+
   return linkUrl.origin !== window.location.origin;
 }
 

@@ -16,11 +16,11 @@
         <details class="toc-details">
           <summary
             data-toc-href="{{ h1.permalink | safe }}"
+            data-toc-id="{{ h1.id }}"
             aria-label="{{ h1.title }}"
+            class="toc-link"
           >
-            <a href="{{ h1.permalink | safe }}" class="toc-link"
-              >{{ h1.title }}</a
-            >
+            {{ h1.title }}
           </summary>
           <ul>
             {% for h2 in h1.children %}

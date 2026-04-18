@@ -19,7 +19,14 @@
         {% endif %}
 
         {% for page in sorted_pages | slice(start=window_start, end=window_end) %}
-            <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
+            {% set is_current = normalized_current_path == page.path %}
+            {% set rel_idx = loop.index0 + window_start %}
+            {% set sidebar_hint = "" %}
+            {% if not is_current %}
+                {# In desc-sorted list: lower index = newer post ("next") = n
+                   higher index = older post ("prev") = v  #}
+            {% endif %}
+            <li {% if is_current %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
                 <a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a>
             </li>
         {% endfor %}

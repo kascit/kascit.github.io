@@ -2,3 +2,17 @@
 {% macro kind_pill(text) %}
 <span class="ui-kind-pill">{{ text }}</span>
 {% endmacro %}
+
+{% macro theme_switcher(id, class="theme-switcher bg-base-300/60 text-xs font-medium") %}
+<div id="{{ id }}" class="{{ class }}">
+    <button data-theme-mode="light" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer" aria-label="Light theme">
+        <i class="fa-solid fa-sun{% if id == 'theme-toggle' %} mr-1{% endif %}"></i>{% if id == 'theme-toggle' %}Light{% endif %}
+    </button>
+    <button data-theme-mode="dark" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer" aria-label="Dark theme">
+        <i class="fa-solid fa-moon{% if id == 'theme-toggle' %} mr-1{% endif %}"></i>{% if id == 'theme-toggle' %}Dark{% endif %}
+    </button>
+    <button data-theme-mode="auto" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer" aria-label="Auto theme">
+        <i class="fa-solid fa-circle-half-stroke{% if id == 'theme-toggle' %} mr-1{% endif %}"></i>{% if id == 'theme-toggle' %}Auto{% endif %}
+    </button>
+</div>
+{% endmacro theme_switcher %}

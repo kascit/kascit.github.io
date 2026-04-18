@@ -156,28 +156,7 @@ function copyAlias(src, dst) {
   fs.copyFileSync(src, dst);
 }
 
-function writeFaSvg(out, width, height, pathData) {
-  const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" fill="none">\n  <path d="${pathData}" fill="#000000"/>\n</svg>\n`;
-  fs.writeFileSync(out, svg, "utf8");
-}
 
-function generateShortcutFamily(command, name, svg) {
-  renderIcon(command, svg, 96, "none", path.join(ICON_DIR, `${name}-96.png`), SHORTCUT_GLYPH_SCALE, BASE_GLYPH_COLOR);
-  renderIcon(command, svg, 192, "none", path.join(ICON_DIR, `${name}.png`), SHORTCUT_GLYPH_SCALE, BASE_GLYPH_COLOR);
-  renderIcon(command, svg, 512, "none", path.join(ICON_DIR, `${name}-512.png`), SHORTCUT_GLYPH_SCALE, BASE_GLYPH_COLOR);
-
-  renderIcon(command, svg, 192, WHITE_BG, path.join(ICON_DIR, `${name}-maskable.png`), SHORTCUT_MASKABLE_GLYPH_SCALE, BASE_GLYPH_COLOR);
-  renderIcon(command, svg, 512, WHITE_BG, path.join(ICON_DIR, `${name}-maskable-512.png`), SHORTCUT_MASKABLE_GLYPH_SCALE, BASE_GLYPH_COLOR);
-
-  renderIcon(command, svg, 192, "none", path.join(ICON_DIR, `${name}-maskable-transparent.png`), SHORTCUT_MASKABLE_GLYPH_SCALE, BASE_GLYPH_COLOR);
-  renderIcon(command, svg, 512, "none", path.join(ICON_DIR, `${name}-maskable-transparent-512.png`), SHORTCUT_MASKABLE_GLYPH_SCALE, BASE_GLYPH_COLOR);
-
-  renderIcon(command, svg, 192, BLACK_BG, path.join(ICON_DIR, `${name}-light.png`), SHORTCUT_GLYPH_SCALE, WHITE_BG);
-  renderIcon(command, svg, 512, BLACK_BG, path.join(ICON_DIR, `${name}-light-512.png`), SHORTCUT_GLYPH_SCALE, WHITE_BG);
-
-  copyAlias(path.join(ICON_DIR, `${name}.png`), path.join(ICON_DIR, `${name}-transparent.png`));
-  copyAlias(path.join(ICON_DIR, `${name}-512.png`), path.join(ICON_DIR, `${name}-transparent-512.png`));
-}
 
 function main() {
   if (!fs.existsSync(OUTPUT_ROOT) || !fs.statSync(OUTPUT_ROOT).isDirectory()) {
@@ -237,27 +216,7 @@ function main() {
   copyAlias(path.join(ICON_DIR, "icon-192x192-maskable-transparent.png"), path.join(ICON_DIR, "android-chrome-192x192-maskable-transparent.png"));
   copyAlias(path.join(ICON_DIR, "icon-512x512-maskable-transparent.png"), path.join(ICON_DIR, "android-chrome-512x512-maskable-transparent.png"));
 
-  const FA_USER = "M224 248a120 120 0 1 0 0-240 120 120 0 1 0 0 240zm-29.7 56C95.8 304 16 383.8 16 482.3 16 498.7 29.3 512 45.7 512l356.6 0c16.4 0 29.7-13.3 29.7-29.7 0-98.5-79.8-178.3-178.3-178.3l-59.4 0z";
-  const FA_CODE = "M360.8 1.2c-17-4.9-34.7 5-39.6 22l-128 448c-4.9 17 5 34.7 22 39.6s34.7-5 39.6-22l128-448c4.9-17-5-34.7-22-39.6zm64.6 136.1c-12.5 12.5-12.5 32.8 0 45.3l73.4 73.4-73.4 73.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l96-96c12.5-12.5 12.5-32.8 0-45.3l-96-96c-12.5-12.5-32.8-12.5-45.3 0zm-274.7 0c-12.5-12.5-32.8-12.5-45.3 0l-96 96c-12.5 12.5-12.5 32.8 0 45.3l96 96c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L77.3 256 150.6 182.6c12.5-12.5 12.5-32.8 0-45.3z";
-  const FA_LINK = "M419.5 96c-16.6 0-32.7 4.5-46.8 12.7-15.8-16-34.2-29.4-54.5-39.5 28.2-24 64.1-37.2 101.3-37.2 86.4 0 156.5 70 156.5 156.5 0 41.5-16.5 81.3-45.8 110.6l-71.1 71.1c-29.3 29.3-69.1 45.8-110.6 45.8-86.4 0-156.5-70-156.5-156.5 0-1.5 0-3 .1-4.5 .5-17.7 15.2-31.6 32.9-31.1s31.6 15.2 31.1 32.9c0 .9 0 1.8 0 2.6 0 51.1 41.4 92.5 92.5 92.5 24.5 0 48-9.7 65.4-27.1l71.1-71.1c17.3-17.3 27.1-40.9 27.1-65.4 0-51.1-41.4-92.5-92.5-92.5zM275.2 173.3c-1.9-.8-3.8-1.9-5.5-3.1-12.6-6.5-27-10.2-42.1-10.2-24.5 0-48 9.7-65.4 27.1L91.1 258.2c-17.3 17.3-27.1 40.9-27.1 65.4 0 51.1 41.4 92.5 92.5 92.5 16.5 0 32.6-4.4 46.7-12.6 15.8 16 34.2 29.4 54.6 39.5-28.2 23.9-64 37.2-101.3 37.2-86.4 0-156.5-70-156.5-156.5 0-41.5 16.5-81.3 45.8-110.6l71.1-71.1c29.3-29.3 69.1-45.8 110.6-45.8 86.6 0 156.5 70.6 156.5 156.9 0 1.3 0 2.6 0 3.9-.4 17.7-15.1 31.6-32.8 31.2s-31.6-15.1-31.2-32.8c0-.8 0-1.5 0-2.3 0-33.7-18-63.3-44.8-79.6z";
-  const FA_PEN_NIB = "M368.5 18.3l-50.1 50.1 125.3 125.3 50.1-50.1c21.9-21.9 21.9-57.3 0-79.2L447.7 18.3c-21.9-21.9-57.3-21.9-79.2 0zM279.3 97.2l-.5 .1-144.1 43.2c-19.9 6-35.7 21.2-42.3 41L3.8 445.8c-2.9 8.7-1.9 18.2 2.5 26L161.7 316.4c-1.1-4-1.6-8.1-1.6-12.4 0-26.5 21.5-48 48-48s48 21.5 48 48-21.5 48-48 48c-4.3 0-8.5-.6-12.4-1.6L40.3 505.7c7.8 4.4 17.2 5.4 26 2.5l264.3-88.6c19.7-6.6 35-22.4 41-42.3l43.2-144.1 .1-.5-135.5-135.5z";
 
-  const aboutSvg = path.join(GEN_DIR, "about.svg");
-  const projectsSvg = path.join(GEN_DIR, "projects.svg");
-  const linksSvg = path.join(GEN_DIR, "links.svg");
-  const blogSvg = path.join(GEN_DIR, "blog.svg");
-
-  writeFaSvg(aboutSvg, 448, 512, FA_USER);
-  writeFaSvg(projectsSvg, 576, 512, FA_CODE);
-  writeFaSvg(linksSvg, 576, 512, FA_LINK);
-  writeFaSvg(blogSvg, 512, 512, FA_PEN_NIB);
-
-  generateShortcutFamily(command, "about", aboutSvg);
-  generateShortcutFamily(command, "projects", projectsSvg);
-  generateShortcutFamily(command, "links", linksSvg);
-  generateShortcutFamily(command, "blog", blogSvg);
-
-  copyAlias(path.join(ICON_DIR, "projects.png"), path.join(ICON_DIR, "tasks.png"));
 
   runMagick(command, [
     path.join(ICON_DIR, "favicon-16x16.png"),

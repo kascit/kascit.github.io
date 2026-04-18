@@ -183,10 +183,10 @@ body.is-landing nav.mt-12 {
 /* Tight TOC spacing — keep it sleek */
 .toc-menu a,
 .toc-menu details > summary {
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  line-height: 1.25;
-  min-height: 0;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  line-height: 1.35;
+  min-height: 24px;
 }
 
 /* Sidebar navigation profile: consistent spacing, hover, and active state */
@@ -601,17 +601,18 @@ body.is-landing nav.mt-12 {
 
 .landing-starfield__layer {
   position: absolute;
-  inset: 0;
+  top: 0; left: 0; right: 0; height: max(200vh, 8000px);
   background-repeat: repeat;
   animation-name: landingStarScroll;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
-  will-change: background-position;
+  will-change: transform;
 }
 
 .landing-starfield__layer--sm {
   background-size: 320px 320px;
   animation-duration: 70s;
+  --scroll-dist: -3200px;
   opacity: 0.5;
   background-image:
     radial-gradient(circle at 22px 31px, var(--landing-star-color) 1px, transparent 1.6px),
@@ -626,6 +627,7 @@ body.is-landing nav.mt-12 {
 .landing-starfield__layer--md {
   background-size: 440px 440px;
   animation-duration: 110s;
+  --scroll-dist: -4400px;
   opacity: 0.4;
   background-image:
     radial-gradient(circle at 38px 36px, var(--landing-star-color) 1.5px, transparent 2.3px),
@@ -639,6 +641,7 @@ body.is-landing nav.mt-12 {
 .landing-starfield__layer--lg {
   background-size: 620px 620px;
   animation-duration: 150s;
+  --scroll-dist: -6200px;
   opacity: 0.28;
   background-image:
     radial-gradient(circle at 56px 118px, var(--landing-star-color) 2.1px, transparent 3.1px),
@@ -649,10 +652,10 @@ body.is-landing nav.mt-12 {
 
 @keyframes landingStarScroll {
   from {
-    background-position: 0 0;
+    transform: translateY(0);
   }
   to {
-    background-position: 0 -2000px;
+    transform: translateY(var(--scroll-dist));
   }
 }
 

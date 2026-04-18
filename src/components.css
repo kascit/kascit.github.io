@@ -13,7 +13,7 @@
   --cb-gutter-bg: color-mix(in oklab, var(--color-base-100) 60%, var(--color-base-200));
   --cb-border: color-mix(in oklab, var(--color-base-content) 14%, transparent);
   --cb-divider: color-mix(in oklab, var(--color-base-content) 12%, transparent);
-  --cb-gutter-fg: color-mix(in oklab, var(--color-base-content) 62%, transparent);
+  --cb-gutter-fg: color-mix(in oklab, var(--color-base-content) 78%, transparent);
 }
 
 :is([data-theme="dark"], html.dark) :not(.mockup-code) > pre {
@@ -27,7 +27,7 @@
   --cb-gutter-bg: color-mix(in oklab, var(--color-base-100) 89%, var(--color-base-200));
   --cb-border: color-mix(in oklab, var(--color-base-content) 12%, transparent);
   --cb-divider: color-mix(in oklab, var(--color-base-content) 10%, transparent);
-  --cb-gutter-fg: color-mix(in oklab, var(--color-base-content) 58%, transparent);
+  --cb-gutter-fg: color-mix(in oklab, var(--color-base-content) 76%, transparent);
 }
 
 :not(.mockup-code) > pre.codeblock-enhanced {
@@ -131,6 +131,19 @@
 :is([data-theme="dark"], html.dark) :not(.mockup-code) > pre.giallo,
 :is([data-theme="dark"], html.dark) :not(.mockup-code) > pre[style*="light-dark("] {
   color-scheme: dark !important;
+}
+
+/* Fix Zola syntax highlighter light mode contrast accessibility issue */
+:is([data-theme="light"], html.light) :not(.mockup-code) > pre span[style*="#e36209"] {
+  color: #b93a05 !important;
+}
+
+/* Fix contrast for gray comments (#6a737d) across both themes */
+:is([data-theme="light"], html.light) :not(.mockup-code) > pre span[style*="#6a737d"] {
+  color: #515a63 !important;
+}
+:is([data-theme="dark"], html.dark) :not(.mockup-code) > pre span[style*="#6a737d"] {
+  color: #929ba5 !important;
 }
 
 :not(.mockup-code) > pre.codeblock-enhanced > code {
@@ -282,7 +295,8 @@ h6:hover .copy-heading-link-button {
 
 .copy-heading-link-button i,
 .rss-action-btn i {
-  line-height: 1;
+  line-height: inherit;
+  display: block;
 }
 
 .rss-action-btn {
@@ -2009,6 +2023,29 @@ html.light :not(.mockup-code) > pre code .z-markup.z-raw.z-inline {
   transition: opacity 80ms ease, transform 80ms ease, background-color 80ms ease;
 }
 
+/* Scroll indicator badges — caret chars near scrollbar */
+.access-key-scroll-badge {
+  min-width: 1.8rem;
+  height: 1.8rem;
+  padding: 0 0.4rem;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0;
+  line-height: 1.6rem;
+  background: oklch(75% 0.16 255);
+  color: oklch(15% 0.06 255);
+  border-color: oklch(60% 0.18 250);
+  box-shadow:
+    0 2px 10px -2px oklch(0% 0 0 / 0.3),
+    0 0 0 1px oklch(60% 0.18 250 / 0.4);
+}
+:is([data-theme="dark"], html.dark) .access-key-scroll-badge {
+  background: oklch(52% 0.18 255);
+  color: oklch(96% 0.01 255);
+  border-color: oklch(44% 0.2 252);
+}
+
 /* Dark mode badge colors */
 :is([data-theme="dark"], html.dark) .access-key-badge {
   color: oklch(15% 0.04 80);
@@ -2021,20 +2058,43 @@ html.light :not(.mockup-code) > pre code .z-markup.z-raw.z-inline {
 
 /* Narrowed: matching hint badges get highlighted */
 .access-key-badge--active {
-  background: oklch(78% 0.2 80);
-  border-color: oklch(62% 0.2 70);
-  transform: scale(1.08);
+  background: oklch(70% 0.22 80);
+  border-color: oklch(55% 0.22 70);
+  color: oklch(15% 0.04 80);
+  transform: scale(1.15);
+  box-shadow:
+    0 2px 8px -1px oklch(0% 0 0 / 0.3),
+    0 0 0 1px oklch(55% 0.22 70 / 0.5);
+  z-index: 1;
 }
 
 :is([data-theme="dark"], html.dark) .access-key-badge--active {
-  background: oklch(76% 0.2 80);
-  border-color: oklch(58% 0.18 72);
+  background: oklch(72% 0.22 82);
+  border-color: oklch(56% 0.2 72);
+  color: oklch(10% 0.04 80);
+  box-shadow:
+    0 2px 10px -1px oklch(0% 0 0 / 0.5),
+    0 0 0 1px oklch(56% 0.2 72 / 0.6);
+}
+
+/* The already-typed portion of a narrowed hint */
+.access-key-badge__typed {
+  color: oklch(30% 0.15 270);
+  font-weight: 900;
+  text-decoration: underline;
+  text-decoration-thickness: 1.5px;
+  text-underline-offset: 1px;
+}
+
+:is([data-theme="dark"], html.dark) .access-key-badge__typed {
+  color: oklch(25% 0.18 270);
 }
 
 /* Narrowed: non-matching badges dim out */
 .access-key-badge--dimmed {
-  opacity: 0.18;
-  transform: scale(0.92);
+  opacity: 0.14;
+  transform: scale(0.88);
+  filter: blur(0.3px);
 }
 
 /* Animations */

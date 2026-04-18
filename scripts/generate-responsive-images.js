@@ -58,7 +58,11 @@ function replaceExtension(filePath, suffixWithExtension) {
 }
 
 function getImageMetadata(command, sourcePath) {
-  const result = runCapture(command, ["identify", "-format", "%w|%h", sourcePath]);
+  // ImageMagick 6 uses standalone `identify`, whereas ImageMagick 7 uses `magick identify`
+  const idCmd = command === "convert" ? "identify" : command;
+  const args = command === "convert" ? ["-format", "%w|%h", sourcePath] : ["identify", "-format", "%w|%h", sourcePath];
+  
+  const result = runCapture(idCmd, args);
   if (result.status !== 0) {
     throw new Error(`Failed to get dimensions for ${sourcePath}`);
   }

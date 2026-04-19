@@ -1,3 +1,4 @@
+{% import "macros/seo.html" as macros_seo %}
 {% macro get_theme_color(config) %}
 {# Theme configuration with backward compatibility #}
 {# Priority: theme.dark_brightness/light_brightness (new per-theme) > theme.brightness (common) > brightness (legacy) #}
@@ -130,79 +131,8 @@
 
     {# Google Analytics and Sentry are loaded client-side only after cookie consent. #}
 
-      <!-- SEO: Open Graph / Twitter Card -->
-      <meta property="og:title" content="{{ resolved_title }}" />
-      <meta property="og:description" content="{{ resolved_description }}" />
-        <meta property="og:url" content="{{ current_url | safe }}" />
-        <meta property="og:type" content="{{ resolved_meta_type }}" />
-        {% if page is defined %}
-          {% set resolved_thumb = page.extra.thumbnail_image | default(value=page.extra.thumbnail | default(value=page.extra.image | default(value=config.extra.default_thumbnail | default(value="")))) %}
-          {% if resolved_thumb != "" %}
-            {% if resolved_thumb is starting_with("http://") or resolved_thumb is starting_with("https://") %}
-            <meta property="og:image" content="{{ resolved_thumb | safe }}" />
-            {% else %}
-            <meta property="og:image" content="{{ get_url(path=resolved_thumb) | safe }}" />
-            {% endif %}
-          {% endif %}
-        {% elif config.extra.default_thumbnail %}
-        <meta property="og:image" content="{{ get_url(path=config.extra.default_thumbnail) | safe }}" />
-        {% endif %}
-
-      <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:title" content="{{ resolved_title }}" />
-      <meta name="twitter:description" content="{{ resolved_description }}" />
-      {# Twitter configuration with backward compatibility #}
-      {# Priority: twitter.* (new) > twitter_* (legacy) #}
-      {% if config.extra.twitter is defined %}
-          {% set twitter_site = config.extra.twitter.site | default(value=config.extra.twitter_site | default(value="")) %}
-          {% set twitter_creator = config.extra.twitter.creator | default(value=config.extra.twitter_creator | default(value="")) %}
-      {% else %}
-          {% set twitter_site = config.extra.twitter_site | default(value="") %}
-          {% set twitter_creator = config.extra.twitter_creator | default(value="") %}
-      {% endif %}
-      {% if twitter_site != "" %}
-      <meta name="twitter:site" content="{{ twitter_site }}" />
-      {% endif %}
-      {% if twitter_creator != "" %}
-      <meta name="twitter:creator" content="{{ twitter_creator }}" />
-      {% endif %}
-        {% if page is defined %}
-          {% set resolved_thumb = page.extra.thumbnail_image | default(value=page.extra.thumbnail | default(value=page.extra.image | default(value=config.extra.default_thumbnail | default(value="")))) %}
-          {% if resolved_thumb != "" %}
-            {% if resolved_thumb is starting_with("http://") or resolved_thumb is starting_with("https://") %}
-            <meta name="twitter:image" content="{{ resolved_thumb | safe }}" />
-            {% else %}
-            <meta name="twitter:image" content="{{ get_url(path=resolved_thumb) | safe }}" />
-            {% endif %}
-          {% endif %}
-        {% elif config.extra.default_thumbnail %}
-        <meta name="twitter:image" content="{{ get_url(path=config.extra.default_thumbnail) | safe }}" />
-        {% endif %}
-
-      <!-- Structured Data (Schema.org JSON-LD) -->
-      <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebSite",
-        "name": "{{ config.title | default(value='dhanur.me') }}",
-        "url": "{{ config.base_url | safe }}",
-        "description": "{{ config.description | default(value='') }}",
-        {% if config.extra.logo and config.extra.logo.image_path %}
-        "publisher": {
-          "@type": "Organization",
-          "name": "{{ config.title | default(value='dhanur.me') }}",
-          "logo": {
-            "@type": "ImageObject",
-            "url": "{{ get_url(path=config.extra.logo.image_path) | safe }}"
-          }
-        },
-        {% endif %}
-        "author": {
-          "@type": "Person",
-          "name": "{{ config.author | default(value='') }}"
-        }
-      }
-      </script>
+      {{ macros_seo::meta_tags(config=config, current_url=current_url, resolved_title=resolved_title, resolved_description=resolved_description, resolved_meta_type=resolved_meta_type, page=page | default(value=false)) }}
+      {{ macros_seo::website_schema(config=config) }}
 
       <!-- Browser address bar color -->
       <meta name="theme-color" content="{{ self::get_theme_color(config=config) | trim }}">

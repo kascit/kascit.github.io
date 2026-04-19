@@ -1,7 +1,8 @@
-{% extends "index.html" %}
+{% extends "base.html" %}
+{% import "macros/seo.html" as macros_seo %}
 
-{% import "macros/content-footer.html" as macros_content_footer %}
-{% import "macros/notify-banner.html" as macros_notify_banner %}
+{% import "macros/content_footer.html" as macros_content_footer %}
+{% import "macros/notify_banner.html" as macros_notify_banner %}
 {% import "macros/icons.html" as macros_icons %}
 {% import "macros/article_meta.html" as macros_article_meta %}
 {% import "macros/nav.html" as macros_nav %}
@@ -13,48 +14,8 @@
 {% endblock header %}
 
 {% block extra_head %}
-<!-- Structured Data for Blog Post (Schema.org JSON-LD) -->
-{% set is_blog_post = false %}
 {% if page is defined %}
-{% set is_blog_post = macros_utils::is_blog_post(page=page) | trim == "true" %}
-{% endif %}
-{% if is_blog_post %}
-{% set_global headline = macros_utils::json_escape(value=page.title) | trim %}
-{% set_global desc = macros_utils::json_escape(value=page.description | default(value='')) | trim %}
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-    "@type": "Article",
-        "headline": "{{ headline | safe }}",
-        "description": "{{ desc | safe }}",
-  "author": {
-    "@type": "Person",
-    "name": "{{ config.author | default(value='Dhanur') }}"
-  },
-        "datePublished": "{{ page.date | date(format='%+') }}",
-        "dateModified": "{{ page.updated | default(value=page.date) | date(format='%+') }}",
-  "publisher": {
-    "@type": "Organization",
-        "name": "{{ config.title | default(value='dhanur.me') }}",{% if config.extra.logo and config.extra.logo.image_path %}
-    "logo": {
-      "@type": "ImageObject",
-      "url": "{{ get_url(path=config.extra.logo.image_path) | safe }}"
-    },{% endif %}
-    "url": "{{ config.base_url | safe }}"
-  },
-  "mainEntityOfPage": {
-    "@type": "WebPage",
-    "@id": "{{ page.permalink | safe }}"
-  },
-        "url": "{{ page.permalink | safe }}",{% set schema_thumb = page.extra.thumbnail_image | default(value=page.extra.thumbnail | default(value=page.extra.image | default(value=config.extra.default_thumbnail | default(value="")))) %}{% if schema_thumb != "" %}
-        "image": ["{% if schema_thumb is starting_with("http://") or schema_thumb is starting_with("https://") %}{{ schema_thumb | safe }}{% else %}{{ get_url(path=schema_thumb) | safe }}{% endif %}"],{% endif %}{% if page.taxonomies.tags %}
-  "keywords": "{{ page.taxonomies.tags | join(sep=', ') }}",{% endif %}
-  "articleSection": "{{ page.taxonomies.categories | default(value=['Blog']) | first }}",
-  "inLanguage": "{{ lang | default(value='en') }}",
-  "wordCount": {{ page.word_count | default(value=0) }},{% if page.reading_time %}
-  "timeRequired": "PT{{ page.reading_time }}M"{% endif %}
-}
-</script>
+{{ macros_seo::article_schema(config=config, page=page, lang=lang) }}
 {% endif %}
 {% endblock extra_head %}
 

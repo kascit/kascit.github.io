@@ -1,4 +1,4 @@
-{% extends "index.html" %}
+{% extends "base.html" %}
 {% import "macros/landing_sections.html" as landing_sections %}
 {% import "macros/nav.html" as macros_nav %}
 
@@ -8,7 +8,7 @@
 {{ macros_nav::render_button(url="/about/", title="About", subtitle="Next", direction="next") }}
 {% endblock next_link %}
 
-{% block content %}
+{% block main_content %}
 
 <div class="landing-starfield" aria-hidden="true">
   <div class="landing-starfield__layer landing-starfield__layer--sm"></div>
@@ -99,4 +99,4 @@
 
 </div>
 
-{% endblock content %}
+{% endblock main_content %}

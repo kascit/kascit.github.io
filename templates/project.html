@@ -1,4 +1,5 @@
-{% extends "index.html" %}
+{% extends "base.html" %}
+{% import "macros/projects.html" as macros_projects %}
 {% import "macros/nav.html" as macros_nav %}
 {% import "macros/taxonomy_chips.html" as taxonomy_chips %}
 
@@ -17,11 +18,7 @@
     </div>
 
     {% set project_status = page.extra.project.status | default(value="") %}
-    {% if project_status == "live" %}<span class="project-card-badge badge-live">Live</span>
-    {% elif project_status == "academic" %}<span class="project-card-badge badge-academic">Academic</span>
-    {% elif project_status == "archived" %}<span class="project-card-badge badge-archived">Archived</span>
-    {% elif project_status == "wip" %}<span class="project-card-badge badge-wip">WIP</span>
-    {% endif %}
+    {{ macros_projects::status_badge(status=project_status) }}
   </div>
 
   <div class="mt-4 flex flex-wrap items-center gap-2 sm:gap-2.5 min-w-0">
@@ -48,17 +45,7 @@
 {% if project_live or project_github or project_url %}
 <section class="not-prose mt-8 rounded-2xl border border-base-content/10 bg-base-200/30 p-4 sm:p-5 md:p-6">
   <h2 class="text-sm font-semibold uppercase tracking-[0.08em] text-base-content/70 mt-0 mb-3">Project Links</h2>
-  <div class="flex flex-wrap gap-2.5">
-    {% if project_live %}
-    <a href="{{ project_live }}" target="_blank" rel="noopener" class="project-card-btn btn-live"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live</a>
-    {% endif %}
-    {% if project_github %}
-    <a href="{{ project_github }}" target="_blank" rel="noopener" class="project-card-btn"><i class="fa-brands fa-github"></i> Code</a>
-    {% endif %}
-    {% if project_url %}
-    <a href="{{ project_url }}" {% if project_external %}target="_blank" rel="noopener"{% endif %} class="project-card-btn"><i class="fa-solid fa-link"></i> {{ project_url_label }}</a>
-    {% endif %}
-  </div>
+  {{ macros_projects::project_links(live_url=project_live, github_url=project_github, url=project_url, url_label=project_url_label, external=project_external) }}
 </section>
 {% endif %}
 {% endblock content %}

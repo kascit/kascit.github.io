@@ -1,0 +1,244 @@
+/* Code block styling */
+:not(.mockup-code) > pre {
+  @apply rounded-box my-6 bg-base-200/30 border border-base-content/12 relative overflow-hidden;
+  --code-block-line-height: 1.58;
+  --code-block-font-size: 0.86rem;
+  --code-block-font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --code-block-inner-pad-y: 0.75rem;
+  --code-block-pad-y: 1rem;
+  --code-block-pad-x: 1rem;
+  --cb-shell-bg: color-mix(in oklab, var(--color-base-200) 35%, var(--color-base-100));
+  --cb-code-bg: color-mix(in oklab, var(--color-base-100) 88%, var(--color-base-200));
+  --cb-toolbar-bg: color-mix(in oklab, var(--color-base-100) 76%, var(--color-base-200));
+  --cb-gutter-bg: color-mix(in oklab, var(--color-base-100) 60%, var(--color-base-200));
+  --cb-border: color-mix(in oklab, var(--color-base-content) 14%, transparent);
+  --cb-divider: color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  --cb-gutter-fg: color-mix(in oklab, var(--color-base-content) 78%, transparent);
+}
+
+:is([data-theme="dark"], html.dark) :not(.mockup-code) > pre {
+  --cb-shell-bg: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--color-base-100) 95%, var(--color-base-200)) 0%,
+    color-mix(in oklab, var(--color-base-100) 90%, var(--color-base-200)) 100%
+  );
+  --cb-code-bg: color-mix(in oklab, var(--color-base-100) 96%, var(--color-base-200));
+  --cb-toolbar-bg: color-mix(in oklab, var(--color-base-100) 92%, var(--color-base-200));
+  --cb-gutter-bg: color-mix(in oklab, var(--color-base-100) 89%, var(--color-base-200));
+  --cb-border: color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  --cb-divider: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+  --cb-gutter-fg: color-mix(in oklab, var(--color-base-content) 76%, transparent);
+}
+
+:not(.mockup-code) > pre.codeblock-enhanced {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  background: var(--cb-shell-bg) !important;
+  border-color: var(--cb-border);
+  box-shadow: none;
+}
+
+.codeblock-toolbar {
+  grid-column: 1 / -1;
+  @apply flex items-center justify-between gap-2 px-3 py-2;
+  border-bottom: 1px solid var(--cb-divider);
+  background: var(--cb-toolbar-bg);
+}
+
+.codeblock-lang-tag {
+  @apply inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide;
+  color: color-mix(in oklab, var(--color-base-content) 68%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 14%, transparent);
+  background: color-mix(in oklab, var(--color-base-content) 6%, transparent);
+}
+
+.codeblock-copy-btn {
+  @apply inline-flex items-center justify-center h-7 w-7 rounded-md border border-base-content/14 text-base-content/60 bg-base-100/92 transition-colors duration-150;
+}
+
+.codeblock-copy-btn:hover {
+  @apply border-base-content/24 text-base-content bg-base-100;
+}
+
+:is([data-theme="dark"], html.dark) .codeblock-copy-btn {
+  border-color: color-mix(in oklab, var(--color-base-content) 22%, transparent);
+  background: color-mix(in oklab, var(--color-base-100) 62%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 72%, transparent);
+}
+
+:is([data-theme="dark"], html.dark) .codeblock-copy-btn:hover {
+  border-color: color-mix(in oklab, var(--color-base-content) 32%, transparent);
+  background: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 94%, transparent);
+}
+
+.codeblock-copy-btn:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--color-base-content) 26%, transparent);
+  outline-offset: 2px;
+}
+
+.codeblock-copy-btn.copied {
+  @apply text-emerald-400 border-emerald-400/30 bg-emerald-400/10;
+}
+
+.codeblock-gutter {
+  @apply flex flex-col items-end select-none px-3 text-right;
+  padding-block: var(--code-block-inner-pad-y);
+  min-width: 2.8rem;
+  font-size: var(--code-block-font-size);
+  font-family: var(--code-block-font-family);
+  line-height: var(--code-block-line-height);
+  font-variant-numeric: tabular-nums;
+  color: var(--cb-gutter-fg);
+  border-right: 1px solid var(--cb-divider);
+  background: var(--cb-gutter-bg);
+}
+
+.codeblock-line-number {
+  display: block;
+  line-height: var(--code-block-line-height);
+  min-height: var(--code-block-line-height);
+}
+
+:not(.mockup-code) > pre code {
+  @apply whitespace-pre block overflow-x-auto;
+  font-size: var(--code-block-font-size);
+  padding: var(--code-block-pad-y) var(--code-block-pad-x);
+  line-height: var(--code-block-line-height);
+  font-family: var(--code-block-font-family);
+  tab-size: 4;
+  -moz-tab-size: 4;
+  font-variant-ligatures: none;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb-color-hover) transparent;
+  background-color: transparent !important;
+  border: none;
+}
+
+/* Prevent browser/default link colors from overriding syntax token colors in code. */
+:not(.mockup-code) > pre code a,
+:not(.mockup-code) > pre code a:any-link {
+  color: inherit !important;
+}
+
+/* Giallo embeds inline light-dark() colors. Force branch selection to current theme
+ * so token colors do not flip to the wrong contrast set. */
+:is([data-theme="light"], html.light) :not(.mockup-code) > pre.giallo,
+:is([data-theme="light"], html.light) :not(.mockup-code) > pre[style*="light-dark("] {
+  color-scheme: light !important;
+}
+
+:is([data-theme="dark"], html.dark) :not(.mockup-code) > pre.giallo,
+:is([data-theme="dark"], html.dark) :not(.mockup-code) > pre[style*="light-dark("] {
+  color-scheme: dark !important;
+}
+
+/* Fix Zola syntax highlighter light mode contrast accessibility issue */
+:is([data-theme="light"], html.light) :not(.mockup-code) > pre span[style*="#e36209"] {
+  color: #b93a05 !important;
+}
+
+/* Fix contrast for gray comments (#6a737d) across both themes */
+:is([data-theme="light"], html.light) :not(.mockup-code) > pre span[style*="#6a737d"] {
+  color: #515a63 !important;
+}
+:is([data-theme="dark"], html.dark) :not(.mockup-code) > pre span[style*="#6a737d"] {
+  color: #929ba5 !important;
+}
+
+:not(.mockup-code) > pre.codeblock-enhanced > code {
+  padding-block: var(--code-block-inner-pad-y);
+  background: var(--cb-code-bg) !important;
+}
+
+/* Zola's ayu theme applies background-color to markdown-context tokens (z-markup.*,
+ * z-variable.z-language.z-fenced). These bleed through as line-span backgrounds
+ * in rendered code blocks. Reset them all to transparent. */
+:not(.mockup-code) > pre code span {
+  background-color: transparent !important;
+}
+
+:not(.mockup-code) > pre code * {
+  background-color: transparent !important;
+}
+
+/* Reset DaisyUI prose pre background */
+.prose pre {
+  @apply bg-base-200/55 text-base-content/90;
+}
+.prose pre code {
+  background-color: transparent !important;
+}
+
+/* Keep KaTeX aligned with active theme text colors in both modes. */
+.katex,
+.katex-display,
+.katex * {
+  color: inherit;
+}
+
+:is([data-theme="dark"], html.dark) .katex,
+:is([data-theme="dark"], html.dark) .katex-display {
+  color: color-mix(in oklab, var(--color-base-content) 96%, transparent);
+}
+
+:is([data-theme="light"], html.light) .katex,
+:is([data-theme="light"], html.light) .katex-display {
+  color: color-mix(in oklab, var(--color-base-content) 95%, transparent);
+}
+
+@media (max-width: 640px) {
+  :not(.mockup-code) > pre.codeblock-enhanced {
+    grid-template-columns: 2.35rem minmax(0, 1fr);
+  }
+
+  .codeblock-toolbar {
+    @apply px-2.5 py-1.5;
+  }
+
+  .codeblock-lang-tag {
+    @apply text-[9px] px-1.5 py-0.5;
+  }
+
+  .codeblock-gutter {
+    @apply px-2 text-[10px];
+    min-width: 2.2rem;
+  }
+
+  :not(.mockup-code) > pre {
+    --code-block-line-height: 1.5;
+    --code-block-font-size: 0.8rem;
+    --code-block-inner-pad-y: 0.625rem;
+    --code-block-pad-y: 0.9rem;
+    --code-block-pad-x: 0.95rem;
+  }
+
+  :not(.mockup-code) > pre:not(.codeblock-enhanced) code {
+    padding-bottom: calc(var(--code-block-pad-y) + 0.1rem);
+  }
+}
+
+:not(.mockup-code) > pre code::-webkit-scrollbar {
+  height: 8px;
+}
+
+:not(.mockup-code) > pre code::-webkit-scrollbar-track {
+  background: transparent;
+  margin-left: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+:not(.mockup-code) > pre code::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb-color-hover);
+  border-radius: 2px;
+}
+
+:not(.mockup-code) > pre code::-webkit-scrollbar-thumb:hover {
+  background: var(--scrollbar-thumb-color-strong);
+}
+
+:not(pre) > code {
+  @apply px-1.5 py-0.5 rounded-md text-[0.875em] font-mono bg-base-content/10 text-base-content;
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent);
+}
+

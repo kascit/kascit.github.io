@@ -1,0 +1,55 @@
+/* Layout and Section-Specific Styles
+ * Contains: Navigation, Sidebar, Gallery, Landing Page, Tables
+ */
+
+html {
+  scrollbar-gutter: stable;
+  overflow-x: clip;
+}
+
+body {
+  overflow-x: clip;
+}
+
+/* Disable automatic cross-document view transitions.
+ * They can introduce visible snapshot flashes when fixed rails/nav are shared across pages.
+ */
+@supports (view-transition-name: root) {
+  @view-transition {
+    navigation: none;
+  }
+
+  /* Keep fixed chrome out of root cross-fade snapshots to avoid rail/nav flash. */
+  .site-topbar,
+  #sidebar,
+  #sidebar-toggle-wrapper,
+  #toc-column,
+  #toc-toggle-anchor {
+    view-transition-name: none;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 160ms;
+    animation-timing-function: ease-out;
+  }
+}
+
+/* Prevent first-frame layout popping: enable transitions only after runtime init sync. */
+html[data-ui-init="0"] #sidebar,
+html[data-ui-init="0"] #sidebar-toggle-wrapper,
+html[data-ui-init="0"] #blog-layout,
+html[data-ui-init="0"] #toc-column,
+html[data-ui-init="0"] #toc-sidebar,
+html[data-ui-init="0"] #toc-toggle-anchor,
+html[data-ui-init="0"] #toc-toggle,
+html[data-ui-init="0"] #toc-toggle svg {
+  transition: none !important;
+  animation: none !important;
+}
+
+/* Landing page: hide prev/next navigation block */
+body.is-landing nav.mt-12 {
+  display: none;
+}
+

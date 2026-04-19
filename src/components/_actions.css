@@ -1,0 +1,189 @@
+/* Shared compact action button style (copy/RSS/icon actions) */
+.action-icon-btn,
+.copy-heading-link-button,
+.rss-action-btn {
+  @apply inline-flex items-center justify-center w-8 h-8 rounded-md cursor-pointer no-underline;
+  @apply bg-base-content/8 border border-base-content/12 text-base-content/50;
+  @apply transition-colors duration-200;
+  box-shadow: none;
+}
+
+.action-icon-btn:hover,
+.copy-heading-link-button:hover,
+.rss-action-btn:hover {
+  @apply bg-base-content/14 border-base-content/25 text-base-content/80;
+}
+
+.action-icon-btn:focus-visible,
+.copy-heading-link-button:focus-visible,
+.rss-action-btn:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--color-base-content) 26%, transparent);
+  outline-offset: 2px;
+}
+
+.copy-heading-link-button.copied {
+  @apply text-emerald-400 border-emerald-400/30 bg-emerald-400/10;
+}
+
+/* Copy heading link button */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  @apply relative;
+}
+
+.copy-heading-link-button {
+  @apply opacity-0 invisible ml-2 align-middle;
+  font-size: 0.8rem;
+}
+
+h1:hover .copy-heading-link-button,
+h2:hover .copy-heading-link-button,
+h3:hover .copy-heading-link-button,
+h4:hover .copy-heading-link-button,
+h5:hover .copy-heading-link-button,
+h6:hover .copy-heading-link-button {
+  @apply opacity-100 visible;
+}
+
+.copy-heading-link-button i,
+.rss-action-btn i {
+  line-height: inherit;
+  display: block;
+}
+
+.rss-action-btn {
+  @apply text-orange-500 bg-orange-500/5 border-orange-500/20;
+}
+
+.rss-action-btn:hover {
+  @apply bg-orange-500/14 border-orange-500/35 text-orange-500;
+}
+
+.rss-action-btn--feedly {
+  @apply text-emerald-500 bg-emerald-500/5 border-emerald-500/20;
+}
+
+.rss-action-btn--feedly:hover {
+  @apply bg-emerald-500/14 border-emerald-500/35 text-emerald-500;
+}
+
+.rss-action-btn--inoreader {
+  @apply text-blue-500 bg-blue-500/5 border-blue-500/20;
+}
+
+.rss-action-btn--inoreader:hover {
+  @apply bg-blue-500/14 border-blue-500/35 text-blue-500;
+}
+
+.tooltip:has(> .tooltip-content[data-smart-tooltip='1']) {
+  --tt-off: calc(100% + 0.35rem);
+}
+
+.tooltip > .tooltip-content.tooltip-content-smart {
+  @apply rounded-md border border-base-content/14 px-2 py-1;
+  background: color-mix(in oklab, var(--color-base-100) 94%, var(--color-base-300));
+  color: color-mix(in oklab, var(--color-base-content) 88%, transparent);
+  box-shadow: 0 8px 18px -16px color-mix(in oklab, var(--color-base-content) 30%, transparent);
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}
+
+.tooltip-content-smart {
+  @apply inline-flex items-center gap-1.5;
+  max-width: 24rem;
+  font-size: 0.74rem;
+  line-height: 1.2;
+}
+
+.tooltip-content-smart .tooltip-label {
+  @apply font-medium tracking-normal;
+}
+
+.tooltip-content-smart .tooltip-shortcut {
+  @apply inline-flex items-center gap-0.5;
+  opacity: 0.84;
+}
+
+.tooltip-content-smart .tooltip-shortcut-separator {
+  @apply text-[9px] uppercase tracking-wide;
+  opacity: 0.62;
+}
+
+.tooltip-content-smart .tooltip-shortcut-option {
+  @apply inline-flex items-center gap-0.5;
+}
+
+.tooltip-content-smart .tooltip-shortcut-step {
+  @apply inline-flex items-center gap-px;
+}
+
+.tooltip-content-smart .tooltip-shortcut-plus {
+  @apply text-[9px] leading-none;
+  opacity: 0.5;
+}
+
+.tooltip-content-smart .tooltip-shortcut-step-gap {
+  display: inline-block;
+  width: 0.05rem;
+}
+
+.tooltip-content-smart .tooltip-shortcut-key {
+  @apply h-4 min-h-4 rounded px-1 text-[9px] font-medium;
+  border-color: color-mix(in oklab, currentColor 24%, transparent);
+  background: color-mix(in oklab, currentColor 7%, transparent);
+}
+
+.tooltip > .tooltip-content.tooltip-content-smart,
+.tooltip:has(> .tooltip-content[data-smart-tooltip='1'])::after {
+  transition-duration: 130ms !important;
+  transition-timing-function: cubic-bezier(0.2, 0, 0.2, 1) !important;
+}
+
+@media (hover: none), (pointer: coarse), (max-width: 1023px) {
+  .tooltip-mobile-disabled > .tooltip-content[data-smart-tooltip='1'],
+  .tooltip:has(> .tooltip-content[data-smart-tooltip='1']) > .tooltip-content[data-smart-tooltip='1'],
+  .tooltip:has(> .tooltip-content[data-smart-tooltip='1'])::after {
+    display: none !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
+
+/* Theme switcher alignment inside dropdown panels */
+.theme-switcher {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  gap: 0.2rem;
+  padding: 0.18rem;
+  border-radius: 0.6rem;
+}
+
+.theme-switcher-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  white-space: nowrap;
+  min-height: 1.6rem;
+  line-height: 1;
+  border-radius: 0.42rem;
+  color: color-mix(in oklab, var(--color-base-content) 75%, transparent);
+  transition: background-color 140ms ease, color 140ms ease, opacity 140ms ease;
+}
+
+.theme-switcher-btn:hover {
+  background: color-mix(in oklab, var(--color-base-content) 9%, transparent);
+  color: var(--color-base-content);
+}
+
+.theme-switcher-btn:focus-visible {
+  outline: none;
+  background: color-mix(in oklab, var(--color-base-content) 11%, transparent);
+  color: var(--color-base-content);
+}
+

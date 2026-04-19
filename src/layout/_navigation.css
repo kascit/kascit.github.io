@@ -1,0 +1,251 @@
+/* Dropdown panels: CSS-only hidden state, toggled via [data-open] */
+[data-dropdown] .dropdown-panel {
+  position: absolute;
+  top: 100%;
+  visibility: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(0.25rem) scale(0.98);
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+[data-dropdown][data-open] .dropdown-panel {
+  visibility: visible;
+  opacity: 1;
+  pointer-events: auto;
+  transform: none;
+}
+
+/* PWA Window Controls Overlay - position navbar intelligently
+ * On Windows: controls on right, overlay uses titlebar-area-width
+ * On macOS: controls on left, overlay uses titlebar-area-x
+ * Fallback: normal positioning when not in WCO mode
+ */
+@media (display-mode: window-controls-overlay) {
+  .site-topbar {
+    width: calc(
+      100% - env(titlebar-area-x, 0) - (100% - env(titlebar-area-width, 100%))
+    );
+    margin-left: env(titlebar-area-x, 0);
+  }
+
+  /* Keep navbar content positioned as-is, but paint a full-width topbar layer
+     so the titlebar control area doesn't show a visual gap. */
+  .site-topbar::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: auto;
+    height: 4rem;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      linear-gradient(
+        180deg,
+        var(--topbar-bg-1) 0%,
+        var(--topbar-bg-2) 100%
+      );
+    backdrop-filter: saturate(128%) blur(11px);
+    -webkit-backdrop-filter: saturate(128%) blur(11px);
+    border-bottom: 1px solid color-mix(in oklab, var(--color-base-content) 11%, transparent);
+    box-shadow:
+      0 1px 0 color-mix(in oklab, var(--color-base-content) 9%, transparent) inset,
+      0 4px 12px -12px color-mix(in oklab, var(--color-base-content) 16%, transparent);
+  }
+
+  .site-topbar > * {
+    position: relative;
+    z-index: 1;
+  }
+}
+
+.navbar {
+  z-index: 70;
+}
+
+/* Subtle title/logo hover pulse */
+@keyframes logo-subtle-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 0.9;
+  }
+  65% {
+    opacity: 0.96;
+  }
+}
+
+.logo-firefly {
+  position: relative;
+}
+
+.site-logo-link {
+  display: inline-flex;
+  align-items: center;
+  min-height: 0;
+  padding: 0.125rem 0.3rem;
+  border: 0;
+  background: transparent;
+  text-decoration: none;
+}
+
+.site-logo-link:hover,
+.site-logo-link:focus-visible {
+  background: transparent;
+  border-color: transparent;
+}
+
+.logo-firefly img {
+  transition: filter 280ms ease, opacity 280ms ease;
+  will-change: filter, opacity;
+}
+
+.logo-firefly:hover {
+  animation: logo-subtle-blink 1.4s ease-in-out infinite;
+}
+
+.logo-firefly:hover img {
+  filter: drop-shadow(0 0 6px rgba(var(--color-primary), 0.36));
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .logo-firefly:hover {
+    animation: none;
+  }
+}
+
+/* Navigation layout styling */
+.prev-nav-item:empty,
+.next-nav-item:empty {
+  @apply hidden;
+}
+
+/* Dropdown Menu Adjustments */
+.dropdown-panel {
+  @apply transition-colors duration-300;
+}
+.dropdown-content.bg-base-100, .dropdown-panel.bg-base-100 {
+  background-color: var(--color-base-100, hsl(var(--b1)));
+}
+
+.site-topbar {
+  --topbar-bg-1: color-mix(in oklab, var(--color-base-100) 84%, transparent);
+  --topbar-bg-2: color-mix(in oklab, var(--color-base-100) 92%, var(--color-base-200));
+  --topbar-control-hover-bg: color-mix(in oklab, var(--color-base-content) 7%, transparent);
+  --topbar-control-hover-border: color-mix(in oklab, var(--color-base-content) 14%, transparent);
+  position: fixed;
+  isolation: isolate;
+  background:
+    linear-gradient(
+      180deg,
+      var(--topbar-bg-1) 0%,
+      var(--topbar-bg-2) 100%
+    );
+  backdrop-filter: saturate(128%) blur(11px);
+  -webkit-backdrop-filter: saturate(128%) blur(11px);
+  border-bottom: 1px solid color-mix(in oklab, var(--color-base-content) 11%, transparent);
+  box-shadow:
+    0 1px 0 color-mix(in oklab, var(--color-base-content) 9%, transparent) inset,
+    0 4px 12px -12px color-mix(in oklab, var(--color-base-content) 16%, transparent);
+}
+
+.site-topbar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(
+      100deg,
+      color-mix(in oklab, var(--color-base-content) 6%, transparent) 0%,
+      transparent 42%
+    );
+  opacity: 0.3;
+}
+
+.site-topbar #hamburger-toggle,
+.site-topbar .menu.menu-horizontal > li > :is(a.btn.btn-ghost, div.btn.btn-ghost),
+.site-topbar [data-dropdown] > [role="button"].btn.btn-ghost {
+  border: 1px solid transparent;
+  background: transparent;
+  color: color-mix(in oklab, var(--color-base-content) 84%, transparent);
+  box-shadow: none;
+}
+
+.site-topbar #hamburger-toggle:hover,
+.site-topbar .menu.menu-horizontal > li > :is(a.btn.btn-ghost, div.btn.btn-ghost):hover,
+.site-topbar [data-dropdown] > [role="button"].btn.btn-ghost:hover {
+  border-color: var(--topbar-control-hover-border);
+  background: var(--topbar-control-hover-bg);
+  color: var(--color-base-content);
+}
+
+.site-topbar #hamburger-toggle:focus-visible,
+.site-topbar .menu.menu-horizontal > li > :is(a.btn.btn-ghost, div.btn.btn-ghost):focus-visible,
+.site-topbar [data-dropdown] > [role="button"].btn.btn-ghost:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--color-primary) 40%, transparent);
+  outline-offset: 2px;
+}
+
+.site-topbar .dropdown-content,
+.site-topbar .dropdown-panel {
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-base-100) 82%, transparent) 0%,
+      color-mix(in oklab, var(--color-base-100) 95%, var(--color-base-200)) 100%
+    );
+  border-color: color-mix(in oklab, var(--color-base-content) 13%, transparent);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  box-shadow:
+    0 1px 0 color-mix(in oklab, var(--color-base-content) 8%, transparent) inset,
+    0 8px 18px -16px color-mix(in oklab, var(--color-base-content) 18%, transparent);
+}
+
+@media (max-width: 1023px) {
+  .site-topbar {
+    backdrop-filter: saturate(124%) blur(9px);
+    -webkit-backdrop-filter: saturate(124%) blur(9px);
+  }
+}
+
+/* Navigation buttons */
+.nav-button {
+  @apply block w-full p-8 rounded-box transition-colors duration-200 ease-out focus:outline-none focus:ring-2 focus:ring-base-content/30 no-underline text-base-content bg-base-200/50 border border-base-content/10 min-h-[6rem];
+}
+
+.nav-button:hover {
+  @apply border-base-content/20 shadow-md bg-base-200;
+}
+
+.nav-button-content {
+  @apply flex flex-col gap-3 h-full justify-center;
+}
+
+.nav-button-direction {
+  @apply flex items-center gap-3 text-sm font-semibold text-base-content/75;
+}
+
+.nav-button-title {
+  @apply text-xl font-bold leading-tight;
+  @apply text-base-content break-words;
+}
+
+/* Next button alignment */
+.nav-button-next .nav-button-content {
+  @apply items-end;
+}
+
+.nav-button-next .nav-button-direction {
+  @apply flex-row-reverse;
+}
+
+.nav-button-next .nav-button-title {
+  @apply text-right;
+}
+

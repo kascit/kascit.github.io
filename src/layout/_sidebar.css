@@ -1,0 +1,556 @@
+/* Navigation Menu Styles - Neutral Colors */
+.nav-menu {
+  @apply text-base-content/80 hover:text-base-content transition-colors duration-200 no-underline hover:no-underline;
+  @apply relative px-3 py-2 rounded-md;
+  @apply hover:bg-base-content/5;
+}
+
+/* Tight TOC spacing — keep it sleek */
+.toc-menu a,
+.toc-menu details > summary {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  line-height: 1.35;
+  min-height: 24px;
+}
+
+/* Sidebar navigation profile: consistent spacing, hover, and active state */
+#sidebar .menu {
+  --sidebar-item-radius: 0.55rem;
+  --sidebar-item-bg-hover: color-mix(in oklab, var(--color-base-content) 7%, transparent);
+  --sidebar-item-bg-active: color-mix(in oklab, var(--color-primary) 12%, transparent);
+  --menu-active-bg: transparent;
+  --menu-active-fg: var(--color-base-content);
+}
+
+#sidebar .menu :where(li > a, li > details > summary) {
+  @apply no-underline text-base-content/78;
+  border-radius: var(--sidebar-item-radius);
+  padding: 0.52rem 0.7rem;
+  min-height: 0;
+  line-height: 1.35;
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+#sidebar .menu :where(li > a, li > details > summary):hover {
+  background: var(--sidebar-item-bg-hover);
+  color: var(--color-base-content);
+}
+
+#sidebar .menu :where(li > a, li > details > summary):focus-visible {
+  outline: none;
+  background: var(--sidebar-item-bg-hover);
+  color: var(--color-base-content);
+}
+
+#sidebar .menu :where(li > a, li > details > summary):active {
+  box-shadow: none;
+  background: color-mix(in oklab, var(--color-base-content) 11%, transparent);
+  color: var(--color-base-content);
+}
+
+#sidebar .menu :where(li > a.menu-active, li > details > summary.menu-active) {
+  background: var(--sidebar-item-bg-active);
+  color: var(--color-base-content);
+  box-shadow: none;
+}
+
+/* Neutralize legacy server-side active borders to prevent double bars */
+#sidebar .menu :where(li, a, summary)[class*="border-l-"] {
+  border-inline-start-width: 0;
+  border-inline-start-color: transparent;
+}
+
+#sidebar .menu :where(li > ul) {
+  margin-inline-start: 0.95rem;
+  padding-inline-start: 0.72rem;
+}
+
+#sidebar .menu :where(li > ul)::before {
+  inset-inline-start: 0;
+  opacity: 0.12;
+}
+
+#sidebar .menu :where(li > a).sidebar-link-active,
+#sidebar .menu :where(li > details > summary).sidebar-parent-active {
+  color: var(--color-base-content);
+  font-weight: 600;
+}
+
+#sidebar .menu :where(li > a).sidebar-link-active {
+  position: relative;
+  background: var(--sidebar-item-bg-active);
+  box-shadow: none;
+}
+
+#sidebar .menu :where(li > a).sidebar-link-active::before {
+  content: "";
+  position: absolute;
+  left: -0.5rem;
+  top: 0.32rem;
+  bottom: 0.32rem;
+  width: 2px;
+  border-radius: 2px;
+  background: color-mix(in oklab, var(--color-primary) 72%, var(--color-base-content));
+}
+
+[data-apps-grid-sidebar] > summary .apps-grid-chevron {
+  transition: transform 180ms ease;
+}
+
+[data-apps-grid-sidebar][open] > summary .apps-grid-chevron {
+  transform: rotate(180deg);
+}
+
+[data-apps-grid-sidebar] > .apps-grid-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition: grid-template-rows 220ms ease, opacity 180ms ease;
+}
+
+[data-apps-grid-sidebar] > .apps-grid-panel > .apps-grid-panel-inner {
+  overflow: hidden;
+  transform: translateY(-0.25rem);
+  transition: transform 220ms ease;
+}
+
+[data-apps-grid-sidebar][open] > .apps-grid-panel {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+[data-apps-grid-sidebar][open] > .apps-grid-panel > .apps-grid-panel-inner {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-apps-grid-sidebar] > summary .apps-grid-chevron,
+  [data-apps-grid-sidebar] > .apps-grid-panel,
+  [data-apps-grid-sidebar] > .apps-grid-panel > .apps-grid-panel-inner {
+    transition: none;
+  }
+}
+
+/* Drawer sidebar: column flex so inner shell can fill; full viewport paint on mobile */
+.drawer-side-panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+/* Mobile drawer: panel above navbar / FAB; overlay is sibling of drawer-side (see macros/drawer.html) */
+@media (max-width: 1023px) {
+  #blog-layout {
+    overflow-x: clip;
+  }
+
+  #blog-layout > main.prose {
+    max-width: none;
+    width: 100%;
+    min-width: 0;
+  }
+
+  #sidebar.drawer-side.drawer-side-panel {
+    z-index: 65;
+    width: min(18rem, 92vw);
+    min-height: 100dvh;
+    background-color: var(--color-sidebar);
+    box-shadow: 4px 0 24px -6px color-mix(in oklab, var(--color-base-content) 14%, transparent);
+    /* Remove scrollbar spacing issues */
+    scrollbar-gutter: stable;
+  }
+
+  .drawer > label.drawer-overlay {
+    position: fixed;
+    inset: 0;
+  }
+
+  .drawer:has(#my-drawer-2:checked) > label.drawer-overlay {
+    z-index: 60;
+  }
+
+  /* Fix sidebar content scrolling on mobile */
+  #sidebar .drawer-content {
+    padding-right: 0;
+    margin-right: 0;
+  }
+
+  #sidebar .thin-scrollbar {
+    scrollbar-gutter: stable;
+  }
+}
+
+@media (min-width: 1024px) {
+  .drawer {
+    --sidebar-width: 17rem;
+    --toggle-width: 2.5rem;
+    --toggle-half-width: 1.25rem;
+  }
+
+  #sidebar {
+    transition: margin-left 300ms var(--motion-ease-standard), 
+                opacity 300ms var(--motion-ease-standard);
+    will-change: margin-left, opacity;
+  }
+
+  .drawer.sidebar-collapsed #sidebar,
+  html[data-sidebar-collapsed="1"] .drawer #sidebar {
+    margin-left: calc(-1 * var(--sidebar-width));
+    opacity: 0;
+    pointer-events: none;
+  }
+
+  /* Sidebar toggle positioning (apply to wrapper, since button is static inside it) */
+  #sidebar-toggle-wrapper {
+    left: calc(var(--sidebar-width) - var(--toggle-half-width));
+    right: auto;
+    transition: left 300ms var(--motion-ease-standard),
+                right 300ms var(--motion-ease-standard),
+                transform 150ms ease;
+    will-change: left, right, transform;
+  }
+
+  .drawer.sidebar-collapsed #sidebar-toggle-wrapper,
+  html[data-sidebar-collapsed="1"] .drawer #sidebar-toggle-wrapper {
+    left: calc(-0.6 * var(--toggle-half-width));
+    right: auto;
+  }
+
+  .drawer:not(.sidebar-collapsed) #sidebar-toggle-wrapper {
+    left: calc(var(--sidebar-width) - var(--toggle-half-width));
+    right: auto;
+  }
+
+  /* Keep direct button rules no-op fallback */
+  #sidebar-toggle {
+    left: auto;
+    right: auto;
+  }
+
+  #sidebar-toggle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  }
+
+  #sidebar-toggle:active {
+    transform: scale(0.95);
+    transition-duration: 100ms;
+  }
+
+  #sidebar-toggle.sidebar-toggle--collapsed,
+  html[data-sidebar-collapsed="1"] #sidebar-toggle {
+    background-color: var(--color-base-300);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  html[data-sidebar-collapsed="1"] #sidebar-toggle .sidebar-toggle-icon-collapsed {
+    display: block;
+  }
+
+  html[data-sidebar-collapsed="1"] #sidebar-toggle .sidebar-toggle-icon-expanded {
+    display: none;
+  }
+}
+
+/* ToC Neutral Link Colors */
+.toc-link {
+  @apply text-base-content/75 hover:text-base-content;
+  @apply transition-colors duration-200 no-underline;
+  font-size: 0.9em;
+}
+
+/* Ensure TOC column doesn't clip sticky child */
+#toc-column {
+  overflow: visible;
+}
+
+/* Active TOC link — highlighted by JS IntersectionObserver */
+.toc-link.toc-active {
+  color: var(--color-base-content);
+  font-weight: 600;
+  position: relative;
+}
+
+.toc-link.toc-active::before {
+  content: '';
+  position: absolute;
+  left: -0.5rem;
+  top: 10%;
+  height: 80%;
+  width: 2px;
+  background: var(--color-primary, currentColor);
+  border-radius: 2px;
+  opacity: 0.8;
+}
+
+
+/* Ensure consistent font-size for ToC summary elements (items with sub-items) */
+.toc-menu details > summary {
+  font-size: inherit;
+}
+
+.toc-link:hover {
+  @apply no-underline font-semibold;
+  background: transparent;
+}
+
+/* Override menu hover styles for ToC - only text highlighting, no button effect */
+.toc-menu a:hover,
+.toc-menu details > summary:hover {
+  background: transparent;
+}
+
+/* Fix for DaisyUI Menu Active Flash: prevent non-link wrappers from flashing active colors when clicked inside */
+.menu li > div:active,
+.menu li > div:focus {
+  background-color: transparent;
+  color: inherit;
+}
+
+/* -------------------------------------
+ * TOC Toggle Styles
+ * ------------------------------------- */
+
+/* =============================================
+ * TOC TOGGLE & SIDEBAR
+ * =============================================
+ * Layout:  main (flex-1) | #toc-toggle-anchor (w-0) | #toc-column (220px)
+ *
+ * The toggle button lives in #toc-toggle-anchor which is a zero-width flex
+ * sentinel with overflow:visible so it is NEVER clipped regardless of what
+ * happens to #toc-column.
+ *
+ * #toc-column collapses by animating width → 0 via body.toc-collapsed.
+ * overflow:hidden is only applied when collapsed so the width animation clips
+ * content — in expanded state it uses overflow:visible so the inner sticky div
+ * from the macro can work correctly.
+ * ============================================= */
+
+/* --- TOC sidebar: scrollable, sticky (sticky is on the inner div from macro) --- */
+#toc-sidebar {
+  /* Don't make this sticky — sticky is on the inner div in toc.html (sticky top-20) */
+  display: block;
+  height: 100%;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  transition: opacity 260ms var(--motion-ease-standard),
+              transform 260ms var(--motion-ease-standard);
+  transform: translateX(0);
+}
+
+#toc-sidebar::-webkit-scrollbar {
+  display: none;
+}
+
+/* The inner sticky container from the macro: ensure it sticks */
+#toc-sidebar > div.sticky {
+  max-height: calc(100dvh - 5.5rem);
+  overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+#toc-sidebar > div.sticky::-webkit-scrollbar {
+  display: none;
+}
+
+#blog-layout {
+  --toc-rail-width: 0px;
+  --toc-rail-padding-left: 0px;
+}
+
+/* --- TOC column: expanded state --- */
+#toc-column {
+  width: var(--toc-rail-width);
+  min-width: var(--toc-rail-width);
+  max-width: var(--toc-rail-width);
+  flex-basis: var(--toc-rail-width);
+  padding-left: var(--toc-rail-padding-left);
+  /* overflow:visible so the inner sticky div works correctly */
+  overflow: visible;
+  transform: translateX(0);
+  transition:
+    width 280ms var(--motion-ease-standard),
+    max-width 280ms var(--motion-ease-standard),
+    min-width 280ms var(--motion-ease-standard),
+    flex-basis 280ms var(--motion-ease-standard),
+    padding-left 260ms var(--motion-ease-standard),
+    margin 280ms var(--motion-ease-standard),
+    opacity 220ms var(--motion-ease-standard),
+    transform 280ms var(--motion-ease-standard);
+  will-change: width, max-width, min-width, flex-basis, padding-left, margin, opacity, transform;
+}
+
+/* --- TOC column: collapsed state --- */
+body.toc-collapsed #toc-column,
+html[data-toc-collapsed="1"] body #toc-column {
+  width: 0;
+  max-width: 0;
+  min-width: 0;
+  flex-basis: 0;
+  opacity: 0;
+  overflow: hidden;
+  margin: 0;
+  padding-left: 0;
+  pointer-events: none;
+  transform: translateX(0.5rem);
+}
+
+body.toc-collapsed #toc-sidebar,
+html[data-toc-collapsed="1"] body #toc-sidebar {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(0.4rem);
+}
+
+/* --- Toggle button anchor --- */
+/* Kept visible so toggle button stays accessible when collapsed */
+#toc-toggle-anchor {
+  z-index: 41;
+  width: 0;
+  min-width: 0;
+  max-width: 0;
+  right: calc(-1 * var(--toc-toggle-offset, 0px));
+  transition: right 280ms var(--motion-ease-standard);
+}
+
+@media (min-width: 1024px) {
+  #blog-layout {
+    --toc-rail-width: 220px;
+    --toc-rail-padding-left: 1.5rem;
+    --toc-toggle-offset: 1.5rem;
+    --blog-layout-pad-right: 2.5rem;
+    transition: max-width 280ms var(--motion-ease-standard),
+                width 280ms var(--motion-ease-standard),
+                padding 280ms var(--motion-ease-standard),
+                margin 280ms var(--motion-ease-standard);
+  }
+}
+
+@media (min-width: 1280px) {
+  #blog-layout {
+    --toc-rail-width: 250px;
+    --toc-rail-padding-left: 2rem;
+    --toc-toggle-offset: 2rem;
+    --blog-layout-pad-right: 2.5rem;
+  }
+}
+
+body.toc-collapsed #blog-layout,
+html[data-toc-collapsed="1"] body #blog-layout {
+  --toc-toggle-offset: var(--blog-layout-pad-right, 2.5rem);
+}
+
+/* Toggle button */
+#toc-toggle {
+  position: absolute;
+  left: 0;
+  transform: translateX(-50%);
+  transition: transform 150ms ease, box-shadow 150ms ease, opacity 200ms ease, background-color 200ms ease;
+}
+
+#toc-toggle svg {
+  transition: transform 220ms var(--motion-ease-standard);
+  transform-origin: center;
+}
+
+#toc-toggle:hover {
+  transform: translateX(-50%) scale(1.1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+#toc-toggle:active {
+  transform: translateX(-50%) scale(0.95);
+  transition-duration: 80ms;
+}
+
+/* Optional: rotate button arrow when collapsed */
+body.toc-collapsed #toc-toggle svg,
+html[data-toc-collapsed="1"] body #toc-toggle svg {
+  transform: scaleX(-1);
+}
+
+body.toc-collapsed #toc-toggle,
+html[data-toc-collapsed="1"] body #toc-toggle {
+  background-color: var(--color-base-300);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #toc-column,
+  #toc-sidebar,
+  #toc-toggle,
+  #toc-toggle svg {
+    transition: none;
+  }
+}
+
+/* Mobile drawer polish */
+@media (max-width: 1023px) {
+  #sidebar.drawer-side.drawer-side-panel {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+/* -------------------------------------
+ * Dropdown Toggle Active States
+ * ------------------------------------- */
+[data-dropdown][data-open] > [role="button"],
+[data-dropdown]:hover > [role="button"] {
+  @apply bg-base-content/10 shadow-inner border-transparent;
+}
+
+/* -------------------------------------
+ * Taxonomy Term Cards (Catalog)
+ * ------------------------------------- */
+.catalog-card {
+  @apply block w-full p-8 rounded-box overflow-hidden bg-base-200/50 border border-base-content/10 shadow-sm transition-all duration-300 ease-out h-full no-underline hover:no-underline flex flex-col focus:outline-none focus:ring-2 focus:ring-base-content/30;
+}
+
+.catalog-card:hover {
+  @apply border-base-content/20 shadow-md bg-base-200 transform hover:-translate-y-1;
+}
+
+.catalog-card__link {
+  @apply flex flex-col h-full no-underline hover:no-underline;
+}
+
+.catalog-card__row {
+  @apply flex items-center justify-between gap-3 text-sm font-semibold text-base-content/60 mb-3;
+}
+
+.catalog-card:hover .catalog-card__row {
+  @apply text-base-content/80;
+}
+
+.catalog-card__action {
+  @apply uppercase tracking-wider text-[11px];
+}
+
+.catalog-card__chevron {
+  @apply w-5 h-5 transition-transform duration-300 ease-out text-base-content/40;
+}
+
+.catalog-card:hover .catalog-card__chevron {
+  @apply translate-x-1.5 text-primary;
+}
+
+.catalog-card__title {
+  @apply text-2xl font-bold text-base-content mb-2 transition-colors duration-200 line-clamp-2;
+}
+
+.catalog-card:hover .catalog-card__title {
+  @apply text-primary;
+}
+
+.catalog-card__meta {
+  @apply text-sm font-medium text-base-content/60 mt-auto pt-4 border-t border-base-content/5 transition-colors duration-200;
+}
+
+.catalog-card:hover .catalog-card__meta {
+  @apply text-base-content/80 border-base-content/15;
+}
+

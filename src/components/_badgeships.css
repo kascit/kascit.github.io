@@ -1,0 +1,523 @@
+/* ─── Shared surface chips (About skills + blog taxonomy links) ─── */
+.surface-chip {
+  @apply inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-medium leading-tight;
+  background: color-mix(in oklab, var(--color-base-content) 7%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 14%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 86%, transparent);
+}
+
+.surface-chip-link {
+  @apply inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium leading-tight no-underline transition-colors duration-150;
+  background: color-mix(in oklab, var(--color-base-content) 7%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 14%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 86%, transparent);
+  min-height: 2rem;
+  max-width: 100%;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.surface-chip-link:hover {
+  background: color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  border-color: color-mix(in oklab, var(--color-base-content) 24%, transparent);
+  color: var(--color-base-content);
+  @apply no-underline;
+}
+
+.taxonomy-chip--category {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.055em;
+  text-transform: uppercase;
+}
+
+.taxonomy-chip--tag {
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+/* Section / page kind label (taxonomy header, etc.) */
+.ui-kind-pill {
+  @apply inline-flex items-center shrink-0 text-xs font-medium px-2.5 py-1 rounded-md uppercase tracking-wide;
+  color: color-mix(in oklab, var(--color-base-content) 65%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 14%, transparent);
+  background: color-mix(in oklab, var(--color-base-content) 4%, transparent);
+}
+
+/* Taxonomy / archive term tiles — responsive text, no nav-button min-height */
+.catalog-card {
+  @apply border border-base-content/10 rounded-box overflow-hidden bg-base-100 transition-colors duration-200;
+}
+
+.catalog-card:hover {
+  @apply border-base-content/20 shadow-md bg-base-200/15;
+}
+
+.catalog-card__link {
+  @apply flex flex-col gap-3 p-4 sm:p-5 min-w-0 no-underline hover:no-underline text-base-content;
+  @apply focus:outline-none focus-visible:ring-2 focus-visible:ring-base-content/20 focus-visible:ring-inset;
+}
+
+.catalog-card__head {
+  @apply flex items-start justify-between gap-3;
+}
+
+.catalog-card__count {
+  @apply inline-flex shrink-0 items-center rounded-md px-1.5 py-0.5 text-[10px] font-semibold;
+  color: color-mix(in oklab, var(--color-base-content) 62%, transparent);
+  background: color-mix(in oklab, var(--color-base-content) 6%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 12%, transparent);
+}
+
+.catalog-card__row {
+  @apply flex items-center justify-between gap-2 w-full min-w-0;
+}
+
+.catalog-card__action {
+  @apply text-xs font-semibold uppercase tracking-wide;
+  color: color-mix(in oklab, var(--color-base-content) 52%, transparent);
+}
+
+.catalog-card__chevron {
+  @apply shrink-0 transition-transform duration-200;
+  color: color-mix(in oklab, var(--color-base-content) 40%, transparent);
+}
+
+.catalog-card__title {
+  @apply text-xl sm:text-2xl font-bold leading-snug m-0 text-left;
+  word-break: break-word;
+}
+
+.catalog-card__meta {
+  @apply text-xs m-0;
+  color: color-mix(in oklab, var(--color-base-content) 62%, transparent);
+}
+
+.taxonomy-term-grid {
+  @apply grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5 sm:gap-3;
+}
+
+.taxonomy-filter-wrap {
+  @apply rounded-box border border-base-content/14 p-4 sm:p-5 shadow-sm;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--color-base-100) 76%, var(--color-base-200)) 0%,
+    var(--color-base-100) 100%
+  );
+}
+
+.taxonomy-filter-label {
+  @apply block text-[11px] font-semibold uppercase tracking-[0.1em] text-base-content/58 mb-2;
+}
+
+.taxonomy-filter-input-wrap {
+  @apply relative flex items-center;
+}
+
+.taxonomy-filter-icon {
+  @apply absolute left-3.5 text-xs text-base-content/45 pointer-events-none;
+}
+
+.taxonomy-filter-input {
+  @apply w-full rounded-md border border-base-content/14 bg-base-200/35 text-sm text-base-content shadow-sm;
+  @apply pl-9 pr-16 py-2.5 transition-colors duration-200;
+}
+
+.taxonomy-filter-input::placeholder {
+  color: color-mix(in oklab, var(--color-base-content) 45%, transparent);
+}
+
+.taxonomy-filter-input:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--color-primary) 26%, transparent);
+  outline-offset: 2px;
+}
+
+.taxonomy-filter-clear {
+  @apply absolute right-2.5 rounded-md border border-base-content/14 px-2 py-1 text-[11px] font-semibold;
+  @apply text-base-content/62 bg-base-100/75 transition-colors duration-150;
+}
+
+.taxonomy-filter-clear:hover {
+  @apply border-base-content/24 text-base-content/88 bg-base-100;
+}
+
+.taxonomy-filter-meta {
+  @apply mt-2 text-xs text-base-content/68;
+}
+
+.taxonomy-filter-empty {
+  @apply mt-2 text-sm text-base-content/72;
+}
+
+.taxonomy-term-btn {
+  @apply inline-flex items-center justify-between gap-2 rounded-md px-3 py-2.5 no-underline;
+  @apply border border-base-content/14 bg-base-100 text-base-content/92 transition-colors duration-200 shadow-sm;
+}
+
+.taxonomy-term-item {
+  @apply relative;
+}
+
+.taxonomy-term-item .taxonomy-term-btn {
+  @apply w-full pr-10;
+}
+
+.taxonomy-term-pick {
+  @apply absolute right-1.5 top-1/2 -translate-y-1/2 inline-flex items-center justify-center;
+  @apply w-7 h-7 rounded-md border border-base-content/14 text-[11px] text-base-content/62 bg-base-100/92;
+  @apply transition-colors duration-150;
+}
+
+.taxonomy-term-pick:hover {
+  @apply border-base-content/28 text-base-content bg-base-100;
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-primary) 18%, transparent);
+}
+
+.taxonomy-term-item.is-selected .taxonomy-term-btn {
+  border-color: color-mix(in oklab, var(--color-primary) 36%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 8%, var(--color-base-100));
+}
+
+.taxonomy-term-item.is-selected .taxonomy-term-pick {
+  border-color: color-mix(in oklab, var(--color-primary) 48%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 20%, transparent);
+  color: color-mix(in oklab, var(--color-primary) 90%, var(--color-base-content));
+}
+
+.taxonomy-term-btn:hover {
+  @apply no-underline border-base-content/24 bg-base-200/22 text-base-content;
+  box-shadow: 0 1px 0 color-mix(in oklab, var(--color-base-content) 10%, transparent);
+}
+
+.taxonomy-term-btn__name {
+  @apply text-[0.9rem] font-semibold truncate;
+}
+
+.taxonomy-term-btn__count {
+  @apply inline-flex items-center justify-center rounded-md text-[10px] font-semibold px-1.5 py-0.5 shrink-0;
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 20%, transparent);
+  background: color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 74%, transparent);
+}
+
+.taxonomy-subscribe-rail {
+  @apply block;
+}
+
+.taxonomy-subscribe-card {
+  @apply rounded-box border border-base-content/14 p-4;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 7rem);
+  min-height: 0;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--color-base-100) 80%, var(--color-base-200)) 0%,
+    var(--color-base-100) 100%
+  );
+}
+
+.taxonomy-subscribe-head {
+  @apply flex items-center justify-between gap-2;
+}
+
+.taxonomy-subscribe-title {
+  @apply text-base font-semibold m-0 text-base-content;
+}
+
+.taxonomy-subscribe-badge {
+  @apply text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-md;
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 18%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 74%, transparent);
+  background: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+}
+
+.taxonomy-subscribe-desc {
+  @apply mt-2 mb-0 text-xs leading-relaxed text-base-content/74;
+}
+
+.taxonomy-subscribe-actions {
+  @apply mt-3 flex items-center gap-2;
+}
+
+.taxonomy-subscribe-btn {
+  @apply inline-flex items-center justify-center rounded-md px-2.5 py-1.5 text-[11px] font-semibold;
+  @apply border border-base-content/18 bg-base-100 text-base-content/78 transition-colors duration-150;
+}
+
+.taxonomy-subscribe-btn:hover {
+  @apply border-base-content/28 text-base-content bg-base-200/34;
+}
+
+.taxonomy-subscribe-btn--primary {
+  border-color: color-mix(in oklab, var(--color-primary) 44%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 14%, var(--color-base-100));
+  color: color-mix(in oklab, var(--color-primary) 92%, var(--color-base-content));
+}
+
+.taxonomy-subscribe-btn--primary:hover {
+  border-color: color-mix(in oklab, var(--color-primary) 56%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 22%, var(--color-base-100));
+}
+
+.taxonomy-subscribe-btn:disabled {
+  @apply opacity-45 cursor-not-allowed;
+}
+
+.taxonomy-subscribe-selected {
+  @apply mt-3 flex flex-wrap gap-1.5 pr-1;
+  min-height: 0;
+  max-height: 14rem;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.taxonomy-subscribe-chip {
+  @apply inline-flex items-center gap-1.5 rounded-md px-2 py-1 text-[11px] font-medium;
+  @apply border border-base-content/16 text-base-content/84 bg-base-200/42;
+}
+
+.taxonomy-subscribe-chip-icon {
+  font-size: 0.65rem;
+  color: color-mix(in oklab, var(--color-base-content) 68%, transparent);
+}
+
+.taxonomy-subscribe-chip-remove {
+  @apply inline-flex items-center justify-center w-4 h-4 rounded-sm border border-base-content/14 text-[9px] leading-none;
+  @apply text-base-content/65 bg-base-100/85 transition-colors duration-150;
+}
+
+.taxonomy-subscribe-chip-remove:hover {
+  @apply border-base-content/24 text-base-content bg-base-100;
+}
+
+.taxonomy-subscribe-empty {
+  @apply mt-2 text-xs text-base-content/62;
+}
+
+.taxonomy-subscribe-footer {
+  @apply mt-4 flex flex-col gap-2 pt-3 border-t border-base-content/14;
+}
+
+.taxonomy-subscribe-meta {
+  @apply m-0 text-xs font-medium text-base-content/72;
+}
+
+.taxonomy-subscribe-link {
+  @apply inline-flex items-center justify-center rounded-md px-2.5 py-1.5 text-[11px] font-semibold no-underline;
+  @apply border border-base-content/18 text-base-content/78 bg-base-100 transition-colors duration-150;
+}
+
+.taxonomy-subscribe-link:hover {
+  @apply no-underline border-base-content/28 text-base-content bg-base-200/34;
+}
+
+.taxonomy-subscribe-link--primary {
+  border-color: color-mix(in oklab, var(--color-primary) 44%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 14%, var(--color-base-100));
+  color: color-mix(in oklab, var(--color-primary) 92%, var(--color-base-content));
+}
+
+.taxonomy-subscribe-link--primary:hover {
+  border-color: color-mix(in oklab, var(--color-primary) 56%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 22%, var(--color-base-100));
+}
+
+.taxonomy-subscribe-link.is-disabled,
+.taxonomy-subscribe-link.is-disabled:hover {
+  @apply opacity-45 cursor-not-allowed;
+  @apply border-base-content/14 text-base-content/58 bg-base-100;
+  pointer-events: none;
+}
+
+.taxonomy-playlist-post {
+  @apply relative;
+}
+
+.taxonomy-playlist-pick {
+  @apply absolute top-2 right-2 z-30 inline-flex items-center justify-center;
+  @apply w-8 h-8 rounded-md border border-base-content/14 text-xs text-base-content/62 bg-base-100/95;
+  @apply transition-colors duration-150;
+}
+
+.taxonomy-playlist-pick:hover {
+  @apply border-base-content/28 text-base-content bg-base-100;
+  box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-primary) 18%, transparent);
+}
+
+.taxonomy-playlist-post.is-selected .taxonomy-playlist-pick {
+  border-color: color-mix(in oklab, var(--color-primary) 48%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 20%, transparent);
+  color: color-mix(in oklab, var(--color-primary) 90%, var(--color-base-content));
+}
+
+@media (max-width: 1023px) {
+  .taxonomy-term-pick,
+  .taxonomy-playlist-pick {
+    display: none !important;
+  }
+}
+
+.taxonomy-playlist-rail {
+  @apply block;
+}
+
+.taxonomy-playlist-card {
+  @apply rounded-box border border-base-content/14 p-4;
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - 7rem);
+  min-height: 0;
+  overflow: hidden;
+  background: linear-gradient(
+    180deg,
+    color-mix(in oklab, var(--color-base-100) 80%, var(--color-base-200)) 0%,
+    var(--color-base-100) 100%
+  );
+}
+
+.taxonomy-playlist-head {
+  @apply flex items-center justify-between gap-2;
+}
+
+.taxonomy-playlist-title {
+  @apply text-base font-semibold m-0 text-base-content;
+}
+
+.taxonomy-playlist-badge {
+  @apply text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-md;
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 18%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 74%, transparent);
+  background: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+}
+
+.taxonomy-playlist-desc {
+  @apply mt-2 mb-0 text-xs leading-relaxed text-base-content/74;
+}
+
+.taxonomy-playlist-actions {
+  @apply mt-3 flex items-center gap-2;
+}
+
+.taxonomy-playlist-btn {
+  @apply inline-flex items-center justify-center rounded-md px-2.5 py-1.5 text-[11px] font-semibold;
+  @apply border border-base-content/18 bg-base-100 text-base-content/78 transition-colors duration-150;
+}
+
+.taxonomy-playlist-btn:hover {
+  @apply border-base-content/28 text-base-content bg-base-200/34;
+}
+
+.taxonomy-playlist-btn--primary {
+  border-color: color-mix(in oklab, var(--color-primary) 44%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 14%, var(--color-base-100));
+  color: color-mix(in oklab, var(--color-primary) 92%, var(--color-base-content));
+}
+
+.taxonomy-playlist-btn--primary:hover {
+  border-color: color-mix(in oklab, var(--color-primary) 56%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 22%, var(--color-base-100));
+}
+
+.taxonomy-playlist-btn:disabled {
+  @apply opacity-45 cursor-not-allowed;
+}
+
+.taxonomy-playlist-list {
+  @apply mt-3 pr-1;
+  min-height: 0;
+  overflow-y: auto;
+  max-height: 18rem;
+  scrollbar-width: thin;
+}
+
+.taxonomy-playlist-empty {
+  @apply mt-2 text-xs text-base-content/62;
+}
+
+.taxonomy-playlist-row {
+  @apply rounded-md border border-base-content/12 bg-base-100/70 p-2;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.taxonomy-playlist-row.is-dragging {
+  opacity: 0.55;
+}
+
+.taxonomy-playlist-row.is-drag-over {
+  border-color: color-mix(in oklab, var(--color-primary) 36%, transparent);
+  background: color-mix(in oklab, var(--color-primary) 9%, var(--color-base-100));
+}
+
+.taxonomy-playlist-row + .taxonomy-playlist-row {
+  margin-top: 0.4rem;
+}
+
+.taxonomy-playlist-handle {
+  @apply inline-flex items-center gap-1 rounded-sm border border-base-content/14;
+  @apply px-1.5 py-1 text-[10px] text-base-content/62 bg-base-100 transition-colors duration-150 cursor-grab;
+}
+
+.taxonomy-playlist-handle:hover {
+  @apply border-base-content/24 text-base-content bg-base-100;
+}
+
+.taxonomy-playlist-handle:active {
+  cursor: grabbing;
+}
+
+.taxonomy-playlist-index {
+  @apply text-[10px] font-semibold text-base-content/55 text-center;
+}
+
+.taxonomy-playlist-link {
+  @apply text-[11px] font-medium no-underline text-base-content/84 truncate;
+}
+
+.taxonomy-playlist-link:hover {
+  @apply no-underline text-base-content;
+}
+
+.taxonomy-playlist-row-btn {
+  @apply inline-flex items-center justify-center w-5 h-5 rounded-sm text-[10px];
+  @apply border border-base-content/14 bg-base-100 text-base-content/62 transition-colors duration-150;
+}
+
+.taxonomy-playlist-row-btn:hover {
+  @apply border-base-content/24 text-base-content bg-base-100;
+}
+
+.taxonomy-playlist-footer {
+  @apply mt-4 flex flex-col gap-2 pt-3 border-t border-base-content/14;
+}
+
+.taxonomy-playlist-meta {
+  @apply m-0 text-xs font-medium text-base-content/72;
+}
+
+.status-pill {
+  @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold tracking-wide uppercase;
+}
+
+.status-pill--neutral {
+  color: color-mix(in oklab, var(--color-base-content) 72%, transparent);
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 18%, transparent);
+  background: color-mix(in oklab, var(--color-base-content) 7%, transparent);
+}
+
+.status-pill--pending {
+  color: color-mix(in oklab, var(--color-warning) 75%, var(--color-base-content));
+  border: 1px solid color-mix(in oklab, var(--color-warning) 28%, transparent);
+  background: color-mix(in oklab, var(--color-warning) 12%, transparent);
+}
+
+.status-pill--online {
+  color: color-mix(in oklab, var(--color-success) 85%, var(--color-base-content));
+  border: 1px solid color-mix(in oklab, var(--color-success) 34%, transparent);
+  background: color-mix(in oklab, var(--color-success) 12%, transparent);
+}
+

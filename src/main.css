@@ -44,10 +44,28 @@
 
 /* Modular CSS Architecture */
 @import "./theme-system.css";
+@import "./base/_transitions.css";
 @import "./typography.css";
-@import "./components.css";
-@import "./dui.css";
-@import "./layout.css";
-@import "./responsive-display.css";
 
+/* Components */
+@import "./components/_actions.css";
+@import "./components/_badgeships.css";
+@import "./components/_cards.css";
+@import "./components/_code.css";
+@import "./components/_hints.css";
+@import "./components/_search.css";
+@import "./components/_widgets.css";
+
+/* Dhanur UI Shell */
+@import "./dui.css";
+
+/* Layout */
+@import "./layout/_gallery.css";
+@import "./layout/_navigation.css";
+@import "./layout/_sidebar.css";
+
+/* Pages */
+@import "./pages/_landing.css";
+
+@import "./responsive-display.css";
 @import "./syntax-highlight.css";

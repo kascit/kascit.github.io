@@ -1,0 +1,20 @@
+/* Gallery Styles */
+.gallery-box {
+  @apply mb-10 rounded-box overflow-hidden shadow-sm border border-base-content/10 bg-base-200/30;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  justify-content: stretch;
+  align-content: center;
+  grid-gap: 15px;
+  padding: 20px;
+}
+
+.gallery img {
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius-box, 0.25rem);
+}
+

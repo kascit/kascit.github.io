@@ -24,6 +24,7 @@ tailwind_version := env_var("TAILWIND_VERSION")
 daisyui_version  := env_var("DAISYUI_VERSION")
 fa_version       := env_var("FA_VERSION")
 katex_version    := env_var("KATEX_VERSION")
+just_version     := env_var("JUST_VERSION")
 
 # ---------------------------------------------------------------------------
 # Default

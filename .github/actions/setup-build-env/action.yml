@@ -44,41 +44,56 @@ runs:
     - name: Cache pnpm store
       uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
       with:
-        path: ~/.pnpm-store
+        path: ~/.local/share/pnpm/store
         key: pnpm-tools-${{ runner.os }}-${{ steps.versions.outputs.PNPM_VERSION }}-${{ steps.versions.outputs.ESLINT_VERSION }}-${{ steps.versions.outputs.STYLELINT_VERSION }}
         restore-keys: |
           pnpm-tools-${{ runner.os }}-
 
-    - name: Install xmllint
-      shell: bash
-      run: |
-        sudo apt-get update
-        sudo apt-get install --no-install-recommends -y libxml2-utils
-
-    - name: Install ImageMagick
-      if: inputs.install-imagemagick == 'true'
-      shell: bash
-      run: sudo apt-get install --no-install-recommends -y imagemagick librsvg2-bin
-
-    - name: Install just
-      uses: taiki-e/install-action@1ed3272338f573e042a2e6bca3893aa19f43b47a # v2
-      with:
-        tool: just
-
-    - name: Cache Zola binary
+    - name: Cache apt packages
+      id: cache-apt
       uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
       with:
-        path: ~/.cargo/bin/zola
+        path: /var/cache/apt/archives
+        key: apt-packages-${{ runner.os }}-libxml2-imagemagick-librsvg2
+
+    - name: Install system packages
+      shell: bash
+      run: |
+        sudo apt-get update -qq
+        sudo apt-get install --no-install-recommends -y libxml2-utils
+        if [[ "${{ inputs.install-imagemagick }}" == "true" ]]; then
+          sudo apt-get install --no-install-recommends -y imagemagick librsvg2-bin
+        fi
+
+    - name: Cache just binary
+      id: cache-just
+      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+      with:
+        path: ~/.cargo/bin/just
+        key: just-${{ runner.os }}-${{ steps.versions.outputs.JUST_VERSION }}
+
+    - name: Install just
+      if: steps.cache-just.outputs.cache-hit != 'true'
+      uses: taiki-e/install-action@1ed3272338f573e042a2e6bca3893aa19f43b47a # v2
+      with:
+        tool: just@${{ steps.versions.outputs.JUST_VERSION }}
+
+    - name: Cache Zola binary
+      id: cache-zola
+      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+      with:
+        path: ~/.install-action/bin/zola
         key: zola-${{ steps.versions.outputs.ZOLA_VERSION }}
 
     - name: Install Zola
+      if: steps.cache-zola.outputs.cache-hit != 'true'
       uses: taiki-e/install-action@1ed3272338f573e042a2e6bca3893aa19f43b47a # v2
       with:
         tool: zola@${{ steps.versions.outputs.ZOLA_VERSION }}
 
-    - name: Verify Zola installation
+    - name: Add zola to PATH
       shell: bash
-      run: zola --version
+      run: echo "$HOME/.install-action/bin" >> "$GITHUB_PATH"
 
     - name: Cache CSS build dependencies
       uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4

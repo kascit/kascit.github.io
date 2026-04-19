@@ -70,8 +70,22 @@ const SEMANTIC_RULES = [
   { match: (el) => isPath(el, "/tos"), hint: "yt" },
   { match: (el) => isPath(el, "/appreciation"), hint: "yc" },
   // Links (/links/) will automatically be matched by the 'l' base rule above, even in the footer, which creates the perfect identical dedup you requested!
-  { match: (el) => el.href && el.href.includes("getzola.org"), hint: "yz" }
+  { match: (el) => isExternalHost(el, "getzola.org"), hint: "yz" }
 ];
+
+/**
+ * Returns true only when `el` is an anchor whose parsed hostname is exactly
+ * `host` or a direct subdomain of it (e.g. docs.getzola.org).
+ * Prevents CodeQL js/incomplete-url-substring-sanitization: an arbitrary URL
+ * like `evil.com?q=getzola.org` will NOT match.
+ */
+function isExternalHost(el, host) {
+  if (el.tagName !== "A" || !el.href) return false;
+  try {
+    const { hostname } = new URL(el.href);
+    return hostname === host || hostname.endsWith(`.${host}`);
+  } catch { return false; }
+}
 
 function isPath(el, path) {
   if (el.tagName !== "A" || !el.href) return false;

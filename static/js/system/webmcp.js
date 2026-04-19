@@ -683,10 +683,13 @@ async function callTool(toolName, args = {}) {
     throw new Error("Tool name is required");
   }
 
-  const tool = TOOL_REGISTRY[toolName];
-  if (!tool) {
+  // Prevent prototype-pollution dispatch: only dispatch to own enumerable keys
+  // on TOOL_REGISTRY, never to inherited properties like 'constructor' or '__proto__'.
+  if (!Object.prototype.hasOwnProperty.call(TOOL_REGISTRY, toolName)) {
     throw new Error(`Unknown tool: ${toolName}`);
   }
+
+  const tool = TOOL_REGISTRY[toolName];
 
   if (typeof tool !== "function") {
     throw new Error(`Tool is not executable: ${toolName}`);

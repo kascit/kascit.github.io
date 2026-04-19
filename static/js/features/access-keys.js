@@ -13,7 +13,7 @@
  *  5. Auto-generated hints are strictly prefix-free (no exact match shadows another).
  */
 
-import { isMobile, prefersReducedMotion } from "./responsive.js";
+import { isMobile, prefersReducedMotion } from "../core/responsive.js";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
 
@@ -49,7 +49,11 @@ const SEMANTIC_RULES = [
   { selector: "[aria-label='Account']", hint: "u" },
   { selector: "[data-search-trigger], label[for*='search']", hint: "k" },
 
-  // Prev / Next Nav Buttons
+  // Explicit Root Overrides (Should bypass generic layout classes)
+  { match: (el) => isPath(el, "/tags/"), hint: "t" },
+  { match: (el) => isPath(el, "/categories/"), hint: "c" },
+
+  // Prev / Next Nav Buttons (Default pagination flow)
   { selector: ".nav-button-prev", hint: "v" },
   { selector: ".nav-button-next", hint: "n" },
 
@@ -60,8 +64,6 @@ const SEMANTIC_RULES = [
   { match: (el) => isPath(el, "/links/"), hint: "l" },
   { match: (el) => isPath(el, "/blog/"), hint: "b" },
   { match: (el) => isPath(el, "/archive/"), hint: "x" },
-  { match: (el) => isPath(el, "/tags/"), hint: "t" },
-  { match: (el) => isPath(el, "/categories/"), hint: "c" },
 
   // Footer equivalents
   { match: (el) => isPath(el, "/privacy"), hint: "yp" },
@@ -75,6 +77,9 @@ function isPath(el, path) {
   if (el.tagName !== "A" || !el.href) return false;
   try {
     const url = new URL(el.href, window.location.origin);
+    // Ignore external origins
+    if (url.origin !== window.location.origin) return false;
+    
     // Exact match ignoring trailing slashes
     const p1 = url.pathname.replace(/\/$/, "");
     const p2 = path.replace(/\/$/, "");
@@ -85,6 +90,7 @@ function isPath(el, path) {
 // ─── State ────────────────────────────────────────────────────────────────────
 
 let active = false;
+let isAltHeld = false;
 let hintNodes = [];       // { hint, badge, element }[]
 let narrowPrefix = "";
 let listenersBound = false;
@@ -413,16 +419,26 @@ function narrowHints(char) {
 function onKeydown(event) {
   if (isMobile()) return;
 
+  if (event.key === "Alt") isAltHeld = true;
+
   const altOnly = event.altKey && !event.ctrlKey && !event.metaKey && !event.shiftKey;
 
   if (altOnly && (event.key === "ArrowUp" || event.key === "ArrowDown")) {
     event.preventDefault();
+    if (active) dismissHints();
+
     const step = window.innerHeight * 0.85;
     window.scrollBy({ top: (event.key === "ArrowUp" ? -1 : 1) * step, behavior: "smooth" });
-    if (active) {
-      dismissHints();
-      setTimeout(showHints, 350);
-    }
+    
+    let fired = false;
+    const resume = () => {
+      if (fired) return;
+      fired = true;
+      window.removeEventListener("scrollend", resume);
+      if (isAltHeld && !active) showHints();
+    };
+    window.addEventListener("scrollend", resume);
+    setTimeout(resume, 800); // fallback if scrollend isn't supported or doesn't fire
     return;
   }
 
@@ -488,7 +504,10 @@ function onKeydown(event) {
 }
 
 function onKeyup(event) {
-  if (event.key === "Alt" && active && narrowPrefix === "") dismissHints();
+  if (event.key === "Alt") {
+    isAltHeld = false;
+    if (active && narrowPrefix === "") dismissHints();
+  }
 }
 
 // ─── Init ─────────────────────────────────────────────────────────────────────

@@ -1,7 +1,7 @@
 /**
  * Mobile Scroll To Top Button
  */
-import { isMobile } from './responsive.js';
+import { isMobile } from "../core/responsive.js";
 
 export function initScrollToTop() {
   if (!isMobile()) return;

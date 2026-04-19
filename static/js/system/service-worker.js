@@ -1,7 +1,7 @@
 /**
  * Service Worker Registration & Notification sync
  */
-import { getConfig } from './config.js';
+import { getConfig } from "../core/config.js";
 
 const PERIODIC_SYNC_TAG = "content-sync";
 const ONE_OFF_SYNC_TAG = "sync-site-refresh";

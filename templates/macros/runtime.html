@@ -5,9 +5,9 @@
     {
         "defaultColorset": "{{ macros_head::get_theme_colorset(config=config) | trim }}",
         "katexCss": "{{ get_url(path='css/katex.min.css') | safe }}",
-        "katexJs": "{{ get_url(path='js/katex.min.js') | safe }}",
-        "mermaidJs": "{{ get_url(path='js/mermaid.min.js') | safe }}",
-        "fuseJs": "{{ get_url(path='fuse.min.js') | safe }}",
+        "katexJs": "{{ get_url(path='js/vendor/katex.min.js') | safe }}",
+        "mermaidJs": "{{ get_url(path='js/vendor/mermaid.min.js') | safe }}",
+        "fuseJs": "{{ get_url(path='js/vendor/fuse.min.js') | safe }}",
         "searchIndexJs": "{{ get_url(path='search_index.' ~ lang ~ '.js') | safe }}",
         "swPath": "{{ get_url(path='sw.js') | safe }}",
         "gtagId": "{{ config.extra.gtag | default(value='') }}",
@@ -17,5 +17,5 @@
 {% endmacro site_config %}
 
 {% macro app_main_script() %}
-    <script type="module" src="{{ get_url(path='js/main.js') | safe }}"></script>
+    <script type="module" src="{{ get_url(path='js/core/main.js') | safe }}"></script>
 {% endmacro app_main_script %}

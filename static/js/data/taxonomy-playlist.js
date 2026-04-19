@@ -3,7 +3,7 @@
  * Persisted in localStorage so users can collect posts from different taxonomies.
  */
 
-import { isDesktop, onResponsiveChange } from "./responsive.js";
+import { isDesktop, onResponsiveChange } from "../core/responsive.js";
 
 const PLAYLIST_STORAGE_KEY = "site-playlist-v1";
 const PLAYLIST_EXIT_PATH = "/blog";

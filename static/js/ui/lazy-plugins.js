@@ -1,8 +1,8 @@
 /**
  * Lazy loading for KaTeX and Mermaid.js
  */
-import { getConfig } from './config.js';
-import { appendScriptOnce, appendStylesheetOnce } from './resource-loader.js';
+import { getConfig } from "../core/config.js";
+import { appendScriptOnce, appendStylesheetOnce } from "../core/resource-loader.js";
 
 function renderKatex(katexInlineElements, katexBlockElements) {
   if (typeof window.katex === "undefined") return;

@@ -1,7 +1,7 @@
 /**
  * Keyboard Shortcut Hints renderer
  */
-import { isMobile } from './responsive.js';
+import { isMobile } from "../core/responsive.js";
 
 let desktopOnlyVisibilityBound = false;
 let desktopOnlyResizeTimer = null;

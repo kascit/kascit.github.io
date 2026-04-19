@@ -5,7 +5,7 @@
  *   (no reload, no re-injection, no loader flash)
  */
 
-import { hasOptionalConsent } from "./cookie-consent.js";
+import { hasOptionalConsent } from "../telemetry/cookie-consent.js";
 
 function renderConsentPlaceholder(mount) {
   if (mount.querySelector("[data-comments-consent]") || mount.querySelector("iframe.giscus-frame")) return;

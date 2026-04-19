@@ -231,7 +231,7 @@ _dl-katex:
     unzip -qo katex.zip -d _tmp
     cp _tmp/katex/katex.min.css static/css/katex.min.css
     sed -i 's|url(fonts/|url(../fonts/katex/|g' static/css/katex.min.css
-    cp _tmp/katex/katex.min.js static/js/katex.min.js
+    cp _tmp/katex/katex.min.js static/js/vendor/katex.min.js
     rm -rf static/fonts/katex
     cp -r _tmp/katex/fonts static/fonts/katex
     rm -rf katex.zip _tmp
@@ -240,7 +240,7 @@ _dl-katex:
 [private]
 [windows]
 _dl-katex:
-    @$kv = $env:KATEX_VERSION; echo "Installing KaTeX v$kv..."; Invoke-WebRequest -Uri "https://github.com/KaTeX/KaTeX/releases/download/v$kv/katex.zip" -OutFile "katex.zip"; Expand-Archive -Path "katex.zip" -DestinationPath "_tmp" -Force; Copy-Item "_tmp/katex/katex.min.css" -Destination "static/css/katex.min.css" -Force; (Get-Content "static/css/katex.min.css" -Raw) -replace 'url\(fonts/', 'url(../fonts/katex/' | Set-Content "static/css/katex.min.css"; Copy-Item "_tmp/katex/katex.min.js" -Destination "static/js/katex.min.js" -Force; if (Test-Path "static/fonts/katex") { Remove-Item "static/fonts/katex" -Recurse -Force }; Copy-Item "_tmp/katex/fonts" -Destination "static/fonts/katex" -Recurse -Force; Remove-Item "katex.zip" -Force; Remove-Item "_tmp" -Recurse -Force; echo "  done."
+    @$kv = $env:KATEX_VERSION; echo "Installing KaTeX v$kv..."; Invoke-WebRequest -Uri "https://github.com/KaTeX/KaTeX/releases/download/v$kv/katex.zip" -OutFile "katex.zip"; Expand-Archive -Path "katex.zip" -DestinationPath "_tmp" -Force; Copy-Item "_tmp/katex/katex.min.css" -Destination "static/css/katex.min.css" -Force; (Get-Content "static/css/katex.min.css" -Raw) -replace 'url\(fonts/', 'url(../fonts/katex/' | Set-Content "static/css/katex.min.css"; Copy-Item "_tmp/katex/katex.min.js" -Destination "static/js/vendor/katex.min.js" -Force; if (Test-Path "static/fonts/katex") { Remove-Item "static/fonts/katex" -Recurse -Force }; Copy-Item "_tmp/katex/fonts" -Destination "static/fonts/katex" -Recurse -Force; Remove-Item "katex.zip" -Force; Remove-Item "_tmp" -Recurse -Force; echo "  done."
 
 # ---------------------------------------------------------------------------
 # Development

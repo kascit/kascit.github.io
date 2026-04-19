@@ -8,12 +8,12 @@
  * <script type="module" src="https://dhanur.me/js/shell.js"></script>
  */
 
-import { BASE_URL, getConfig } from './modules/config.js';
-import { initResponsive } from './modules/responsive.js';
-import { initTheme } from './modules/theme-engine.js';
-import { initAuth } from './modules/auth-integration.js';
-import { initDropdowns } from './modules/dropdowns.js';
-import { SHELL_CONFIG_DEFAULTS } from './shell-config.js';
+import { BASE_URL, getConfig } from "./config.js";
+import { initResponsive } from "./responsive.js";
+import { initTheme } from "./theme-engine.js";
+import { initAuth } from "../system/auth-integration.js";
+import { initDropdowns } from "../ui/dropdowns.js";
+import { SHELL_CONFIG_DEFAULTS } from "./shell-config.js";
 
 window.__componentsJS = true;
 let _injected = false;

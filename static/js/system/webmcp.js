@@ -11,7 +11,7 @@
  *   { protocol: "dhanur.webmcp.v1", type: "webmcp.call", id, tool, args }
  */
 
-import { cycleThemeMode, getResolvedTheme, getThemeMode, setThemeMode } from "./theme-engine.js";
+import { cycleThemeMode, getResolvedTheme, getThemeMode, setThemeMode } from "../core/theme-engine.js";
 
 const PROTOCOL = "dhanur.webmcp.v1";
 const VERSION = "1.1.0";

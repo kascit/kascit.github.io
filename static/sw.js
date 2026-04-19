@@ -18,9 +18,9 @@ const CRITICAL_ASSETS = [
   // Assets needed for offline page to render properly
   "/css/main.css",
   "/css/font-awesome.min.css",
-  "/js/boot.js",
-  "/js/main.js",
-  "/js/offline-reload.js",
+  "/js/core/boot.js",
+  "/js/core/main.js",
+  "/js/system/offline-reload.js",
   "/fonts/Pretendard-Regular.woff",
   "/webfonts/fa-solid-900.woff2",
   "/webfonts/fa-brands-400.woff2",

@@ -5,10 +5,10 @@
  * - all: required + optional integrations (analytics, error monitoring, comments)
  */
 
-import { getConfig } from "./config.js";
+import { getConfig } from "../core/config.js";
 import { readCookie, writeCookie } from "./cookie-utils.js";
-import { initGtag } from "../gtag-init.js";
-import { appendScriptOnce } from "./resource-loader.js";
+import { initGtag } from "./gtag-init.js";
+import { appendScriptOnce } from "../core/resource-loader.js";
 
 const CONSENT_COOKIE_KEY = "site_cookie_consent_v1";
 const CONSENT_COOKIE_MAX_AGE = 60 * 60 * 24 * 180;

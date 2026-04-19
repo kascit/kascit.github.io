@@ -34,31 +34,31 @@ function main() {
 
   console.log(`Optimizing JavaScript in '${outputDirArg}'...`);
 
-  const mainEntry = path.join(jsDir, "main.js");
+  const mainEntry = path.join(jsDir, "core", "main.js");
   if (fs.existsSync(mainEntry)) {
-    console.log(`Bundling ${outputDirArg}/js/main.js with esbuild@${esbuildVersion}...`);
+    console.log(`Bundling ${outputDirArg}/js/core/main.js with esbuild@${esbuildVersion}...`);
     runPkg(
       [
         "dlx",
         `esbuild@${esbuildVersion}`,
-        `${outputDirArg}/js/main.js`,
+        `${outputDirArg}/js/core/main.js`,
         "--bundle",
         "--format=esm",
         "--target=es2020",
         "--minify",
         "--allow-overwrite",
-        `--outfile=${outputDirArg}/js/main.js`,
+        `--outfile=${outputDirArg}/js/core/main.js`,
       ],
       [
         "--yes",
         `esbuild@${esbuildVersion}`,
-        `${outputDirArg}/js/main.js`,
+        `${outputDirArg}/js/core/main.js`,
         "--bundle",
         "--format=esm",
         "--target=es2020",
         "--minify",
         "--allow-overwrite",
-        `--outfile=${outputDirArg}/js/main.js`,
+        `--outfile=${outputDirArg}/js/core/main.js`,
       ]
     );
   }
@@ -74,7 +74,7 @@ function main() {
     if (normalizedFile === normalizedMain) continue;
 
     const rel = path.relative(outputDir, file).split(path.sep).join("/");
-    const isModule = rel.startsWith("js/modules/");
+    const isModule = !rel.startsWith("js/vendor/");
 
     const pnpmArgs = [
       "dlx",

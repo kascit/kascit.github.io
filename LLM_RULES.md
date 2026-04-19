@@ -28,7 +28,7 @@ subdomains (*.dhanur.me): shell.js handles integration. maintain backward compat
 
 FRONTEND
 selectors: `data-*-mount` ONLY. NO generic IDs (prevents markdown heading collisions).
-responsive: require static/js/modules/responsive.js. NO ad-hoc breakpoints.
+responsive: require static/js/core/responsive.js. NO ad-hoc breakpoints.
 daisyUI: `data-tip` XOR `title`. never both.
 typography: use HTML class="not-prose". NO CSS @apply not-prose.
 layout: TOC/rail toggles controlled strictly by src/layout.css vars.

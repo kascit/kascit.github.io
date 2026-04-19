@@ -2,7 +2,7 @@
  * Drawer toggle sync, sidebar collapse, apps-grid persistence,
  * and back navigation fixing.
  */
-import { isMobile } from './responsive.js';
+import { isMobile } from "../core/responsive.js";
 
 const SIDEBAR_KEY = "sidebar-collapsed";
 const APPS_KEY = "apps_collapsed";

@@ -9,7 +9,7 @@
  * Emits rich tooltip content so shortcut hints can include kbd tokens.
  */
 
-import { initResponsive, isMobile, onResponsiveChange } from "./responsive.js";
+import { initResponsive, isMobile, onResponsiveChange } from "../core/responsive.js";
 
 const TOOLTIP_SELECTOR = "[data-tooltip-label], [data-tooltip-key-only='1'][data-tooltip-shortcut]";
 const POSITION_CLASSES = ["tooltip-top", "tooltip-bottom", "tooltip-left", "tooltip-right"];

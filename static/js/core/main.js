@@ -2,36 +2,36 @@
  * Main Web Application Entrypoint (ES Module)
  */
 
-import { initResponsive } from "./modules/responsive.js";
-import { initTheme } from "./modules/theme-engine.js";
-import { initAuth } from "./modules/auth-integration.js";
-import { initDropdowns } from "./modules/dropdowns.js";
-import { initDrawer } from "./modules/drawer.js";
-import { initServiceWorker } from "./modules/service-worker.js";
-import { initCookieConsent } from "./modules/cookie-consent.js";
-import { initWebMCP } from "./modules/webmcp.js";
-import { initTooltips } from "./modules/tooltips.js";
-import { initExternalLinkUtm } from "./modules/external-link-utm.js";
+import { initResponsive } from "./responsive.js";
+import { initTheme } from "./theme-engine.js";
+import { initAuth } from "../system/auth-integration.js";
+import { initDropdowns } from "../ui/dropdowns.js";
+import { initDrawer } from "../ui/drawer.js";
+import { initServiceWorker } from "../system/service-worker.js";
+import { initCookieConsent } from "../telemetry/cookie-consent.js";
+import { initWebMCP } from "../system/webmcp.js";
+import { initTooltips } from "../ui/tooltips.js";
+import { initExternalLinkUtm } from "../telemetry/external-link-utm.js";
 
 // Structural UX natively bundled
-import { initToc } from "./toc.js";
-import { initSearchLoader } from "./search-loader.js";
-import { initShowcaseRotate } from "./showcase-rotate.js";
-import { initCodeBlocks } from "./modules/code-blocks.js";
-import { initClipboard } from "./modules/clipboard.js";
-import { initShortcuts } from "./modules/shortcuts.js";
-import { initKeyboardShortcuts } from "./modules/keyboard-shortcuts.js";
-import { initAccessKeys } from "./modules/access-keys.js";
-import { initScrollToTop } from "./modules/scroll-top.js";
-import { initLazyPlugins } from "./modules/lazy-plugins.js";
+import { initToc } from "../features/toc.js";
+import { initSearchLoader } from "../features/search-loader.js";
+import { initShowcaseRotate } from "../ui/showcase-rotate.js";
+import { initCodeBlocks } from "../ui/code-blocks.js";
+import { initClipboard } from "../features/clipboard.js";
+import { initShortcuts } from "../features/shortcuts.js";
+import { initKeyboardShortcuts } from "../features/keyboard-shortcuts.js";
+import { initAccessKeys } from "../features/access-keys.js";
+import { initScrollToTop } from "../ui/scroll-top.js";
+import { initLazyPlugins } from "../ui/lazy-plugins.js";
 
 // Deferred UX & Heavy components natively bundled
-import { initLayoutRecommendation } from "./modules/layout-recommendation.js";
-import { initBlogFeed } from "./modules/blog-feed.js";
-import { initTaxonomyFilter } from "./modules/taxonomy-filter.js";
-import { initTaxonomySubscribe } from "./modules/taxonomy-subscribe.js";
-import { initTaxonomyPlaylist } from "./modules/taxonomy-playlist.js";
-import { initComments } from "./modules/comments.js";
+import { initLayoutRecommendation } from "../data/layout-recommendation.js";
+import { initBlogFeed } from "../data/blog-feed.js";
+import { initTaxonomyFilter } from "../data/taxonomy-filter.js";
+import { initTaxonomySubscribe } from "../data/taxonomy-subscribe.js";
+import { initTaxonomyPlaylist } from "../data/taxonomy-playlist.js";
+import { initComments } from "../features/comments.js";
 
 function runSafely(task, label) {
   try {

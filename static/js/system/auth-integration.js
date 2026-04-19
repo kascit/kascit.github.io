@@ -3,7 +3,7 @@
  * Handles Auth client loading and UI state syncing.
  */
 
-import { appendScriptOnce } from "./resource-loader.js";
+import { appendScriptOnce } from "../core/resource-loader.js";
 
 function getAuthClient() {
   if (!window.AUTH || typeof window.AUTH !== "object") return null;

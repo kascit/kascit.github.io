@@ -52,7 +52,7 @@
     <script data-cookie-domain="{{ cookie_domain }}"
             data-default-colorset="{{ theme_colorset }}"
             data-webmcp-compat="1">
-{{ load_data(path="static/js/boot.js") | safe }}
+{{ load_data(path="static/js/core/boot.js") | safe }}
     </script>
 
         {# Font configuration with backward compatibility #}
@@ -180,7 +180,7 @@
       <!-- Keep icon font stylesheet eager to avoid icon pop-in across page navigations -->
     <link rel="preload" href="{{ get_url(path="css/font-awesome.min.css") | safe }}" as="style">
       <link rel="stylesheet" href="{{ get_url(path="css/font-awesome.min.css") | safe }}">
-    <link rel="modulepreload" href="{{ get_url(path="js/main.js") | safe }}">
+    <link rel="modulepreload" href="{{ get_url(path="js/core/main.js") | safe }}">
 
     <meta name="js-modules"
             data-katex-css="{{ get_url(path="css/katex.min.css") | safe }}"

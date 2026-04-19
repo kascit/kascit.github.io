@@ -7,8 +7,8 @@
  * - Export selected feeds as OPML for feed readers
  */
 
-import { isDesktop, onResponsiveChange } from "./responsive.js";
-import { readCookie, writeCookie } from "./cookie-utils.js";
+import { isDesktop, onResponsiveChange } from "../core/responsive.js";
+import { readCookie, writeCookie } from "../telemetry/cookie-utils.js";
 
 const TAXONOMY_SELECTION_COOKIE = "taxonomy-rss-selection-v1";
 const TAXONOMY_SELECTION_COOKIE_MAX_AGE = 60 * 60 * 24 * 180;

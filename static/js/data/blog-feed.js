@@ -2,7 +2,7 @@
  * Blog feed progressive reveal (infinite-scroll style)
  */
 
-import { isLargeScreen, prefersReducedMotion } from "./responsive.js";
+import { isLargeScreen, prefersReducedMotion } from "../core/responsive.js";
 
 export function initBlogFeed() {
   const mount = document.querySelector("[data-blog-feed-mount]");

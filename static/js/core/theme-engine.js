@@ -1,8 +1,8 @@
 /**
  * Theme Engine (Light/Dark/Auto)
  */
-import { COOKIE_DOMAIN } from './config.js';
-import { readCookie, writeCookie } from './cookie-utils.js';
+import { COOKIE_DOMAIN } from "./config.js";
+import { readCookie, writeCookie } from "../telemetry/cookie-utils.js";
 
 const THEME_MAP = { dark: "dark", light: "light" };
 const MODE_CYCLE = ["auto", "light", "dark"];

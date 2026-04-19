@@ -21,7 +21,7 @@ const FINGERPRINTABLE_EXTENSIONS = new Set([
   "ico",
   "woff",
   "woff2",
-  "webmanifest",
+  "woff2",
 ]);
 const FINGERPRINTABLE_PREFIXES = [
   "images/",
@@ -40,8 +40,7 @@ const REWRITE_EXTENSIONS = new Set([
   ".webmanifest",
 ]);
 const STABLE_LOADER_ENTRIES = [
-  { sourceRel: "js/shell.js", stableRel: "js/shell.js", kind: "esm" },
-  { sourceRel: "sw.js", stableRel: "sw.js", kind: "sw" },
+  { sourceRel: "js/core/shell.js", stableRel: "js/shell.js", kind: "esm" },
 ];
 
 function toPosixPath(value) {
@@ -73,6 +72,9 @@ function collectFiles(dirPath, out = []) {
 
 function shouldFingerprint(relPath) {
   const normalized = String(relPath || "").toLowerCase();
+  
+  if (normalized === "sw.js" || normalized === "sw.min.js") return false;
+
   const parsed = path.posix.parse(normalized);
 
   if (HASHED_SEGMENT_RE.test(parsed.base)) return false;

@@ -90,11 +90,11 @@ Cache-Control: public, max-age=3600
 -> Cache-Control = public, max-age=0, must-revalidate
 
 # Static Assets (fingerprinted build output)
-(http.host eq "dhanur.me") and (http.request.uri.path.extension in {"css" "js" "jpg" "jpeg" "png" "webp" "svg" "ico" "woff" "woff2" "webmanifest"} or starts_with(http.request.uri.path, "/images/") or starts_with(http.request.uri.path, "/fonts/") or starts_with(http.request.uri.path, "/css/") or starts_with(http.request.uri.path, "/js/"))
+(http.host eq "dhanur.me") and (http.request.uri.path.extension in {"css" "js" "jpg" "jpeg" "png" "webp" "svg" "ico" "woff" "woff2"} or starts_with(http.request.uri.path, "/images/") or starts_with(http.request.uri.path, "/fonts/") or starts_with(http.request.uri.path, "/css/") or starts_with(http.request.uri.path, "/js/"))
 -> Cache-Control = public, max-age=31536000, immutable
 
-# HTML & XML Cache
-(http.host eq "dhanur.me") and ((http.request.uri.path eq "/") or (ends_with(http.request.uri.path, "/")) or (ends_with(http.request.uri.path, ".html")) or (ends_with(http.request.uri.path, ".xml")) or (ends_with(http.request.uri.path, ".txt")))
+# HTML, XML & Webmanifest Cache
+(http.host eq "dhanur.me") and ((http.request.uri.path eq "/") or (ends_with(http.request.uri.path, "/")) or (ends_with(http.request.uri.path, ".html")) or (ends_with(http.request.uri.path, ".xml")) or (ends_with(http.request.uri.path, ".txt")) or (ends_with(http.request.uri.path, ".webmanifest")))
 -> Cache-Control = public, max-age=3600
 
 # RSS Content Type (Requires Update)

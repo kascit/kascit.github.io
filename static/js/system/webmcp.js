@@ -433,7 +433,11 @@ function getAppState() {
   };
 }
 
-const TOOL_REGISTRY = {
+// Registry created with a null prototype so there are no inherited callable
+// properties (constructor, __proto__, toString, etc.) that a user-controlled
+// toolName lookup could accidentally dispatch to.
+// This satisfies CodeQL js/unvalidated-dynamic-method-call.
+const TOOL_REGISTRY = Object.assign(Object.create(null), {
   "tools.list": async () => Object.keys(TOOL_REGISTRY),
   "system.ping": async () => ({ now: Date.now(), protocol: PROTOCOL, runtime: _runtime }),
   "app.getState": async () => getAppState(),
@@ -548,7 +552,7 @@ const TOOL_REGISTRY = {
     await registration.update();
     return { updated: true };
   },
-};
+});
 
 const TOOL_SPECS = {
   "tools.list": {

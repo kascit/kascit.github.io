@@ -49,20 +49,18 @@ runs:
         restore-keys: |
           pnpm-tools-${{ runner.os }}-
 
-    - name: Cache apt packages
-      id: cache-apt
-      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
-      with:
-        path: /var/cache/apt/archives
-        key: apt-packages-${{ runner.os }}-libxml2-imagemagick-librsvg2
-
     - name: Install system packages
       shell: bash
       run: |
-        sudo apt-get update -qq
-        sudo apt-get install --no-install-recommends -y libxml2-utils
+        # Skip packages that are already installed (warm runner pool reuse)
+        pkgs=()
+        command -v xmllint &>/dev/null || pkgs+=(libxml2-utils)
         if [[ "${{ inputs.install-imagemagick }}" == "true" ]]; then
-          sudo apt-get install --no-install-recommends -y imagemagick librsvg2-bin
+          command -v convert &>/dev/null || pkgs+=(imagemagick librsvg2-bin)
+        fi
+        if [[ ${#pkgs[@]} -gt 0 ]]; then
+          sudo apt-get update -qq
+          sudo apt-get install --no-install-recommends -y "${pkgs[@]}"
         fi
 
     - name: Cache just binary

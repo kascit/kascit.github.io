@@ -99,4 +99,22 @@
 
 </div>
 
+<script type="module">
+  import { initResponsive, isMobile } from '{{ config.base_url }}/js/core/responsive.js';
+  
+  function checkStars() {
+    initResponsive();
+    if (isMobile()) {
+      const starfield = document.querySelector('.landing-starfield');
+      if (starfield) starfield.remove();
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkStars);
+  } else {
+    checkStars();
+  }
+</script>
+
 {% endblock main_content %}

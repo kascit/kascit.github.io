@@ -17,7 +17,7 @@ next_subtitle = "Next"
 enabled = false
 
 [taxonomies]
-tags = ["systems", "backend", "devops", "data", "tooling", "security", "frontend", "cloud"]
+tags = ["systems", "backend", "devops", "data", "tooling", "security", "frontend", "cloud", "Java", "Python", "Go", "C / C++", "JavaScript", "Lua", "SQL", "Bash", "Spring Boot", "Node.js", "PostgreSQL", "MongoDB", "Redis", "DynamoDB", "AWS", "GCP", "Docker", "Kubernetes", "CI/CD", "Terraform", "Neovim", "Linux", "Git", "Postman", "AI Systems", "Applied Cryptography", "Computer Graphics"]
 +++
 <div class="prose max-w-none prose-base-content lg:prose-lg mb-12">
 

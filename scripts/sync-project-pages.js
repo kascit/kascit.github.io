@@ -71,7 +71,7 @@ function renderPage(project) {
   const repoTopics = compactUnique(project.repo_topics || []);
   const thumbnailImage = String(project.thumbnail_image || "").trim();
   const thumbnailAlt = String(project.thumbnail_alt || title).trim();
-  const tags = compactUnique(project.tags || []);
+  const tags = compactUnique([...(project.tags || []), ...(project.techs || [])]);
 
   const statusBadgeMap = {
     live: "Live",

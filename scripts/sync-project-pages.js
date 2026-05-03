@@ -194,7 +194,40 @@ function main() {
   ensureDir(PROJECTS_DIR);
   removeLegacyGeneratedDir();
   removePreviouslyGeneratedPages(PROJECTS_DIR);
-  fs.rmSync(path.join(PROJECTS_DIR, "_skill-tags-seed.md"), { force: true });
+  const seedFile = path.join(PROJECTS_DIR, "_skill-tags-seed.md");
+  fs.rmSync(seedFile, { force: true });
+
+  const aboutPath = path.join(ROOT, "content", "about.md");
+  if (fs.existsSync(aboutPath)) {
+    let aboutContent = fs.readFileSync(aboutPath, "utf8");
+    const regex = /\{\{\s*tag_chip\(name="([^"]+)"/g;
+    let match;
+    let dynamicTags = [];
+    while ((match = regex.exec(aboutContent)) !== null) {
+      dynamicTags.push(match[1]);
+    }
+    
+    if (dynamicTags.length > 0) {
+      let existingTags = [];
+      const tagsMatch = aboutContent.match(/^tags\s*=\s*\[(.*?)\]/m);
+      if (tagsMatch && tagsMatch[1]) {
+        existingTags = tagsMatch[1].split(',')
+          .map(t => t.trim().replace(/^"|"$/g, ''))
+          .filter(t => t.length > 0);
+      }
+      
+      const allAboutTags = compactUnique([...existingTags, ...dynamicTags]);
+      
+      const updatedContent = aboutContent.replace(
+        /^tags\s*=\s*\[.*?\]/m, 
+        `tags = ${tomlArray(allAboutTags)}`
+      );
+      
+      if (updatedContent !== aboutContent) {
+        fs.writeFileSync(aboutPath, updatedContent, "utf8");
+      }
+    }
+  }
 
   let written = 0;
   for (const project of projects) {

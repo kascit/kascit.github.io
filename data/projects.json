@@ -1,6 +1,49 @@
 {
   "projects": [
     {
+      "slug": "up",
+      "title": "UP",
+      "group": "featured",
+      "icon": "fa-solid fa-signal",
+      "description": "Real-time service health dashboard for all dhanur.me services. Written in Go, zero external dependencies, deployed on Render.",
+      "extended_description": "A lightweight status monitor with concurrent goroutine probes and in-memory rolling history. Designed for absolute minimal resource footprint.",
+      "role": "Status Dashboard",
+      "highlights": [
+        "Concurrent goroutines probe every service every 30 seconds",
+        "Pure Go standard library with zero external dependencies",
+        "Single embedded HTML file served at root",
+        "In-memory 45-minute rolling window for history"
+      ],
+      "lang": "Go",
+      "status": "live",
+      "techs": [
+        "Go",
+        "Monitoring",
+        "Status Page",
+        "Render",
+        "Concurrency"
+      ],
+      "tags": [
+        "infra",
+        "systems",
+        "backend",
+        "devops",
+        "tooling"
+      ],
+      "github_url": "https://github.com/kascit/up",
+      "live_url": "https://up.dhanur.me",
+      "repo_language": "Go",
+      "repo_topics": [
+        "go",
+        "status-page",
+        "monitoring",
+        "dashboard"
+      ],
+      "repo_updated_at": "2026-05-01T10:00:00Z",
+      "repo_archived": false,
+      "repo_stars": 1
+    },
+    {
       "slug": "face-rekognition",
       "title": "Face Rekognition",
       "group": "learning",
@@ -126,7 +169,7 @@
         "Data Structures",
         "DSA",
         "Linked List",
-        "Oop",
+        "OOP",
         "Playlist Manager"
       ],
       "tags": [
@@ -301,7 +344,7 @@
       "extended_description": "This is my practical junk drawer: tiny CLIs, helper scripts, and quality-of-life automations I keep building whenever something feels repetitive.",
       "role": "Personal Utility Suite",
       "lang": "HTML",
-      "status": "wip",
+      "status": "live",
       "highlights": [
         "Personal tools focused on daily workflow friction",
         "Small utilities designed for fast iteration",
@@ -326,7 +369,8 @@
       "repo_topics": [],
       "repo_updated_at": "2026-04-04T16:51:26Z",
       "repo_archived": false,
-      "repo_stars": 0
+      "repo_stars": 0,
+      "live_url": "https://dhanur.me/stuff/"
     },
     {
       "slug": "leetcode-solutions",
@@ -482,9 +526,9 @@
       "status": "archived",
       "techs": [
         "HTML",
-        "Css",
+        "CSS",
         "Game",
-        "Javascript",
+        "JavaScript",
         "Tic Tac Toe",
         "Web Game"
       ],

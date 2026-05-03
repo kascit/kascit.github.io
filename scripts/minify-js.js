@@ -5,8 +5,8 @@ const fs = require("fs");
 const path = require("path");
 const { createPackageRunner, requireEnvVar, collectFiles, ROOT } = require("./lib/shared");
 
-const outputDirArg = process.argv[2] || "public";
-const outputDir = path.resolve(ROOT, outputDirArg);
+const outputDirLabel = "public";
+const outputDir = path.resolve(ROOT, "public");
 const terserVersion = requireEnvVar("TERSER_VERSION");
 const esbuildVersion = requireEnvVar("ESBUILD_VERSION");
 
@@ -20,45 +20,45 @@ function listJsFiles(dir) {
 
 function main() {
   if (!fs.existsSync(outputDir) || !fs.statSync(outputDir).isDirectory()) {
-    console.error(`ERROR: Output directory '${outputDirArg}' does not exist.`);
+    console.error(`ERROR: Output directory '${outputDirLabel}' does not exist.`);
     process.exit(1);
   }
 
   const jsDir = path.join(outputDir, "js");
   if (!fs.existsSync(jsDir) || !fs.statSync(jsDir).isDirectory()) {
-    console.log(`No ${outputDirArg}/js directory found. Skipping JS minification.`);
+    console.log(`No ${outputDirLabel}/js directory found. Skipping JS minification.`);
     return;
   }
 
   const { runPkg } = createPackageRunner();
 
-  console.log(`Optimizing JavaScript in '${outputDirArg}'...`);
+  console.log(`Optimizing JavaScript in '${outputDirLabel}'...`);
 
   const mainEntry = path.join(jsDir, "core", "main.js");
   if (fs.existsSync(mainEntry)) {
-    console.log(`Bundling ${outputDirArg}/js/core/main.js with esbuild@${esbuildVersion}...`);
+    console.log(`Bundling ${outputDirLabel}/js/core/main.js with esbuild@${esbuildVersion}...`);
     runPkg(
       [
         "dlx",
         `esbuild@${esbuildVersion}`,
-        `${outputDirArg}/js/core/main.js`,
+        `${outputDirLabel}/js/core/main.js`,
         "--bundle",
         "--format=esm",
         "--target=es2020",
         "--minify",
         "--allow-overwrite",
-        `--outfile=${outputDirArg}/js/core/main.js`,
+        `--outfile=${outputDirLabel}/js/core/main.js`,
       ],
       [
         "--yes",
         `esbuild@${esbuildVersion}`,
-        `${outputDirArg}/js/core/main.js`,
+        `${outputDirLabel}/js/core/main.js`,
         "--bundle",
         "--format=esm",
         "--target=es2020",
         "--minify",
         "--allow-overwrite",
-        `--outfile=${outputDirArg}/js/core/main.js`,
+        `--outfile=${outputDirLabel}/js/core/main.js`,
       ]
     );
   }

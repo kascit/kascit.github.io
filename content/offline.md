@@ -3,13 +3,13 @@ title = "Offline"
 description = "You appear to be offline. Reconnect to continue browsing the site."
 template = "offline.html"
 path = "offline"
+in_search_index = false
 
 [extra]
 sitemap_exclude = true
 hide_page_meta = true
 hide_post_actions = true
-shell_fit = true
-compact_main = true
+force_rail = true
 
 [extra.comments]
 enabled = false

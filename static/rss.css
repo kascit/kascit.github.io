@@ -1,0 +1,198 @@
+@namespace atom url("http://www.w3.org/2005/Atom");
+@namespace content url("http://purl.org/rss/1.0/modules/content/");
+@namespace site url("https://dhanur.me/ns/rss-ui");
+
+rss,
+channel,
+item,
+title,
+link,
+description,
+author,
+pubDate,
+guid,
+language,
+generator,
+lastBuildDate,
+atom|link,
+content|encoded,
+site|back,
+site|feed,
+site|top {
+  display: block;
+}
+
+rss {
+  color-scheme: light dark;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.55;
+  background: #f6f8fb;
+  color: #101828;
+  max-width: 980px;
+  margin: 0 auto;
+  padding: 2rem 1rem 3rem;
+}
+
+channel {
+  display: block;
+}
+
+channel > title {
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.2;
+  margin: 0 0 0.5rem;
+}
+
+channel > description {
+  font-size: 1rem;
+  color: #344054;
+  margin: 0 0 1rem;
+  max-width: 70ch;
+}
+
+channel > link,
+channel > atom|link {
+  font-size: 0.92rem;
+  color: #0f5dd7;
+  margin: 0 0 0.25rem;
+  overflow-wrap: anywhere;
+}
+
+channel > language,
+channel > generator,
+channel > lastBuildDate {
+  font-size: 0.8rem;
+  color: #667085;
+  margin: 0.1rem 0;
+}
+
+channel > item {
+  background: #ffffff;
+  border: 1px solid #d0d5dd;
+  border-radius: 14px;
+  padding: 1rem 1.1rem;
+  margin: 1rem 0;
+  box-shadow: 0 8px 24px -22px rgba(16, 24, 40, 0.45);
+}
+
+channel > site|back,
+channel > site|feed,
+channel > site|top {
+  font-size: 0.86rem;
+  margin: 0.45rem 0;
+  color: #0f5dd7;
+  overflow-wrap: anywhere;
+  padding: 0.5rem 0.7rem;
+  border: 1px solid #d0d5dd;
+  border-radius: 10px;
+  background: #ffffff;
+}
+
+channel > site|back::before,
+channel > site|feed::before,
+channel > site|top::before {
+  display: block;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #667085;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 0.2rem;
+}
+
+channel > site|back::before {
+  content: "Back URL";
+}
+
+channel > site|feed::before {
+  content: "Feed URL";
+}
+
+channel > site|top::before {
+  content: "Top URL";
+}
+
+item > title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.35;
+  margin: 0 0 0.45rem;
+}
+
+item > pubDate,
+item > author {
+  font-size: 0.8rem;
+  color: #667085;
+  margin: 0.08rem 0;
+}
+
+item > link,
+item > guid {
+  font-size: 0.86rem;
+  color: #0f5dd7;
+  margin: 0.2rem 0;
+  overflow-wrap: anywhere;
+}
+
+item > description {
+  font-size: 0.94rem;
+  color: #1d2939;
+  margin: 0.6rem 0 0;
+}
+
+item > content|encoded,
+item > guid {
+  display: none;
+}
+
+atom|link {
+  margin-bottom: 0.6rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  rss {
+    background: #0b101a;
+    color: #e4e7ec;
+  }
+
+  channel > description,
+  item > description {
+    color: #c6ccd7;
+  }
+
+  channel > language,
+  channel > generator,
+  channel > lastBuildDate,
+  item > pubDate,
+  item > author {
+    color: #98a2b3;
+  }
+
+  channel > link,
+  channel > atom|link,
+  item > link,
+  item > guid {
+    color: #86b7ff;
+  }
+
+  channel > item {
+    background: #111827;
+    border-color: #344054;
+    box-shadow: none;
+  }
+
+  channel > site|back,
+  channel > site|feed,
+  channel > site|top {
+    background: #111827;
+    border-color: #344054;
+    color: #86b7ff;
+  }
+
+  channel > site|back::before,
+  channel > site|feed::before,
+  channel > site|top::before {
+    color: #98a2b3;
+  }
+}

@@ -56,10 +56,12 @@ help:
     echo "  just clean        # remove build artifacts"
     echo ""
     echo -e "${yellow}data pipelines${reset}"
-    echo "  just sync-generated   # refresh project pages, about tags, widget data"
+    echo "  just sync-generated   # refresh deterministic generated artifacts"
     echo "  just project-pages    # regenerate project markdown pages"
     echo "  just about-skill-tags # sync About taxonomy tags from tag chips"
     echo "  just widget-data      # regenerate latest-posts widget data"
+    echo "  just blog-taxonomies  # one-off: normalize blog tags/categories"
+    echo "  just project-data     # one-off: enrich project catalog from GitHub"
     echo ""
     echo -e "${green}full command list:${reset}"
     just --list
@@ -83,10 +85,12 @@ help:
     @Write-Host "  just clean        # remove build artifacts"
     @Write-Host ""
     @Write-Host "data pipelines" -ForegroundColor Yellow
-    @Write-Host "  just sync-generated   # refresh project pages, about tags, widget data"
+    @Write-Host "  just sync-generated   # refresh deterministic generated artifacts"
     @Write-Host "  just project-pages    # regenerate project markdown pages"
     @Write-Host "  just about-skill-tags # sync About taxonomy tags from tag chips"
     @Write-Host "  just widget-data      # regenerate latest-posts widget data"
+    @Write-Host "  just blog-taxonomies  # one-off: normalize blog tags/categories"
+    @Write-Host "  just project-data     # one-off: enrich project catalog from GitHub"
     @Write-Host ""
     @Write-Host "full command list:" -ForegroundColor Green
     @just --list
@@ -254,6 +258,8 @@ dev:
     @node scripts/just-run.js "clean public output" -- just --quiet clean-public
     @node scripts/just-run.js "sync-generated" -- just --quiet sync-generated
     @node scripts/just-run.js "css build" -- just --quiet css
+    @node scripts/just-run.js "shell bundle" -- just --quiet shell-bundle
+    @node scripts/just-run.js "generate dev icons" -- just --quiet generate-icons-dev
     @node scripts/just-log.js ok "Starting Zola dev server (use the URL printed by Zola below)"
     @zola serve --interface 127.0.0.1 --port 1111
 
@@ -263,6 +269,8 @@ dev-fast:
     @node scripts/just-log.js step "Fast development pipeline"
     @node scripts/just-run.js "clean public output" -- just --quiet clean-public
     @node scripts/just-run.js "css build" -- just --quiet css
+    @node scripts/just-run.js "shell bundle" -- just --quiet shell-bundle
+    @node scripts/just-run.js "generate dev icons" -- just --quiet generate-icons-dev
     @node scripts/just-log.js warn "Fast mode enabled: generated content refresh skipped"
     @node scripts/just-log.js ok "Starting Zola dev server (use the URL printed by Zola below)"
     @zola serve --interface 127.0.0.1 --port 1111
@@ -286,6 +294,12 @@ css: setup-build-deps
     @node scripts/just-run.js "compile shell css" -- {{ tailwind }} -i {{ dui_css_in }} -o {{ dui_css_out }} --minify
     @node scripts/just-log.js ok "CSS build complete"
 
+[doc("Compile and bundle shell.js")]
+[group('build')]
+shell-bundle:
+    @node scripts/just-log.js info "Bundling shell JS"
+    @node scripts/just-run.js "bundle shell js" -- node scripts/build-shell.js
+
 [doc("Generate responsive image variants inside built public/images")]
 [group('build')]
 generate-images:
@@ -297,6 +311,12 @@ generate-images:
 generate-icons:
     @node scripts/just-log.js info "Generating icon assets"
     @node scripts/just-run.js "generate icons" -- node scripts/generate-icons.js public public/icons/favicon.svg
+
+[doc("Generate icon assets in static/icons for local dev serve parity")]
+[group('build')]
+generate-icons-dev:
+    @node scripts/just-log.js info "Generating dev icon assets"
+    @node scripts/just-run.js "generate dev icons" -- node scripts/generate-icons.js static static/icons/favicon.svg
 
 [doc("Attach responsive srcset attributes to generated HTML img tags")]
 [group('build')]
@@ -362,9 +382,9 @@ clean-public:
     @if (Test-Path "public") { Write-Host "ERROR: failed to remove public directory"; exit 1 }
 
 [unix]
-[doc("Full production build (clean + generated content + css + zola + post-build)")]
+[doc("Full production build (clean + generated content + css + shell + zola + post-build)")]
 [group('build')]
-build: clean project-pages about-skill-tags widget-data css
+build: clean project-pages about-skill-tags widget-data css shell-bundle
         #!/usr/bin/env bash
         set -euo pipefail
         node scripts/just-log.js step "Production build"
@@ -379,9 +399,9 @@ build: clean project-pages about-skill-tags widget-data css
         node scripts/just-log.js ok "Production build complete"
 
 [windows]
-[doc("Full production build (clean + generated content + css + zola + post-build)")]
+[doc("Full production build (clean + generated content + css + shell + zola + post-build)")]
 [group('build')]
-build: clean project-pages about-skill-tags widget-data css
+build: clean project-pages about-skill-tags widget-data css shell-bundle
     @node scripts/just-log.js step "Production build"
     @if ($env:ZOLA_BASE_URL) { node scripts/just-run.js "zola build" -- zola build --base-url "$env:ZOLA_BASE_URL" } else { node scripts/just-run.js "zola build" -- zola build }
     @just _post-build
@@ -418,6 +438,20 @@ about-skill-tags:
     @node scripts/just-log.js info "Syncing About skill tags"
     @node scripts/just-run.js "sync about skill tags" -- node scripts/sync-about-skill-tags.js
     @node scripts/just-log.js ok "About taxonomy tags refreshed"
+
+[doc("Sync projects catalog metadata from GitHub repositories")]
+[group('build')]
+project-data:
+    @node scripts/just-log.js info "Syncing project metadata from GitHub"
+    @node scripts/just-run.js "sync project data" -- node scripts/sync-project-data.js
+    @node scripts/just-log.js ok "Project metadata refreshed"
+
+[doc("Normalize blog tags/categories with shared taxonomy rules")]
+[group('build')]
+blog-taxonomies:
+    @node scripts/just-log.js info "Syncing blog taxonomies"
+    @node scripts/just-run.js "sync blog taxonomies" -- node scripts/sync-blog-taxonomies.js
+    @node scripts/just-log.js ok "Blog taxonomies refreshed"
 
 [unix]
 [doc("Fail if generated content differs from committed files")]
@@ -471,6 +505,8 @@ ci-build: _assert-zola-version verify-generated-clean
     node scripts/just-run.js "clean" -- just clean
     node scripts/just-log.js info "Compiling CSS"
     node scripts/just-run.js "css build" -- just css
+    node scripts/just-log.js info "Bundling shell"
+    node scripts/just-run.js "shell bundle" -- just shell-bundle
     node scripts/just-log.js info "Running integrated quality checks"
     node scripts/just-run.js "quality checks" -- node scripts/run-quality-checks.js
     if [ -n "${ZOLA_BASE_URL:-}" ]; then
@@ -494,6 +530,8 @@ ci-build: _assert-zola-version verify-generated-clean
     @node scripts/just-run.js "clean" -- just clean
     @node scripts/just-log.js info "Compiling CSS"
     @node scripts/just-run.js "css build" -- just css
+    @node scripts/just-log.js info "Bundling shell"
+    @node scripts/just-run.js "shell bundle" -- just shell-bundle
     @node scripts/just-log.js info "Running integrated quality checks"
     @node scripts/just-run.js "quality checks" -- node scripts/run-quality-checks.js
     @node scripts/just-log.js info "Building site"

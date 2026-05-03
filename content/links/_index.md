@@ -7,9 +7,11 @@ template = "section.html"
 enabled = false
 +++
 
-{{ link_card(url="mailto:contact@dhanur.me", external=true, icon="fa-solid fa-envelope", title="Send an Email", description="Drop me a message", contrast=true) }}
+
+{{ email_card(user="pbagnpg", domain="qunahe.zr", icon="fa-solid fa-envelope", title="Send an Email", description="Drop me a message", contrast=true) }}
 
 This page is the clean index of where to find me online. If you need to reach me quickly, email is the fastest route and everything else is grouped by context below.
+
 
 ## Code & Professional
 
@@ -47,7 +49,7 @@ This page is the clean index of where to find me online. If you need to reach me
 
 {{ link_card(url="https://www.duolingo.com/profile/kascit", external=true, icon="fa-solid fa-language", title="Duolingo", description="Trying to keep the owl happy") }}
 
-{{ link_card(url="/projects", external=false, icon="fa-solid fa-folder", title="Projects Portfolio", description="Check out what I've built") }}
+{{ link_card(url="/projects/", external=false, icon="fa-solid fa-folder", title="Projects Portfolio", description="Check out what I've built") }}
 
 {{ link_card(url="/rss.xml", external=false, icon="fa-solid fa-rss", title="RSS Feed", description="Subscribe via RSS") }}
 

@@ -11,6 +11,21 @@
         "searchIndexJs": "{{ get_url(path='search_index.' ~ lang ~ '.js') | safe }}",
         "swPath": "{{ get_url(path='sw.js') | safe }}",
         "gtagId": "{{ config.extra.gtag | default(value='') }}",
+        "ai": {
+            "enabled": {{ config.extra.ai.enabled | default(value=true) }},
+            "label": "{{ config.extra.ai.label | default(value='Ask AI about this') }}",
+            "endpoint": "{{ config.extra.ai.endpoint | default(value='') }}",
+            "profileUrl": "{{ config.extra.ai.profile_url | default(value='/data/ask-ai-profile.json') }}",
+            "openInNewTab": {{ config.extra.ai.open_in_new_tab | default(value=false) }},
+            "includePageContext": {{ config.extra.ai.include_page_context | default(value=true) }},
+            "includeProfileContext": {{ config.extra.ai.include_profile_context | default(value=true) }},
+            "maxContextChunks": {{ config.extra.ai.max_context_chunks | default(value=4) }},
+            "maxHeadings": {{ config.extra.ai.max_headings | default(value=8) }},
+            "requireAuth": {{ config.extra.ai.require_auth | default(value=true) }},
+            "creditCost": {{ config.extra.ai.credit_cost | default(value=20) }},
+            "guestMessage": "{{ config.extra.ai.guest_message | default(value='Sign in to use Ask AI') }}",
+            "trustedEndpointHosts": {{ config.extra.ai.trusted_endpoint_hosts | default(value=[]) | json_encode() | safe }}
+        },
         "sentryScriptUrl": "https://js-de.sentry-cdn.com/76f095eb3818528a530b2347e1735e14.min.js"
     }
     </script>

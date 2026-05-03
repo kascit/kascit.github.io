@@ -5,8 +5,8 @@ const fs = require("fs");
 const path = require("path");
 const { resolveImageMagickCommand, runCapture, collectFiles, prettyBytes, ROOT } = require("./lib/shared");
 
-const outputDirArg = process.argv[2] || "public";
-const outputDir = path.resolve(ROOT, outputDirArg);
+const outputDirLabel = "public";
+const outputDir = path.resolve(ROOT, "public");
 
 const OPTIMIZERS = {
   ".jpg": {
@@ -85,7 +85,7 @@ function optimizeFile(filePath, command) {
 
 function main() {
   if (!fs.existsSync(outputDir) || !fs.statSync(outputDir).isDirectory()) {
-    console.error(`ERROR: Output directory '${outputDirArg}' does not exist.`);
+    console.error(`ERROR: Output directory '${outputDirLabel}' does not exist.`);
     process.exit(1);
   }
 
@@ -97,7 +97,7 @@ function main() {
 
   const files = collectFiles(outputDir, isOptimizableImage);
   if (files.length === 0) {
-    console.log(`No raster image files found under '${outputDirArg}'.`);
+    console.log(`No raster image files found under '${outputDirLabel}'.`);
     return;
   }
 

@@ -3,14 +3,13 @@ title = "Docker and Kubernetes: A Love-Hate Story"
 date = 2025-12-30
 description = "Learning containers and orchestration without losing your sanity (probably impossible)"
 
-[taxonomies]
-tags = ["Docker", "Kubernetes", "DevOps", "Containers", "Cloud Infrastructure"]
-categories = ["DevOps"]
-
 [extra]
 thumbnail_image = "images/thumbs/ship.jpg"
-+++
 
+[taxonomies]
+tags = ["devops", "systems"]
+categories = ["engineering"]
++++
 So you want to learn about containers and orchestration? Buckle up, because you're about to enter a world where "it works on my machine" becomes both your mantra and your nightmare.
 
 ## Docker: The Gateway Drug

@@ -3,14 +3,13 @@ title = "I Use Arch BTW: My Setup and Why I Torture Myself"
 date = 2025-12-29
 description = "A walkthrough of my Arch Linux setup, or: how I learned to stop worrying and love the terminal"
 
-[taxonomies]
-tags = ["Linux", "Arch Linux", "Developer Environment", "Productivity", "Tooling"]
-categories = ["Personal"]
-
 [extra]
 thumbnail_image = "images/thumbs/arch.jpg"
-+++
 
+[taxonomies]
+tags = ["tooling", "automation", "systems", "frontend"]
+categories = ["engineering"]
++++
 Yes, I'm that person. I use Arch Linux. I will tell you about it. Repeatedly.
 
 But seriously, after a year of daily-driving Arch for development, I've got opinions and a setup that (mostly) doesn't break every update. Let me walk you through it.

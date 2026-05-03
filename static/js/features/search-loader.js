@@ -10,6 +10,8 @@
  *   data-lang          — language code (default "en")
  */
 
+import { askAiAboutQuery, getAskAiConfig, isAskAiEnabled } from "../system/ask-ai.js";
+
   var el = document.currentScript;
   var data = (el && el.dataset) || {};
   var fuseSrc = "";
@@ -29,10 +31,19 @@
       return "";
     }
 
+    if (trimmed.indexOf("://") !== -1 || trimmed.indexOf("//") === 0) return "";
+    if (!trimmed.startsWith("/")) return "";
+    if (!/\.js(?:[?#].*)?$/i.test(trimmed)) return "";
+    return trimmed;
+  }
+
+  function safeInternalHref(href) {
+    if (!href) return "";
+
     try {
-      var parsed = new URL(trimmed, window.location.href);
+      var parsed = new URL(String(href), window.location.origin);
       if (parsed.origin !== window.location.origin) return "";
-      if (!parsed.pathname || !parsed.pathname.toLowerCase().endsWith(".js")) return "";
+      if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return "";
       return parsed.pathname + parsed.search + parsed.hash;
     } catch (_error) {
       return "";
@@ -595,6 +606,7 @@
   // ── Result item renderer ─────────────────────────────────────────────
   var DOC_ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-base-content/50" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>';
   var ARROW_ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-base-content/40" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>';
+  var ASK_AI_ICON_SVG = '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.813 15.904L9 18l-1.813-2.096a5.5 5.5 0 117.626 0L13 18l-.813-2.096M12 8v4m0 3h.01" /></svg>';
 
   function parseSvgString(svgString) {
     var doc = new DOMParser().parseFromString(svgString, "image/svg+xml");
@@ -686,6 +698,7 @@
   function formatSearchResultItem(item, terms) {
     var li = document.createElement("li");
     li.className = "search-result-item";
+    li.setAttribute("data-search-result-kind", "content");
     var link = document.createElement("a");
     link.href = sanitizeResultHref(item && item.item ? item.item.id : "");
     link.className = "search-result-link block px-4 py-3 rounded-md transition-colors duration-150";
@@ -712,6 +725,52 @@
     var excerpt = document.createElement("div");
     excerpt.className = "search-result-excerpt text-xs text-base-content/60 line-clamp-2";
     renderTeaserText(excerpt, makeTeaser(item && item.item ? item.item.body : "", terms));
+
+    var arrow = document.createElement("div");
+    arrow.className = "search-result-arrow flex-shrink-0 opacity-0 transition-opacity duration-150";
+    var arrowIcon = parseSvgString(ARROW_ICON_SVG);
+    if (arrowIcon) arrow.appendChild(arrowIcon);
+
+    bodyWrap.appendChild(title);
+    bodyWrap.appendChild(excerpt);
+    row.appendChild(iconWrap);
+    row.appendChild(bodyWrap);
+    row.appendChild(arrow);
+    link.appendChild(row);
+    li.appendChild(link);
+
+    return li;
+  }
+
+  function formatAskAiResultItem(term, label) {
+    var li = document.createElement("li");
+    li.className = "search-result-item";
+    li.setAttribute("data-search-result-kind", "ask-ai");
+
+    var link = document.createElement("a");
+    link.href = "#";
+    link.className = "search-result-link block px-4 py-3 rounded-md transition-colors duration-150";
+    link.setAttribute("data-search-action", "ask-ai");
+    link.setAttribute("data-search-query", term);
+
+    var row = document.createElement("div");
+    row.className = "flex items-start gap-3";
+
+    var iconWrap = document.createElement("div");
+    iconWrap.className = "search-result-icon flex-shrink-0 mt-1";
+    var askAiIcon = parseSvgString(ASK_AI_ICON_SVG);
+    if (askAiIcon) iconWrap.appendChild(askAiIcon);
+
+    var bodyWrap = document.createElement("div");
+    bodyWrap.className = "flex-1 min-w-0";
+
+    var title = document.createElement("div");
+    title.className = "search-result-title font-semibold text-sm text-base-content mb-1";
+    title.textContent = label || "Ask AI about this";
+
+    var excerpt = document.createElement("div");
+    excerpt.className = "search-result-excerpt text-xs text-base-content/60 line-clamp-2";
+    excerpt.textContent = 'Use current query and page context for "' + term + '"';
 
     var arrow = document.createElement("div");
     arrow.className = "search-result-arrow flex-shrink-0 opacity-0 transition-opacity duration-150";
@@ -771,6 +830,8 @@
     if (!$searchResultsContainer || !$searchResultsHeader || !$searchResultsItems) return;
     var MAX_ITEMS = 10;
     var selectedIndex = -1;
+    var askAiConfig = getAskAiConfig();
+    var askAiEnabled = isAskAiEnabled();
 
     var options = {
       keys: [
@@ -791,6 +852,34 @@
       var hasValue = $searchInput.value.trim().length > 0;
       $searchClearButton.hidden = !hasValue;
       $searchClearButton.disabled = !hasValue;
+    }
+
+    function getCurrentSearchTerm() {
+      return $searchInput.value.trim() || currentTerm;
+    }
+
+    function appendAskAiResult(term) {
+      if (!askAiEnabled) return;
+      if (!term) return;
+      $searchResultsItems.appendChild(formatAskAiResultItem(term, askAiConfig.label));
+    }
+
+    function executeAskAi(term) {
+      if (!term) return;
+      askAiAboutQuery(term, { source: "search-modal" }).catch(function (error) {
+        console.error("[Search] Ask AI failed:", error);
+
+        var code = error && error.code ? String(error.code) : "";
+        if (code === "AUTH_REQUIRED") {
+          $searchResultsHeader.textContent = askAiConfig.guestMessage || "Sign in to use Ask AI";
+          if (window.AUTH && typeof window.AUTH.login === "function") {
+            window.AUTH.login();
+          }
+          return;
+        }
+
+        $searchResultsHeader.textContent = "Ask AI is unavailable right now. Please try again.";
+      });
     }
 
     function resetSearchUi() {
@@ -830,19 +919,26 @@
 
       if (term === "") { currentTerm = ""; return; }
 
+      currentTerm = term;
+
       var results = fuse.search(term).filter(function (r) { return r.item.body !== ""; });
 
       if (results.length === 0) {
         setSearchHeader($searchResultsHeader, term, 0, true);
+        appendAskAiResult(term);
+        if ($searchResultsItems.children.length > 0) {
+          selectedIndex = 0;
+          updateSelectedResult();
+        }
         return;
       }
 
-      currentTerm = term;
       setSearchHeader($searchResultsHeader, term, results.length, false);
       for (var i = 0; i < Math.min(results.length, MAX_ITEMS); i++) {
         if (!results[i].item.body) continue;
         $searchResultsItems.appendChild(formatSearchResultItem(results[i], term.split(" ")));
       }
+      appendAskAiResult(term);
 
       if ($searchResultsItems.children.length > 0) {
         selectedIndex = 0;
@@ -961,7 +1057,15 @@
       var link = event.target && event.target.closest ? event.target.closest(".search-result-link") : null;
       if (!link) return;
 
-      var term = $searchInput.value.trim() || currentTerm;
+      var action = link.getAttribute("data-search-action");
+      var term = link.getAttribute("data-search-query") || getCurrentSearchTerm();
+
+      if (action === "ask-ai") {
+        event.preventDefault();
+        executeAskAi(term);
+        return;
+      }
+
       if (term) {
         persistPageFindTransferQuery(term);
       }
@@ -986,11 +1090,24 @@
         e.preventDefault();
         var link = items[selectedIndex].querySelector(".search-result-link");
         if (link) {
-          var term = $searchInput.value.trim() || currentTerm;
+          var action = link.getAttribute("data-search-action");
+          var term = link.getAttribute("data-search-query") || getCurrentSearchTerm();
+
+          if (action === "ask-ai") {
+            executeAskAi(term);
+            return;
+          }
+
           if (term) {
             persistPageFindTransferQuery(term);
           }
-          window.location.href = link.getAttribute("href");
+          var nextHref = safeInternalHref(link.getAttribute("href"));
+          if (nextHref) {
+            var nav = document.createElement("a");
+            nav.href = nextHref;
+            nav.rel = "noopener noreferrer";
+            nav.click();
+          }
         }
       }
     });

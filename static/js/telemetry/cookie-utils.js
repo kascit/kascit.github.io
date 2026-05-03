@@ -20,13 +20,9 @@ export function writeCookie(name, value, options = {}) {
     domain,
     path = "/",
     sameSite = "Lax",
-    secure = window.location.protocol === "https:",
   } = options;
 
-  const attrs = [`Path=${path}`, `SameSite=${sameSite}`];
-  if (typeof maxAgeSeconds === "number") attrs.push(`Max-Age=${maxAgeSeconds}`);
-  if (domain) attrs.push(`Domain=${domain}`);
-  if (secure) attrs.push("Secure");
-
-  document.cookie = `${name}=${encodeURIComponent(value)}; ${attrs.join("; ")}`;
+  const maxAgePart = typeof maxAgeSeconds === "number" ? `; Max-Age=${maxAgeSeconds}` : "";
+  const domainPart = domain ? `; Domain=${domain}` : "";
+  document.cookie = `${name}=${encodeURIComponent(value)}; Path=${path}; SameSite=${sameSite}; Secure${maxAgePart}${domainPart}`;
 }

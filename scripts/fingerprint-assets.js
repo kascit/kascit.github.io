@@ -4,10 +4,10 @@
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
+const { ROOT, assertInsideRoot, collectFiles, toPosixRel } = require("./lib/shared");
 
-const PUBLIC_DIR = path.resolve(process.argv[2] || "public");
+const PUBLIC_DIR = path.resolve(ROOT, "public");
 const SITE_ORIGIN = "https://dhanur.me";
-const ALLOW_NON_PUBLIC_TARGET = process.env.ALLOW_NON_PUBLIC_FINGERPRINT === "1";
 
 const HASHED_SEGMENT_RE = /\.[a-f0-9]{12}\.[^.]+$/i;
 const FINGERPRINTABLE_EXTENSIONS = new Set([
@@ -20,7 +20,6 @@ const FINGERPRINTABLE_EXTENSIONS = new Set([
   "svg",
   "ico",
   "woff",
-  "woff2",
   "woff2",
 ]);
 const FINGERPRINTABLE_PREFIXES = [
@@ -39,41 +38,20 @@ const REWRITE_EXTENSIONS = new Set([
   ".txt",
   ".webmanifest",
 ]);
-const STABLE_LOADER_ENTRIES = [
-  { sourceRel: "js/core/shell.js", stableRel: "js/shell.js", kind: "esm" },
-];
-
-function toPosixPath(value) {
-  return value.replace(/\\/g, "/");
-}
+const STABLE_LOADER_ENTRIES = [];
 
 function fileHash(contents) {
   return crypto.createHash("sha256").update(contents).digest("hex").slice(0, 12);
 }
 
-function collectFiles(dirPath, out = []) {
-  const entries = fs.readdirSync(dirPath, { withFileTypes: true });
-
-  for (const entry of entries) {
-    const abs = path.join(dirPath, entry.name);
-    if (entry.isDirectory()) {
-      collectFiles(abs, out);
-      continue;
-    }
-
-    if (!entry.isFile()) continue;
-
-    const rel = toPosixPath(path.relative(PUBLIC_DIR, abs));
-    out.push(rel);
-  }
-
-  return out;
+function listPublicFiles() {
+  return collectFiles(PUBLIC_DIR).map((absPath) => toPosixRel(absPath, PUBLIC_DIR));
 }
 
 function shouldFingerprint(relPath) {
   const normalized = String(relPath || "").toLowerCase();
   
-  if (normalized === "sw.js" || normalized === "sw.min.js") return false;
+  if (normalized === "sw.js" || normalized === "sw.min.js" || normalized === "js/shell.min.js") return false;
 
   const parsed = path.posix.parse(normalized);
 
@@ -116,7 +94,7 @@ function makeReplacementPairsForFile(relPath, mappings) {
 function rewriteReferences(mappings) {
   const stableSourceSet = new Set(STABLE_LOADER_ENTRIES.map((entry) => entry.sourceRel));
   const rewriteMappings = mappings.filter((mapping) => !stableSourceSet.has(mapping.sourceRel));
-  const files = collectFiles(PUBLIC_DIR).filter(shouldRewrite);
+  const files = listPublicFiles().filter(shouldRewrite);
 
   let touched = 0;
   for (const relPath of files) {
@@ -141,7 +119,7 @@ function rewriteReferences(mappings) {
 }
 
 function toPublicAbsolutePath(relPath) {
-  return path.join(PUBLIC_DIR, ...relPath.split("/"));
+  return assertInsideRoot(path.join(PUBLIC_DIR, ...relPath.split("/")), "Public target path");
 }
 
 function stableLoaderContent(kind, targetRel) {
@@ -203,16 +181,7 @@ function main() {
     process.exit(1);
   }
 
-  const targetDirName = path.basename(PUBLIC_DIR).toLowerCase();
-  if (!ALLOW_NON_PUBLIC_TARGET && targetDirName !== "public") {
-    console.error(
-      `ERROR: refusing to fingerprint non-public directory '${PUBLIC_DIR}'. ` +
-      "Use output dir named 'public' or set ALLOW_NON_PUBLIC_FINGERPRINT=1 to override."
-    );
-    process.exit(1);
-  }
-
-  const candidates = collectFiles(PUBLIC_DIR).filter(shouldFingerprint);
+  const candidates = listPublicFiles().filter(shouldFingerprint);
   const mappings = [];
   for (const sourceRel of candidates) {
     const sourceAbs = path.join(PUBLIC_DIR, ...sourceRel.split("/"));
@@ -235,6 +204,8 @@ function main() {
     fs.renameSync(sourceAbs, fingerprintedAbs);
     mappings.push({ sourceRel, fingerprintedRel });
   }
+
+  mappings.sort((a, b) => a.sourceRel.localeCompare(b.sourceRel));
 
   if (mappings.length === 0) {
     console.log("No fingerprint targets found; skipping asset fingerprint step.");

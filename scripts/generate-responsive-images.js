@@ -6,8 +6,15 @@ const path = require("path");
 const { spawnSync } = require("child_process");
 const { resolveImageMagickCommand, runMagick, runCapture, collectFiles, toPosixRel, ROOT } = require("./lib/shared");
 
-const sourceDirArg = process.argv[2] || "static/images";
-const sourceDir = path.resolve(ROOT, sourceDirArg);
+const sourceModeArg = (process.argv[2] || "static").trim().toLowerCase();
+if (sourceModeArg !== "static" && sourceModeArg !== "public") {
+  console.error("ERROR: Source mode must be 'static' or 'public'.");
+  process.exit(1);
+}
+
+const sourceDir = sourceModeArg === "public"
+  ? path.resolve(ROOT, "public")
+  : path.resolve(ROOT, "static", "images");
 const TARGET_WIDTHS = [240, 360, 480, 640, 768, 1024, 1280, 1600, 1920, 2560];
 
 const SOURCE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp"]);
@@ -112,7 +119,7 @@ function optimizeResponsiveSet(command, sourcePath) {
 
 function main() {
   if (!fs.existsSync(sourceDir) || !fs.statSync(sourceDir).isDirectory()) {
-    console.error(`ERROR: Source directory '${sourceDirArg}' does not exist.`);
+    console.error(`ERROR: Source directory for mode '${sourceModeArg}' does not exist: ${sourceDir}`);
     process.exit(1);
   }
 
@@ -124,7 +131,7 @@ function main() {
 
   const sourceFiles = collectFiles(sourceDir, isSourceImage);
   if (sourceFiles.length === 0) {
-    console.log(`No source images found under '${sourceDirArg}'.`);
+    console.log(`No source images found under '${sourceDir}'.`);
     return;
   }
 

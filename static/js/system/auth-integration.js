@@ -118,7 +118,7 @@ function hideCreditsUI(drawer) {
   drawer.querySelector('[data-auth="sidebar-credits-row"]')?.classList.add("hidden");
 }
 
-export function initAuth(drawerElement = document) {
+export function initAuth(drawerElement = document, onAuthResolved = null) {
   if (drawerElement.__authIntegrationBound) return;
   drawerElement.__authIntegrationBound = true;
 
@@ -234,6 +234,10 @@ export function initAuth(drawerElement = document) {
         setText(r.sidebarEmail, "Not signed in");
 
         hideCreditsUI(drawerElement);
+      }
+
+      if (typeof onAuthResolved === "function") {
+        onAuthResolved(status);
       }
     }
 

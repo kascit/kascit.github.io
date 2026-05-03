@@ -22,16 +22,6 @@
   src: url(/webfonts/fa-solid-900.woff2) format("woff2"),
        url(/webfonts/fa-solid-900.ttf) format("truetype");
 }
-@font-face {
-  font-family: "Pretendard-Regular";
-  src: local("Pretendard Regular"),
-       local("Pretendard-Regular"),
-       local("Pretendard"),
-       url('/fonts/Pretendard-Regular.woff') format("woff");
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
 
 @layer base {
   html {

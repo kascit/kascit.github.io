@@ -20,10 +20,38 @@
       "thumbnail_alt": "Face Rekognition project preview",
       "role": "Academic Prototype",
       "lang": "C++ · Python",
-      "status": "academic",
-      "techs": ["AWS IoT", "Lambda", "Rekognition", "ESP32-CAM", "DynamoDB"],
-      "tags": ["Computer Vision", "IoT", "AWS", "Serverless", "Python", "C / C++"],
-      "github_url": "https://github.com/kascit/face-rekognition"
+      "status": "archived",
+      "techs": [
+        "C++",
+        "Python",
+        "Attendance System",
+        "AWS IoT",
+        "AWS Lambda",
+        "Computer Vision"
+      ],
+      "tags": [
+        "systems",
+        "cloud",
+        "infra",
+        "backend",
+        "automation"
+      ],
+      "github_url": "https://github.com/kascit/face-rekognition",
+      "repo_language": "C++",
+      "repo_topics": [
+        "attendance-system",
+        "aws-iot",
+        "aws-lambda",
+        "computer-vision",
+        "cpp",
+        "esp32",
+        "face-recognition",
+        "iot",
+        "python"
+      ],
+      "repo_updated_at": "2025-12-29T19:30:37Z",
+      "repo_archived": true,
+      "repo_stars": 0
     },
     {
       "slug": "beat-pe",
@@ -44,12 +72,36 @@
       "thumbnail_image": "/images/thumbs/default_thumbnail.jpg",
       "thumbnail_alt": "Beat.pe project preview",
       "role": "Game UX Experiment",
-      "lang": "JavaScript",
+      "lang": "JavaScript · CSS",
       "status": "live",
-      "techs": ["Browser Game Loop", "CSS Animations", "Client Storage", "Responsive UI"],
-      "tags": ["JavaScript", "Frontend Engineering", "Game Development", "Web Performance"],
+      "techs": [
+        "JavaScript",
+        "CSS",
+        "HTML",
+        "Game",
+        "Web Game",
+        "Browser Game Loop"
+      ],
+      "tags": [
+        "frontend",
+        "gaming",
+        "systems",
+        "automation",
+        "portfolio"
+      ],
       "github_url": "https://github.com/kascit/Beat.pe",
-      "live_url": "https://kascit.github.io/Beat.pe/"
+      "live_url": "https://kascit.github.io/Beat.pe/",
+      "repo_language": "JavaScript",
+      "repo_topics": [
+        "css",
+        "game",
+        "html",
+        "javascript",
+        "web-game"
+      ],
+      "repo_updated_at": "2026-02-26T17:59:39Z",
+      "repo_archived": false,
+      "repo_stars": 1
     },
     {
       "slug": "listly",
@@ -68,10 +120,36 @@
       "thumbnail_alt": "Listly terminal app preview",
       "role": "CLI Product Build",
       "lang": "Java",
-      "status": "academic",
-      "techs": ["Linked Lists", "File I/O", "CLI", "OOP"],
-      "tags": ["Java", "CLI Applications", "Data Structures", "Algorithms"],
-      "github_url": "https://github.com/kascit/listly"
+      "status": "archived",
+      "techs": [
+        "Java",
+        "Data Structures",
+        "DSA",
+        "Linked List",
+        "Oop",
+        "Playlist Manager"
+      ],
+      "tags": [
+        "systems",
+        "tooling",
+        "algorithms",
+        "frontend",
+        "backend"
+      ],
+      "github_url": "https://github.com/kascit/listly",
+      "repo_language": "Java",
+      "repo_topics": [
+        "data-structures",
+        "dsa",
+        "java",
+        "linked-list",
+        "oop",
+        "playlist-manager",
+        "terminal"
+      ],
+      "repo_updated_at": "2025-12-29T17:57:30Z",
+      "repo_archived": true,
+      "repo_stars": 0
     },
     {
       "slug": "dhanur-me",
@@ -89,13 +167,38 @@
       "thumbnail_image": "/images/thumbs/default_thumbnail.jpg",
       "thumbnail_alt": "dhanur.me project preview",
       "role": "Personal Platform",
-      "lang": "Zola",
+      "lang": "JavaScript · HTML",
       "status": "live",
-      "techs": ["Zola", "TailwindCSS", "DaisyUI", "GitHub Pages"],
-      "tags": ["Zola", "Static Site Engineering", "TailwindCSS", "DaisyUI", "GitHub Pages"],
+      "techs": [
+        "JavaScript",
+        "HTML",
+        "CSS",
+        "Just",
+        "Github Pages",
+        "Personal Website"
+      ],
+      "tags": [
+        "portfolio",
+        "frontend",
+        "systems",
+        "data",
+        "backend"
+      ],
       "github_url": "https://github.com/kascit/kascit.github.io",
       "url": "/",
-      "url_label": "Visit"
+      "url_label": "Visit",
+      "repo_language": "JavaScript",
+      "repo_topics": [
+        "css",
+        "github-pages",
+        "html",
+        "javascript",
+        "personal-website",
+        "portfolio"
+      ],
+      "repo_updated_at": "2026-04-19T09:17:31Z",
+      "repo_archived": false,
+      "repo_stars": 1
     },
     {
       "slug": "tasks",
@@ -105,17 +208,51 @@
       "description": "Minimal, high-contrast task manager designed for speed. Part of the Dhanur UI ecosystem.",
       "extended_description": "Built as a production-grade demonstration of the centralized Dhanur UI component system. Incorporates seamless theming, robust keyboard shortcuts, and local workflow persistence.",
       "role": "Productivity Tool",
-      "lang": "TypeScript · React",
+      "lang": "HTML · Java",
       "status": "live",
       "highlights": [
         "Keyboard-first navigation and shortcuts",
         "Dhanur UI standardized design tokens",
         "Instant local persistence"
       ],
-      "techs": ["TypeScript", "TailwindCSS", "React"],
-      "tags": ["Frontend Engineering", "DUI", "Productivity"],
+      "techs": [
+        "HTML",
+        "Java",
+        "JavaScript",
+        "Dockerfile",
+        "API",
+        "Crud API"
+      ],
+      "tags": [
+        "backend",
+        "systems",
+        "frontend",
+        "productivity",
+        "devops"
+      ],
       "github_url": "https://github.com/kascit/tasks",
-      "live_url": "https://tasks.dhanur.me"
+      "live_url": "https://tasks.dhanur.me",
+      "repo_language": "HTML",
+      "repo_topics": [
+        "api",
+        "crud-api",
+        "docker",
+        "h2",
+        "hibernate",
+        "java",
+        "jpa",
+        "junit5",
+        "maven",
+        "openapi",
+        "rest-api",
+        "spring-boot",
+        "spring-data-jpa",
+        "swagger",
+        "task-manager"
+      ],
+      "repo_updated_at": "2026-04-04T16:48:36Z",
+      "repo_archived": false,
+      "repo_stars": 1
     },
     {
       "slug": "linkr",
@@ -125,17 +262,35 @@
       "description": "Fast, privacy-focused link management and routing built for personal infrastructure.",
       "extended_description": "Linkr provides robust sub-link routing for my personal domains. Features a slick UI built top to bottom with the new Dhanur UI component library.",
       "role": "Infrastructure Service",
-      "lang": "TypeScript · React",
+      "lang": "Rust · HTML",
       "status": "live",
       "highlights": [
         "Zero-friction link routing",
         "Integrated with Dhanur UI styling",
         "Fast programmatic redirects"
       ],
-      "techs": ["TypeScript", "Routing", "Frontend"],
-      "tags": ["Infrastructure", "DUI", "Networking"],
+      "techs": [
+        "Rust",
+        "HTML",
+        "Shell",
+        "Dockerfile",
+        "Batchfile",
+        "CSS"
+      ],
+      "tags": [
+        "infra",
+        "systems",
+        "frontend",
+        "backend",
+        "portfolio"
+      ],
       "github_url": "https://github.com/kascit/linkr",
-      "live_url": "https://linkr.dhanur.me"
+      "live_url": "https://linkr.dhanur.me",
+      "repo_language": "Rust",
+      "repo_topics": [],
+      "repo_updated_at": "2026-04-04T16:48:28Z",
+      "repo_archived": false,
+      "repo_stars": 0
     },
     {
       "slug": "stuff",
@@ -145,16 +300,33 @@
       "description": "A whole lot of personal utility tools and experiments bundled in one repo.",
       "extended_description": "This is my practical junk drawer: tiny CLIs, helper scripts, and quality-of-life automations I keep building whenever something feels repetitive.",
       "role": "Personal Utility Suite",
-      "lang": "TypeScript · Shell",
+      "lang": "HTML",
       "status": "wip",
       "highlights": [
         "Personal tools focused on daily workflow friction",
         "Small utilities designed for fast iteration",
         "Actively evolving with new scripts over time"
       ],
-      "techs": ["TypeScript", "Node.js", "Shell Scripting", "Automation"],
-      "tags": ["Developer Tools", "Automation", "CLI", "Productivity", "TypeScript"],
-      "github_url": "https://github.com/kascit/stuff"
+      "techs": [
+        "HTML",
+        "TypeScript",
+        "Node.js",
+        "Shell Scripting",
+        "Automation"
+      ],
+      "tags": [
+        "tooling",
+        "frontend",
+        "infra",
+        "algorithms",
+        "debugging"
+      ],
+      "github_url": "https://github.com/kascit/stuff",
+      "repo_language": "HTML",
+      "repo_topics": [],
+      "repo_updated_at": "2026-04-04T16:51:26Z",
+      "repo_archived": false,
+      "repo_stars": 0
     },
     {
       "slug": "leetcode-solutions",
@@ -169,13 +341,42 @@
         "Complexity-focused optimization notes",
         "Interview-style problem progression"
       ],
-      "lang": "Java",
-      "techs": ["Algorithms", "Data Structures", "Problem Solving"],
-      "tags": ["Java", "Algorithms", "Data Structures", "Problem Solving"],
+      "lang": "Java · Python",
+      "techs": [
+        "Java",
+        "Python",
+        "JavaScript",
+        "C++",
+        "Rust",
+        "C"
+      ],
+      "tags": [
+        "systems",
+        "algorithms",
+        "backend",
+        "frontend",
+        "devops"
+      ],
       "github_url": "https://github.com/kascit/leetcode-solutions",
       "url": "https://leetcode.com/u/kascit/",
       "url_label": "Profile",
-      "external": true
+      "external": true,
+      "repo_language": "Java",
+      "repo_topics": [
+        "algorithms",
+        "coding-challenges",
+        "cpp",
+        "data-structures",
+        "interview-prep",
+        "java",
+        "leetcode",
+        "python",
+        "rust"
+      ],
+      "repo_updated_at": "2025-12-28T14:16:43Z",
+      "repo_archived": false,
+      "repo_stars": 1,
+      "status": "live"
     },
     {
       "slug": "java-dsa",
@@ -191,9 +392,34 @@
         "Focus on clean, readable Java patterns"
       ],
       "lang": "Java",
-      "techs": ["Data Structures", "Algorithms", "Collections"],
-      "tags": ["Java", "Data Structures", "Algorithms", "Backend Engineering"],
-      "github_url": "https://github.com/kascit/java-data-structures-and-algorithms"
+      "techs": [
+        "Algorithms",
+        "Data Structures",
+        "DSA",
+        "Java",
+        "Learning",
+        "Collections"
+      ],
+      "tags": [
+        "algorithms",
+        "systems",
+        "backend",
+        "data",
+        "frontend"
+      ],
+      "github_url": "https://github.com/kascit/java-data-structures-and-algorithms",
+      "repo_language": "",
+      "repo_topics": [
+        "algorithms",
+        "data-structures",
+        "dsa",
+        "java",
+        "learning"
+      ],
+      "repo_updated_at": "2025-11-19T16:28:59Z",
+      "repo_archived": false,
+      "repo_stars": 1,
+      "status": "live"
     },
     {
       "slug": "selenium-automata",
@@ -210,9 +436,34 @@
       ],
       "lang": "Python",
       "status": "archived",
-      "techs": ["Selenium", "Test Automation", "Browser Automation"],
-      "tags": ["Python", "Selenium", "Test Automation", "QA"],
-      "github_url": "https://github.com/kascit/coursera-automata"
+      "techs": [
+        "Python",
+        "Automation",
+        "Browser Automation",
+        "Learning Project",
+        "Selenium",
+        "Web Scraping"
+      ],
+      "tags": [
+        "automation",
+        "frontend",
+        "systems",
+        "productivity",
+        "backend"
+      ],
+      "github_url": "https://github.com/kascit/coursera-automata",
+      "repo_language": "Python",
+      "repo_topics": [
+        "automation",
+        "browser-automation",
+        "learning-project",
+        "python",
+        "selenium",
+        "web-scraping"
+      ],
+      "repo_updated_at": "2025-12-29T14:12:22Z",
+      "repo_archived": true,
+      "repo_stars": 1
     },
     {
       "slug": "tic-tac-toe",
@@ -227,11 +478,36 @@
         "DOM-driven interaction updates",
         "Classic project built for iteration speed"
       ],
-      "lang": "JavaScript",
+      "lang": "HTML",
       "status": "archived",
-      "techs": ["JavaScript", "Game State Management", "DOM Interactions"],
-      "tags": ["JavaScript", "Frontend Engineering", "Game Development"],
-      "github_url": "https://github.com/kascit/tic-tac-toe"
+      "techs": [
+        "HTML",
+        "Css",
+        "Game",
+        "Javascript",
+        "Tic Tac Toe",
+        "Web Game"
+      ],
+      "tags": [
+        "frontend",
+        "gaming",
+        "systems",
+        "automation",
+        "devops"
+      ],
+      "github_url": "https://github.com/kascit/tic-tac-toe",
+      "repo_language": "HTML",
+      "repo_topics": [
+        "css",
+        "game",
+        "html",
+        "javascript",
+        "tic-tac-toe",
+        "web-game"
+      ],
+      "repo_updated_at": "2025-11-19T15:04:02Z",
+      "repo_archived": true,
+      "repo_stars": 1
     },
     {
       "slug": "toaws",
@@ -246,10 +522,34 @@
         "CLI ergonomics for faster daily usage",
         "Automation-first developer workflow"
       ],
-      "lang": "JavaScript",
-      "techs": ["AWS", "CLI Tools", "Automation"],
-      "tags": ["AWS", "CLI Tools", "Automation", "DevOps"],
-      "github_url": "https://github.com/kascit/toAWS"
+      "lang": "JavaScript · HTML",
+      "techs": [
+        "JavaScript",
+        "HTML",
+        "CSS",
+        "AWS",
+        "Cloud",
+        "Web Development"
+      ],
+      "tags": [
+        "tooling",
+        "frontend",
+        "cloud",
+        "systems",
+        "automation"
+      ],
+      "github_url": "https://github.com/kascit/toAWS",
+      "repo_language": "JavaScript",
+      "repo_topics": [
+        "aws",
+        "cloud",
+        "javascript",
+        "web-development"
+      ],
+      "repo_updated_at": "2025-11-19T15:02:55Z",
+      "repo_archived": false,
+      "repo_stars": 1,
+      "status": "live"
     },
     {
       "slug": "wallowords",
@@ -266,9 +566,24 @@
       ],
       "lang": "Coming Soon",
       "status": "wip",
-      "techs": ["Word Game Mechanics", "Frontend Prototyping", "Rapid Iteration"],
-      "tags": ["JavaScript", "Frontend Engineering", "Game Development", "Prototype"],
-      "github_url": "https://github.com/kascit/wallowords"
+      "techs": [
+        "Word Game Mechanics",
+        "Frontend Prototyping",
+        "Rapid Iteration"
+      ],
+      "tags": [
+        "gaming",
+        "systems",
+        "infra",
+        "tooling",
+        "debugging"
+      ],
+      "github_url": "https://github.com/kascit/wallowords",
+      "repo_language": "",
+      "repo_topics": [],
+      "repo_updated_at": "2025-11-19T14:59:48Z",
+      "repo_archived": false,
+      "repo_stars": 1
     }
   ]
 }

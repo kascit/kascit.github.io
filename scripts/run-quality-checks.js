@@ -89,6 +89,8 @@ function main() {
 
   run("node", ["scripts/validate-xml-xsl.js"], "Validate XML/XSL");
 
+  run("node", ["scripts/validate-icon-assets.js"], "Validate icon assets");
+
   run("zola", ["check"], "Validate Tera templates (zola check)");
 
   log("ok", "All quality checks passed.");

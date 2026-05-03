@@ -1,6 +1,6 @@
 +++
 title = "Privacy Policy"
-description = "Privacy policy for dhanur.me"
+description = "Privacy policy for dhanur.me — how data is collected, stored, and what your choices are."
 template = "page.html"
 
 [extra]
@@ -87,7 +87,7 @@ This policy may change; the "Last updated" date will be refreshed when it does.
 
 ## Contact
 
-Questions? Reach out at [contact@dhanur.me](mailto:contact@dhanur.me) or [github.com/kascit](https://github.com/kascit).
+Questions? Reach out via the [contact page](/links/) or find me on [github.com/kascit](https://github.com/kascit).
 
 ## Open Source
 

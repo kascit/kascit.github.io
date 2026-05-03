@@ -64,9 +64,14 @@ function renderPage(project) {
   const external = Boolean(project.external);
   const techs = compactUnique(project.techs || []);
   const highlights = compactUnique(project.highlights || []);
+  const repoLanguage = String(project.repo_language || "").trim();
+  const repoUpdatedAt = String(project.repo_updated_at || "").trim();
+  const repoArchived = Boolean(project.repo_archived);
+  const repoStars = Number.isFinite(project.repo_stars) ? Number(project.repo_stars) : 0;
+  const repoTopics = compactUnique(project.repo_topics || []);
   const thumbnailImage = String(project.thumbnail_image || "").trim();
   const thumbnailAlt = String(project.thumbnail_alt || title).trim();
-  const tags = compactUnique([...(project.tags || []), ...techs]);
+  const tags = compactUnique(project.tags || []);
 
   const statusBadgeMap = {
     live: "Live",
@@ -75,14 +80,6 @@ function renderPage(project) {
     wip: "WIP",
   };
   const badge = statusBadgeMap[status.toLowerCase()] || "";
-
-  const links = [];
-  if (live) links.push(`- Live: [${title}](${live})`);
-  if (github) links.push(`- Code: [GitHub repository](${github})`);
-  if (url) {
-    const label = urlLabel || "Visit";
-    links.push(`- ${label}: [${label}](${url})`);
-  }
 
   const bodyParts = [
     "## Overview",
@@ -103,6 +100,19 @@ function renderPage(project) {
     bodyParts.push("## Tech Focus", "", ...techs.map((item) => `- ${item}`), "");
   }
 
+  if (repoLanguage || repoTopics.length > 0 || repoUpdatedAt || repoStars > 0 || repoArchived) {
+    const snapshot = [];
+    if (repoLanguage) snapshot.push(`- Primary language: ${repoLanguage}`);
+    snapshot.push(`- Archived: ${repoArchived ? "Yes" : "No"}`);
+    snapshot.push(`- Stars: ${repoStars}`);
+    if (repoUpdatedAt) snapshot.push(`- Last update: ${repoUpdatedAt}`);
+    if (repoTopics.length > 0) {
+      snapshot.push(`- Topics: ${repoTopics.join(", ")}`);
+    }
+
+    bodyParts.push("## Repository Snapshot", "", ...snapshot, "");
+  }
+
   if (problem) {
     bodyParts.push("## Problem", "", problem, "");
   }
@@ -115,10 +125,6 @@ function renderPage(project) {
     bodyParts.push("## Outcome", "", outcome, "");
   }
 
-  if (links.length > 0) {
-    bodyParts.push("## Links", "", ...links, "");
-  }
-
   if (contentMarkdown) {
     bodyParts.push(contentMarkdown, "");
   }
@@ -129,7 +135,7 @@ function renderPage(project) {
     "+++",
     `title = ${tomlString(title)}`,
     `description = ${tomlString(description)}`,
-    'template = "page.html"',
+    'template = "project.html"',
     `date = ${tomlString(date)}`,
     "[extra]",
     'back_url = "/projects/"',
@@ -165,6 +171,11 @@ function renderPage(project) {
     `url = ${tomlString(url)}`,
     `url_label = ${tomlString(urlLabel)}`,
     `external = ${external ? "true" : "false"}`,
+    `repo_language = ${tomlString(repoLanguage)}`,
+    `repo_updated_at = ${tomlString(repoUpdatedAt)}`,
+    `repo_archived = ${repoArchived ? "true" : "false"}`,
+    `repo_stars = ${repoStars}`,
+    `repo_topics = ${tomlArray(repoTopics)}`,
     "generated = true",
     `techs = ${tomlArray(techs)}`,
     "+++",

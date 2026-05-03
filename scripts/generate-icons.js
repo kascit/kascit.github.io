@@ -3,14 +3,22 @@
 
 const fs = require("fs");
 const path = require("path");
-const { resolveImageMagickCommand, runMagick } = require("./lib/shared");
+const { ROOT, resolveImageMagickCommand, runMagick, assertInsideRoot } = require("./lib/shared");
 
-const ROOT_DIR = path.resolve(__dirname, "..");
-const OUTPUT_ROOT_ARG = process.argv[2] || "public";
-const OUTPUT_ROOT = path.resolve(ROOT_DIR, OUTPUT_ROOT_ARG);
+const OUTPUT_MODE = (process.argv[2] || "public").trim().toLowerCase();
+if (OUTPUT_MODE !== "public" && OUTPUT_MODE !== "static") {
+  console.error("ERROR: Output mode must be 'public' or 'static'.");
+  process.exit(1);
+}
+
+const OUTPUT_ROOT = OUTPUT_MODE === "static"
+  ? path.resolve(ROOT, "static")
+  : path.resolve(ROOT, "public");
 const ICON_DIR = path.join(OUTPUT_ROOT, "icons");
-const SRC_SVG = path.resolve(process.argv[3] || path.join(ICON_DIR, "favicon.svg"));
-const GEN_DIR = path.join(ROOT_DIR, "scripts", ".tmp-icons");
+const SRC_SVG = OUTPUT_MODE === "static"
+  ? path.resolve(ROOT, "static", "icons", "favicon.svg")
+  : path.resolve(ROOT, "public", "icons", "favicon.svg");
+const GEN_DIR = assertInsideRoot(path.join(ROOT, "scripts", ".tmp-icons"), "Temp icons directory");
 
 const SQUIRCLE_RADIUS_PERCENT = Number.parseInt(process.env.SQUIRCLE_RADIUS_PERCENT || "11", 10);
 const BASE_GLYPH_COLOR = process.env.BASE_GLYPH_COLOR || "#000000";
@@ -18,8 +26,6 @@ const FAVICON_GLYPH_SCALE = Number.parseInt(process.env.FAVICON_GLYPH_SCALE || "
 const TOUCH_GLYPH_SCALE = Number.parseInt(process.env.TOUCH_GLYPH_SCALE || "76", 10);
 const PWA_GLYPH_SCALE = Number.parseInt(process.env.PWA_GLYPH_SCALE || "74", 10);
 const PWA_MASKABLE_GLYPH_SCALE = Number.parseInt(process.env.PWA_MASKABLE_GLYPH_SCALE || "66", 10);
-const SHORTCUT_GLYPH_SCALE = Number.parseInt(process.env.SHORTCUT_GLYPH_SCALE || "58", 10);
-const SHORTCUT_MASKABLE_GLYPH_SCALE = Number.parseInt(process.env.SHORTCUT_MASKABLE_GLYPH_SCALE || "48", 10);
 
 const WHITE_BG = "#ffffff";
 const BLACK_BG = "#000000";
@@ -156,11 +162,9 @@ function copyAlias(src, dst) {
   fs.copyFileSync(src, dst);
 }
 
-
-
 function main() {
   if (!fs.existsSync(OUTPUT_ROOT) || !fs.statSync(OUTPUT_ROOT).isDirectory()) {
-    throw new Error(`Output directory not found: ${OUTPUT_ROOT_ARG}`);
+    throw new Error(`Output directory not found for mode '${OUTPUT_MODE}': ${OUTPUT_ROOT}`);
   }
 
   ensureExists(SRC_SVG, "Source SVG");
@@ -216,8 +220,6 @@ function main() {
   copyAlias(path.join(ICON_DIR, "icon-192x192-maskable-transparent.png"), path.join(ICON_DIR, "android-chrome-192x192-maskable-transparent.png"));
   copyAlias(path.join(ICON_DIR, "icon-512x512-maskable-transparent.png"), path.join(ICON_DIR, "android-chrome-512x512-maskable-transparent.png"));
 
-
-
   runMagick(command, [
     path.join(ICON_DIR, "favicon-16x16.png"),
     path.join(ICON_DIR, "favicon-32x32.png"),
@@ -239,7 +241,7 @@ function main() {
 
   fs.rmSync(GEN_DIR, { recursive: true, force: true });
 
-  console.log(`Icon generation complete in '${OUTPUT_ROOT_ARG}' from: ${SRC_SVG}`);
+  console.log(`Icon generation complete in '${OUTPUT_MODE}' from: ${SRC_SVG}`);
 }
 
 try {

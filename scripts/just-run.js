@@ -35,6 +35,18 @@ if (commandTokens.length === 0) usageAndExit();
 const command = commandTokens[0];
 const args = commandTokens.slice(1);
 
+if (!/^[A-Za-z0-9._:/\\-]+$/.test(command)) {
+  logError(`Invalid command token: ${command}`);
+  process.exit(2);
+}
+
+for (const arg of args) {
+  if (arg.includes("\0")) {
+    logError("Invalid command argument: contains NUL byte");
+    process.exit(2);
+  }
+}
+
 const child = spawn(command, args, {
   stdio: "inherit",
   shell: false,

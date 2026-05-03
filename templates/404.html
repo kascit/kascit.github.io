@@ -1,14 +1,23 @@
-{% extends "page.html" %}
+{% extends "base.html" %}
 {% import "macros/nav.html" as macros_nav %}
 
-{% block layout_fit_class %}lg:w-fit{% endblock layout_fit_class %}
-{% block main_width_class %}max-w-prose{% endblock main_width_class %}
+{#
+  404 error page.
+  Extends base.html directly (not page.html) because Zola renders 404.html
+  without a page/section/taxonomy context object.  page.html assumes `page`
+  exists and would throw on {{ page.content }}, {{ page.title }}, etc.
+
+  _force_rail is normally computed from the absence of page/section/taxonomy
+  in base.html — which is exactly the case here — so the right rail (apps
+  grid) appears automatically via the {% block rail_content %} default.
+#}
 
 {% block extra_head %}
 <meta name="robots" content="noindex, nofollow" />
 {% endblock extra_head %}
 
 {% block content %}
+{# Header — mirrors the exact structure page.html uses so the layout is identical. #}
 <div class="mb-8 lg:mb-10 pb-6 border-b border-base-content/10">
     <div class="flex flex-col gap-3">
         <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-base-content m-0">404</h1>
@@ -17,6 +26,7 @@
 </div>
 
 <p>The link may be outdated, mistyped, or the page was moved.</p>
+<p>Try heading back to the <a href="/">home page</a> or use the search bar to find what you were looking for.</p>
 {% endblock content %}
 
 {% block prev_link %}

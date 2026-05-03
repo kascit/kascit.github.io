@@ -1,0 +1,113 @@
+<div class="navbar site-topbar fixed top-0 left-0 right-0 z-50 h-16">
+    <!-- Mobile hamburger -->
+    <div class="flex-none lg:hidden">
+        <label id="hamburger-toggle" for="my-drawer-2" aria-label="Open menu" class="btn btn-ghost btn-circle btn-sm transition-colors duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </label>
+    </div>
+
+    <!-- Logo -->
+    <div class="flex-1 flex justify-center items-center lg:flex lg:justify-start">
+        <a href="https://dhanur.me/" class="btn btn-ghost hover:bg-transparent hover:border-transparent normal-case text-xl font-bold text-base-content site-logo-link">
+            dhanur.me
+        </a>
+    </div>
+
+    <div class="flex-none lg:hidden" aria-hidden="true"><div class="btn btn-circle btn-sm invisible"></div></div>
+
+    <!-- Desktop Menu -->
+    <div class="flex-none hidden lg:flex">
+        <ul class="menu menu-horizontal px-1 items-center">
+            
+            <!-- Apps Grid -->
+            <li data-nav-chrome="apps" class="ml-1">
+                <div class="relative p-0" data-dropdown="apps">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-square tooltip tooltip-bottom" data-tooltip-label="Apps" data-tooltip-position="bottom" aria-label="Apps">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    </div>
+                    <div class="dropdown-panel z-50 mt-2 p-4 bg-base-100 border border-base-content/10 rounded-box w-64 right-0 mr-2 md:mr-4">
+                        <div class="grid grid-cols-3 gap-2" data-apps-grid>
+                            <!-- Apps grid populated by manifest.js -->
+                            <div class="col-span-3 flex justify-center py-4 opacity-50"><span class="loading loading-spinner loading-sm"></span></div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+            <!-- Account -->
+            <li data-nav-chrome="account" class="ml-1">
+                <div class="relative p-0" data-dropdown="account">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle tooltip tooltip-bottom" data-tooltip-label="Account" data-tooltip-position="bottom" aria-label="Account">
+                        <div data-auth="nav-guest-avatar" class="w-9 h-9 rounded-full bg-base-300 flex items-center justify-center">
+                            <i class="fa-solid fa-user text-base-content/50 text-sm"></i>
+                        </div>
+                        <div data-auth="nav-authed-avatar" class="hidden w-9 h-9 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-1 overflow-hidden">
+                            <img src="" alt="Profile" class="w-full h-full object-cover" />
+                        </div>
+                    </div>
+                    <div class="dropdown-panel z-50 mt-2 bg-base-100 border border-base-content/10 rounded-box w-64 right-0 mr-2 md:mr-4 overflow-hidden">
+                        
+                        <!-- authed header -->
+                        <div data-auth="nav-authed-header" class="hidden px-3 pt-3 pb-2 border-b border-base-content/10 cursor-default select-none">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-full overflow-hidden shrink-0"><img data-auth="nav-authed-header-avatar" class="w-full h-full object-cover" src="" alt="Profile" /></div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="font-semibold truncate text-sm" data-auth="nav-name"></div>
+                                    <div class="text-xs opacity-60 truncate" data-auth="nav-email"></div>
+                                </div>
+                                <span class="badge badge-sm hidden" data-auth="nav-role"></span>
+                            </div>
+                        </div>
+
+                        <!-- guest header -->
+                        <div data-auth="nav-guest-header" class="px-3 pt-3 pb-2 border-b border-base-content/10 cursor-default select-none">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-full bg-base-300 flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-user text-base-content/40"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="font-semibold text-sm">Guest</div>
+                                    <div class="text-xs opacity-60">Not signed in</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Credits display -->
+                        <div class="hidden px-3 py-1.5 border-b border-base-content/10" data-auth="credits-row">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="flex items-center gap-1.5 opacity-70">
+                                    <span>🪙</span>
+                                    <span data-auth="credits-balance">—</span>
+                                    <span class="opacity-60">credits</span>
+                                </span>
+                                <span class="opacity-40 text-[10px]" data-auth="credits-reset"></span>
+                            </div>
+                        </div>
+
+                        <ul class="menu p-2">
+                            <li data-nav-chrome="theme">
+                                <div class="flex items-center gap-2.5 px-2.5 py-2">
+                                    <i class="fa-solid fa-circle-half-stroke w-4 text-center opacity-60"></i>
+                                    <div id="theme-toggle" class="theme-switcher w-full bg-base-300/70 text-xs font-medium">
+                                        <button data-theme-mode="light" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer"><i class="fa-solid fa-sun mr-1"></i>Light</button>
+                                        <button data-theme-mode="dark" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer"><i class="fa-solid fa-moon mr-1"></i>Dark</button>
+                                        <button data-theme-mode="auto" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer"><i class="fa-solid fa-circle-half-stroke mr-1"></i>Auto</button>
+                                    </div>
+                                </div>
+                            </li>
+                            <li data-auth="login-item">
+                                <a class="flex items-center gap-3" href="https://auth.dhanur.me" data-auth="login-btn"><i class="fa-solid fa-right-to-bracket w-4 text-center"></i><span>Sign In</span></a>
+                            </li>
+                            <li class="hidden" data-auth="account-item">
+                                <a class="flex items-center gap-3" href="https://auth.dhanur.me"><i class="fa-solid fa-gear w-4 text-center"></i><span>Account Settings</span></a>
+                            </li>
+                            <li class="hidden border-t border-base-content/10 mt-1 pt-1" data-auth="logout-item">
+                                <button type="button" class="w-full text-left flex items-center gap-3 text-error/80 hover:text-error" data-auth="logout-btn"><i class="fa-solid fa-right-from-bracket w-4 text-center"></i><span>Sign Out</span></button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>

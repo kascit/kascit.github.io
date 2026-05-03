@@ -17,7 +17,7 @@ next_subtitle = "Next"
 enabled = false
 
 [taxonomies]
-tags = ["Java", "Python", "Go", "C / C++", "JavaScript", "Lua", "SQL", "Bash", "Spring Boot", "Node.js", "PostgreSQL", "MongoDB", "Redis", "DynamoDB", "AWS", "GCP", "Docker", "Kubernetes", "CI/CD", "Terraform", "Neovim", "Linux", "Git", "Postman", "AI Systems", "Applied Cryptography", "Computer Graphics"]
+tags = ["systems", "backend", "devops", "data", "tooling", "security", "frontend", "cloud"]
 +++
 <div class="prose max-w-none prose-base-content lg:prose-lg mb-12">
 
@@ -136,4 +136,4 @@ When I am not coding, I am usually on strategy games, sci-fi, or watching tsodin
 
 ## Keep In Touch
 
-{{ link_card(url="/links", external=false, icon="fa-solid fa-link", title="Socials and Communities", description="Find me around the internet.", contrast=true) }}
+{{ link_card(url="/links/", external=false, icon="fa-solid fa-link", title="Socials and Communities", description="Find me around the internet.", contrast=true) }}

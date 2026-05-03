@@ -11,15 +11,7 @@ async function copyText(value) {
     return;
   }
 
-  const ta = document.createElement("textarea");
-  ta.value = text;
-  ta.setAttribute("readonly", "");
-  ta.style.position = "fixed";
-  ta.style.left = "-9999px";
-  document.body.appendChild(ta);
-  ta.select();
-  document.execCommand("copy");
-  document.body.removeChild(ta);
+  throw new Error("Clipboard API unavailable");
 }
 
 function setHeadingLinkIcon(link, copied) {

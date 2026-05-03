@@ -3,14 +3,13 @@ title = "Debugging Production Issues Like a Detective"
 date = 2026-02-28
 description = "A systematic approach to finding and fixing bugs when you can't reproduce the issue locally"
 
-[taxonomies]
-tags = ["Debugging", "Production Systems", "Incident Response", "Troubleshooting", "Reliability"]
-categories = ["Development"]
-
 [extra]
 thumbnail_image = "images/thumbs/code.jpg"
-+++
 
+[taxonomies]
+tags = ["systems", "debugging", "automation", "tooling"]
+categories = ["engineering"]
++++
 It's 3 AM. You get a Slack notification: "The site is down." You check your local environment - everything works fine. You check staging - also works fine. But production is broken.
 
 This is the story of every developer's life. Here's how I learned to debug production issues like a detective instead of like a panicked developer.

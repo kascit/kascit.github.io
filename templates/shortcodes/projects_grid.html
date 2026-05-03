@@ -1,4 +1,5 @@
 {% import "macros/projects.html" as macros_projects %}
+{% import "macros/taxonomy_chips.html" as taxonomy_chips %}
 {% set target_group = group | default(value="featured") %}
 {% set target_grid = grid_class | default(value="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12") %}
 {% set catalog = load_data(path="data/projects.json", format="json") %}
@@ -35,10 +36,17 @@
 
     <div class="project-card-desc">{{ project.description }}</div>
 
-    {% if project.techs %}
+    {% set project_tags = project.tags | default(value=[]) %}
+    {% if project_tags %}
+    <div class="project-card-techs">
+      {% for tag in project_tags %}
+      {{ taxonomy_chips::tag_link(name=tag) }}
+      {% endfor %}
+    </div>
+    {% elif project.techs %}
     <div class="project-card-techs">
       {% for tech in project.techs %}
-      <a href="{{ get_taxonomy_url(kind='tags', name=tech) }}" class="surface-chip-link taxonomy-chip taxonomy-chip--tag">{{ tech }}</a>
+      <span class="surface-chip taxonomy-chip taxonomy-chip--tag">{{ tech }}</span>
       {% endfor %}
     </div>
     {% endif %}

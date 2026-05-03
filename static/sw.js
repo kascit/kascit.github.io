@@ -1,11 +1,15 @@
 // Service Worker with smart caching strategy
 // Cache versioning: Update CACHE_VERSION when assets change
-const CACHE_VERSION = "v13";
+const CACHE_VERSION = "v15";
 const CACHE_NAME = `kascit-${CACHE_VERSION}`;
 const META_CACHE = `kascit-meta-${CACHE_VERSION}`;
 const RUNTIME_META_CACHE = "kascit-runtime-meta-v1";
 
-// Critical assets that must be cached on install
+// Critical assets that must be cached on install.
+// Only include STABLE (non-fingerprinted) paths here: page URLs and sw-adjacent files.
+// Fingerprinted assets (/css/main.HASH.css, /js/core/main.HASH.js etc.) must NOT be
+// listed here — their hash changes every build, so a fixed path would 404 and return
+// an HTML error page, which browsers then reject with a MIME type mismatch.
 const CRITICAL_ASSETS = [
   "/",
   "/index.html",
@@ -15,15 +19,6 @@ const CRITICAL_ASSETS = [
   "/projects/",
   "/privacy/",
   "/offline/",
-  // Assets needed for offline page to render properly
-  "/css/main.css",
-  "/css/font-awesome.min.css",
-  "/js/core/boot.js",
-  "/js/core/main.js",
-  "/js/system/offline-reload.js",
-  "/fonts/Pretendard-Regular.woff",
-  "/webfonts/fa-solid-900.woff2",
-  "/webfonts/fa-brands-400.woff2",
 ];
 
 // Asset patterns to cache (will be cached on-demand)
@@ -47,7 +42,7 @@ const DO_NOT_CACHE = [
   /analytics/,
   /giscus/,
   /^\/sw\.js$/,
-  /^\/js\/notify-banner\.js$/,
+  /^\/js\/ui\/notify-banner\.[a-f0-9]*\.js$/,  // fingerprinted; loaded per-page only when needed
   /^\/__runtime\//,
   /^\/share-target\/$/,
   /^\/open-file\/$/,
@@ -353,6 +348,29 @@ async function checkLatestAndNotify() {
   }
 }
 
+// Push Notification — server-initiated push events (e.g. via Web Push API)
+self.addEventListener("push", (event) => {
+  let data = {};
+  try {
+    data = event.data ? event.data.json() : {};
+  } catch (_) {
+    data = { title: "New update", body: event.data ? event.data.text() : "" };
+  }
+
+  const title = data.title || "dhanur.me";
+  const options = {
+    body: data.body || "Something new is waiting for you.",
+    tag: data.tag || "push-notification",
+    icon: "/icons/icon-192x192.png",
+    badge: "/icons/favicon-96x96.png",
+    data: { url: data.url || "/" },
+  };
+
+  event.waitUntil(
+    self.registration.showNotification(title, options)
+  );
+});
+
 // Periodic Background Sync - check RSS
 self.addEventListener("periodicsync", (event) => {
   if (event.tag === "content-sync") {
@@ -497,16 +515,6 @@ self.addEventListener("fetch", (event) => {
         });
       }),
     );
-  }
-});
-
-// Handle messages from clients (useful for version updates)
-self.addEventListener("message", (event) => {
-  if (event.data && event.data.type === "SKIP_WAITING") {
-    self.skipWaiting();
-  }
-  if (event.data && event.data.type === "CHECK_LATEST_POST") {
-    event.waitUntil(checkLatestAndNotify());
   }
 });
 

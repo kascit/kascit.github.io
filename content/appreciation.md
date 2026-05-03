@@ -56,4 +56,4 @@ The site is built and maintained on top of tools that deserve direct credit:
 
 If I missed a person, package, script, or resource that should be acknowledged, send a message and I will update this page.
 
-{{ link_card(url="/links", external=false, icon="fa-solid fa-envelope", title="Get in Touch", description="gotta credit that shit", contrast=true) }}
+{{ link_card(url="/links/", external=false, icon="fa-solid fa-envelope", title="Get in Touch", description="gotta credit that shit", contrast=true) }}

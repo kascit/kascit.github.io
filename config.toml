@@ -30,8 +30,8 @@ preserve_dotfiles_in_output = true  # Needed for .well-known / security files
 # CONTENT MODEL (TAXONOMIES)
 # =============================================================================
 taxonomies = [
-  { name = "tags", feed = true, paginate_by = 10 },
-  { name = "categories", feed = true, paginate_by = 10 },
+  { name = "tags", feed = true, paginate_by = 50 },
+  { name = "categories", feed = true, paginate_by = 50 },
 ]
 
 # =============================================================================
@@ -84,6 +84,7 @@ default_thumbnail = "images/thumbs/default_thumbnail.jpg"
 
 # Analytics (leave empty to disable cleanly)
 gtag = "G-BY8SPYYYYR"
+ahrefs_analytics_key = "zpZ3KAfSjE0wBbf1DHDY0w"
 
 # GitHub edit link (used by theme templates)
 edit_url = "https://github.com/kascit/kascit.github.io/edit/main"
@@ -152,6 +153,24 @@ theme = "preferred_color_scheme"
 [extra.share]
 copy_url = true
 x = true
+
+# =============================================================================
+# ASK AI
+# =============================================================================
+[extra.ai]
+enabled = true
+label = "Ask AI about this"
+endpoint = ""
+profile_url = "/data/ask-ai-profile.json"
+open_in_new_tab = false
+include_page_context = true
+include_profile_context = true
+max_context_chunks = 4
+max_headings = 8
+require_auth = true
+credit_cost = 20
+guest_message = "Sign in to use Ask AI"
+trusted_endpoint_hosts = ["dhanur.me", "auth.dhanur.me"]
 
 # =============================================================================
 # SOCIAL META

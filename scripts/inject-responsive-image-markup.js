@@ -3,10 +3,10 @@
 
 const fs = require("fs");
 const path = require("path");
+const { ROOT, collectFiles } = require("./lib/shared");
 
-const ROOT = path.resolve(__dirname, "..");
-const outputDirArg = process.argv[2] || "public";
-const outputDir = path.resolve(ROOT, outputDirArg);
+const outputDirLabel = "public";
+const outputDir = path.resolve(ROOT, "public");
 const IMAGE_EXT_RE = /\.(jpe?g|png|webp)$/i;
 const BASE_HOSTS = new Set(["dhanur.me", "www.dhanur.me"]);
 
@@ -22,27 +22,7 @@ if (fs.existsSync(manifestPath)) {
 }
 
 function collectHtmlFiles(rootDir) {
-  const files = [];
-  const stack = [rootDir];
-
-  while (stack.length > 0) {
-    const current = stack.pop();
-    const entries = fs.readdirSync(current, { withFileTypes: true });
-
-    for (const entry of entries) {
-      const abs = path.join(current, entry.name);
-      if (entry.isDirectory()) {
-        stack.push(abs);
-        continue;
-      }
-      if (!entry.isFile()) continue;
-      if (!entry.name.toLowerCase().endsWith(".html")) continue;
-
-      files.push(abs);
-    }
-  }
-
-  return files;
+  return collectFiles(rootDir, (_abs, entry) => entry.name.toLowerCase().endsWith(".html"));
 }
 
 function splitUrl(value) {
@@ -175,7 +155,7 @@ function processHtmlFile(filePath) {
 
 function main() {
   if (!fs.existsSync(outputDir) || !fs.statSync(outputDir).isDirectory()) {
-    console.error(`ERROR: Output directory '${outputDirArg}' does not exist.`);
+    console.error(`ERROR: Output directory '${outputDirLabel}' does not exist.`);
     process.exit(1);
   }
 
@@ -186,7 +166,7 @@ function main() {
 
   const htmlFiles = collectHtmlFiles(outputDir);
   if (htmlFiles.length === 0) {
-    console.log(`No HTML files found under '${outputDirArg}'.`);
+    console.log(`No HTML files found under '${outputDirLabel}'.`);
     return;
   }
 

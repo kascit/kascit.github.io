@@ -60,7 +60,8 @@
   {% endif %}
   "author": {
     "@type": "Person",
-    "name": "{{ config.author | default(value='') }}"
+    "name": "{{ config.author | default(value='') }}",
+    "url": "{{ config.base_url | safe }}about/"
   }
 }
 </script>
@@ -80,7 +81,8 @@
   "description": "{{ desc | safe }}",
   "author": {
     "@type": "Person",
-    "name": "{{ config.author | default(value='Dhanur') }}"
+    "name": "{{ config.author | default(value='Dhanur') }}",
+    "url": "{{ config.base_url | safe }}about/"
   },
   "datePublished": "{{ page.date | date(format='%+') }}",
   "dateModified": "{{ page.updated | default(value=page.date) | date(format='%+') }}",

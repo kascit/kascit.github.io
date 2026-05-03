@@ -3,14 +3,13 @@ title = "The Art of Writing Technical Documentation That People Actually Read"
 date = 2026-03-12
 description = "How to write docs that stay useful after launch, based on years of fixing stale and unread documentation"
 
-[taxonomies]
-tags = ["Technical Writing", "Documentation", "Developer Experience", "Communication", "Best Practices"]
-categories = ["Development"]
-
 [extra]
 thumbnail_image = "images/thumbs/typing.jpg"
-+++
 
+[taxonomies]
+tags = ["writing", "systems", "automation", "tooling"]
+categories = ["engineering"]
++++
 Most documentation fails for a simple reason: it is written once, merged, and then abandoned while the product keeps changing. The first draft is usually good enough for the sprint demo, but not resilient enough for real users who arrive months later with different assumptions and different urgency.
 
 The second reason is perspective drift. Experts forget what is obvious only after years of context, so they accidentally skip setup steps, naming conventions, and error expectations that new readers need before they can even begin.

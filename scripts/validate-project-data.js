@@ -6,8 +6,21 @@ const path = require("path");
 
 const ROOT = path.resolve(__dirname, "..");
 const DATA_FILE = path.join(ROOT, "data", "projects.json");
+const TAXONOMY_RULES_FILE = path.join(ROOT, "data", "taxonomy-rules.json");
 const ALLOWED_GROUPS = new Set(["featured", "personal", "learning", "experiments"]);
 const ALLOWED_STATUS = new Set(["", "live", "academic", "archived", "wip"]);
+
+function loadCanonicalTags() {
+  const raw = fs.readFileSync(TAXONOMY_RULES_FILE, "utf8");
+  const parsed = JSON.parse(raw);
+  const tags = Array.isArray(parsed.canonical_tags) ? parsed.canonical_tags : [];
+  const canonical = new Set(tags.map((item) => String(item || "").trim().toLowerCase()).filter(Boolean));
+  if (canonical.size === 0) {
+    throw new Error("taxonomy-rules.json must define at least one canonical tag");
+  }
+
+  return canonical;
+}
 
 function readJson(filePath) {
   const raw = fs.readFileSync(filePath, "utf8");
@@ -34,7 +47,7 @@ function isValidUrlLike(value) {
   }
 }
 
-function validateProject(project, index, seenSlugs, errors) {
+function validateProject(project, index, seenSlugs, errors, canonicalTags) {
   const id = `[project ${index + 1}]`;
 
   if (!isNonEmptyString(project.slug)) {
@@ -71,10 +84,28 @@ function validateProject(project, index, seenSlugs, errors) {
     errors.push(`${id} invalid status '${project.status}'. Allowed: live, academic, archived, wip`);
   }
 
-  const arrayFields = ["techs", "tags", "highlights"];
+  const arrayFields = ["techs", "tags", "highlights", "repo_topics"];
   for (const field of arrayFields) {
     if (project[field] !== undefined && !isStringArray(project[field])) {
       errors.push(`${id} field '${field}' must be an array of strings`);
+    }
+  }
+
+  const tags = Array.isArray(project.tags) ? project.tags : [];
+  if (tags.length === 0) {
+    errors.push(`${id} must define at least one taxonomy tag`);
+  }
+  for (const tag of tags) {
+    const normalized = String(tag || "").trim().toLowerCase();
+    if (!normalized) continue;
+
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(normalized)) {
+      errors.push(`${id} tag '${tag}' must be lowercase slug format (e.g. backend, cloud-native)`);
+      continue;
+    }
+
+    if (canonicalTags.size > 0 && !canonicalTags.has(normalized)) {
+      errors.push(`${id} tag '${tag}' is not in data/taxonomy-rules.json canonical_tags`);
     }
   }
 
@@ -91,6 +122,8 @@ function validateProject(project, index, seenSlugs, errors) {
     "content_markdown",
     "thumbnail_image",
     "thumbnail_alt",
+    "repo_language",
+    "repo_updated_at",
   ];
   for (const field of stringFields) {
     if (project[field] !== undefined && typeof project[field] !== "string") {
@@ -112,6 +145,14 @@ function validateProject(project, index, seenSlugs, errors) {
   if (project.external !== undefined && typeof project.external !== "boolean") {
     errors.push(`${id} field 'external' must be a boolean`);
   }
+
+  if (project.repo_archived !== undefined && typeof project.repo_archived !== "boolean") {
+    errors.push(`${id} field 'repo_archived' must be a boolean`);
+  }
+
+  if (project.repo_stars !== undefined && !Number.isFinite(project.repo_stars)) {
+    errors.push(`${id} field 'repo_stars' must be a number`);
+  }
 }
 
 function main() {
@@ -129,9 +170,17 @@ function main() {
     process.exit(1);
   }
 
+  let canonicalTags;
+  try {
+    canonicalTags = loadCanonicalTags();
+  } catch (error) {
+    console.error(`Taxonomy rules parse error: ${error.message}`);
+    process.exit(1);
+  }
+
   const errors = [];
   const seenSlugs = new Set();
-  projects.forEach((project, index) => validateProject(project, index, seenSlugs, errors));
+  projects.forEach((project, index) => validateProject(project, index, seenSlugs, errors, canonicalTags));
 
   if (errors.length > 0) {
     console.error("Project data validation failed:");

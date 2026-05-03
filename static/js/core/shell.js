@@ -12,17 +12,16 @@ import { BASE_URL, getConfig } from "./config.js";
 import { initResponsive } from "./responsive.js";
 import { initTheme } from "./theme-engine.js";
 import { initAuth } from "../system/auth-integration.js";
+import { checkAccess, renderAccessWall } from "../system/access-guard.js";
+import { filterAppsByRole, getManifestSync } from "../system/manifest.js";
 import { initDropdowns } from "../ui/dropdowns.js";
 import { SHELL_CONFIG_DEFAULTS } from "./shell-config.js";
 
 window.__componentsJS = true;
 let _injected = false;
-let _activeShellController = null;
-let _shellAbortHandlersBound = false;
 
 const DEFAULT_SHELL_CONFIG = {
   ...SHELL_CONFIG_DEFAULTS,
-  shellFetchTimeoutMs: 10000,
   noCss: false,
   showNavbar: true,
 };
@@ -37,11 +36,6 @@ function getShellRuntimeConfig() {
   }
 
   return merged;
-}
-
-function normalizePath(path) {
-  if (!path.startsWith('/')) return `/${path}`;
-  return path;
 }
 
 function isSameOriginHost() {
@@ -137,6 +131,74 @@ function applyChromeVisibility(root, config) {
   }
 }
 
+function safeHref(value) {
+  const input = String(value || "").trim();
+  if (!input) return "#";
+  try {
+    const parsed = new URL(input, window.location.origin);
+    if (parsed.protocol === "http:" || parsed.protocol === "https:") {
+      return parsed.href;
+    }
+  } catch {
+    // Ignore malformed URL and fall back to anchor.
+  }
+  return "#";
+}
+
+function safeIconClass(value) {
+  const input = String(value || "").trim();
+  if (!input) return "fa-solid fa-link";
+  if (!/^[a-z0-9\s_-]+$/i.test(input)) return "fa-solid fa-link";
+  return input;
+}
+
+function renderAppsGrid(shellRoot, apps) {
+  const grids = shellRoot.querySelectorAll('[data-apps-grid], [data-apps-grid-sidebar]');
+  if (!grids.length) return;
+
+  const entries = Array.isArray(apps) ? apps : [];
+  grids.forEach((grid) => {
+    const isDesktop = grid.hasAttribute("data-apps-grid");
+    const padding = isDesktop ? "p-3" : "p-2.5";
+
+    const fragment = document.createDocumentFragment();
+
+    for (const app of entries) {
+      const href = safeHref(app?.url);
+      const icon = safeIconClass(app?.icon);
+      const name = String(app?.name || "App").trim() || "App";
+
+      const anchor = document.createElement("a");
+      anchor.href = href;
+      anchor.className = `group flex flex-col items-center gap-1.5 ${padding} rounded-md hover:bg-base-200 transition-colors duration-200 no-underline hover:no-underline text-base-content`;
+
+      const iconWrap = document.createElement("div");
+      iconWrap.className = "w-10 h-10 rounded-md bg-base-300/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors";
+
+      const iconNode = document.createElement("i");
+      iconNode.className = `${icon} text-lg`;
+
+      const label = document.createElement("span");
+      label.className = "text-[10px] font-medium opacity-70 group-hover:opacity-100";
+      label.textContent = name;
+
+      iconWrap.appendChild(iconNode);
+      anchor.appendChild(iconWrap);
+      anchor.appendChild(label);
+      fragment.appendChild(anchor);
+    }
+
+    grid.replaceChildren(fragment);
+  });
+}
+
+function updateAppsGridForRole(shellRoot, role) {
+  const fallback = getManifestSync();
+  const visibleApps = filterAppsByRole(fallback.apps, role);
+  renderAppsGrid(shellRoot, visibleApps);
+  return Promise.resolve(visibleApps);
+}
+
 function hydrate(shellRoot) {
   const config = getShellRuntimeConfig();
   const sameOrigin = isSameOriginHost();
@@ -155,29 +217,28 @@ function hydrate(shellRoot) {
 
   applyChromeVisibility(shellRoot, config);
 
+  const cachedManifest = getManifestSync();
+  renderAppsGrid(shellRoot, filterAppsByRole(cachedManifest.apps, "guest"));
+  updateAppsGridForRole(shellRoot, "guest");
+
   initResponsive();
   initTheme(shellRoot);
   initDropdowns(shellRoot);
-  initAuth(shellRoot);
-}
 
-function resolveShellRoot(doc) {
-  return doc.querySelector('.site-nav-shell') || doc.querySelector('.drawer');
-}
+  initAuth(shellRoot, (authStatus) => {
+    const role = authStatus?.role || "guest";
+    const access = checkAccess(config, authStatus);
+    const contentSlot = shellRoot.querySelector('.site-nav-slot') || shellRoot.querySelector('.drawer-content');
 
-function abortActiveShellFetch() {
-  if (_activeShellController) {
-    _activeShellController.abort();
-    _activeShellController = null;
-  }
-}
+    if (!access.allowed) {
+      if (contentSlot) {
+        renderAccessWall(contentSlot, access.reason, document.title || "This app");
+      }
+      return;
+    }
 
-function bindShellAbortHandlers() {
-  if (_shellAbortHandlersBound) return;
-  _shellAbortHandlersBound = true;
-
-  window.addEventListener('pagehide', abortActiveShellFetch, { once: true });
-  window.addEventListener('beforeunload', abortActiveShellFetch, { once: true });
+    updateAppsGridForRole(shellRoot, role);
+  });
 }
 
 async function bootstrapShell() {
@@ -200,54 +261,12 @@ async function bootstrapShell() {
     return;
   }
 
-  // We are on an external subdomain. Fetch shell first, then atomically move content.
-  const shellUrl = `${BASE_URL}${normalizePath(config.shellPath)}`;
-  const timeoutMs = Number(config.shellFetchTimeoutMs) > 0
-    ? Number(config.shellFetchTimeoutMs)
-    : DEFAULT_SHELL_CONFIG.shellFetchTimeoutMs;
-  const controller = new AbortController();
-  let timedOut = false;
-  const timeoutId = window.setTimeout(() => {
-    timedOut = true;
-    controller.abort();
-  }, timeoutMs);
-
-  _activeShellController = controller;
-  bindShellAbortHandlers();
-
-  try {
-    const res = await fetch(shellUrl, { signal: controller.signal });
-    if (!res.ok) throw new Error("Failed to fetch layout shell");
-
-    const html = await res.text();
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, "text/html");
-    const shellRoot = resolveShellRoot(doc);
-    if (!shellRoot) throw new Error("Navbar shell root not found in fetched HTML");
-
-    const slot = shellRoot.querySelector(".site-nav-slot");
-    if (!slot) throw new Error("site-nav-slot missing in fetched navbar shell");
-
-    const children = Array.from(document.body.children);
-    const fragment = document.createDocumentFragment();
-    children.forEach(node => fragment.appendChild(node));
-
-    slot.appendChild(fragment);
-    document.body.appendChild(shellRoot);
-    hydrate(shellRoot);
-  } catch (err) {
-    if (err && err.name === 'AbortError') {
-      if (timedOut) {
-        console.warn(`[shell.js] Bootstrap fetch timed out after ${timeoutMs}ms`);
-      }
-      return;
-    }
-    console.error("[shell.js] Bootstrap Error:", err);
-  } finally {
-    window.clearTimeout(timeoutId);
-    if (_activeShellController === controller) {
-      _activeShellController = null;
-    }
+  // Security hardening: do not inject cross-origin HTML into this document.
+  // External consumers should ship a local shell markup and then call hydrate().
+  if (!sameOrigin) {
+    injectCSS(false, config);
+    injectFavicons(false, config);
+    return;
   }
 }
 

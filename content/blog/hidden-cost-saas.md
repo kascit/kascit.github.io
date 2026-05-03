@@ -3,14 +3,13 @@ title = "The Hidden Cost of 'Free' SaaS Tools"
 date = 2026-02-03
 description = "Why 'free' software often costs more than you think, and how to calculate the real price"
 
-[taxonomies]
-tags = ["SaaS", "Product Strategy", "Pricing", "Cost Optimization", "Productivity Tools"]
-categories = ["Business"]
-
 [extra]
 thumbnail_image = "images/thumbs/chain.jpg"
-+++
 
+[taxonomies]
+tags = ["systems", "tooling", "product", "automation"]
+categories = ["engineering"]
++++
 We've all been there. You find a "free" tool that solves exactly the problem you're having. You sign up, start using it, and everything seems great. Six months later, you're paying $47/month for three different "freemium" tools that you can't live without.
 
 This is the hidden cost of free SaaS.

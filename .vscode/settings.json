@@ -46,5 +46,7 @@
     "trainwrecks",
     "wallowords",
     "webfonts"
-  ]
+  ],
+  "snyk.advanced.organization": "2e71801d-63cb-41d9-bd82-ab5e7937173d",
+  "snyk.advanced.autoSelectOrganization": true
 }

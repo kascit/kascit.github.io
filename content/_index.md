@@ -1,6 +1,6 @@
 +++
 title = "Home"
-description = "Welcome to my corner of the internet"
+description = "Backend engineering, side projects, and technical writing from Dhanur — my cozy corner of the internet."
 template = "landing.html"
 
 [extra]
@@ -17,8 +17,8 @@ image_dark = "/images/landing/whood.jpg"
 image_light = "/images/landing/whood-light.jpg"
 
 cta_buttons = [
-    { text = "View Projects", url = "/projects", style = "primary" },
-    { text = "Read Blog", url = "/blog", style = "secondary" },
+    { text = "View Projects", url = "/projects/", style = "primary" },
+    { text = "Read Blog", url = "/blog/", style = "secondary" },
 ]
 
 # -----------------------------------------------------------------------------
@@ -101,5 +101,5 @@ description = "The human patch notes: where the ideas come from, what I am curre
 [extra.final_cta_section]
 title = "Let's Connect"
 description = "If you are building something ambitious, weird, useful, or suspiciously all three, I am probably interested."
-button = { text = "Contact Me", url = "/links" }
+button = { text = "Contact Me", url = "/links/" }
 +++

@@ -12,9 +12,10 @@
  */
 
 import { cycleThemeMode, getResolvedTheme, getThemeMode, setThemeMode } from "../core/theme-engine.js";
+import { askAiAboutQuery, buildAskAiContext, getAskAiConfig, getStoredAskAiContext, isAskAiEnabled } from "./ask-ai.js";
 
 const PROTOCOL = "dhanur.webmcp.v1";
-const VERSION = "1.1.0";
+const VERSION = "1.2.0";
 
 let _initialized = false;
 let _runtime = "main";
@@ -266,7 +267,10 @@ function navigateTo(href) {
   if (!safe) {
     throw new Error("Navigation target is missing or unsafe");
   }
-  window.location.assign(safe);
+  const anchor = document.createElement("a");
+  anchor.href = safe;
+  anchor.rel = "noopener noreferrer";
+  anchor.click();
   return { href: safe };
 }
 
@@ -285,6 +289,45 @@ function findFirstLink(selectors) {
 
 function getSearchModal() {
   return document.querySelector("[data-search-modal]") || document.getElementById("search-modal");
+}
+
+function getSearchInput() {
+  return document.querySelector("[data-search-input]") || document.getElementById("search");
+}
+
+function getSearchItemsContainer() {
+  return document.querySelector("[data-search-results-items]") || document.querySelector(".search-results__items");
+}
+
+function readSearchResults(limit = 20) {
+  const container = getSearchItemsContainer();
+  if (!container) return [];
+
+  const nodes = Array.from(container.querySelectorAll(".search-result-item")).slice(0, Math.max(0, Number(limit) || 20));
+  return nodes
+    .map((node) => {
+      const link = node.querySelector(".search-result-link");
+      if (!link) return null;
+
+      const titleNode = node.querySelector(".search-result-title");
+      const excerptNode = node.querySelector(".search-result-excerpt");
+
+      return {
+        kind: node.getAttribute("data-search-result-kind") || "content",
+        action: link.getAttribute("data-search-action") || null,
+        query: link.getAttribute("data-search-query") || null,
+        href: link.getAttribute("href") || null,
+        title: titleNode ? (titleNode.textContent || "").trim() : "",
+        excerpt: excerptNode ? (excerptNode.textContent || "").trim() : "",
+      };
+    })
+    .filter(Boolean);
+}
+
+function wait(ms) {
+  return new Promise((resolve) => {
+    window.setTimeout(resolve, ms);
+  });
 }
 
 function setSearchOpen(open) {
@@ -394,20 +437,14 @@ async function copyToClipboard(text) {
     return { copied: true, value };
   }
 
-  const ta = document.createElement("textarea");
-  ta.value = value;
-  ta.setAttribute("readonly", "");
-  ta.style.position = "fixed";
-  ta.style.left = "-9999px";
-  document.body.appendChild(ta);
-  ta.select();
-  document.execCommand("copy");
-  document.body.removeChild(ta);
-
-  return { copied: true, value };
+  return { copied: false, value };
 }
 
 function getAppState() {
+  const searchInput = getSearchInput();
+  const searchModal = getSearchModal();
+  const aiConfig = getAskAiConfig();
+
   return {
     protocol: PROTOCOL,
     version: VERSION,
@@ -426,7 +463,17 @@ function getAppState() {
     ui: {
       sidebarCollapsed: getSidebarCollapsed(),
       tocCollapsed: getTocCollapsed(),
-      searchOpen: Boolean(getSearchModal()?.checked),
+      searchOpen: Boolean(searchModal?.checked),
+    },
+    search: {
+      query: searchInput ? (searchInput.value || "").trim() : "",
+      resultsCount: readSearchResults(200).length,
+    },
+    ai: {
+      enabled: isAskAiEnabled(),
+      label: aiConfig.label,
+      endpoint: aiConfig.endpoint || null,
+      profileUrl: aiConfig.profileUrl || null,
     },
     navigation: getNavigationState(),
     online: navigator.onLine,
@@ -484,6 +531,58 @@ const TOOL_REGISTRY = Object.assign(Object.create(null), {
     const modal = getSearchModal();
     if (!modal) throw new Error("Search modal is not available on this page");
     return setSearchOpen(!modal.checked);
+  },
+  "search.query": async (args = {}) => {
+    const query = String(args.query || "").trim();
+    if (!query) throw new Error("Search query is required");
+
+    await setSearchOpen(true);
+    const input = getSearchInput();
+    if (!input) throw new Error("Search input not found");
+
+    input.value = query;
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    await wait(220);
+
+    return {
+      query,
+      open: true,
+      results: readSearchResults(50),
+    };
+  },
+  "search.results": async (args = {}) => ({
+    query: (getSearchInput()?.value || "").trim(),
+    results: readSearchResults(args.limit || 50),
+  }),
+
+  "ai.status": async () => ({
+    enabled: isAskAiEnabled(),
+    config: getAskAiConfig(),
+  }),
+  "ai.buildContext": async (args = {}) => {
+    const query = String(args.query || "").trim();
+    if (!query) throw new Error("AI query is required");
+
+    const source = String(args.source || "webmcp").trim() || "webmcp";
+    return buildAskAiContext(query, { source });
+  },
+  "ai.context.get": async (args = {}) => {
+    const ctxKey = String(args.ctxKey || args.key || "").trim();
+    if (!ctxKey) throw new Error("Context key is required");
+
+    const payload = getStoredAskAiContext(ctxKey);
+    if (!payload) throw new Error("Stored context was not found");
+    return { ctxKey, payload };
+  },
+  "ai.ask": async (args = {}) => {
+    const query = String(args.query || "").trim();
+    if (!query) throw new Error("AI query is required");
+
+    const source = String(args.source || "webmcp").trim() || "webmcp";
+    return askAiAboutQuery(query, {
+      source,
+      newTab: Boolean(args.newTab),
+    });
   },
 
   "toc.open": async () => ({ collapsed: clickToggleToState("[data-toc-toggle], #toc-toggle", false, getTocCollapsed) }),
@@ -607,6 +706,71 @@ const TOOL_SPECS = {
   "search.open": { description: "Open the search modal.", inputSchema: { type: "object", additionalProperties: false } },
   "search.close": { description: "Close the search modal.", inputSchema: { type: "object", additionalProperties: false } },
   "search.toggle": { description: "Toggle search modal visibility.", inputSchema: { type: "object", additionalProperties: false } },
+  "search.query": {
+    description: "Set a search query in the modal and return the current rendered results.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        query: { type: "string" },
+      },
+      required: ["query"],
+      additionalProperties: false,
+    },
+  },
+  "search.results": {
+    description: "Read currently rendered search results from the modal.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        limit: { type: "number" },
+      },
+      additionalProperties: false,
+    },
+    annotations: { readOnlyHint: true },
+  },
+  "ai.status": {
+    description: "Read Ask AI runtime status and effective configuration.",
+    inputSchema: { type: "object", additionalProperties: false },
+    annotations: { readOnlyHint: true },
+  },
+  "ai.buildContext": {
+    description: "Build an Ask AI context payload from query, page state, and profile context.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        query: { type: "string" },
+        source: { type: "string" },
+      },
+      required: ["query"],
+      additionalProperties: false,
+    },
+    annotations: { readOnlyHint: true },
+  },
+  "ai.context.get": {
+    description: "Read a previously stored Ask AI context payload from session storage by key.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        ctxKey: { type: "string" },
+        key: { type: "string" },
+      },
+      additionalProperties: false,
+    },
+    annotations: { readOnlyHint: true },
+  },
+  "ai.ask": {
+    description: "Execute Ask AI for a query using current runtime configuration.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        query: { type: "string" },
+        source: { type: "string" },
+        newTab: { type: "boolean" },
+      },
+      required: ["query"],
+      additionalProperties: false,
+    },
+  },
   "toc.open": { description: "Expand/open the table of contents panel.", inputSchema: { type: "object", additionalProperties: false } },
   "toc.close": { description: "Collapse/close the table of contents panel.", inputSchema: { type: "object", additionalProperties: false } },
   "toc.toggle": { description: "Toggle the table of contents panel.", inputSchema: { type: "object", additionalProperties: false } },

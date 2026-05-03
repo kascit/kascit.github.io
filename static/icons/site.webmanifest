@@ -1,7 +1,7 @@
 {
   "id": "/?source=pwa",
   "name": "dhanur.me",
-  "short_name": "dhanur.me",
+  "short_name": "dhanur",
   "description": "Unified progressive web application for all that is dhanur.me",
   "start_url": "/?source=pwa",
   "scope": "/",
@@ -18,68 +18,14 @@
   "dir": "ltr",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
-  "orientation": "portrait-primary",
+  "orientation": "any",
   "prefer_related_applications": false,
   "related_applications": [],
   "icons": [
     {
-      "src": "/icons/icon-192x192-transparent.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-512x512-transparent.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-192x192-maskable.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/icons/icon-512x512-maskable.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/icons/icon-192x192-maskable-transparent.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/icons/icon-512x512-maskable-transparent.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/icons/icon-192x192-maskable-dark.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/icons/icon-512x512-maskable-dark.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable"
-    },
-    {
-      "src": "/icons/icon-192x192-dark.png",
-      "sizes": "192x192",
-      "type": "image/png",
-      "purpose": "any"
-    },
-    {
-      "src": "/icons/icon-512x512-dark.png",
-      "sizes": "512x512",
-      "type": "image/png",
+      "src": "/icons/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
       "purpose": "any"
     },
     {
@@ -95,16 +41,16 @@
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-192x192-monochrome.png",
+      "src": "/icons/icon-192x192-maskable.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "monochrome"
+      "purpose": "maskable"
     },
     {
-      "src": "/icons/icon-512x512-monochrome.png",
+      "src": "/icons/icon-512x512-maskable.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "monochrome"
+      "purpose": "maskable"
     }
   ],
   "screenshots": [
@@ -112,13 +58,15 @@
       "src": "/screenshots/desktop.png",
       "sizes": "1920x1080",
       "type": "image/png",
-      "form_factor": "wide"
+      "form_factor": "wide",
+      "label": "dhanur.me on desktop"
     },
     {
       "src": "/screenshots/mobile.png",
       "sizes": "1080x1920",
       "type": "image/png",
-      "form_factor": "narrow"
+      "form_factor": "narrow",
+      "label": "dhanur.me on mobile"
     }
   ],
   "shortcuts": [
@@ -129,29 +77,34 @@
       "url": "/blog/?source=pwa",
       "icons": [
         {
-          "src": "/icons/icon-192x192-transparent.png",
+          "src": "/icons/icon-192x192.png",
           "sizes": "192x192",
           "type": "image/png",
           "purpose": "any"
-        },
+        }
+      ]
+    },
+    {
+      "name": "About",
+      "short_name": "About",
+      "description": "About dhanur.me",
+      "url": "/about/?source=pwa",
+      "icons": [
         {
-          "src": "/icons/icon-192x192-maskable.png",
+          "src": "/icons/icon-192x192.png",
           "sizes": "192x192",
           "type": "image/png",
-          "purpose": "maskable"
+          "purpose": "any"
         }
       ]
     }
   ],
   "scope_extensions": [
-    {
-      "type": "origin",
-      "origin": "https://blog.dhanur.me"
-    },
-    {
-      "type": "origin",
-      "origin": "https://api.dhanur.me"
-    }
+    { "type": "origin", "origin": "https://social.dhanur.me" },
+    { "type": "origin", "origin": "https://up.dhanur.me" },
+    { "type": "origin", "origin": "https://auth.dhanur.me" },
+    { "type": "origin", "origin": "https://linkr.dhanur.me" },
+    { "type": "origin", "origin": "https://tasks.dhanur.me" }
   ],
   "tab_strip": {
     "home_tab": {
@@ -195,31 +148,15 @@
     {
       "action": "/open-file/",
       "accept": {
-        "text/plain": [
-          ".txt",
-          ".md",
-          ".json"
-        ],
-        "text/csv": [
-          ".csv"
-        ]
+        "text/plain": [".txt", ".md", ".json"],
+        "text/csv": [".csv"]
       }
     }
   ],
   "categories": [
     "developer",
     "productivity",
-    "education",
-    "books",
-    "fitness",
-    "games",
-    "health",
-    "lifestyle",
-    "magazines",
-    "music",
-    "news",
-    "personalization",
-    "politics"
+    "education"
   ],
   "edge_side_panel": {
     "preferred_width": 400

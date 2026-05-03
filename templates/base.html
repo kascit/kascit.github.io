@@ -56,9 +56,9 @@
         {% set term_page_count = term.pages | length %}
         {% set resolved_meta_title = term.name ~ " · " ~ taxonomy_name_cap ~ " | " ~ site_title %}
         {% if term_page_count == 1 %}
-            {% set resolved_meta_description = "1 post under " ~ term.name ~ " in " ~ taxonomy_name_cap ~ "." %}
+            {% set resolved_meta_description = "1 post tagged " ~ term.name ~ " — engineering notes and technical writing on dhanur.me." %}
         {% else %}
-            {% set resolved_meta_description = term_page_count ~ " posts under " ~ term.name ~ " in " ~ taxonomy_name_cap ~ "." %}
+            {% set resolved_meta_description = term_page_count ~ " posts tagged " ~ term.name ~ " — engineering notes and technical writing on dhanur.me." %}
         {% endif %}
     {% elif taxonomy is defined %}
         {% set resolved_meta_type = "website" %}
@@ -67,7 +67,7 @@
         {% if taxonomy.config.description %}
             {% set resolved_meta_description = taxonomy.config.description %}
         {% else %}
-            {% set resolved_meta_description = "Browse all " ~ taxonomy.name ~ " across the site." %}
+            {% set resolved_meta_description = "Browse all " ~ taxonomy.name ~ " used across dhanur.me — engineering notes, debugging guides, and technical writing." %}
         {% endif %}
     {% endif %}
 
@@ -101,6 +101,19 @@
             {% block header %}
             {{ macros_header::header(config=config, lang=lang) }}
             {% endblock header %}
+
+            {# Force right-rail layout for special pages:
+               - 404: Zola's only template rendered without page/section/taxonomy context.
+               - Opt-in pages: set force_rail = true in [extra] frontmatter. #}
+            {% set _force_rail = false %}
+            {% if page is not defined and section is not defined and taxonomy is not defined %}
+                {% set _force_rail = true %}
+            {% endif %}
+            {% if page is defined and page.extra is defined %}
+                {% if page.extra.force_rail is defined and page.extra.force_rail %}
+                    {% set _force_rail = true %}
+                {% endif %}
+            {% endif %}
 
             {% block main_content %}
             {% set has_toc = false %}
@@ -141,14 +154,15 @@
                 {% set force_shell_fit = section.extra.shell_fit | default(value=force_shell_fit) %}
                 {% set force_compact_main = section.extra.compact_main | default(value=force_compact_main) %}
             {% endif %}
-            {% if resolved_current_path == "/404.html" %}
-                {% set force_shell_fit = true %}
+            {% set use_fit_shell = has_layout_rail or force_shell_fit or _force_rail %}
+            {% if _force_rail %}
+                {% set has_layout_rail = true %}
                 {% set force_compact_main = true %}
             {% endif %}
-            {% set use_fit_shell = has_layout_rail or force_shell_fit %}
+
             {% set rail_hide_label = "Hide table of contents" %}
             {% set rail_show_label = "Show table of contents" %}
-            {% if is_taxonomy_view and not has_toc %}
+            {% if (is_taxonomy_view or _force_rail) and not has_toc %}
                 {% set rail_hide_label = "Hide tools rail" %}
                 {% set rail_show_label = "Show tools rail" %}
             {% endif %}
@@ -210,6 +224,43 @@
                             <nav id="toc-sidebar" data-toc-sidebar="true" class="hidden lg:block origin-right" aria-label="Tools rail">
                                 <div class="sticky top-20 px-4 py-2 border-l border-base-content/10">
                                     {% block taxonomy_sidebar %}{% endblock taxonomy_sidebar %}
+                                </div>
+                            </nav>
+                        {% elif _force_rail %}
+                            <nav id="toc-sidebar" data-toc-sidebar="true" class="hidden lg:block origin-right w-48 min-w-[12rem] max-w-[12rem] shrink-0" aria-label="Page tools">
+                                <div class="sticky top-20 px-4 py-2 border-l border-base-content/10 w-full">
+                                    {% block rail_content %}
+                                    {#
+                                      Default right-rail for _force_rail pages (404, offline, etc).
+                                      Intentionally mirrors toc.html structure/typography so it feels
+                                      like a native part of the page rather than a separate widget.
+                                      Nav items sourced from config.extra.nav — same as the sidebar.
+                                    #}
+                                    <h2 class="text-[11px] font-semibold uppercase tracking-wider text-base-content/68 mb-3">Navigate</h2>
+                                    <ul class="menu menu-sm toc-menu">
+                                        {% if config.extra.nav is defined %}
+                                        {% for item in config.extra.nav %}
+                                        {% if item.type == "url" and item.url %}
+                                        <li>
+                                            <a href="{{ item.url | safe }}" class="toc-link">
+                                                <i class="{{ item.icon | default(value='fa-solid fa-link') }} text-[11px] opacity-60 mr-1"></i>
+                                                {{ item.name }}
+                                            </a>
+                                        </li>
+                                        {% endif %}
+                                        {% endfor %}
+                                        {% else %}
+                                        <li><a href="/about/" class="toc-link">About</a></li>
+                                        <li><a href="/projects/" class="toc-link">Projects</a></li>
+                                        <li><a href="/blog/" class="toc-link">Blog</a></li>
+                                        <li><a href="/links/" class="toc-link">Links</a></li>
+                                        {% endif %}
+                                        <li><a href="/archive/" class="toc-link">
+                                            <i class="fa-solid fa-calendar-days text-[11px] opacity-60 mr-1"></i>
+                                            Archive
+                                        </a></li>
+                                    </ul>
+                                    {% endblock rail_content %}
                                 </div>
                             </nav>
                         {% endif %}

@@ -1,0 +1,291 @@
+{
+  "canonical_tags": [
+    "backend",
+    "frontend",
+    "cloud",
+    "devops",
+    "automation",
+    "tooling",
+    "algorithms",
+    "gaming",
+    "portfolio",
+    "infra",
+    "systems",
+    "security",
+    "data",
+    "product",
+    "productivity",
+    "debugging",
+    "writing",
+    "meta"
+  ],
+  "tag_priority": [
+    "backend",
+    "frontend",
+    "cloud",
+    "devops",
+    "automation",
+    "tooling",
+    "algorithms",
+    "gaming",
+    "portfolio",
+    "infra",
+    "systems",
+    "security",
+    "data",
+    "product",
+    "productivity",
+    "debugging",
+    "writing",
+    "meta"
+  ],
+  "tag_rules": [
+    {
+      "tag": "backend",
+      "keywords": [
+        "backend",
+        "api",
+        "rest",
+        "graphql",
+        "server",
+        "java",
+        "spring",
+        "node",
+        "express",
+        "rust",
+        "go",
+        "python",
+        "hibernate",
+        "jpa",
+        "maven",
+        "microservice"
+      ]
+    },
+    {
+      "tag": "frontend",
+      "keywords": [
+        "frontend",
+        "ui",
+        "ux",
+        "html",
+        "css",
+        "javascript",
+        "typescript",
+        "react",
+        "vue",
+        "svelte",
+        "tailwind",
+        "daisyui",
+        "web"
+      ]
+    },
+    {
+      "tag": "cloud",
+      "keywords": [
+        "cloud",
+        "aws",
+        "azure",
+        "gcp",
+        "serverless",
+        "lambda",
+        "rekognition",
+        "dynamodb"
+      ]
+    },
+    {
+      "tag": "devops",
+      "keywords": [
+        "devops",
+        "docker",
+        "kubernetes",
+        "terraform",
+        "ci",
+        "cd",
+        "github actions",
+        "deployment",
+        "iac"
+      ]
+    },
+    {
+      "tag": "automation",
+      "keywords": [
+        "automation",
+        "automata",
+        "selenium",
+        "workflow",
+        "script",
+        "scripting",
+        "web scraping",
+        "crawler",
+        "bot"
+      ]
+    },
+    {
+      "tag": "tooling",
+      "keywords": [
+        "tooling",
+        "tools",
+        "cli",
+        "terminal",
+        "neovim",
+        "linux",
+        "git",
+        "postman",
+        "utility",
+        "utilities"
+      ]
+    },
+    {
+      "tag": "algorithms",
+      "keywords": [
+        "algorithm",
+        "algorithms",
+        "dsa",
+        "data structures",
+        "leetcode",
+        "coding challenges",
+        "problem solving"
+      ]
+    },
+    {
+      "tag": "gaming",
+      "keywords": [
+        "game",
+        "gaming",
+        "tic tac toe",
+        "word",
+        "rhythm"
+      ]
+    },
+    {
+      "tag": "portfolio",
+      "keywords": [
+        "portfolio",
+        "personal website",
+        "personal platform"
+      ]
+    },
+    {
+      "tag": "infra",
+      "keywords": [
+        "infra",
+        "infrastructure",
+        "network",
+        "routing",
+        "iot",
+        "esp32"
+      ]
+    },
+    {
+      "tag": "systems",
+      "keywords": [
+        "systems",
+        "system programming",
+        "graphics",
+        "computer graphics",
+        "c++",
+        "c"
+      ]
+    },
+    {
+      "tag": "security",
+      "keywords": [
+        "security",
+        "cryptography",
+        "applied cryptography",
+        "auth"
+      ]
+    },
+    {
+      "tag": "data",
+      "keywords": [
+        "data",
+        "sql",
+        "postgresql",
+        "mongodb",
+        "redis",
+        "dynamodb",
+        "database"
+      ]
+    },
+    {
+      "tag": "product",
+      "keywords": [
+        "product",
+        "saas",
+        "pricing",
+        "business",
+        "strategy"
+      ]
+    },
+    {
+      "tag": "productivity",
+      "keywords": [
+        "productivity",
+        "workflow",
+        "task manager",
+        "tasks"
+      ]
+    },
+    {
+      "tag": "debugging",
+      "keywords": [
+        "debugging",
+        "incident",
+        "troubleshooting",
+        "reliability",
+        "production"
+      ]
+    },
+    {
+      "tag": "writing",
+      "keywords": [
+        "writing",
+        "documentation",
+        "technical writing",
+        "docs"
+      ]
+    },
+    {
+      "tag": "meta",
+      "keywords": [
+        "meta",
+        "welcome",
+        "site updates",
+        "general",
+        "personal notes"
+      ]
+    }
+  ],
+  "blog_category_rules": [
+    {
+      "category": "engineering",
+      "tags": [
+        "backend",
+        "frontend",
+        "cloud",
+        "devops",
+        "automation",
+        "tooling",
+        "algorithms",
+        "infra",
+        "systems",
+        "security",
+        "data",
+        "debugging",
+        "writing"
+      ]
+    },
+    {
+      "category": "notes",
+      "tags": [
+        "meta",
+        "product",
+        "productivity",
+        "gaming",
+        "portfolio"
+      ]
+    }
+  ],
+  "default_blog_category": "notes"
+}

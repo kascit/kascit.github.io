@@ -24,6 +24,7 @@ import { initKeyboardShortcuts } from "../features/keyboard-shortcuts.js";
 import { initAccessKeys } from "../features/access-keys.js";
 import { initScrollToTop } from "../ui/scroll-top.js";
 import { initLazyPlugins } from "../ui/lazy-plugins.js";
+import { initEmailLinks } from "../ui/email-links.js";
 
 // Deferred UX & Heavy components natively bundled
 import { initLayoutRecommendation } from "../data/layout-recommendation.js";
@@ -182,6 +183,10 @@ DDDDDDDDDDb·······················PDDDDDDDDDDDDDDDPP··�
     runSafely(() => initAccessKeys(), "access keys");
 
     runSafely(() => initScrollToTop(), "scroll top");
+
+    if (has("[data-rot13-email]")) {
+      runSafely(() => initEmailLinks(document), "email links");
+    }
 
     if (hasAny([".katex-inline", ".katex-block", ".mermaid"])) {
       runSafely(() => initLazyPlugins(), "lazy plugins");

@@ -140,7 +140,7 @@
         {% set show_notify_banner = page.extra.notify_banner %}
     {% endif %}
     {% if show_notify_banner %}
-    <script defer src="{{ get_url(path='js/notify-banner.js') | safe }}"></script>
+    <script defer src="{{ get_url(path='js/ui/notify-banner.js') | safe }}"></script>
     {% endif %}
 {% endblock js_body %}
 

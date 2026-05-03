@@ -5,6 +5,10 @@ export const SHELL_CONFIG_DEFAULTS = {
   enablePwa: true,
   swPath: "/sw.js",
 
+  // Optional access policy for host apps
+  requireAuth: false,
+  requireAdmin: false,
+
   // Top navbar chrome
   showMobileMenu: true,
   showLanguage: false,

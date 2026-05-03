@@ -38,7 +38,7 @@ function clearAnalyticsCookies() {
   for (const name of cookieNames) {
     for (const domain of domains) {
       const domainPart = domain ? `; Domain=${domain}` : "";
-      document.cookie = `${name}=; Path=/; Max-Age=0; SameSite=Lax${domainPart}`;
+      document.cookie = `${name}=; Path=/; Max-Age=0; SameSite=Lax; Secure${domainPart}`;
     }
   }
 }
@@ -137,7 +137,6 @@ export function setCookieConsent(choice) {
     maxAgeSeconds: CONSENT_COOKIE_MAX_AGE,
     path: "/",
     sameSite: "Lax",
-    secure: window.location.protocol === "https:",
   });
   const config = getConfig();
   applyChoice(choice, config);

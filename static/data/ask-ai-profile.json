@@ -1,0 +1,35 @@
+{
+  "role": "Full-stack software engineer",
+  "summary": "Builds practical web platforms, automation-heavy workflows, and developer-first tooling.",
+  "skills": [
+    "JavaScript",
+    "TypeScript",
+    "Node.js",
+    "Java",
+    "Python",
+    "Cloud",
+    "DevOps",
+    "System design"
+  ],
+  "interests": [
+    "Scalable APIs",
+    "Developer experience",
+    "Product engineering",
+    "Automation",
+    "AI-assisted workflows"
+  ],
+  "links": [
+    {
+      "label": "About",
+      "href": "/about/"
+    },
+    {
+      "label": "Projects",
+      "href": "/projects/"
+    },
+    {
+      "label": "Blog",
+      "href": "/blog/"
+    }
+  ]
+}

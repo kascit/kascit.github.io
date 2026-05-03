@@ -1,6 +1,6 @@
 +++
 title = "Terms of Service"
-description = "Terms of Service for dhanur.me and associated applications."
+description = "Terms of Service for dhanur.me and associated applications — acceptable use, accounts, and disclaimers."
 template = "page.html"
 
 [extra]
@@ -54,5 +54,4 @@ I may revise these Terms of Service at any time without notice. By using this we
 
 ## Contact
 
-If you have any questions regarding these terms, please contact me at:
-[contact@dhanur.me](mailto:contact@dhanur.me)
+If you have any questions regarding these terms, please reach out via the [contact page](/links/).

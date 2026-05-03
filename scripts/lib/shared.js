@@ -93,17 +93,15 @@ function requireEnvVar(name) {
 
 function createPackageRunner() {
   const pnpmVersion = requireEnvVar("PNPM_VERSION");
-  let runner = "pnpm";
-
   if (canRun("pnpm", ["--version"])) {
-    return { runner: "pnpm", run: makeRunFn("pnpm"), runPkg: makeRunPkgFn("pnpm") };
+    return { runner: "pnpm", runPkg: makeRunPkgFn("pnpm") };
   }
 
   if (canRun("corepack", ["--version"])) {
     runInherit("corepack", ["enable"], undefined, { shell: true });
     runInherit("corepack", ["prepare", `pnpm@${pnpmVersion}`, "--activate"], undefined, { shell: true });
     if (canRun("pnpm", ["--version"])) {
-      return { runner: "pnpm", run: makeRunFn("pnpm"), runPkg: makeRunPkgFn("pnpm") };
+      return { runner: "pnpm", runPkg: makeRunPkgFn("pnpm") };
     }
   }
 
@@ -112,16 +110,9 @@ function createPackageRunner() {
     process.exit(1);
   }
 
-  runner = "npx";
   const prefix = supportsColor() ? `${ANSI.red}[WARN]${ANSI.reset}` : "[WARN]";
   process.stderr.write(`${prefix} pnpm unavailable locally; falling back to npx.\n`);
-  return { runner: "npx", run: makeRunFn("npx"), runPkg: makeRunPkgFn("npx") };
-}
-
-function makeRunFn(runner) {
-  return function run(command, args, label) {
-    runInherit(command, args, label, { shell: true });
-  };
+  return { runner: "npx", runPkg: makeRunPkgFn("npx") };
 }
 
 function makeRunPkgFn(runner) {
@@ -163,6 +154,15 @@ function collectFiles(rootDir, filterFn) {
 
 function toPosixRel(absPath, root) {
   return path.relative(root || ROOT, absPath).split(path.sep).join("/");
+}
+
+function assertInsideRoot(absPath, label) {
+  const target = path.resolve(absPath);
+  const rel = path.relative(ROOT, target);
+  if (rel.startsWith("..") || path.isAbsolute(rel)) {
+    throw new Error(`${label || "Path"} must be inside repository root: ${target}`);
+  }
+  return target;
 }
 
 // ---------------------------------------------------------------------------
@@ -217,6 +217,7 @@ module.exports = {
   createPackageRunner,
   collectFiles,
   toPosixRel,
+  assertInsideRoot,
   tomlString,
   tomlArray,
   compactUnique,

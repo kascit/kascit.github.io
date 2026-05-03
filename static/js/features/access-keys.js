@@ -101,6 +101,24 @@ function isPath(el, path) {
   } catch(e) { return false; }
 }
 
+/**
+ * Stable dedup key for an anchor element.
+ * Same-destination links share a key regardless of trailing slash or relative/absolute form.
+ * Hash fragments (#section) are PRESERVED — each distinct anchor target gets its own key.
+ * External links use the full el.href so cross-origin links never collide with internal ones.
+ */
+function hrefKey(el) {
+  if (el.tagName !== "A" || !el.href) return null;
+  try {
+    const u = new URL(el.href);
+    if (u.origin !== window.location.origin) return el.href; // external: identity
+    // Normalize: strip trailing slash from pathname, but keep hash so that
+    // /about/#skills and /about/#contact remain different keys.
+    const pathname = u.pathname.replace(/\/$/, "") || "/";
+    return u.hash ? pathname + u.hash : pathname;
+  } catch { return null; }
+}
+
 // ─── State ────────────────────────────────────────────────────────────────────
 
 let active = false;
@@ -307,52 +325,93 @@ function showHints() {
   const targets = collectTargets();
   if (targets.length === 0) { active = false; return; }
 
-  const explicitMap  = new Map(); 
+  const explicitMap   = new Map();
   const explicitExact = new Set();
-  const hrefToHint = new Map();
+  const hrefToHint    = new Map(); // hrefKey → assigned hint (both semantic + generated)
 
+  // ── Pass 1: Semantic rules + HTML data-hint overrides ───────────────────────
+  // Only elements that have an explicitly assigned hint are handled here.
+  // hrefToHint is populated so later passes can share the same badge for
+  // duplicate destinations (e.g. the same nav link in the header and sidebar).
   for (const el of targets) {
     let explicitHint = null;
 
-    // 1. Semantic Rules (JS predefined)
-    for (const rule of SEMANTIC_RULES) {
-      if ((rule.selector && el.matches(rule.selector)) || (rule.match && rule.match(el))) {
-        explicitHint = rule.hint;
-        break;
+    // Semantic rules — skip TOC sidebar: those are page-internal anchors
+    // (#skills, #section-heading) that must not inherit site-nav shortcuts.
+    if (!el.closest("[data-toc-sidebar]")) {
+      for (const rule of SEMANTIC_RULES) {
+        if ((rule.selector && el.matches(rule.selector)) || (rule.match && rule.match(el))) {
+          explicitHint = rule.hint;
+          break;
+        }
       }
     }
 
-    // 2. HTML Override (fallback)
+    // HTML data-hint override (highest priority)
     const raw = el.getAttribute("data-hint");
     if (raw) explicitHint = raw.trim().toLowerCase().replace(/\s+/g, "");
 
     if (explicitHint) {
       explicitMap.set(el, explicitHint);
       explicitExact.add(explicitHint);
-      if (el.tagName === "A" && el.href) hrefToHint.set(el.href, explicitHint);
+      const key = hrefKey(el);
+      if (key) hrefToHint.set(key, explicitHint);
     }
   }
 
-  // To prevent ANY auto-gen hint from conflicting with an explicit hint
+  // Prevent auto-gen hints from conflicting with any explicit hint leader char.
   const reservedLeaders = new Set([...explicitExact].map(h => h[0]));
 
+  // ── Pass 2: Queue elements needing auto-generated hints ─────────────────────
+  // keyToFirst tracks the FIRST element seen for each hrefKey so that all
+  // subsequent elements with the same key can reuse its generated hint after
+  // pass 3.  Without this, all duplicates would end up in toGenerate at the
+  // same time (hrefToHint has no entry for them yet) and each would receive a
+  // unique hint — which is the bug this fixes.
   const toGenerate = [];
+  const keyToFirst = new Map(); // hrefKey → first element queued for that key
+
   for (const el of targets) {
-    if (!explicitMap.has(el)) {
-      if (el.tagName === "A" && el.href && hrefToHint.has(el.href)) {
-        explicitMap.set(el, hrefToHint.get(el.href)); // duplicate reuse
-      } else {
-        toGenerate.push(el);
-      }
+    if (explicitMap.has(el)) continue; // already handled in pass 1
+
+    const key = hrefKey(el);
+
+    if (key && hrefToHint.has(key)) {
+      // Semantic-rule element already registered this key → reuse its hint.
+      explicitMap.set(el, hrefToHint.get(key));
+    } else if (key && keyToFirst.has(key)) {
+      // A previous element with the same destination is queued for generation.
+      // Skip for now; pass 4 will resolve this once the hint exists.
+      // (intentionally left out of toGenerate — it's a deferred duplicate)
+    } else {
+      // New unique destination: queue for hint generation.
+      toGenerate.push(el);
+      if (key) keyToFirst.set(key, el);
     }
   }
 
+  // ── Pass 3: Generate unique hints for all unique destinations ───────────────
   const generated = generateHints(toGenerate.length, reservedLeaders);
   let gi = 0;
   for (const el of toGenerate) {
     const h = generated[gi++] ?? "??";
     explicitMap.set(el, h);
-    if (el.tagName === "A" && el.href) hrefToHint.set(el.href, h);
+    const key = hrefKey(el);
+    if (key) hrefToHint.set(key, h); // now available for pass 4 deferred duplicates
+  }
+
+  // ── Pass 4: Apply deferred duplicates that shared a key in pass 2 ───────────
+  // Now that hrefToHint has entries for all generated hints, any element
+  // that was skipped in pass 2 (because keyToFirst already had its key)
+  // can look up the correct shared hint.
+  for (const el of targets) {
+    if (explicitMap.has(el)) continue;
+    const key = hrefKey(el);
+    if (key && hrefToHint.has(key)) {
+      explicitMap.set(el, hrefToHint.get(key));
+    }
+    // If still unmapped (shouldn't happen), fall back to a placeholder.
+    if (!explicitMap.has(el)) explicitMap.set(el, "??");
   }
 
   hintNodes = targets.map(el => createBadge(explicitMap.get(el), el));

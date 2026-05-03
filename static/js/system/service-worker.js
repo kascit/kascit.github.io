@@ -44,6 +44,18 @@ async function registerBackgroundSync(registration) {
   }
 }
 
+async function requestNotificationPermission() {
+  if (!("Notification" in window)) return "unsupported";
+  if (Notification.permission === "granted") return "granted";
+  if (Notification.permission === "denied") return "denied";
+  // Only prompt after a SW is active — avoids cold-start permission spam
+  try {
+    return await Notification.requestPermission();
+  } catch (_) {
+    return "error";
+  }
+}
+
 async function setupServiceWorker(swPath) {
   try {
     await navigator.serviceWorker.register(swPath);
@@ -52,6 +64,10 @@ async function setupServiceWorker(swPath) {
     registerPeriodicSync(registration);
     registerBackgroundSync(registration);
     postLatestCheckToWorker(registration);
+
+    // Request notification permission after SW is ready so the browser
+    // associates the prompt with a user interaction context where possible.
+    requestNotificationPermission();
 
     let refreshing = false;
     navigator.serviceWorker.addEventListener("controllerchange", () => {

@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
+<?xml-stylesheet type="text/css" href="/rss.f9c7c966bfc8.css"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:site="https://dhanur.me/ns/rss-ui" version="2.0" xml:id="top">
   <channel>
       
       
@@ -22,6 +23,9 @@
       <generator>Zola</generator>
       <language>en</language>
       <atom:link href="https://dhanur.me/rss.xml" rel="self" type="application/rss+xml"/>
+      <site:back>https:&#x2F;&#x2F;dhanur.me&#x2F;</site:back>
+      <site:feed>https://dhanur.me/rss.xml</site:feed>
+      <site:top>https://dhanur.me/rss.xml#top</site:top>
       
       
         
@@ -126,7 +130,7 @@
 
 
 <a
-  href="&#x2F;links"
+  href="&#x2F;links&#x2F;"
   
   class="link-card link-card-contrast"
 >
@@ -465,10 +469,20 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 </ul>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
+<li>JavaScript</li>
+<li>CSS</li>
+<li>HTML</li>
+<li>Game</li>
+<li>Web Game</li>
 <li>Browser Game Loop</li>
-<li>CSS Animations</li>
-<li>Client Storage</li>
-<li>Responsive UI</li>
+</ul>
+<h2 id="repository-snapshot">Repository Snapshot</h2>
+<ul>
+<li>Primary language: JavaScript</li>
+<li>Archived: No</li>
+<li>Stars: 1</li>
+<li>Last update: 2026-02-26T17:59:39Z</li>
+<li>Topics: css, game, html, javascript, web-game</li>
 </ul>
 <h2 id="problem">Problem</h2>
 <p>Most rhythm game prototypes feel laggy on low-end laptops because input handling and animation updates drift over time.</p>
@@ -476,11 +490,6 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <p>Implemented frame-aware timing windows, stateful input handling, and lightweight animation orchestration using vanilla JavaScript and CSS.</p>
 <h2 id="outcome">Outcome</h2>
 <p>Shipped a smooth browser game with stable interactions, responsive layout behavior, and fast initial load for casual play sessions.</p>
-<h2 id="links">Links</h2>
-<ul>
-<li>Live: <a rel="noopener noreferrer external" target="_blank" href="https://kascit.github.io/Beat.pe/">Beat.pe</a></li>
-<li>Code: <a rel="noopener noreferrer external" target="_blank" href="https://github.com/kascit/Beat.pe">GitHub repository</a></li>
-</ul>
 ]]></content:encoded>
         </item>
       
@@ -507,15 +516,20 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 </ul>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
-<li>Zola</li>
-<li>TailwindCSS</li>
-<li>DaisyUI</li>
-<li>GitHub Pages</li>
+<li>JavaScript</li>
+<li>HTML</li>
+<li>CSS</li>
+<li>Just</li>
+<li>Github Pages</li>
+<li>Personal Website</li>
 </ul>
-<h2 id="links">Links</h2>
+<h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
-<li>Code: <a rel="noopener noreferrer external" target="_blank" href="https://github.com/kascit/kascit.github.io">GitHub repository</a></li>
-<li>Visit: <a href="/">Visit</a></li>
+<li>Primary language: JavaScript</li>
+<li>Archived: No</li>
+<li>Stars: 1</li>
+<li>Last update: 2026-04-19T09:17:31Z</li>
+<li>Topics: css, github-pages, html, javascript, personal-website, portfolio</li>
 </ul>
 ]]></content:encoded>
         </item>
@@ -543,11 +557,20 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 </ul>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
+<li>C++</li>
+<li>Python</li>
+<li>Attendance System</li>
 <li>AWS IoT</li>
-<li>Lambda</li>
-<li>Rekognition</li>
-<li>ESP32-CAM</li>
-<li>DynamoDB</li>
+<li>AWS Lambda</li>
+<li>Computer Vision</li>
+</ul>
+<h2 id="repository-snapshot">Repository Snapshot</h2>
+<ul>
+<li>Primary language: C++</li>
+<li>Archived: Yes</li>
+<li>Stars: 0</li>
+<li>Last update: 2025-12-29T19:30:37Z</li>
+<li>Topics: attendance-system, aws-iot, aws-lambda, computer-vision, cpp, esp32, face-recognition, iot, python</li>
 </ul>
 <h2 id="problem">Problem</h2>
 <p>Manual attendance workflows are error-prone and slow, especially in classrooms where time-to-start matters.</p>
@@ -555,10 +578,6 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <p>Combined edge camera capture with a serverless event pipeline. Recognition events flow through AWS IoT and Lambda, then persist to DynamoDB with timestamped logs for traceability.</p>
 <h2 id="outcome">Outcome</h2>
 <p>Delivered a working end-to-end attendance flow with near real-time updates, reproducible infra behavior, and clear monitoring points for failure analysis.</p>
-<h2 id="links">Links</h2>
-<ul>
-<li>Code: <a rel="noopener noreferrer external" target="_blank" href="https://github.com/kascit/face-rekognition">GitHub repository</a></li>
-</ul>
 ]]></content:encoded>
         </item>
       
@@ -584,13 +603,19 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 </ul>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
-<li>Data Structures</li>
 <li>Algorithms</li>
+<li>Data Structures</li>
+<li>DSA</li>
+<li>Java</li>
+<li>Learning</li>
 <li>Collections</li>
 </ul>
-<h2 id="links">Links</h2>
+<h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
-<li>Code: <a rel="noopener noreferrer external" target="_blank" href="https://github.com/kascit/java-data-structures-and-algorithms">GitHub repository</a></li>
+<li>Archived: No</li>
+<li>Stars: 1</li>
+<li>Last update: 2025-11-19T16:28:59Z</li>
+<li>Topics: algorithms, data-structures, dsa, java, learning</li>
 </ul>
 ]]></content:encoded>
         </item>
@@ -617,14 +642,20 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 </ul>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
-<li>Algorithms</li>
-<li>Data Structures</li>
-<li>Problem Solving</li>
+<li>Java</li>
+<li>Python</li>
+<li>JavaScript</li>
+<li>C++</li>
+<li>Rust</li>
+<li>C</li>
 </ul>
-<h2 id="links">Links</h2>
+<h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
-<li>Code: <a rel="noopener noreferrer external" target="_blank" href="https://github.com/kascit/leetcode-solutions">GitHub repository</a></li>
-<li>Profile: <a rel="noopener noreferrer external" target="_blank" href="https://leetcode.com/u/kascit/">Profile</a></li>
+<li>Primary language: Java</li>
+<li>Archived: No</li>
+<li>Stars: 1</li>
+<li>Last update: 2025-12-28T14:16:43Z</li>
+<li>Topics: algorithms, coding-challenges, cpp, data-structures, interview-prep, java, leetcode, python, rust</li>
 </ul>
 ]]></content:encoded>
         </item>
@@ -651,14 +682,19 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 </ul>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
-<li>TypeScript</li>
-<li>Routing</li>
-<li>Frontend</li>
+<li>Rust</li>
+<li>HTML</li>
+<li>Shell</li>
+<li>Dockerfile</li>
+<li>Batchfile</li>
+<li>CSS</li>
 </ul>
-<h2 id="links">Links</h2>
+<h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
-<li>Live: <a rel="noopener noreferrer external" target="_blank" href="https://linkr.dhanur.me">Linkr</a></li>
-<li>Code: <a rel="noopener noreferrer external" target="_blank" href="https://github.com/kascit/linkr">GitHub repository</a></li>
+<li>Primary language: Rust</li>
+<li>Archived: No</li>
+<li>Stars: 0</li>
+<li>Last update: 2026-04-04T16:48:28Z</li>
 </ul>
 ]]></content:encoded>
         </item>
@@ -686,14 +722,20 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 </ul>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
-<li>Linked Lists</li>
-<li>File I/O</li>
-<li>CLI</li>
-<li>OOP</li>
+<li>Java</li>
+<li>Data Structures</li>
+<li>DSA</li>
+<li>Linked List</li>
+<li>Oop</li>
+<li>Playlist Manager</li>
 </ul>
-<h2 id="links">Links</h2>
+<h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
-<li>Code: <a rel="noopener noreferrer external" target="_blank" href="https://github.com/kascit/listly">GitHub repository</a></li>
+<li>Primary language: Java</li>
+<li>Archived: Yes</li>
+<li>Stars: 0</li>
+<li>Last update: 2025-12-29T17:57:30Z</li>
+<li>Topics: data-structures, dsa, java, linked-list, oop, playlist-manager, terminal</li>
 </ul>
 ]]></content:encoded>
         </item>
@@ -720,13 +762,20 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 </ul>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
-<li>Selenium</li>
-<li>Test Automation</li>
+<li>Python</li>
+<li>Automation</li>
 <li>Browser Automation</li>
+<li>Learning Project</li>
+<li>Selenium</li>
+<li>Web Scraping</li>
 </ul>
-<h2 id="links">Links</h2>
+<h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
-<li>Code: <a rel="noopener noreferrer external" target="_blank" href="https://github.com/kascit/coursera-automata">GitHub repository</a></li>
+<li>Primary language: Python</li>
+<li>Archived: Yes</li>
+<li>Stars: 1</li>
+<li>Last update: 2025-12-29T14:12:22Z</li>
+<li>Topics: automation, browser-automation, learning-project, python, selenium, web-scraping</li>
 </ul>
 ]]></content:encoded>
         </item>
@@ -753,14 +802,18 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 </ul>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
+<li>HTML</li>
 <li>TypeScript</li>
 <li>Node.js</li>
 <li>Shell Scripting</li>
 <li>Automation</li>
 </ul>
-<h2 id="links">Links</h2>
+<h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
-<li>Code: <a rel="noopener noreferrer external" target="_blank" href="https://github.com/kascit/stuff">GitHub repository</a></li>
+<li>Primary language: HTML</li>
+<li>Archived: No</li>
+<li>Stars: 0</li>
+<li>Last update: 2026-04-04T16:51:26Z</li>
 </ul>
 ]]></content:encoded>
         </item>
@@ -787,14 +840,20 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 </ul>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
-<li>TypeScript</li>
-<li>TailwindCSS</li>
-<li>React</li>
+<li>HTML</li>
+<li>Java</li>
+<li>JavaScript</li>
+<li>Dockerfile</li>
+<li>API</li>
+<li>Crud API</li>
 </ul>
-<h2 id="links">Links</h2>
+<h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
-<li>Live: <a rel="noopener noreferrer external" target="_blank" href="https://tasks.dhanur.me">Tasks</a></li>
-<li>Code: <a rel="noopener noreferrer external" target="_blank" href="https://github.com/kascit/tasks">GitHub repository</a></li>
+<li>Primary language: HTML</li>
+<li>Archived: No</li>
+<li>Stars: 1</li>
+<li>Last update: 2026-04-04T16:48:36Z</li>
+<li>Topics: api, crud-api, docker, h2, hibernate, java, jpa, junit5, maven, openapi, rest-api, spring-boot, spring-data-jpa, swagger, task-manager</li>
 </ul>
 ]]></content:encoded>
         </item>
@@ -821,13 +880,20 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 </ul>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
-<li>JavaScript</li>
-<li>Game State Management</li>
-<li>DOM Interactions</li>
+<li>HTML</li>
+<li>Css</li>
+<li>Game</li>
+<li>Javascript</li>
+<li>Tic Tac Toe</li>
+<li>Web Game</li>
 </ul>
-<h2 id="links">Links</h2>
+<h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
-<li>Code: <a rel="noopener noreferrer external" target="_blank" href="https://github.com/kascit/tic-tac-toe">GitHub repository</a></li>
+<li>Primary language: HTML</li>
+<li>Archived: Yes</li>
+<li>Stars: 1</li>
+<li>Last update: 2025-11-19T15:04:02Z</li>
+<li>Topics: css, game, html, javascript, tic-tac-toe, web-game</li>
 </ul>
 ]]></content:encoded>
         </item>
@@ -854,13 +920,20 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 </ul>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
+<li>JavaScript</li>
+<li>HTML</li>
+<li>CSS</li>
 <li>AWS</li>
-<li>CLI Tools</li>
-<li>Automation</li>
+<li>Cloud</li>
+<li>Web Development</li>
 </ul>
-<h2 id="links">Links</h2>
+<h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
-<li>Code: <a rel="noopener noreferrer external" target="_blank" href="https://github.com/kascit/toAWS">GitHub repository</a></li>
+<li>Primary language: JavaScript</li>
+<li>Archived: No</li>
+<li>Stars: 1</li>
+<li>Last update: 2025-11-19T15:02:55Z</li>
+<li>Topics: aws, cloud, javascript, web-development</li>
 </ul>
 ]]></content:encoded>
         </item>
@@ -891,9 +964,11 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <li>Frontend Prototyping</li>
 <li>Rapid Iteration</li>
 </ul>
-<h2 id="links">Links</h2>
+<h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
-<li>Code: <a rel="noopener noreferrer external" target="_blank" href="https://github.com/kascit/wallowords">GitHub repository</a></li>
+<li>Archived: No</li>
+<li>Stars: 1</li>
+<li>Last update: 2025-11-19T14:59:48Z</li>
 </ul>
 ]]></content:encoded>
         </item>

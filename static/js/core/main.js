@@ -2,7 +2,7 @@
  * Main Web Application Entrypoint (ES Module)
  */
 
-import { initResponsive } from "./responsive.js";
+import { initResponsive, isMobile } from "./responsive.js";
 import { initTheme } from "./theme-engine.js";
 import { initAuth } from "../system/auth-integration.js";
 import { initDropdowns } from "../ui/dropdowns.js";
@@ -127,7 +127,13 @@ DDDDDDDDDDb·······················PDDDDDDDDDDDDDDDPP··�
 ······································c(·PPPP(c············
 ···························································
 \x1b[0m`);
-  runSafely(() => initResponsive(), "responsive");
+  runSafely(() => {
+    initResponsive();
+    if (isMobile()) {
+      const starfield = document.querySelector('.landing-starfield');
+      if (starfield) starfield.remove();
+    }
+  }, "responsive");
 
   // Align classes with prepaint attrs before transitions are enabled.
   runSafely(() => syncPrepaintLayoutState(), "prepaint layout sync");

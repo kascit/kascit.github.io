@@ -44,7 +44,7 @@ Necessary cookies/storage may include:
 - `site_cookie_consent_v1` cookie to remember your cookie choice.
 - Local storage keys for interface behavior (for example sidebar/TOC state and playlist tools).
 - Security and infrastructure cookies set by hosting/CDN providers (including Cloudflare) for DDoS protection, abuse mitigation, and request integrity.
-- **Ahrefs Analytics**: A lightweight, cookieless analytics script used to monitor basic site traffic. It does not store cookies or track personal identifiable information (PII).
+- **Ahrefs Analytics**: A lightweight, cookieless analytics script used to monitor basic site traffic. It does not store cookies or track personally identifiable information (PII).
 
 These are used for site operation, safety, usability, and basic traffic monitoring.
 

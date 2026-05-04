@@ -158,6 +158,8 @@ function bindConsentActions() {
       setCookieConsent(CONSENT_ALL);
     } else if (action === CONSENT_NECESSARY) {
       setCookieConsent(CONSENT_NECESSARY);
+    } else if (action === "privacy") {
+      window.location.href = "/privacy/";
     }
   });
 }

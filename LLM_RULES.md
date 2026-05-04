@@ -41,7 +41,7 @@ SECURITY
 NO secrets committed.
 DOM: use textContent. NO innerHTML. guard URLs, reject `javascript:`.
 network: fetches require AbortController + timeout. cleanup on pagehide/beforeunload.
-webmcp.js TOOL_REGISTRY: must use Object.create(null) (null prototype) to prevent prototype-chain dispatch. always guard with hasOwnProperty before invocation.
+webmcp.js TOOL_REGISTRY: must use a Map lookup (SAFE_TOOL_MAP.has() / .get()) to prevent prototype-chain dispatch and satisfy CodeQL static analysis.
 URL checks: use URL constructor + hostname comparison. never substring includes() for host validation.
 subdomains (*.dhanur.me): shell.js handles integration. bootstrap fetches must not hang.
 

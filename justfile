@@ -492,7 +492,7 @@ validate-public:
 [unix]
 [doc("CI pipeline: verify generated files, build, minify JS, validate output")]
 [group('ci')]
-ci-build: _assert-zola-version sync-generated
+ci-build: _assert-zola-version sync-generated verify-generated-clean
     #!/usr/bin/env bash
     set -euo pipefail
     node scripts/just-log.js step "CI build pipeline"
@@ -519,7 +519,7 @@ ci-build: _assert-zola-version sync-generated
 [windows]
 [doc("CI pipeline: verify generated files, build, minify JS, validate output")]
 [group('ci')]
-ci-build: _assert-zola-version sync-generated
+ci-build: _assert-zola-version sync-generated verify-generated-clean
     @node scripts/just-log.js step "CI build pipeline"
     @node scripts/just-log.js info "Cleaning workspace"
     @node scripts/just-run.js "clean" -- just clean
@@ -538,7 +538,7 @@ ci-build: _assert-zola-version sync-generated
 
 [doc("Run strict integrated quality checks (JS/CSS/XML/XSL/Tera)")]
 [group('ci')]
-quality: _assert-zola-version sync-generated
+quality: _assert-zola-version sync-generated verify-generated-clean
     @node scripts/just-log.js info "Running integrated quality checks"
     @node scripts/just-run.js "quality checks" -- node scripts/run-quality-checks.js
     @node scripts/just-log.js ok "All quality checks passed"

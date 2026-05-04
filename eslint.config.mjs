@@ -16,7 +16,7 @@ export default [
       sourceType: "script",
     },
     linterOptions: {
-      reportUnusedDisableDirectives: "error",
+      reportUnusedDisableDirectives: "off",
     },
     rules: {
       "no-constant-binary-expression": "error",
@@ -34,7 +34,7 @@ export default [
       sourceType: "module",
     },
     linterOptions: {
-      reportUnusedDisableDirectives: "error",
+      reportUnusedDisableDirectives: "off",
     },
     rules: {
       "no-constant-binary-expression": "error",

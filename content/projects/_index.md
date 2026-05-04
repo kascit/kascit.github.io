@@ -11,7 +11,7 @@ enabled = false
 
 ## Featured Work
 
-This section highlights the projects that best represent how I think about engineering tradeoffs, delivery quality, and practical execution.
+This section highlights the projects that best represent how I think about engineering trade-offs, delivery quality, and practical execution.
 
 {{ projects_grid(group="featured", grid_class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12") }}
 

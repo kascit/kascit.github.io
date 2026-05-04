@@ -14,7 +14,7 @@ enabled = false
 
 > **Last updated: April 3, 2026**
 
-## About This Website
+## About This site
 
 **dhanur.me** and its subdomains are personal projects run by Dhanur. The site is not operated by a company, and data collection is intentionally minimal. Information is only used for functionality, security, and lightweight analytics, and personal data is never sold.
 
@@ -42,7 +42,7 @@ Necessary cookies/storage may include:
 
 - `theme` cookie to remember light/dark/auto preference.
 - `site_cookie_consent_v1` cookie to remember your cookie choice.
-- Local storage keys for interface behavior (for example sidebar/TOC state and playlist tools).
+- LocalStorage keys for interface behavior (for example sidebar/TOC state and playlist tools).
 - Security and infrastructure cookies set by hosting/CDN providers (including Cloudflare) for DDoS protection, abuse mitigation, and request integrity.
 - **Ahrefs Analytics**: A lightweight, cookieless analytics script used to monitor basic site traffic. It does not store cookies or track personally identifiable information (PII).
 
@@ -75,7 +75,7 @@ Comments are powered by **[Giscus](https://giscus.app)** and stored through GitH
 This site uses two forms of analytics:
 
 1. **Ahrefs Analytics**: A privacy-friendly, cookieless script loaded by default to monitor basic traffic patterns.
-2. **Google Analytics**: A more detailed tracking script loaded *only* if you opt-in by enabling optional cookies. This helps understand aggregate traffic patterns like page views, device types, and referrers to improve content. None of this is used for user-level profiling.
+2. **Google Analytics**: A more detailed tracking script loaded _only_ if you opt-in by enabling optional cookies. This helps understand aggregate traffic patterns like page views, device types, and referrers to improve content. None of this is used for user-level profiling.
 
 ## What We Collect (summary)
 
@@ -95,7 +95,7 @@ Questions? Reach out via the [contact page](/links/) or find me on [github.com/k
 
 ## Open Source
 
-This website is open source, and you can inspect the implementation in the public repository at [github.com/kascit/kascit.github.io](https://github.com/kascit/kascit.github.io).
+This site is open source, and you can inspect the implementation in the public repository at [github.com/kascit/kascit.github.io](https://github.com/kascit/kascit.github.io).
 
 ## Copyright & Licensing
 

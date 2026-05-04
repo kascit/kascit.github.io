@@ -17,8 +17,9 @@ next_subtitle = "Next"
 enabled = false
 
 [taxonomies]
-tags = ["java", "python", "go", "c / c++", "javascript", "lua", "sql", "bash", "spring boot", "node.js", "postgresql", "mongodb", "redis", "dynamodb", "aws", "gcp", "docker", "kubernetes", "ci/cd", "terraform", "neovim", "linux", "git", "postman", "ai systems", "applied cryptography", "computer graphics"]
+tags = ["Java", "python", "go", "c / c++", "JavaScript", "lua", "SQL", "Bash", "spring boot", "Node.js", "PostgreSQL", "MongoDB", "redis", "dynamodb", "aws", "gcp", "Docker", "kubernetes", "ci/cd", "terraform", "neovim", "Linux", "Git", "postman", "ai systems", "applied cryptography", "computer graphics"]
 +++
+
 <div class="prose max-w-none prose-base-content lg:prose-lg mb-12">
 
 I am a backend-leaning engineer with a soft spot for systems that behave under pressure and side projects that absolutely do not.
@@ -132,7 +133,7 @@ I like building things that feel inevitable after they are done, even if they lo
 
 ## Off the Keyboard
 
-When I am not coding, I am usually on strategy games, sci-fi, or watching tsoding/sebastian-style engineering deep dives and pretending I will "just watch one." 
+When I am not coding, I am usually on strategy games, sci-fi, or watching tsoding/sebastian-style engineering deep dives and pretending I will "just watch one."
 
 ## Keep In Touch
 

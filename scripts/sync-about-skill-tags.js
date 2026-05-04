@@ -13,7 +13,8 @@ function readText(filePath) {
 
 function extractAboutSkillTags(raw) {
   const tags = [];
-  const tagChipRegex = /\{\{\s*tag_chip\(\s*name\s*=\s*"([^"]+)"[^)]*\)\s*\}\}/g;
+  const tagChipRegex =
+    /\{\{\s*tag_chip\(\s*name\s*=\s*"([^"]+)"[^)]*\)\s*\}\}/g;
 
   let match;
   while ((match = tagChipRegex.exec(raw)) !== null) {
@@ -25,7 +26,9 @@ function extractAboutSkillTags(raw) {
 
 function extractExistingTaxonomyTags(raw) {
   const parsed = parseFrontMatter(raw);
-  const taxMatch = parsed.frontMatterBody.match(/\[taxonomies\]([\s\S]*?)(\n\[[^\]]+\]|$)/m);
+  const taxMatch = parsed.frontMatterBody.match(
+    /\[taxonomies\]([\s\S]*?)(\n\[[^\]]+\]|$)/m,
+  );
   if (!taxMatch) return [];
 
   const block = taxMatch[1] || "";
@@ -45,7 +48,9 @@ function extractExistingTaxonomyTags(raw) {
 function parseFrontMatter(raw) {
   const match = raw.match(/^(\+\+\+\s*\n)([\s\S]*?)(\n\+\+\+\s*\n?)([\s\S]*)$/);
   if (!match) {
-    throw new Error("content/about.md does not contain valid TOML frontmatter.");
+    throw new Error(
+      "content/about.md does not contain valid TOML frontmatter.",
+    );
   }
 
   return {
@@ -90,8 +95,16 @@ function stripTaxonomiesTable(frontMatterBody) {
 function buildAboutWithSyncedTaxonomies(raw, tags) {
   const parsed = parseFrontMatter(raw);
   const strippedFrontMatter = stripTaxonomiesTable(parsed.frontMatterBody);
-  const frontMatterParts = [strippedFrontMatter, "", "[taxonomies]", `tags = ${tomlArray(tags)}`];
-  const nextFrontMatter = frontMatterParts.join("\n").replace(/\n{3,}/g, "\n\n").trimEnd();
+  const frontMatterParts = [
+    strippedFrontMatter,
+    "",
+    "[taxonomies]",
+    `tags = ${tomlArray(tags)}`,
+  ];
+  const nextFrontMatter = frontMatterParts
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trimEnd();
 
   return `${parsed.prefix}${nextFrontMatter}\n+++\n${parsed.contentBody}`;
 }
@@ -99,21 +112,25 @@ function buildAboutWithSyncedTaxonomies(raw, tags) {
 function main() {
   const aboutRaw = readText(ABOUT_FILE);
   const rawSkills = extractAboutSkillTags(aboutRaw);
-  
+
   if (rawSkills.length === 0) {
     console.error("No tag_chip entries were found in content/about.md");
     process.exit(1);
   }
 
   // Direct 1:1 sync of skills to tags
-  const safeTags = compactUnique(rawSkills.map(s => s.trim().toLowerCase()).filter(Boolean));
+  const safeTags = compactUnique(
+    rawSkills.map((s) => s.trim().toLowerCase()).filter(Boolean),
+  );
 
   const nextAbout = buildAboutWithSyncedTaxonomies(aboutRaw, safeTags);
   if (nextAbout !== aboutRaw) {
     fs.writeFileSync(ABOUT_FILE, nextAbout, "utf8");
   }
 
-  console.log(`About skill tags synced into content/about.md: ${safeTags.length}`);
+  console.log(
+    `About skill tags synced into content/about.md: ${safeTags.length}`,
+  );
 }
 
 main();

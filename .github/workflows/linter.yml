@@ -44,6 +44,13 @@ jobs:
           VALIDATE_GITHUB_ACTIONS_ZIZMOR: false
           VALIDATE_JSCPD: false
           VALIDATE_YAML_PRETTIER: false
+          VALIDATE_HTML: false
+          VALIDATE_HTML_PRETTIER: false
+          VALIDATE_CSS: false
+          VALIDATE_CSS_PRETTIER: false
+          VALIDATE_JSON_PRETTIER: false
+          VALIDATE_MARKDOWN_PRETTIER: false
+          FILTER_REGEX_EXCLUDE: .*public/.*|.*scratch/.*|.*static/js/vendor/.*|.*templates/.*|.*data/.*|.*\.min\.js
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   quality:

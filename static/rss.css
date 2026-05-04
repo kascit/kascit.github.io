@@ -24,7 +24,15 @@ site|top {
 
 rss {
   color-scheme: light dark;
-  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
   line-height: 1.55;
   background: #f6f8fb;
   color: #101828;

@@ -62,7 +62,11 @@
 }
 
 .blog-feed-head {
-  background: color-mix(in oklab, var(--color-base-100) 66%, var(--color-base-200));
+  background: color-mix(
+    in oklab,
+    var(--color-base-100) 66%,
+    var(--color-base-200)
+  );
 }
 
 .blog-feed-scroller {
@@ -87,8 +91,13 @@
   width: 16px;
   height: 16px;
   border-radius: 999px;
-  border: 2px solid color-mix(in oklab, var(--color-base-content) 20%, transparent);
-  border-top-color: color-mix(in oklab, var(--color-base-content) 72%, transparent);
+  border: 2px solid
+    color-mix(in oklab, var(--color-base-content) 20%, transparent);
+  border-top-color: color-mix(
+    in oklab,
+    var(--color-base-content) 72%,
+    transparent
+  );
   animation: blog-feed-spin 0.9s linear infinite;
 }
 
@@ -99,7 +108,9 @@
 .blog-feed-item-enter {
   opacity: 0;
   transform: translateY(18px);
-  transition: opacity 260ms ease, transform 260ms ease;
+  transition:
+    opacity 260ms ease,
+    transform 260ms ease;
 }
 
 .blog-feed-item-enter.is-visible {
@@ -176,13 +187,21 @@
 /* Soft "featured" strip — readable in both themes, not a full inverse block */
 .link-card-contrast {
   @apply rounded-box border shadow-sm transition-colors duration-200;
-  background: color-mix(in oklab, var(--color-base-content) 10%, var(--color-base-100));
+  background: color-mix(
+    in oklab,
+    var(--color-base-content) 10%,
+    var(--color-base-100)
+  );
   border-color: color-mix(in oklab, var(--color-base-content) 14%, transparent);
   color: var(--color-base-content);
 }
 
 .link-card-contrast:hover {
-  background: color-mix(in oklab, var(--color-base-content) 14%, var(--color-base-100));
+  background: color-mix(
+    in oklab,
+    var(--color-base-content) 14%,
+    var(--color-base-100)
+  );
   border-color: color-mix(in oklab, var(--color-base-content) 22%, transparent);
   @apply shadow-md;
 }
@@ -250,7 +269,9 @@
   background: color-mix(in oklab, var(--color-primary) 12%, transparent);
   border: 1px solid color-mix(in oklab, var(--color-primary) 15%, transparent);
   flex-shrink: 0;
-  transition: border-color 0.2s ease, background-color 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
 }
 
 .project-card:hover .project-card-icon-wrap {
@@ -320,8 +341,12 @@
   padding: 0.3rem 0.65rem;
   border-radius: var(--radius-field, 0.25rem);
   text-decoration: none;
-  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
-  border: 1px solid color-mix(in oklab, var(--color-base-content) 15%, transparent);
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease,
+    color 0.2s ease;
+  border: 1px solid
+    color-mix(in oklab, var(--color-base-content) 15%, transparent);
   color: color-mix(in oklab, var(--color-base-content) 70%, transparent);
   background: transparent;
   max-width: 100%;
@@ -393,7 +418,8 @@
 
 .project-card-badge.badge-archived {
   background: color-mix(in oklab, var(--color-base-content) 6%, transparent);
-  border: 1px solid color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  border: 1px solid
+    color-mix(in oklab, var(--color-base-content) 12%, transparent);
   color: color-mix(in oklab, var(--color-base-content) 68%, transparent);
 }
 
@@ -489,4 +515,3 @@ main .design-showcase ol li {
 .pretty-link-card:hover .pretty-link-icon {
   @apply text-base-content/80;
 }
-

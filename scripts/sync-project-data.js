@@ -6,7 +6,6 @@ const path = require("path");
 const https = require("https");
 const { execSync } = require("child_process");
 const { ROOT, compactUnique } = require("./lib/shared");
-const { loadTaxonomyRules, deriveSemanticTagsFromValues } = require("./lib/taxonomy");
 
 const DATA_FILE = path.join(ROOT, "data", "projects.json");
 const API_BASE = "https://api.github.com";
@@ -75,17 +74,25 @@ function githubRequest(endpoint, token) {
         });
         res.on("end", () => {
           if (res.statusCode < 200 || res.statusCode >= 300) {
-            reject(new Error(`GitHub API ${endpoint} failed with ${res.statusCode}: ${body.slice(0, 200)}`));
+            reject(
+              new Error(
+                `GitHub API ${endpoint} failed with ${res.statusCode}: ${body.slice(0, 200)}`,
+              ),
+            );
             return;
           }
 
           try {
             resolve(JSON.parse(body));
           } catch (error) {
-            reject(new Error(`Invalid JSON from GitHub API ${endpoint}: ${error.message}`));
+            reject(
+              new Error(
+                `Invalid JSON from GitHub API ${endpoint}: ${error.message}`,
+              ),
+            );
           }
         });
-      }
+      },
     );
 
     req.on("error", reject);
@@ -142,29 +149,22 @@ function deriveStatus(existingStatus, repoArchived, hasPublicUrl) {
   return String(existingStatus || "").trim() || "live";
 }
 
-function toCanonicalTags(input, rules) {
-  const canonical = new Set(
-    (rules.canonical_tags || [])
-      .map((tag) => String(tag || "").trim().toLowerCase())
-      .filter(Boolean)
-  );
-
-  return compactUnique(input || [])
-    .map((tag) => String(tag || "").trim().toLowerCase())
-    .filter((tag) => Boolean(tag) && (canonical.size === 0 || canonical.has(tag)));
-}
-
-async function syncProjectFromGitHub(project, token, rules) {
+async function syncProjectFromGitHub(project, token) {
   const repoRef = parseRepoFromUrl(project.github_url);
   if (!repoRef) return { project, synced: false, reason: "no-github-url" };
 
   const { owner, repo } = repoRef;
   const repoData = await githubRequest(`/repos/${owner}/${repo}`, token);
-  const languagesPayload = await githubRequest(`/repos/${owner}/${repo}/languages`, token);
+  const languagesPayload = await githubRequest(
+    `/repos/${owner}/${repo}/languages`,
+    token,
+  );
 
   const languageList = toLanguageList(languagesPayload);
-  const primaryLanguage = languageList[0] || String(repoData.language || "").trim();
-  const langDisplay = compactUnique(languageList).slice(0, 2).join(" · ") || primaryLanguage;
+  const primaryLanguage =
+    languageList[0] || String(repoData.language || "").trim();
+  const langDisplay =
+    compactUnique(languageList).slice(0, 2).join(" · ") || primaryLanguage;
   const repoTopics = compactUnique(repoData.topics || []);
 
   const techs = compactUnique([
@@ -173,39 +173,33 @@ async function syncProjectFromGitHub(project, token, rules) {
     ...(project.techs || []),
   ]).slice(0, 6);
 
-  const semanticTags = deriveSemanticTagsFromValues(
-    [
-      project.title,
-      project.description,
-      project.role,
-      project.group,
-      ...(project.tags || []),
-      ...repoTopics,
-      ...languageList,
-      repoData.language || "",
-    ],
-    rules,
-    { maxTags: 5 }
-  );
-  const existingTags = toCanonicalTags(project.tags || [], rules);
-  const derivedTags = toCanonicalTags(semanticTags, rules);
-
   project.repo_language = primaryLanguage;
   project.repo_topics = repoTopics;
   project.repo_updated_at = repoData.pushed_at || repoData.updated_at || "";
   project.repo_archived = Boolean(repoData.archived);
-  project.repo_stars = Number.isFinite(repoData.stargazers_count) ? Number(repoData.stargazers_count) : 0;
+  project.repo_stars = Number.isFinite(repoData.stargazers_count)
+    ? Number(repoData.stargazers_count)
+    : 0;
+  project.repo_forks = Number.isFinite(repoData.forks_count)
+    ? Number(repoData.forks_count)
+    : 0;
+  project.repo_open_issues = Number.isFinite(repoData.open_issues_count)
+    ? Number(repoData.open_issues_count)
+    : 0;
+  project.repo_license =
+    repoData.license && repoData.license.name ? repoData.license.name : "";
 
   if (langDisplay) project.lang = langDisplay;
   if (techs.length > 0) project.techs = techs;
-  if (existingTags.length > 0) {
-    project.tags = existingTags;
-  } else if (derivedTags.length > 0) {
-    project.tags = derivedTags;
-  }
 
-  const hasPublicUrl = Boolean(String(project.live_url || project.url || "").trim());
-  project.status = deriveStatus(project.status, project.repo_archived, hasPublicUrl);
+  const hasPublicUrl = Boolean(
+    String(project.live_url || project.url || "").trim(),
+  );
+  project.status = deriveStatus(
+    project.status,
+    project.repo_archived,
+    hasPublicUrl,
+  );
 
   return { project, synced: true, reason: `${owner}/${repo}` };
 }
@@ -213,11 +207,12 @@ async function syncProjectFromGitHub(project, token, rules) {
 async function main() {
   const token = getGitHubToken();
   if (!token) {
-    console.error("GitHub token not found. Set GITHUB_TOKEN or run `gh auth login` first.");
+    console.error(
+      "GitHub token not found. Set GITHUB_TOKEN or run `gh auth login` first.",
+    );
     process.exit(1);
   }
 
-  const rules = loadTaxonomyRules();
   const data = readProjects();
 
   let syncedCount = 0;
@@ -227,22 +222,28 @@ async function main() {
     const project = data.projects[i];
 
     try {
-      const result = await syncProjectFromGitHub(project, token, rules);
+      const result = await syncProjectFromGitHub(project, token);
       if (result.synced) {
         syncedCount += 1;
         console.log(`synced: ${result.reason}`);
       } else {
         skippedCount += 1;
-        console.log(`skipped: ${project.slug || "(unknown)"} (${result.reason})`);
+        console.log(
+          `skipped: ${project.slug || "(unknown)"} (${result.reason})`,
+        );
       }
     } catch (error) {
       skippedCount += 1;
-      console.error(`failed: ${project.slug || "(unknown)"} - ${error.message}`);
+      console.error(
+        `failed: ${project.slug || "(unknown)"} - ${error.message}`,
+      );
     }
   }
 
   writeProjects(data);
-  console.log(`Project data sync complete. synced=${syncedCount}, skipped=${skippedCount}`);
+  console.log(
+    `Project data sync complete. synced=${syncedCount}, skipped=${skippedCount}`,
+  );
 }
 
 main().catch((error) => {

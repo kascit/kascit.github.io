@@ -42,7 +42,7 @@ const DO_NOT_CACHE = [
   /analytics/,
   /giscus/,
   /^\/sw\.js$/,
-  /^\/js\/ui\/notify-banner\.[a-f0-9]*\.js$/,  // fingerprinted; loaded per-page only when needed
+  /^\/js\/ui\/notify-banner\.[a-f0-9]*\.js$/, // fingerprinted; loaded per-page only when needed
   /^\/__runtime\//,
   /^\/share-target\/$/,
   /^\/open-file\/$/,
@@ -110,7 +110,7 @@ async function getStoredLatest() {
     if (!res) return null;
     const json = await res.json();
     return json;
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -124,7 +124,7 @@ async function setStoredLatest(info) {
         headers: { "Content-Type": "application/json" },
       }),
     );
-  } catch (e) {
+  } catch {
     // ignore
   }
 }
@@ -141,7 +141,7 @@ async function setRuntimeJson(path, payload) {
         },
       }),
     );
-  } catch (_e) {
+  } catch {
     // ignore runtime cache failures
   }
 }
@@ -152,7 +152,7 @@ async function getRuntimeJson(path) {
     const res = await cache.match(path);
     if (!res) return null;
     return await res.json();
-  } catch (_e) {
+  } catch {
     return null;
   }
 }
@@ -196,7 +196,7 @@ async function handleShareTargetPost(request) {
 
     await setRuntimeJson("/__runtime/share-target", payload);
     return Response.redirect("/share-target/?shared=1", 303);
-  } catch (_e) {
+  } catch {
     return Response.redirect("/share-target/?error=1", 303);
   }
 }
@@ -210,19 +210,12 @@ function hasWidgetRuntime() {
 }
 
 function getWidgetTemplateUrl(definition) {
-  return (
-    definition?.msAcTemplate ||
-    definition?.ms_ac_template ||
-    ""
-  );
+  return definition?.msAcTemplate || definition?.ms_ac_template || "";
 }
 
 function getWidgetDataUrl(definition) {
   return (
-    definition?.data ||
-    definition?.msAcData ||
-    definition?.ms_ac_data ||
-    ""
+    definition?.data || definition?.msAcData || definition?.ms_ac_data || ""
   );
 }
 
@@ -301,7 +294,7 @@ function parseLatestFromRSS(xmlText) {
     const pubDate = getTag("pubDate") || "";
     const guid = getTag("guid") || link;
     return { title, link, pubDate, guid };
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -343,7 +336,7 @@ async function checkLatestAndNotify() {
         badge: "/icons/favicon-96x96.png",
       });
     }
-  } catch (e) {
+  } catch {
     // ignore
   }
 }
@@ -353,7 +346,7 @@ self.addEventListener("push", (event) => {
   let data = {};
   try {
     data = event.data ? event.data.json() : {};
-  } catch (_) {
+  } catch {
     data = { title: "New update", body: event.data ? event.data.text() : "" };
   }
 
@@ -366,9 +359,7 @@ self.addEventListener("push", (event) => {
     data: { url: data.url || "/" },
   };
 
-  event.waitUntil(
-    self.registration.showNotification(title, options)
-  );
+  event.waitUntil(self.registration.showNotification(title, options));
 });
 
 // Periodic Background Sync - check RSS
@@ -402,7 +393,10 @@ self.addEventListener("fetch", (event) => {
   }
 
   // Runtime metadata endpoint used by feature pages.
-  if (request.method === "GET" && url.pathname === "/__runtime/share-target.json") {
+  if (
+    request.method === "GET" &&
+    url.pathname === "/__runtime/share-target.json"
+  ) {
     event.respondWith(
       (async () => {
         const payload = await getRuntimeJson("/__runtime/share-target");
@@ -427,7 +421,9 @@ self.addEventListener("fetch", (event) => {
   const shouldCache = CACHEABLE_PATTERNS.some((pattern) =>
     pattern.test(url.pathname),
   );
-  const acceptsHtml = (request.headers.get("accept") || "").includes("text/html");
+  const acceptsHtml = (request.headers.get("accept") || "").includes(
+    "text/html",
+  );
   const isDocumentRequest =
     request.mode === "navigate" ||
     request.destination === "document" ||
@@ -473,8 +469,7 @@ self.addEventListener("fetch", (event) => {
         const cache = await caches.open(CACHE_NAME);
         const key = documentCacheKey(url);
         const cachedResponse =
-          (await cache.match(key)) ||
-          (await cache.match(request));
+          (await cache.match(key)) || (await cache.match(request));
 
         const networkFetch = fetch(request)
           .then((response) => {
@@ -495,11 +490,13 @@ self.addEventListener("fetch", (event) => {
           return networkResponse;
         }
 
-        return (await caches.match("/offline/")) ||
+        return (
+          (await caches.match("/offline/")) ||
           new Response("Offline", {
             status: 503,
             statusText: "Service Unavailable",
-          });
+          })
+        );
       })(),
     );
   } else {
@@ -525,7 +522,7 @@ self.addEventListener("notificationclick", (event) => {
   if (url) {
     event.waitUntil(
       (async () => {
-        const allClients = await clients.matchAll({
+        const allClients = await self.clients.matchAll({
           type: "window",
           includeUncontrolled: true,
         });
@@ -535,11 +532,11 @@ self.addEventListener("notificationclick", (event) => {
             if (clientUrl.pathname === new URL(url, location.origin).pathname) {
               return client.focus();
             }
-          } catch (_) {
+          } catch {
             /* ignore */
           }
         }
-        return clients.openWindow(url);
+        return self.clients.openWindow(url);
       })(),
     );
   }

@@ -21,7 +21,7 @@
               <a href="{{ term_rss_url | safe }}" class="rss-action-btn" title="RSS Feed for {{ term.name }}">
                 <i class="fa-solid fa-rss text-sm"></i>
               </a>
-              <a href="https://feedly.com/i/subscription/feed/{{ term_rss_url | urlencode }}" target="_blank" rel="noopener noreferrer" class="rss-action-btn rss-action-btn--feedly" title="Subscribe to {{ term.name }} via Feedly">
+              <a href="https://feedly.com/i/subscription/feed/{{ term_rss_url }}" target="_blank" rel="noopener noreferrer" class="rss-action-btn rss-action-btn--feedly" title="Subscribe to {{ term.name }} via Feedly">
                 <i class="fa-solid fa-leaf text-sm"></i>
               </a>
               <a href="https://www.inoreader.com/?add_feed={{ term_rss_url | urlencode }}" target="_blank" rel="noopener noreferrer" class="rss-action-btn rss-action-btn--inoreader" title="Subscribe to {{ term.name }} via Inoreader">

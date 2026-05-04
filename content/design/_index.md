@@ -8,6 +8,8 @@ in_search_index = true
 hide_toc = false
 +++
 
+<!-- markdownlint-disable MD034 -->
+
 This page is now intentionally Markdown-first. Instead of embedding large blocks of raw HTML inside content files, the design system is documented as guidance, examples, and reusable shortcodes so the source stays readable and maintainable.
 
 ## Design Language
@@ -26,9 +28,9 @@ The quickest integration path is to include the shared shell script and configur
     mode: "full",
     nav: [
       { name: "Docs", url: "/docs/", icon: "fa-solid fa-book" },
-      { name: "API", url: "/api/", icon: "fa-solid fa-code" }
+      { name: "API", url: "/api/", icon: "fa-solid fa-code" },
     ],
-    showThemeToggle: true
+    showThemeToggle: true,
   };
 </script>
 <script src="https://dhanur.me/js/shell.js" defer></script>

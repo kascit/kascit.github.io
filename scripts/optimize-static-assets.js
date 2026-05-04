@@ -3,18 +3,40 @@
 
 const fs = require("fs");
 const path = require("path");
-const { resolveImageMagickCommand, runCapture, collectFiles, prettyBytes, ROOT } = require("./lib/shared");
+const {
+  resolveImageMagickCommand,
+  runCapture,
+  collectFiles,
+  prettyBytes,
+  ROOT,
+} = require("./lib/shared");
 
 const outputDirLabel = "public";
 const outputDir = path.resolve(ROOT, "public");
 
 const OPTIMIZERS = {
   ".jpg": {
-    args: ["-strip", "-sampling-factor", "4:2:0", "-interlace", "Plane", "-quality", "86"],
+    args: [
+      "-strip",
+      "-sampling-factor",
+      "4:2:0",
+      "-interlace",
+      "Plane",
+      "-quality",
+      "86",
+    ],
     minGainBytes: 128,
   },
   ".jpeg": {
-    args: ["-strip", "-sampling-factor", "4:2:0", "-interlace", "Plane", "-quality", "86"],
+    args: [
+      "-strip",
+      "-sampling-factor",
+      "4:2:0",
+      "-interlace",
+      "Plane",
+      "-quality",
+      "86",
+    ],
     minGainBytes: 128,
   },
   ".png": {
@@ -67,7 +89,11 @@ function optimizeFile(filePath, command) {
     return {
       status: "failed",
       savedBytes: 0,
-      error: (result.stderr || result.stdout || "ImageMagick optimize failed").trim(),
+      error: (
+        result.stderr ||
+        result.stdout ||
+        "ImageMagick optimize failed"
+      ).trim(),
     };
   }
 
@@ -85,13 +111,17 @@ function optimizeFile(filePath, command) {
 
 function main() {
   if (!fs.existsSync(outputDir) || !fs.statSync(outputDir).isDirectory()) {
-    console.error(`ERROR: Output directory '${outputDirLabel}' does not exist.`);
+    console.error(
+      `ERROR: Output directory '${outputDirLabel}' does not exist.`,
+    );
     process.exit(1);
   }
 
   const command = resolveImageMagickCommand();
   if (!command) {
-    console.log("Image optimization skipped: ImageMagick is not installed (magick/convert not found).");
+    console.log(
+      "Image optimization skipped: ImageMagick is not installed (magick/convert not found).",
+    );
     return;
   }
 
@@ -123,7 +153,7 @@ function main() {
   }
 
   console.log(
-    `Optimized ${optimized}/${files.length} image files (${unchanged} unchanged, ${failed} failed), saved ${prettyBytes(totalSaved)}.`
+    `Optimized ${optimized}/${files.length} image files (${unchanged} unchanged, ${failed} failed), saved ${prettyBytes(totalSaved)}.`,
   );
 }
 

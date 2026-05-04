@@ -30,7 +30,7 @@ export function initEmailLinks(root = document) {
   root.querySelectorAll("[data-rot13-email]").forEach((el) => {
     const encoded = el.getAttribute("data-rot13-email");
     if (!encoded) return;
-    el.href = "mailto:" + rot13(encoded);
+    el.setAttribute("href", "mailto:" + encodeURIComponent(rot13(encoded)));
     el.removeAttribute("data-rot13-email");
   });
 }

@@ -17,7 +17,8 @@
 .action-icon-btn:focus-visible,
 .copy-heading-link-button:focus-visible,
 .rss-action-btn:focus-visible {
-  outline: 2px solid color-mix(in oklab, var(--color-base-content) 26%, transparent);
+  outline: 2px solid
+    color-mix(in oklab, var(--color-base-content) 26%, transparent);
   outline-offset: 2px;
 }
 
@@ -79,15 +80,20 @@ h6:hover .copy-heading-link-button {
   @apply bg-blue-500/14 border-blue-500/35 text-blue-500;
 }
 
-.tooltip:has(> .tooltip-content[data-smart-tooltip='1']) {
+.tooltip:has(> .tooltip-content[data-smart-tooltip="1"]) {
   --tt-off: calc(100% + 0.35rem);
 }
 
 .tooltip > .tooltip-content.tooltip-content-smart {
   @apply rounded-md border border-base-content/14 px-2 py-1;
-  background: color-mix(in oklab, var(--color-base-100) 94%, var(--color-base-300));
+  background: color-mix(
+    in oklab,
+    var(--color-base-100) 94%,
+    var(--color-base-300)
+  );
   color: color-mix(in oklab, var(--color-base-content) 88%, transparent);
-  box-shadow: 0 8px 18px -16px color-mix(in oklab, var(--color-base-content) 30%, transparent);
+  box-shadow: 0 8px 18px -16px
+    color-mix(in oklab, var(--color-base-content) 30%, transparent);
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
 }
@@ -138,15 +144,16 @@ h6:hover .copy-heading-link-button {
 }
 
 .tooltip > .tooltip-content.tooltip-content-smart,
-.tooltip:has(> .tooltip-content[data-smart-tooltip='1'])::after {
+.tooltip:has(> .tooltip-content[data-smart-tooltip="1"])::after {
   transition-duration: 130ms !important;
   transition-timing-function: cubic-bezier(0.2, 0, 0.2, 1) !important;
 }
 
 @media (hover: none), (pointer: coarse), (max-width: 1023px) {
-  .tooltip-mobile-disabled > .tooltip-content[data-smart-tooltip='1'],
-  .tooltip:has(> .tooltip-content[data-smart-tooltip='1']) > .tooltip-content[data-smart-tooltip='1'],
-  .tooltip:has(> .tooltip-content[data-smart-tooltip='1'])::after {
+  .tooltip-mobile-disabled > .tooltip-content[data-smart-tooltip="1"],
+  .tooltip:has(> .tooltip-content[data-smart-tooltip="1"])
+    > .tooltip-content[data-smart-tooltip="1"],
+  .tooltip:has(> .tooltip-content[data-smart-tooltip="1"])::after {
     display: none !important;
     opacity: 0 !important;
     pointer-events: none !important;
@@ -173,7 +180,10 @@ h6:hover .copy-heading-link-button {
   line-height: 1;
   border-radius: 0.42rem;
   color: color-mix(in oklab, var(--color-base-content) 75%, transparent);
-  transition: background-color 140ms ease, color 140ms ease, opacity 140ms ease;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease,
+    opacity 140ms ease;
 }
 
 .theme-switcher-btn:hover {
@@ -186,4 +196,3 @@ h6:hover .copy-heading-link-button {
   background: color-mix(in oklab, var(--color-base-content) 11%, transparent);
   color: var(--color-base-content);
 }
-

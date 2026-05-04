@@ -60,7 +60,7 @@ help:
     echo "  just project-pages    # regenerate project markdown pages"
     echo "  just about-skill-tags # sync About taxonomy tags from tag chips"
     echo "  just widget-data      # regenerate latest-posts widget data"
-    echo "  just blog-taxonomies  # one-off: normalize blog tags/categories"
+
     echo "  just project-data     # one-off: enrich project catalog from GitHub"
     echo ""
     echo -e "${green}full command list:${reset}"
@@ -89,7 +89,7 @@ help:
     @Write-Host "  just project-pages    # regenerate project markdown pages"
     @Write-Host "  just about-skill-tags # sync About taxonomy tags from tag chips"
     @Write-Host "  just widget-data      # regenerate latest-posts widget data"
-    @Write-Host "  just blog-taxonomies  # one-off: normalize blog tags/categories"
+
     @Write-Host "  just project-data     # one-off: enrich project catalog from GitHub"
     @Write-Host ""
     @Write-Host "full command list:" -ForegroundColor Green
@@ -446,12 +446,7 @@ project-data:
     @node scripts/just-run.js "sync project data" -- node scripts/sync-project-data.js
     @node scripts/just-log.js ok "Project metadata refreshed"
 
-[doc("Normalize blog tags/categories with shared taxonomy rules")]
-[group('build')]
-blog-taxonomies:
-    @node scripts/just-log.js info "Syncing blog taxonomies"
-    @node scripts/just-run.js "sync blog taxonomies" -- node scripts/sync-blog-taxonomies.js
-    @node scripts/just-log.js ok "Blog taxonomies refreshed"
+
 
 [unix]
 [doc("Fail if generated content differs from committed files")]
@@ -497,7 +492,7 @@ validate-public:
 [unix]
 [doc("CI pipeline: verify generated files, build, minify JS, validate output")]
 [group('ci')]
-ci-build: _assert-zola-version verify-generated-clean
+ci-build: _assert-zola-version sync-generated verify-generated-clean
     #!/usr/bin/env bash
     set -euo pipefail
     node scripts/just-log.js step "CI build pipeline"
@@ -524,7 +519,7 @@ ci-build: _assert-zola-version verify-generated-clean
 [windows]
 [doc("CI pipeline: verify generated files, build, minify JS, validate output")]
 [group('ci')]
-ci-build: _assert-zola-version verify-generated-clean
+ci-build: _assert-zola-version sync-generated verify-generated-clean
     @node scripts/just-log.js step "CI build pipeline"
     @node scripts/just-log.js info "Cleaning workspace"
     @node scripts/just-run.js "clean" -- just clean
@@ -543,10 +538,35 @@ ci-build: _assert-zola-version verify-generated-clean
 
 [doc("Run strict integrated quality checks (JS/CSS/XML/XSL/Tera)")]
 [group('ci')]
-quality: _assert-zola-version verify-generated-clean
+quality: _assert-zola-version sync-generated
     @node scripts/just-log.js info "Running integrated quality checks"
     @node scripts/just-run.js "quality checks" -- node scripts/run-quality-checks.js
     @node scripts/just-log.js ok "All quality checks passed"
+
+[doc("Format the codebase using Prettier")]
+format:
+    pnpm dlx prettier@3 --write .
+
+[unix]
+[doc("Prepare for push: branch (if on main), format, sync, check, commit, and push")]
+[group('ci')]
+prep-push BRANCH_NAME MESSAGE="chore: prep for push": format sync-generated quality
+    #!/usr/bin/env bash
+    set -e
+    if [ "$(git rev-parse --abbrev-ref HEAD)" = "main" ]; then
+      git checkout -b "{{BRANCH_NAME}}"
+    fi
+    git add .
+    if [ -n "$(git status --porcelain)" ]; then
+      git commit -m "{{MESSAGE}}"
+    fi
+    git push -u origin HEAD
+
+[windows]
+[doc("Prepare for push: branch (if on main), format, sync, check, commit, and push")]
+[group('ci')]
+prep-push BRANCH_NAME MESSAGE="chore: prep for push": format sync-generated quality
+    powershell.exe -NoProfile -Command "$ErrorActionPreference = 'Stop'; if ((git rev-parse --abbrev-ref HEAD) -eq 'main') { git checkout -b '{{BRANCH_NAME}}' }; git add .; if (git status --porcelain) { git commit -m '{{MESSAGE}}' }; git push -u origin HEAD"
 
 # ---------------------------------------------------------------------------
 # Info

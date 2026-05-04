@@ -10,6 +10,7 @@ thumbnail_image = "images/thumbs/wave.jpg"
 tags = ["tooling", "algorithms", "debugging", "writing"]
 categories = ["engineering"]
 +++
+
 Welcome. This is the first entry in a blog that exists mainly so useful lessons do not die inside random local notes and terminal history.
 
 ## Why This Exists

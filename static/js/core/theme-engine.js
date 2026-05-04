@@ -10,11 +10,15 @@ const THEME_CANVAS_MAP = { dark: "#010409", light: "#f6f8fa" };
 const THEME_TRANSITION_MS = 240;
 
 let _currentMode = "auto";
-let _mediaQuery = window.matchMedia ? window.matchMedia("(prefers-color-scheme: dark)") : null;
+let _mediaQuery = window.matchMedia
+  ? window.matchMedia("(prefers-color-scheme: dark)")
+  : null;
 let _themeTransitionTimer = null;
 
 function normalizeThemeMode(value, fallback = "auto") {
-  const normalized = String(value || "").trim().toLowerCase();
+  const normalized = String(value || "")
+    .trim()
+    .toLowerCase();
   if (MODE_CYCLE.includes(normalized)) return normalized;
   if (normalized.includes("dark")) return "dark";
   if (normalized.includes("light")) return "light";
@@ -22,13 +26,18 @@ function normalizeThemeMode(value, fallback = "auto") {
 }
 
 function getCookie() {
-  const raw = window.__getThemeCookie ? window.__getThemeCookie() : (readCookie("theme") || null);
+  const raw = window.__getThemeCookie
+    ? window.__getThemeCookie()
+    : readCookie("theme") || null;
   return normalizeThemeMode(raw, "auto");
 }
 
 function setCookie(val) {
   const normalized = normalizeThemeMode(val, "auto");
-  if (window.__setThemeCookie) { window.__setThemeCookie(normalized); return; }
+  if (window.__setThemeCookie) {
+    window.__setThemeCookie(normalized);
+    return;
+  }
   writeCookie("theme", normalized, {
     maxAgeSeconds: 31536000,
     domain: COOKIE_DOMAIN || undefined,
@@ -42,7 +51,7 @@ function resolveColorset(val) {
   const mode = normalizeThemeMode(val, "auto");
   if (window.__resolveColorset) return window.__resolveColorset(mode);
   if (mode === "auto") {
-    return (_mediaQuery && _mediaQuery.matches) ? "dark" : "light";
+    return _mediaQuery && _mediaQuery.matches ? "dark" : "light";
   }
   return mode;
 }
@@ -50,8 +59,9 @@ function resolveColorset(val) {
 function applyTheme(resolvedTheme) {
   const daisyTheme = THEME_MAP[resolvedTheme] || resolvedTheme;
   document.documentElement.setAttribute("data-theme", daisyTheme);
-  document.documentElement.style.backgroundColor = THEME_CANVAS_MAP[resolvedTheme] || THEME_CANVAS_MAP.dark;
-  
+  document.documentElement.style.backgroundColor =
+    THEME_CANVAS_MAP[resolvedTheme] || THEME_CANVAS_MAP.dark;
+
   if (resolvedTheme === "dark") {
     document.documentElement.classList.add("dark");
     document.documentElement.classList.remove("light");
@@ -90,8 +100,8 @@ function beginThemeTransition() {
 }
 
 function updateToggleUI() {
-  document.querySelectorAll(".theme-switcher").forEach(sw => {
-    sw.querySelectorAll("[data-theme-mode]").forEach(btn => {
+  document.querySelectorAll(".theme-switcher").forEach((sw) => {
+    sw.querySelectorAll("[data-theme-mode]").forEach((btn) => {
       const mode = btn.getAttribute("data-theme-mode");
       const isActive = mode === _currentMode;
 
@@ -127,7 +137,9 @@ export function getResolvedTheme() {
 }
 
 export function setThemeMode(mode) {
-  const normalized = String(mode || "").trim().toLowerCase();
+  const normalized = String(mode || "")
+    .trim()
+    .toLowerCase();
   if (!MODE_CYCLE.includes(normalized)) {
     throw new Error(`Unsupported theme mode: ${mode}`);
   }
@@ -155,14 +167,16 @@ export function initTheme(rootElement = document) {
   updateToggleUI();
   document.dispatchEvent(new CustomEvent("themeChanged", { detail: resolved }));
 
-  rootElement.querySelectorAll(".theme-switcher [data-theme-mode]").forEach(btn => {
-    btn.addEventListener("click", e => {
-      e.preventDefault();
-      e.stopPropagation();
-      const mode = btn.getAttribute("data-theme-mode");
-      if (mode && mode !== _currentMode) setMode(mode);
+  rootElement
+    .querySelectorAll(".theme-switcher [data-theme-mode]")
+    .forEach((btn) => {
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        const mode = btn.getAttribute("data-theme-mode");
+        if (mode && mode !== _currentMode) setMode(mode);
+      });
     });
-  });
 
   if (_mediaQuery) {
     const osChangeHandler = () => {
@@ -171,10 +185,13 @@ export function initTheme(rootElement = document) {
         const resolvedAuto = resolveColorset("auto");
         applyTheme(resolvedAuto);
         updateToggleUI();
-        document.dispatchEvent(new CustomEvent("themeChanged", { detail: resolvedAuto }));
+        document.dispatchEvent(
+          new CustomEvent("themeChanged", { detail: resolvedAuto }),
+        );
       }
     };
-    if (_mediaQuery.addEventListener) _mediaQuery.addEventListener("change", osChangeHandler);
+    if (_mediaQuery.addEventListener)
+      _mediaQuery.addEventListener("change", osChangeHandler);
     else if (_mediaQuery.addListener) _mediaQuery.addListener(osChangeHandler);
   }
 }

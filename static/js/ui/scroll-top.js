@@ -26,8 +26,9 @@ export function initScrollToTop() {
   path.setAttribute("d", "M5 10l7-7m0 0l7 7m-7-7v18");
   icon.appendChild(path);
   btn.appendChild(icon);
-  
-  btn.style.cssText = "position: fixed; bottom: 1rem; right: 1rem; z-index: 40; opacity: 0; pointer-events: none; transition: opacity 0.3s ease, transform 0.3s ease; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); transform: translateY(20px);";
+
+  btn.style.cssText =
+    "position: fixed; bottom: 1rem; right: 1rem; z-index: 40; opacity: 0; pointer-events: none; transition: opacity 0.3s ease, transform 0.3s ease; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); transform: translateY(20px);";
   document.body.appendChild(btn);
 
   let lastScrollY = 0;
@@ -52,12 +53,18 @@ export function initScrollToTop() {
     ticking = false;
   }
 
-  window.addEventListener("scroll", () => {
-    if (!ticking) {
-      window.requestAnimationFrame(updateButton);
-      ticking = true;
-    }
-  }, { passive: true });
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateButton);
+        ticking = true;
+      }
+    },
+    { passive: true },
+  );
 
-  btn.addEventListener("click", () => window.scrollTo({ top: 0, behavior: "smooth" }));
+  btn.addEventListener("click", () =>
+    window.scrollTo({ top: 0, behavior: "smooth" }),
+  );
 }

@@ -11,7 +11,7 @@
       <a href="{{ site_rss_url }}" class="rss-action-btn" title="RSS Feed">
         <i class="fa-solid fa-rss text-sm"></i>
       </a>
-      <a href="https://feedly.com/i/subscription/feed/{{ site_rss_url | urlencode }}" target="_blank" rel="noopener noreferrer" class="rss-action-btn rss-action-btn--feedly" title="Subscribe via Feedly">
+      <a href="https://feedly.com/i/subscription/feed/{{ site_rss_url }}" target="_blank" rel="noopener noreferrer" class="rss-action-btn rss-action-btn--feedly" title="Subscribe via Feedly">
         <i class="fa-solid fa-leaf text-sm"></i>
       </a>
       <a href="https://www.inoreader.com/?add_feed={{ site_rss_url | urlencode }}" target="_blank" rel="noopener noreferrer" class="rss-action-btn rss-action-btn--inoreader" title="Subscribe via Inoreader">
@@ -84,29 +84,33 @@
   {% endif %}
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <a class="nav-button nav-button-prev group tooltip tooltip-top" href="{{ oldest_post_url | safe }}" data-keybind="d arrowup" data-keybind-action="click" data-tooltip-key-only="1" data-tooltip-shortcut="d arrowup" data-tooltip-position="top">
-      <div class="nav-button-content">
-        <div class="nav-button-direction">
-          <svg class="w-5 h-5 transition-transform group-hover:-translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19V5m0 0l-7 7m7-7l7 7"></path>
-          </svg>
-          <span class="nav-button-label">Chronology</span>
+    <div class="prev-nav-item">
+      <a class="nav-button nav-button-prev group tooltip tooltip-top" href="{{ oldest_post_url | safe }}" data-keybind="d arrowleft" data-keybind-action="click" data-tooltip-key-only="1" data-tooltip-shortcut="d arrowleft" data-tooltip-position="top">
+        <div class="nav-button-content">
+          <div class="nav-button-direction">
+            <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+            </svg>
+            <span class="nav-button-label">Chronology</span>
+          </div>
+          <div class="nav-button-title">{{ oldest_post_title }}</div>
         </div>
-        <div class="nav-button-title">{{ oldest_post_title }}</div>
-      </div>
-    </a>
+      </a>
+    </div>
 
-    <a class="nav-button nav-button-next group tooltip tooltip-top" href="/blog/" data-keybind="d arrowdown" data-keybind-action="click" data-tooltip-key-only="1" data-tooltip-shortcut="d arrowdown" data-tooltip-position="top">
-      <div class="nav-button-content">
-        <div class="nav-button-direction">
-          <span class="nav-button-label">Back to Blog</span>
-          <svg class="w-5 h-5 transition-transform group-hover:translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 5v14m0 0l-7-7m7 7l7-7"></path>
-          </svg>
+    <div class="next-nav-item">
+      <a class="nav-button nav-button-next group tooltip tooltip-top" href="/blog/" data-keybind="d arrowright" data-keybind-action="click" data-tooltip-key-only="1" data-tooltip-shortcut="d arrowright" data-tooltip-position="top">
+        <div class="nav-button-content">
+          <div class="nav-button-direction">
+            <span class="nav-button-label">Back to Blog</span>
+            <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+            </svg>
+          </div>
+          <div class="nav-button-title">Welcome</div>
         </div>
-        <div class="nav-button-title">Welcome</div>
-      </div>
-    </a>
+      </a>
+    </div>
   </div>
 </div>
 {% endblock content %}
@@ -167,10 +171,10 @@
 
 {% block prev_link %}
   {# Link to Tags #}
-  <a class="nav-button nav-button-prev group tooltip tooltip-top" href="/tags" data-keybind="d arrowleft" data-keybind-action="click" data-tooltip-key-only="1" data-tooltip-shortcut="d arrowleft" data-tooltip-position="top">
+  <a class="nav-button nav-button-prev group tooltip tooltip-top" href="/tags" data-keybind="d arrowup" data-keybind-action="click" data-tooltip-key-only="1" data-tooltip-shortcut="d arrowup" data-tooltip-position="top">
     <div class="nav-button-content">
       <div class="nav-button-direction">
-        <svg class="w-5 h-5 transition-transform group-hover:-translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-5 h-5 transition-transform group-hover:-translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"></path>
         </svg>
         <span class="nav-button-label">Browse</span>
@@ -182,11 +186,11 @@
 
 {% block next_link %}
   {# Link to Categories #}
-  <a class="nav-button nav-button-next group tooltip tooltip-top" href="/categories" data-keybind="d arrowright" data-keybind-action="click" data-tooltip-key-only="1" data-tooltip-shortcut="d arrowright" data-tooltip-position="top">
+  <a class="nav-button nav-button-next group tooltip tooltip-top" href="/categories" data-keybind="d arrowdown" data-keybind-action="click" data-tooltip-key-only="1" data-tooltip-shortcut="d arrowdown" data-tooltip-position="top">
     <div class="nav-button-content">
       <div class="nav-button-direction">
         <span class="nav-button-label">Browse</span>
-        <svg class="w-5 h-5 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-5 h-5 transition-transform group-hover:translate-y-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7a2 2 0 012-2h5l2 2h7a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V7z"></path>
         </svg>
       </div>

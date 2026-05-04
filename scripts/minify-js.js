@@ -3,7 +3,12 @@
 
 const fs = require("fs");
 const path = require("path");
-const { createPackageRunner, requireEnvVar, collectFiles, ROOT } = require("./lib/shared");
+const {
+  createPackageRunner,
+  requireEnvVar,
+  collectFiles,
+  ROOT,
+} = require("./lib/shared");
 
 const outputDirLabel = "public";
 const outputDir = path.resolve(ROOT, "public");
@@ -20,13 +25,17 @@ function listJsFiles(dir) {
 
 function main() {
   if (!fs.existsSync(outputDir) || !fs.statSync(outputDir).isDirectory()) {
-    console.error(`ERROR: Output directory '${outputDirLabel}' does not exist.`);
+    console.error(
+      `ERROR: Output directory '${outputDirLabel}' does not exist.`,
+    );
     process.exit(1);
   }
 
   const jsDir = path.join(outputDir, "js");
   if (!fs.existsSync(jsDir) || !fs.statSync(jsDir).isDirectory()) {
-    console.log(`No ${outputDirLabel}/js directory found. Skipping JS minification.`);
+    console.log(
+      `No ${outputDirLabel}/js directory found. Skipping JS minification.`,
+    );
     return;
   }
 
@@ -36,7 +45,9 @@ function main() {
 
   const mainEntry = path.join(jsDir, "core", "main.js");
   if (fs.existsSync(mainEntry)) {
-    console.log(`Bundling ${outputDirLabel}/js/core/main.js with esbuild@${esbuildVersion}...`);
+    console.log(
+      `Bundling ${outputDirLabel}/js/core/main.js with esbuild@${esbuildVersion}...`,
+    );
     runPkg(
       [
         "dlx",
@@ -59,7 +70,7 @@ function main() {
         "--minify",
         "--allow-overwrite",
         `--outfile=${outputDirLabel}/js/core/main.js`,
-      ]
+      ],
     );
   }
 
@@ -132,7 +143,7 @@ function main() {
         "2020",
         "-o",
         swFile,
-      ]
+      ],
     );
     minifiedCount += 1;
   }

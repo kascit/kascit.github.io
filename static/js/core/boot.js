@@ -2,15 +2,25 @@
 // Reads template values through data-* attributes on its script tag.
 (function () {
   var script = document.currentScript;
-  var cookieDomain = (script && script.getAttribute("data-cookie-domain")) || "";
-  var defaultColorset = (script && script.getAttribute("data-default-colorset")) || "dark";
-  var enableWebMcpCompat = ((script && script.getAttribute("data-webmcp-compat")) || "1") !== "0";
+  var cookieDomain =
+    (script && script.getAttribute("data-cookie-domain")) || "";
+  var defaultColorset =
+    (script && script.getAttribute("data-default-colorset")) || "dark";
+  var enableWebMcpCompat =
+    ((script && script.getAttribute("data-webmcp-compat")) || "1") !== "0";
   var SIDEBAR_KEY = "sidebar-collapsed";
   var TOC_KEY = "toc-collapsed";
 
   function normalizeThemeMode(value, fallback) {
-    var normalized = String(value || "").trim().toLowerCase();
-    if (normalized === "auto" || normalized === "light" || normalized === "dark") return normalized;
+    var normalized = String(value || "")
+      .trim()
+      .toLowerCase();
+    if (
+      normalized === "auto" ||
+      normalized === "light" ||
+      normalized === "dark"
+    )
+      return normalized;
     if (normalized.indexOf("dark") >= 0) return "dark";
     if (normalized.indexOf("light") >= 0) return "light";
     return fallback || "auto";
@@ -21,7 +31,7 @@
   function getStorageFlag(key) {
     try {
       return window.localStorage.getItem(key) === "1";
-    } catch (_error) {
+    } catch {
       return false;
     }
   }
@@ -31,7 +41,7 @@
     if (!m) return null;
     try {
       return decodeURIComponent(m[1]);
-    } catch (_error) {
+    } catch {
       return m[1];
     }
   };
@@ -39,15 +49,28 @@
   window.__setThemeCookie = function (val) {
     var h = window.location.hostname;
     var isLocalHost = h === "localhost" || h === "127.0.0.1";
-    var domainPart = isLocalHost || !cookieDomain ? "" : "; domain=." + cookieDomain;
+    var domainPart =
+      isLocalHost || !cookieDomain ? "" : "; domain=." + cookieDomain;
     var securePart = window.location.protocol === "https:" ? "; Secure" : "";
-    document.cookie = "theme=" + encodeURIComponent(val) + "; path=/" + domainPart + "; max-age=31536000; SameSite=Lax" + securePart;
+    document.cookie =
+      "theme=" +
+      encodeURIComponent(val) +
+      "; path=/" +
+      domainPart +
+      "; max-age=31536000; SameSite=Lax" +
+      securePart;
   };
 
   window.__resolveColorset = function (val) {
-    var mode = normalizeThemeMode(val, normalizeThemeMode(defaultColorset, "auto"));
+    var mode = normalizeThemeMode(
+      val,
+      normalizeThemeMode(defaultColorset, "auto"),
+    );
     if (mode === "auto") {
-      return (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ? "dark" : "light";
+      return window.matchMedia &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
     }
     return mode;
   };
@@ -64,7 +87,7 @@
         name: tool.name,
         description: tool.description,
         inputSchema: JSON.stringify(tool.inputSchema || {}),
-        annotations: tool.annotations || { readOnlyHint: false }
+        annotations: tool.annotations || { readOnlyHint: false },
       };
     }
 
@@ -75,26 +98,39 @@
           Object.defineProperty(proto, name, {
             configurable: true,
             enumerable: false,
-            get: function () { return value; }
+            get: function () {
+              return value;
+            },
           });
         }
-      } catch (_error) {}
+      } catch {
+        // ignore
+      }
 
       try {
         if (!Object.prototype.hasOwnProperty.call(navigator, name)) {
           Object.defineProperty(navigator, name, {
             configurable: true,
             enumerable: false,
-            get: function () { return value; }
+            get: function () {
+              return value;
+            },
           });
         }
-      } catch (_error2) {
-        try { navigator[name] = value; } catch (_error3) {}
+      } catch {
+        try {
+          navigator[name] = value;
+        } catch {
+          // ignore
+        }
       }
     }
 
     var compatModelContext = navigator.modelContext;
-    if (!compatModelContext || typeof compatModelContext.registerTool !== "function") {
+    if (
+      !compatModelContext ||
+      typeof compatModelContext.registerTool !== "function"
+    ) {
       compatModelContext = {
         registerTool: function (tool, options) {
           if (!tool || typeof tool !== "object") {
@@ -104,7 +140,9 @@
           var name = String(tool.name || "").trim();
           var description = String(tool.description || "").trim();
           if (!name || !description || typeof tool.execute !== "function") {
-            throw new Error("Tool name, description, and execute callback are required");
+            throw new Error(
+              "Tool name, description, and execute callback are required",
+            );
           }
 
           webmcpStore.tools[name] = {
@@ -112,19 +150,27 @@
             description: description,
             inputSchema: tool.inputSchema || {},
             execute: tool.execute,
-            annotations: tool.annotations || { readOnlyHint: false }
+            annotations: tool.annotations || { readOnlyHint: false },
           };
 
-          if (options && options.signal && typeof options.signal.addEventListener === "function") {
+          if (
+            options &&
+            options.signal &&
+            typeof options.signal.addEventListener === "function"
+          ) {
             if (options.signal.aborted) {
               delete webmcpStore.tools[name];
               return;
             }
-            options.signal.addEventListener("abort", function () {
-              delete webmcpStore.tools[name];
-            }, { once: true });
+            options.signal.addEventListener(
+              "abort",
+              function () {
+                delete webmcpStore.tools[name];
+              },
+              { once: true },
+            );
           }
-        }
+        },
       };
 
       defineNavigatorApi("modelContext", compatModelContext);
@@ -134,9 +180,11 @@
       defineNavigatorApi("modelContextTesting", {
         listTools: function () {
           var names = Object.keys(webmcpStore.tools);
-          return Promise.resolve(names.map(function (name) {
-            return toToolRecord(webmcpStore.tools[name]);
-          }));
+          return Promise.resolve(
+            names.map(function (name) {
+              return toToolRecord(webmcpStore.tools[name]);
+            }),
+          );
         },
         executeTool: function (toolName, input) {
           var name = String(toolName || "").trim();
@@ -144,13 +192,16 @@
           if (!tool || typeof tool.execute !== "function") {
             return Promise.reject(new Error("Tool not found: " + name));
           }
-          return Promise.resolve(tool.execute(input || {}, {
-            requestUserInteraction: function (callback) {
-              if (typeof callback !== "function") return Promise.resolve(undefined);
-              return Promise.resolve(callback());
-            }
-          }));
-        }
+          return Promise.resolve(
+            tool.execute(input || {}, {
+              requestUserInteraction: function (callback) {
+                if (typeof callback !== "function")
+                  return Promise.resolve(undefined);
+                return Promise.resolve(callback());
+              },
+            }),
+          );
+        },
       });
     }
   }
@@ -182,20 +233,24 @@
 
   document.documentElement.setAttribute(
     "data-sidebar-collapsed",
-    getStorageFlag(SIDEBAR_KEY) ? "1" : "0"
+    getStorageFlag(SIDEBAR_KEY) ? "1" : "0",
   );
 
   var tocCollapsed = getStorageFlag(TOC_KEY);
   document.documentElement.setAttribute(
     "data-toc-collapsed",
-    tocCollapsed ? "1" : "0"
+    tocCollapsed ? "1" : "0",
   );
 
   if (tocCollapsed) {
-    document.addEventListener("DOMContentLoaded", function () {
-      if (document.body) {
-        document.body.classList.add("toc-collapsed");
-      }
-    }, { once: true });
+    document.addEventListener(
+      "DOMContentLoaded",
+      function () {
+        if (document.body) {
+          document.body.classList.add("toc-collapsed");
+        }
+      },
+      { once: true },
+    );
   }
 })();

@@ -9,10 +9,20 @@
  * Emits rich tooltip content so shortcut hints can include kbd tokens.
  */
 
-import { initResponsive, isMobile, onResponsiveChange } from "../core/responsive.js";
+import {
+  initResponsive,
+  isMobile,
+  onResponsiveChange,
+} from "../core/responsive.js";
 
-const TOOLTIP_SELECTOR = "[data-tooltip-label], [data-tooltip-key-only='1'][data-tooltip-shortcut]";
-const POSITION_CLASSES = ["tooltip-top", "tooltip-bottom", "tooltip-left", "tooltip-right"];
+const TOOLTIP_SELECTOR =
+  "[data-tooltip-label], [data-tooltip-key-only='1'][data-tooltip-shortcut]";
+const POSITION_CLASSES = [
+  "tooltip-top",
+  "tooltip-bottom",
+  "tooltip-left",
+  "tooltip-right",
+];
 const DEFAULT_POSITION_CLASS = "tooltip-bottom";
 
 let listenersBound = false;
@@ -25,14 +35,18 @@ function disableTooltipElement(element) {
   POSITION_CLASSES.forEach((klass) => element.classList.remove(klass));
   element.classList.add("tooltip-mobile-disabled");
 
-  const content = element.querySelector(":scope > .tooltip-content[data-smart-tooltip='1']");
+  const content = element.querySelector(
+    ":scope > .tooltip-content[data-smart-tooltip='1']",
+  );
   if (content) {
     content.setAttribute("aria-hidden", "true");
   }
 }
 
 function canonicalizeToken(token) {
-  const value = String(token || "").trim().toLowerCase();
+  const value = String(token || "")
+    .trim()
+    .toLowerCase();
   if (!value) return "";
 
   if (value === "control") return "ctrl";
@@ -75,19 +89,25 @@ function tokenLabel(token) {
     default: {
       const normalized = canonicalizeToken(token);
       if (!normalized) return "";
-      return normalized.length === 1 ? normalized.toUpperCase() : normalized.charAt(0).toUpperCase() + normalized.slice(1);
+      return normalized.length === 1
+        ? normalized.toUpperCase()
+        : normalized.charAt(0).toUpperCase() + normalized.slice(1);
     }
   }
 }
 
 function resolvePositionClass(element) {
-  const explicit = canonicalizeToken(element.getAttribute("data-tooltip-position"));
+  const explicit = canonicalizeToken(
+    element.getAttribute("data-tooltip-position"),
+  );
   if (explicit) {
     const candidate = `tooltip-${explicit}`;
     if (POSITION_CLASSES.includes(candidate)) return candidate;
   }
 
-  const existing = POSITION_CLASSES.find((klass) => element.classList.contains(klass));
+  const existing = POSITION_CLASSES.find((klass) =>
+    element.classList.contains(klass),
+  );
   return existing || DEFAULT_POSITION_CLASS;
 }
 
@@ -144,7 +164,9 @@ function renderShortcutOption(option) {
 }
 
 function ensureTooltipContentNode(element) {
-  let content = element.querySelector(":scope > .tooltip-content[data-smart-tooltip='1']");
+  let content = element.querySelector(
+    ":scope > .tooltip-content[data-smart-tooltip='1']",
+  );
   if (!content) {
     content = document.createElement("span");
     content.className = "tooltip-content tooltip-content-smart";
@@ -156,7 +178,9 @@ function ensureTooltipContentNode(element) {
 }
 
 function resolveShortcutSpec(element) {
-  const explicit = String(element.getAttribute("data-tooltip-shortcut") || "").trim();
+  const explicit = String(
+    element.getAttribute("data-tooltip-shortcut") || "",
+  ).trim();
   if (explicit) return explicit;
 
   const fromKeybind = String(element.getAttribute("data-keybind") || "").trim();

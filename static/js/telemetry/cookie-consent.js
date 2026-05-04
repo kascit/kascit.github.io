@@ -30,7 +30,10 @@ function clearAnalyticsCookies() {
   const cookieNames = (document.cookie || "")
     .split(";")
     .map((item) => item.trim().split("=")[0])
-    .filter((name) => /^_ga($|_)/.test(name) || /^_gid$/.test(name) || /^_gat/.test(name));
+    .filter(
+      (name) =>
+        /^_ga($|_)/.test(name) || /^_gid$/.test(name) || /^_gat/.test(name),
+    );
 
   if (cookieNames.length === 0) return;
 
@@ -105,11 +108,12 @@ function setBannerVisible(visible) {
 }
 
 function updateConsentStatusUi(choice) {
-  const text = choice === CONSENT_ALL
-    ? "All cookies allowed"
-    : choice === CONSENT_NECESSARY
-    ? "Necessary only"
-    : "Necessary only (default)";
+  const text =
+    choice === CONSENT_ALL
+      ? "All cookies allowed"
+      : choice === CONSENT_NECESSARY
+        ? "Necessary only"
+        : "Necessary only (default)";
   document.querySelectorAll("[data-cookie-consent-status]").forEach((node) => {
     node.textContent = text;
   });
@@ -122,7 +126,7 @@ function emitConsentEvent(choice) {
         choice,
         optional: choice === CONSENT_ALL,
       },
-    })
+    }),
   );
 }
 
@@ -158,6 +162,8 @@ function bindConsentActions() {
       setCookieConsent(CONSENT_ALL);
     } else if (action === CONSENT_NECESSARY) {
       setCookieConsent(CONSENT_NECESSARY);
+    } else if (action === "privacy") {
+      window.location.href = "/privacy/";
     }
   });
 }

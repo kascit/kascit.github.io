@@ -32,6 +32,8 @@ static/icons/*
 static/icons/.gen/
 !static/icons/favicon.svg
 !static/icons/site.webmanifest
+scratch/
+docs/
 
 # Temp/log files
 .tmp*

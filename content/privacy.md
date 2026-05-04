@@ -14,7 +14,7 @@ enabled = false
 
 > **Last updated: April 3, 2026**
 
-## About This Website
+## About This site
 
 **dhanur.me** and its subdomains are personal projects run by Dhanur. The site is not operated by a company, and data collection is intentionally minimal. Information is only used for functionality, security, and lightweight analytics, and personal data is never sold.
 
@@ -26,14 +26,14 @@ You can choose one of two modes:
 - **Allow All Cookies**: enables necessary cookies plus optional services (analytics, error monitoring, comments).
 
 <div class="not-prose privacy-consent-panel">
-	<div class="privacy-consent-panel__head">
-		<strong>Current preference:</strong>
-		<span class="privacy-consent-panel__status" data-cookie-consent-status>Not set</span>
-	</div>
-	<div class="privacy-consent-panel__actions">
-		<button type="button" class="cookie-consent-btn" data-cookie-consent-action="necessary">Necessary Only</button>
-		<button type="button" class="cookie-consent-btn cookie-consent-btn--primary" data-cookie-consent-action="all">Allow All Cookies</button>
-	</div>
+    <div class="privacy-consent-panel__head">
+        <strong>Current preference:</strong>
+        <span class="privacy-consent-panel__status" data-cookie-consent-status>Not set</span>
+    </div>
+    <div class="privacy-consent-panel__actions">
+        <button type="button" class="cookie-consent-btn" data-cookie-consent-action="necessary">Necessary Only</button>
+        <button type="button" class="cookie-consent-btn cookie-consent-btn--primary" data-cookie-consent-action="all">Allow All Cookies</button>
+    </div>
 </div>
 
 ## Necessary Cookies & Storage
@@ -42,10 +42,11 @@ Necessary cookies/storage may include:
 
 - `theme` cookie to remember light/dark/auto preference.
 - `site_cookie_consent_v1` cookie to remember your cookie choice.
-- Local storage keys for interface behavior (for example sidebar/TOC state and playlist tools).
+- LocalStorage keys for interface behavior (for example sidebar/TOC state and playlist tools).
 - Security and infrastructure cookies set by hosting/CDN providers (including Cloudflare) for DDoS protection, abuse mitigation, and request integrity.
+- **Ahrefs Analytics**: A lightweight, cookieless analytics script used to monitor basic site traffic. It does not store cookies or track personally identifiable information (PII).
 
-These are used for site operation, safety, and usability.
+These are used for site operation, safety, usability, and basic traffic monitoring.
 
 ## Optional Services (Allow All)
 
@@ -71,7 +72,10 @@ Comments are powered by **[Giscus](https://giscus.app)** and stored through GitH
 
 ## Analytics
 
-The site uses Google Analytics only when optional cookies are enabled to understand aggregate traffic patterns like page views, device types, and referrers. This is used to improve content and reliability, not for user-level profiling.
+This site uses two forms of analytics:
+
+1. **Ahrefs Analytics**: A privacy-friendly, cookieless script loaded by default to monitor basic traffic patterns.
+2. **Google Analytics**: A more detailed tracking script loaded _only_ if you opt-in by enabling optional cookies. This helps understand aggregate traffic patterns like page views, device types, and referrers to improve content. None of this is used for user-level profiling.
 
 ## What We Collect (summary)
 
@@ -91,7 +95,7 @@ Questions? Reach out via the [contact page](/links/) or find me on [github.com/k
 
 ## Open Source
 
-This website is open source, and you can inspect the implementation in the public repository at [github.com/kascit/kascit.github.io](https://github.com/kascit/kascit.github.io).
+This site is open source, and you can inspect the implementation in the public repository at [github.com/kascit/kascit.github.io](https://github.com/kascit/kascit.github.io).
 
 ## Copyright & Licensing
 

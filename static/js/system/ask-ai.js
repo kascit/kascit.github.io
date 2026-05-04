@@ -24,7 +24,7 @@ function readSiteConfig() {
 
   try {
     return JSON.parse(node.textContent || "{}");
-  } catch (_error) {
+  } catch {
     return {};
   }
 }
@@ -42,7 +42,7 @@ function normalizeLocalUrl(value) {
     if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return "";
     if (parsed.origin !== window.location.origin) return "";
     return `${parsed.pathname}${parsed.search}${parsed.hash}`;
-  } catch (_error) {
+  } catch {
     return "";
   }
 }
@@ -74,12 +74,14 @@ function normalizeEndpointUrl(value, trustedHosts) {
 
   try {
     const parsed = new URL(input, window.location.origin);
-    const protocolAllowed = parsed.protocol === "https:" || (parsed.protocol === "http:" && isLocalHostname(parsed.hostname));
+    const protocolAllowed =
+      parsed.protocol === "https:" ||
+      (parsed.protocol === "http:" && isLocalHostname(parsed.hostname));
     if (!protocolAllowed) return "";
 
     if (!isTrustedHost(parsed.hostname, trustedHosts)) return "";
     return parsed.toString();
-  } catch (_error) {
+  } catch {
     return "";
   }
 }
@@ -98,7 +100,9 @@ function normalizeNumber(value, fallback, min, max) {
 export function getAskAiConfig() {
   const cfg = readSiteConfig();
   const ai = cfg && typeof cfg.ai === "object" ? cfg.ai : {};
-  const trustedEndpointHosts = normalizeTrustedHosts(ai.trustedEndpointHosts || []);
+  const trustedEndpointHosts = normalizeTrustedHosts(
+    ai.trustedEndpointHosts || [],
+  );
 
   const enabled = ai.enabled !== false;
   const endpoint = normalizeEndpointUrl(ai.endpoint, trustedEndpointHosts);
@@ -134,17 +138,26 @@ function getSearchTerms(query) {
 }
 
 function getPageHeadings(limit) {
-  const headings = Array.from(document.querySelectorAll("main h1, main h2, main h3, main h4, main h5, main h6"));
-  return headings.slice(0, limit).map((node) => ({
-    level: Number(String(node.tagName || "").replace("H", "")) || null,
-    text: normalizeString(node.textContent),
-    id: normalizeString(node.id),
-  })).filter((item) => item.text);
+  const headings = Array.from(
+    document.querySelectorAll(
+      "main h1, main h2, main h3, main h4, main h5, main h6",
+    ),
+  );
+  return headings
+    .slice(0, limit)
+    .map((node) => ({
+      level: Number(String(node.tagName || "").replace("H", "")) || null,
+      text: normalizeString(node.textContent),
+      id: normalizeString(node.id),
+    }))
+    .filter((item) => item.text);
 }
 
 function pickContextChunks(query, maxChunks) {
   const terms = getSearchTerms(query);
-  const candidates = Array.from(document.querySelectorAll("main p, main li, main blockquote"));
+  const candidates = Array.from(
+    document.querySelectorAll("main p, main li, main blockquote"),
+  );
 
   const scored = candidates
     .map((node, idx) => {
@@ -169,7 +182,10 @@ function pickContextChunks(query, maxChunks) {
     .sort((a, b) => b.score - a.score);
 
   const prioritized = scored.filter((chunk) => chunk.score > 0);
-  const selected = (prioritized.length > 0 ? prioritized : scored).slice(0, maxChunks);
+  const selected = (prioritized.length > 0 ? prioritized : scored).slice(
+    0,
+    maxChunks,
+  );
 
   return selected.map((chunk) => chunk.text);
 }
@@ -181,27 +197,39 @@ function sanitizeProfilePayload(payload) {
   const summary = normalizeString(payload.summary);
 
   const skills = Array.isArray(payload.skills)
-    ? payload.skills.map((item) => normalizeString(item)).filter(Boolean).slice(0, 20)
+    ? payload.skills
+        .map((item) => normalizeString(item))
+        .filter(Boolean)
+        .slice(0, 20)
     : [];
 
   const interests = Array.isArray(payload.interests)
-    ? payload.interests.map((item) => normalizeString(item)).filter(Boolean).slice(0, 20)
+    ? payload.interests
+        .map((item) => normalizeString(item))
+        .filter(Boolean)
+        .slice(0, 20)
     : [];
 
   const links = Array.isArray(payload.links)
     ? payload.links
-      .map((item) => {
-        if (!item || typeof item !== "object") return null;
-        const label = normalizeString(item.label);
-        const href = normalizeLocalUrl(item.href);
-        if (!label || !href) return null;
-        return { label, href };
-      })
-      .filter(Boolean)
-      .slice(0, 8)
+        .map((item) => {
+          if (!item || typeof item !== "object") return null;
+          const label = normalizeString(item.label);
+          const href = normalizeLocalUrl(item.href);
+          if (!label || !href) return null;
+          return { label, href };
+        })
+        .filter(Boolean)
+        .slice(0, 8)
     : [];
 
-  if (!role && !summary && skills.length === 0 && interests.length === 0 && links.length === 0) {
+  if (
+    !role &&
+    !summary &&
+    skills.length === 0 &&
+    interests.length === 0 &&
+    links.length === 0
+  ) {
     return null;
   }
 
@@ -228,7 +256,10 @@ async function loadProfileContext(config) {
 
   profileCache.promise = (async () => {
     const controller = new AbortController();
-    const timeout = window.setTimeout(() => controller.abort(), PROFILE_TIMEOUT_MS);
+    const timeout = window.setTimeout(
+      () => controller.abort(),
+      PROFILE_TIMEOUT_MS,
+    );
     const abortOnPageExit = () => controller.abort();
 
     window.addEventListener("pagehide", abortOnPageExit, { once: true });
@@ -249,7 +280,7 @@ async function loadProfileContext(config) {
       profileCache.value = sanitized;
       profileCache.expiresAt = Date.now() + PROFILE_CACHE_TTL_MS;
       return sanitized;
-    } catch (_error) {
+    } catch {
       return null;
     } finally {
       window.clearTimeout(timeout);
@@ -265,10 +296,19 @@ async function loadProfileContext(config) {
 function getPageContext(query, config) {
   if (!config.includePageContext) return null;
 
-  const tags = Array.from(document.querySelectorAll('meta[property="article:tag"], meta[name="keywords"]'))
+  const tags = Array.from(
+    document.querySelectorAll(
+      'meta[property="article:tag"], meta[name="keywords"]',
+    ),
+  )
     .map((node) => normalizeString(node.getAttribute("content")))
     .filter(Boolean)
-    .flatMap((raw) => raw.split(",").map((token) => normalizeString(token)).filter(Boolean))
+    .flatMap((raw) =>
+      raw
+        .split(",")
+        .map((token) => normalizeString(token))
+        .filter(Boolean),
+    )
     .slice(0, 16);
 
   return {
@@ -284,7 +324,8 @@ function shortHash(input) {
   let hash = 2166136261;
   for (let i = 0; i < input.length; i += 1) {
     hash ^= input.charCodeAt(i);
-    hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+    hash +=
+      (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
   }
   return Math.abs(hash >>> 0).toString(36);
 }
@@ -304,8 +345,11 @@ function pruneStoredContexts() {
         try {
           const raw = window.sessionStorage.getItem(key);
           const parsed = raw ? JSON.parse(raw) : null;
-          return { key, ts: parsed && Number(parsed.ts) ? Number(parsed.ts) : 0 };
-        } catch (_error) {
+          return {
+            key,
+            ts: parsed && Number(parsed.ts) ? Number(parsed.ts) : 0,
+          };
+        } catch {
           return { key, ts: 0 };
         }
       })
@@ -314,7 +358,7 @@ function pruneStoredContexts() {
       .forEach((item) => {
         window.sessionStorage.removeItem(item.key);
       });
-  } catch (_error) {
+  } catch {
     // Ignore storage failures.
   }
 }
@@ -324,7 +368,9 @@ function sanitizeHistoryMessage(item) {
   const role = normalizeString(item.role).toLowerCase();
   if (role !== "user" && role !== "assistant") return null;
 
-  const content = normalizeString(item.content).replace(/\s+/g, " ").slice(0, 4000);
+  const content = normalizeString(item.content)
+    .replace(/\s+/g, " ")
+    .slice(0, 4000);
   if (!content) return null;
 
   return { role, content };
@@ -348,7 +394,7 @@ export function getAskAiSessionHistory() {
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return trimHistory(parsed);
-  } catch (_error) {
+  } catch {
     return [];
   }
 }
@@ -356,7 +402,7 @@ export function getAskAiSessionHistory() {
 export function clearAskAiSessionHistory() {
   try {
     window.sessionStorage.removeItem(ASK_AI_HISTORY_KEY);
-  } catch (_error) {
+  } catch {
     // Ignore storage failures.
   }
 }
@@ -366,7 +412,7 @@ function saveAskAiSessionHistory(history) {
 
   try {
     window.sessionStorage.setItem(ASK_AI_HISTORY_KEY, JSON.stringify(trimmed));
-  } catch (_error) {
+  } catch {
     // Ignore storage failures.
   }
 
@@ -380,7 +426,10 @@ function appendAskAiHistoryTurn(userMessage, assistantMessage) {
   const user = sanitizeHistoryMessage({ role: "user", content: userMessage });
   if (user) next.push(user);
 
-  const assistant = sanitizeHistoryMessage({ role: "assistant", content: assistantMessage });
+  const assistant = sanitizeHistoryMessage({
+    role: "assistant",
+    content: assistantMessage,
+  });
   if (assistant) next.push(assistant);
 
   return saveAskAiSessionHistory(next);
@@ -389,22 +438,37 @@ function appendAskAiHistoryTurn(userMessage, assistantMessage) {
 function mapAskAiHttpError(response, fallbackMessage) {
   const status = Number(response && response.status) || 0;
   if (status === 401) {
-    return buildAskAiError("AUTH_REQUIRED", fallbackMessage || "Sign in to use Ask AI");
+    return buildAskAiError(
+      "AUTH_REQUIRED",
+      fallbackMessage || "Sign in to use Ask AI",
+    );
   }
 
   if (status === 402) {
-    return buildAskAiError("INSUFFICIENT_CREDITS", "Not enough credits to run Ask AI");
+    return buildAskAiError(
+      "INSUFFICIENT_CREDITS",
+      "Not enough credits to run Ask AI",
+    );
   }
 
   if (status === 403) {
-    return buildAskAiError("FORBIDDEN", "Ask AI is not available for this account");
+    return buildAskAiError(
+      "FORBIDDEN",
+      "Ask AI is not available for this account",
+    );
   }
 
   if (status === 429) {
-    return buildAskAiError("RATE_LIMITED", "Ask AI is busy right now. Please retry in a moment.");
+    return buildAskAiError(
+      "RATE_LIMITED",
+      "Ask AI is busy right now. Please retry in a moment.",
+    );
   }
 
-  return buildAskAiError("REQUEST_FAILED", fallbackMessage || "Ask AI request failed");
+  return buildAskAiError(
+    "REQUEST_FAILED",
+    fallbackMessage || "Ask AI request failed",
+  );
 }
 
 function normalizeAskAiAnswer(payload) {
@@ -419,27 +483,29 @@ function normalizeAskAiAnswer(payload) {
 
   const citations = Array.isArray(payload.citations)
     ? payload.citations
-      .map((item) => {
-        if (!item || typeof item !== "object") return null;
-        const title = normalizeString(item.title);
-        const url = normalizeString(item.url);
-        const snippet = normalizeString(item.snippet);
-        if (!title && !url && !snippet) return null;
-        return {
-          title: title || "Source",
-          url: url || "",
-          snippet: snippet || "",
-          sourceType: normalizeString(item.sourceType) || "context",
-        };
-      })
-      .filter(Boolean)
+        .map((item) => {
+          if (!item || typeof item !== "object") return null;
+          const title = normalizeString(item.title);
+          const url = normalizeString(item.url);
+          const snippet = normalizeString(item.snippet);
+          if (!title && !url && !snippet) return null;
+          return {
+            title: title || "Source",
+            url: url || "",
+            snippet: snippet || "",
+            sourceType: normalizeString(item.sourceType) || "context",
+          };
+        })
+        .filter(Boolean)
     : [];
 
   return {
     answer,
     citations,
     cost: Number(payload.cost) || 0,
-    creditsRemaining: Number.isFinite(Number(payload.creditsRemaining)) ? Number(payload.creditsRemaining) : null,
+    creditsRemaining: Number.isFinite(Number(payload.creditsRemaining))
+      ? Number(payload.creditsRemaining)
+      : null,
     role: normalizeString(payload.role).toLowerCase() || "user",
     requestId: normalizeString(payload.requestId),
   };
@@ -480,12 +546,13 @@ export async function requestAskAiAnswer(query, options = {}) {
   let payload = null;
   try {
     payload = await response.json();
-  } catch (_error) {
+  } catch {
     payload = null;
   }
 
   if (!response.ok) {
-    const backendMessage = payload && typeof payload.message === "string" ? payload.message : "";
+    const backendMessage =
+      payload && typeof payload.message === "string" ? payload.message : "";
     throw mapAskAiHttpError(response, backendMessage || config.guestMessage);
   }
 
@@ -493,12 +560,15 @@ export async function requestAskAiAnswer(query, options = {}) {
   appendAskAiHistoryTurn(context.query, normalized.answer);
 
   if (Number.isFinite(normalized.creditsRemaining)) {
-    document.dispatchEvent(new CustomEvent("creditsChanged", {
-      detail: {
-        balance: normalized.creditsRemaining,
-        unlimited: normalized.role === "admin" || normalized.creditsRemaining < 0,
-      },
-    }));
+    document.dispatchEvent(
+      new CustomEvent("creditsChanged", {
+        detail: {
+          balance: normalized.creditsRemaining,
+          unlimited:
+            normalized.role === "admin" || normalized.creditsRemaining < 0,
+        },
+      }),
+    );
   }
 
   return {
@@ -514,12 +584,14 @@ export function getStoredAskAiContext(ctxKey) {
   if (!key) return null;
 
   try {
-    const raw = window.sessionStorage.getItem(`${CONTEXT_STORAGE_PREFIX}${key}`);
+    const raw = window.sessionStorage.getItem(
+      `${CONTEXT_STORAGE_PREFIX}${key}`,
+    );
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (!parsed || typeof parsed !== "object") return null;
     return parsed.payload || null;
-  } catch (_error) {
+  } catch {
     return null;
   }
 }
@@ -530,9 +602,12 @@ function storeAskAiContext(payload) {
 
   try {
     const wrapped = JSON.stringify({ ts: Date.now(), payload });
-    window.sessionStorage.setItem(`${CONTEXT_STORAGE_PREFIX}${ctxKey}`, wrapped);
+    window.sessionStorage.setItem(
+      `${CONTEXT_STORAGE_PREFIX}${ctxKey}`,
+      wrapped,
+    );
     pruneStoredContexts();
-  } catch (_error) {
+  } catch {
     // Ignore storage failures; caller still gets payload return.
   }
 
@@ -591,11 +666,14 @@ function ensureAskAiAccess(config) {
 }
 
 async function copyToClipboard(text) {
-  if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+  if (
+    navigator.clipboard &&
+    typeof navigator.clipboard.writeText === "function"
+  ) {
     try {
       await navigator.clipboard.writeText(text);
       return true;
-    } catch (_error) {
+    } catch {
       return false;
     }
   }
@@ -632,16 +710,26 @@ function buildPrompt(context) {
   if (context.profile) {
     lines.push("", "Profile context:");
     if (context.profile.role) lines.push(`- Role: ${context.profile.role}`);
-    if (context.profile.summary) lines.push(`- Summary: ${context.profile.summary}`);
-    if (Array.isArray(context.profile.skills) && context.profile.skills.length) {
+    if (context.profile.summary)
+      lines.push(`- Summary: ${context.profile.summary}`);
+    if (
+      Array.isArray(context.profile.skills) &&
+      context.profile.skills.length
+    ) {
       lines.push(`- Skills: ${context.profile.skills.join(", ")}`);
     }
-    if (Array.isArray(context.profile.interests) && context.profile.interests.length) {
+    if (
+      Array.isArray(context.profile.interests) &&
+      context.profile.interests.length
+    ) {
       lines.push(`- Interests: ${context.profile.interests.join(", ")}`);
     }
   }
 
-  lines.push("", "Answer concisely and only use details supported by this context.");
+  lines.push(
+    "",
+    "Answer concisely and only use details supported by this context.",
+  );
   return lines.join("\n");
 }
 
@@ -656,7 +744,10 @@ export async function buildAskAiContext(query, options = {}) {
   const page = getPageContext(normalizedQuery, config);
   const profile = await loadProfileContext(config);
   const auth = getAuthSnapshot();
-  const role = auth && typeof auth.role === "string" ? normalizeString(auth.role).toLowerCase() : "guest";
+  const role =
+    auth && typeof auth.role === "string"
+      ? normalizeString(auth.role).toLowerCase()
+      : "guest";
 
   return {
     query: normalizedQuery,

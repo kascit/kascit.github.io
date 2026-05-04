@@ -1,5 +1,5 @@
 +++
-title = "Why I Switched from VS Code to Neovim"
+title = "Why I Switched from Visual Studio Code to Neovim"
 date = 2026-01-15
 description = "A journey of pain, frustration, and eventual productivity with terminal-based editors"
 
@@ -10,7 +10,8 @@ thumbnail_image = "images/thumbs/nerd.jpg"
 tags = ["tooling", "systems", "productivity", "backend"]
 categories = ["engineering"]
 +++
-Let me start by saying this: I still love VS Code. It's an amazing editor that probably does 95% of what most developers need. But I switched to Neovim anyway, and here's why.
+
+Let me start by saying this: I still love Visual Studio Code. It's an amazing editor that probably does 95% of what most developers need. But I switched to Neovim anyway, and here's why.
 
 ## The Breaking Point
 
@@ -27,15 +28,19 @@ The first few days were chaotic. I had to relearn basic movement and command pat
 After the painful learning curve, things started clicking:
 
 ### 1. Speed
+
 Everything is instant. No loading times, no lag. Just pure speed.
 
 ### 2. Keyboard-First Workflow
+
 No more reaching for the mouse. My hands stay on the keyboard, and I can navigate and edit code faster than ever.
 
 ### 3. Customization
+
 My editor works exactly how I want it to. No compromises.
 
 ### 4. The "Flow State"
+
 This is hard to explain, but there's something about staying in the terminal that keeps me in a deeper state of concentration.
 
 Taken together, those four shifts changed how coding sessions feel: less interruption, faster iteration, and a setup that behaves like a toolbelt rather than a platform to tame.
@@ -63,7 +68,7 @@ The exact plugins matter less than the principle: pick a minimal core, make it d
 
 ## What I Still Miss
 
-I still miss a few VS Code conveniences, especially rich GitLens context, Live Share collaboration, and niche marketplace extensions with no direct Neovim replacement.
+I still miss a few Visual Studio Code conveniences, especially rich GitLens context, Live Share collaboration, and niche marketplace extensions with no direct Neovim replacement.
 
 ## Should You Switch?
 
@@ -77,4 +82,4 @@ Am I more productive now? Honestly, yes. But more importantly, I enjoy coding mo
 
 ---
 
-*P.S. If you do make the switch, bookmark `:help` and `vim-fugitive`. You'll thank me later.*
+_P.S. If you do make the switch, bookmark `:help` and `vim-fugitive`. You'll thank me later._

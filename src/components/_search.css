@@ -57,11 +57,23 @@
 
 #sidebar .sidebar-search-trigger {
   --sidebar-item-radius: 0.55rem;
-  --sidebar-item-bg-hover: color-mix(in oklab, var(--color-base-content) 7%, transparent);
-  --sidebar-item-bg-active: color-mix(in oklab, var(--color-primary) 12%, transparent);
+  --sidebar-item-bg-hover: color-mix(
+    in oklab,
+    var(--color-base-content) 7%,
+    transparent
+  );
+  --sidebar-item-bg-active: color-mix(
+    in oklab,
+    var(--color-primary) 12%,
+    transparent
+  );
   border-radius: var(--sidebar-item-radius);
   border-color: color-mix(in oklab, var(--color-base-content) 16%, transparent);
-  background: color-mix(in oklab, var(--color-base-100) 84%, var(--color-base-200));
+  background: color-mix(
+    in oklab,
+    var(--color-base-100) 84%,
+    var(--color-base-200)
+  );
   color: color-mix(in oklab, var(--color-base-content) 78%, transparent);
   padding: 0.52rem 0.7rem;
   min-height: 0;
@@ -109,21 +121,24 @@
   position: relative;
   overflow: hidden;
   border-radius: 0.95rem;
-  border: 1px solid color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  border: 1px solid
+    color-mix(in oklab, var(--color-base-content) 12%, transparent);
   background: linear-gradient(
     180deg,
     color-mix(in oklab, var(--color-base-100) 92%, var(--color-base-200)) 0%,
     var(--color-base-100) 72%
   );
   box-shadow:
-    0 20px 48px -34px color-mix(in oklab, var(--color-base-content) 24%, transparent),
+    0 20px 48px -34px
+      color-mix(in oklab, var(--color-base-content) 24%, transparent),
     0 1px 0 color-mix(in oklab, var(--color-base-content) 8%, transparent) inset;
 }
 
 html.dark .search-modal-shell {
   box-shadow:
     0 14px 36px -30px color-mix(in oklab, #000 58%, transparent),
-    0 1px 0 color-mix(in oklab, var(--color-base-content) 12%, transparent) inset;
+    0 1px 0 color-mix(in oklab, var(--color-base-content) 12%, transparent)
+      inset;
 }
 
 .search-modal-close {
@@ -131,11 +146,17 @@ html.dark .search-modal-shell {
   width: 1.7rem;
   height: 1.7rem;
   border-radius: 0.45rem;
-  border: 1px solid color-mix(in oklab, var(--color-base-content) 14%, transparent);
+  border: 1px solid
+    color-mix(in oklab, var(--color-base-content) 14%, transparent);
   color: color-mix(in oklab, var(--color-base-content) 72%, transparent);
   background: color-mix(in oklab, var(--color-base-100) 72%, transparent);
   cursor: pointer;
-  transition: background-color 150ms ease, color 150ms ease, border-color 150ms ease, transform 150ms ease, box-shadow 150ms ease;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease,
+    border-color 150ms ease,
+    transform 150ms ease,
+    box-shadow 150ms ease;
 }
 
 .search-modal-close.search-modal-close-inline {
@@ -155,7 +176,8 @@ html.dark .search-modal-shell {
 .search-modal-close:focus-visible {
   outline: none;
   border-color: color-mix(in oklab, var(--color-primary) 36%, transparent);
-  box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-primary) 24%, transparent);
+  box-shadow: 0 0 0 2px
+    color-mix(in oklab, var(--color-primary) 24%, transparent);
 }
 
 .search-modal-close:active {
@@ -191,13 +213,17 @@ html.dark .search-modal-shell {
   height: 1.6rem;
   padding: 0 0.52rem;
   border-radius: 0.44rem;
-  border: 1px solid color-mix(in oklab, var(--color-base-content) 16%, transparent);
+  border: 1px solid
+    color-mix(in oklab, var(--color-base-content) 16%, transparent);
   background: color-mix(in oklab, var(--color-base-100) 72%, transparent);
   color: color-mix(in oklab, var(--color-base-content) 72%, transparent);
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.02em;
-  transition: background-color 140ms ease, color 140ms ease, border-color 140ms ease;
+  transition:
+    background-color 140ms ease,
+    color 140ms ease,
+    border-color 140ms ease;
 }
 
 .search-clear-btn:hover {
@@ -234,8 +260,16 @@ html.dark .search-modal-shell {
 
 .search-results-container {
   --search-item-radius: 0.55rem;
-  --search-item-bg-hover: color-mix(in oklab, var(--color-base-content) 7%, transparent);
-  --search-item-bg-active: color-mix(in oklab, var(--color-primary) 12%, transparent);
+  --search-item-bg-hover: color-mix(
+    in oklab,
+    var(--color-base-content) 7%,
+    transparent
+  );
+  --search-item-bg-active: color-mix(
+    in oklab,
+    var(--color-primary) 12%,
+    transparent
+  );
   scrollbar-width: thin;
   scrollbar-color: rgba(156, 163, 175, 0.3) transparent;
 }
@@ -271,7 +305,10 @@ html.dark .search-modal-shell {
   border: 1px solid transparent;
   color: var(--color-base-content);
   text-decoration: none;
-  transition: background-color 160ms ease, color 160ms ease, border-color 160ms ease;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    border-color 160ms ease;
 }
 
 .search-result-link:hover,
@@ -289,7 +326,8 @@ html.dark .search-modal-shell {
   background: var(--search-item-bg-active);
   color: var(--color-base-content);
   border-color: color-mix(in oklab, var(--color-primary) 28%, transparent);
-  box-shadow: 0 8px 20px -18px color-mix(in oklab, var(--color-primary) 56%, transparent);
+  box-shadow: 0 8px 20px -18px
+    color-mix(in oklab, var(--color-primary) 56%, transparent);
 }
 
 .search-result-link.search-result-selected::before {
@@ -300,7 +338,11 @@ html.dark .search-modal-shell {
   bottom: 0.42rem;
   width: 2px;
   border-radius: 999px;
-  background: color-mix(in oklab, var(--color-primary) 72%, var(--color-base-content));
+  background: color-mix(
+    in oklab,
+    var(--color-primary) 72%,
+    var(--color-base-content)
+  );
 }
 
 .search-result-link:hover .search-result-arrow,
@@ -354,7 +396,9 @@ html.dark .search-modal-shell {
   transform: translate(-50%, -0.7rem);
   opacity: 0;
   pointer-events: none;
-  transition: transform 180ms var(--motion-ease-standard), opacity 180ms var(--motion-ease-standard);
+  transition:
+    transform 180ms var(--motion-ease-standard),
+    opacity 180ms var(--motion-ease-standard);
 }
 
 .page-find-panel.is-open {
@@ -365,14 +409,16 @@ html.dark .search-modal-shell {
 
 .page-find-shell {
   @apply flex items-center gap-2 rounded-box px-3 py-2;
-  border: 1px solid color-mix(in oklab, var(--color-base-content) 14%, transparent);
+  border: 1px solid
+    color-mix(in oklab, var(--color-base-content) 14%, transparent);
   background: linear-gradient(
     180deg,
     color-mix(in oklab, var(--color-base-100) 94%, var(--color-base-200)) 0%,
     var(--color-base-100) 78%
   );
   box-shadow:
-    0 16px 36px -24px color-mix(in oklab, var(--color-base-content) 30%, transparent),
+    0 16px 36px -24px
+      color-mix(in oklab, var(--color-base-content) 30%, transparent),
     0 1px 0 color-mix(in oklab, var(--color-base-content) 8%, transparent) inset;
 }
 
@@ -410,7 +456,8 @@ html.dark .search-modal-shell {
   height: 1.7rem;
   padding: 0 0.52rem;
   border-radius: 0.45rem;
-  border: 1px solid color-mix(in oklab, var(--color-base-content) 16%, transparent);
+  border: 1px solid
+    color-mix(in oklab, var(--color-base-content) 16%, transparent);
   background: color-mix(in oklab, var(--color-base-100) 70%, transparent);
   color: color-mix(in oklab, var(--color-base-content) 74%, transparent);
   font-size: 0.7rem;
@@ -450,7 +497,8 @@ html.dark .search-modal-shell {
 [data-page-find-scope] mark.page-find-hit.page-find-hit-active {
   background: color-mix(in oklab, var(--color-primary) 36%, transparent);
   color: var(--color-base-content);
-  box-shadow: 0 0 0 1px color-mix(in oklab, var(--color-primary) 38%, transparent);
+  box-shadow: 0 0 0 1px
+    color-mix(in oklab, var(--color-primary) 38%, transparent);
 }
 
 @media (max-width: 1023px) {
@@ -459,4 +507,3 @@ html.dark .search-modal-shell {
     width: min(34rem, calc(100vw - 0.85rem));
   }
 }
-

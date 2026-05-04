@@ -17,8 +17,16 @@
 /* Sidebar navigation profile: consistent spacing, hover, and active state */
 #sidebar .menu {
   --sidebar-item-radius: 0.55rem;
-  --sidebar-item-bg-hover: color-mix(in oklab, var(--color-base-content) 7%, transparent);
-  --sidebar-item-bg-active: color-mix(in oklab, var(--color-primary) 12%, transparent);
+  --sidebar-item-bg-hover: color-mix(
+    in oklab,
+    var(--color-base-content) 7%,
+    transparent
+  );
+  --sidebar-item-bg-active: color-mix(
+    in oklab,
+    var(--color-primary) 12%,
+    transparent
+  );
   --menu-active-bg: transparent;
   --menu-active-fg: var(--color-base-content);
 }
@@ -29,7 +37,9 @@
   padding: 0.52rem 0.7rem;
   min-height: 0;
   line-height: 1.35;
-  transition: background-color 160ms ease, color 160ms ease;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
 }
 
 #sidebar .menu :where(li > a, li > details > summary):hover {
@@ -91,7 +101,11 @@
   bottom: 0.32rem;
   width: 2px;
   border-radius: 2px;
-  background: color-mix(in oklab, var(--color-primary) 72%, var(--color-base-content));
+  background: color-mix(
+    in oklab,
+    var(--color-primary) 72%,
+    var(--color-base-content)
+  );
 }
 
 [data-apps-grid-sidebar] > summary .apps-grid-chevron {
@@ -106,7 +120,9 @@
   display: grid;
   grid-template-rows: 0fr;
   opacity: 0;
-  transition: grid-template-rows 220ms ease, opacity 180ms ease;
+  transition:
+    grid-template-rows 220ms ease,
+    opacity 180ms ease;
 }
 
 [data-apps-grid-sidebar] > .apps-grid-panel > .apps-grid-panel-inner {
@@ -156,7 +172,8 @@
     width: min(18rem, 92vw);
     min-height: 100dvh;
     background-color: var(--color-sidebar);
-    box-shadow: 4px 0 24px -6px color-mix(in oklab, var(--color-base-content) 14%, transparent);
+    box-shadow: 4px 0 24px -6px
+      color-mix(in oklab, var(--color-base-content) 14%, transparent);
     /* Remove scrollbar spacing issues */
     scrollbar-gutter: stable;
   }
@@ -189,8 +206,9 @@
   }
 
   #sidebar {
-    transition: margin-left 300ms var(--motion-ease-standard), 
-                opacity 300ms var(--motion-ease-standard);
+    transition:
+      margin-left 300ms var(--motion-ease-standard),
+      opacity 300ms var(--motion-ease-standard);
     will-change: margin-left, opacity;
   }
 
@@ -205,9 +223,10 @@
   #sidebar-toggle-wrapper {
     left: calc(var(--sidebar-width) - var(--toggle-half-width));
     right: auto;
-    transition: left 300ms var(--motion-ease-standard),
-                right 300ms var(--motion-ease-standard),
-                transform 150ms ease;
+    transition:
+      left 300ms var(--motion-ease-standard),
+      right 300ms var(--motion-ease-standard),
+      transform 150ms ease;
     will-change: left, right, transform;
   }
 
@@ -244,11 +263,15 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
 
-  html[data-sidebar-collapsed="1"] #sidebar-toggle .sidebar-toggle-icon-collapsed {
+  html[data-sidebar-collapsed="1"]
+    #sidebar-toggle
+    .sidebar-toggle-icon-collapsed {
     display: block;
   }
 
-  html[data-sidebar-collapsed="1"] #sidebar-toggle .sidebar-toggle-icon-expanded {
+  html[data-sidebar-collapsed="1"]
+    #sidebar-toggle
+    .sidebar-toggle-icon-expanded {
     display: none;
   }
 }
@@ -273,7 +296,7 @@
 }
 
 .toc-link.toc-active::before {
-  content: '';
+  content: "";
   position: absolute;
   left: -0.5rem;
   top: 10%;
@@ -283,7 +306,6 @@
   border-radius: 2px;
   opacity: 0.8;
 }
-
 
 /* Ensure consistent font-size for ToC summary elements (items with sub-items) */
 .toc-menu details > summary {
@@ -334,8 +356,9 @@
   height: 100%;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  transition: opacity 260ms var(--motion-ease-standard),
-              transform 260ms var(--motion-ease-standard);
+  transition:
+    opacity 260ms var(--motion-ease-standard),
+    transform 260ms var(--motion-ease-standard);
   transform: translateX(0);
 }
 
@@ -379,7 +402,9 @@
     margin 280ms var(--motion-ease-standard),
     opacity 220ms var(--motion-ease-standard),
     transform 280ms var(--motion-ease-standard);
-  will-change: width, max-width, min-width, flex-basis, padding-left, margin, opacity, transform;
+  will-change:
+    width, max-width, min-width, flex-basis, padding-left, margin, opacity,
+    transform;
 }
 
 /* --- TOC column: collapsed state --- */
@@ -421,10 +446,11 @@ html[data-toc-collapsed="1"] body #toc-sidebar {
     --toc-rail-padding-left: 1.5rem;
     --toc-toggle-offset: 1.5rem;
     --blog-layout-pad-right: 2.5rem;
-    transition: max-width 280ms var(--motion-ease-standard),
-                width 280ms var(--motion-ease-standard),
-                padding 280ms var(--motion-ease-standard),
-                margin 280ms var(--motion-ease-standard);
+    transition:
+      max-width 280ms var(--motion-ease-standard),
+      width 280ms var(--motion-ease-standard),
+      padding 280ms var(--motion-ease-standard),
+      margin 280ms var(--motion-ease-standard);
   }
 }
 
@@ -447,7 +473,11 @@ html[data-toc-collapsed="1"] body #blog-layout {
   position: absolute;
   left: 0;
   transform: translateX(-50%);
-  transition: transform 150ms ease, box-shadow 150ms ease, opacity 200ms ease, background-color 200ms ease;
+  transition:
+    transform 150ms ease,
+    box-shadow 150ms ease,
+    opacity 200ms ease,
+    background-color 200ms ease;
 }
 
 #toc-toggle svg {
@@ -553,4 +583,3 @@ html[data-toc-collapsed="1"] body #toc-toggle {
 .catalog-card:hover .catalog-card__meta {
   @apply text-base-content/80 border-base-content/15;
 }
-

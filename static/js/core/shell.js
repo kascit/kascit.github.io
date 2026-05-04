@@ -28,10 +28,13 @@ const DEFAULT_SHELL_CONFIG = {
 
 function getShellRuntimeConfig() {
   const rawConfig = getConfig() || {};
-  const nestedShell = rawConfig.shell && typeof rawConfig.shell === 'object' ? rawConfig.shell : {};
+  const nestedShell =
+    rawConfig.shell && typeof rawConfig.shell === "object"
+      ? rawConfig.shell
+      : {};
   const merged = { ...DEFAULT_SHELL_CONFIG, ...rawConfig, ...nestedShell };
 
-  if (typeof merged.shellPath !== 'string' || merged.shellPath.trim() === '') {
+  if (typeof merged.shellPath !== "string" || merged.shellPath.trim() === "") {
     merged.shellPath = DEFAULT_SHELL_CONFIG.shellPath;
   }
 
@@ -46,15 +49,20 @@ function maybeRegisterServiceWorker(config) {
   if (config.enablePwa === false) return;
   if (!("serviceWorker" in navigator) || !window.isSecureContext) return;
 
-  const swPath = typeof config.swPath === 'string' && config.swPath.trim() !== ''
-    ? config.swPath
-    : '/sw.js';
+  const swPath =
+    typeof config.swPath === "string" && config.swPath.trim() !== ""
+      ? config.swPath
+      : "/sw.js";
 
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register(swPath).catch(() => {
-      // Subdomains can opt out or provide their own /sw.js.
-    });
-  }, { once: true });
+  window.addEventListener(
+    "load",
+    () => {
+      navigator.serviceWorker.register(swPath).catch(() => {
+        // Subdomains can opt out or provide their own /sw.js.
+      });
+    },
+    { once: true },
+  );
 }
 
 // Helpers to inject CSS and favicon assets into foreign documents.
@@ -62,22 +70,26 @@ function injectCSS(sameOrigin, config) {
   if (config.noCss) return;
   if (document.querySelector('link[data-shell-style="main"]')) return;
 
-  const cssBase = sameOrigin ? '' : BASE_URL;
-  const shellCssHref = sameOrigin ? `${cssBase}/css/main.css` : `${cssBase}/css/dui.css`;
+  const cssBase = sameOrigin ? "" : BASE_URL;
+  const shellCssHref = sameOrigin
+    ? `${cssBase}/css/main.css`
+    : `${cssBase}/css/dui.css`;
 
   const mainLink = document.createElement("link");
   mainLink.rel = "stylesheet";
   mainLink.href = shellCssHref;
-  mainLink.setAttribute('data-shell-style', 'main');
+  mainLink.setAttribute("data-shell-style", "main");
   if (!sameOrigin) mainLink.crossOrigin = "anonymous";
   document.head.appendChild(mainLink);
 
   const faLink = document.createElement("link");
   faLink.rel = "stylesheet";
   faLink.href = `${cssBase}/css/font-awesome.min.css`;
-  faLink.setAttribute('data-shell-style', 'fa');
+  faLink.setAttribute("data-shell-style", "fa");
   faLink.media = "print";
-  faLink.onload = function () { this.media = "all"; };
+  faLink.onload = function () {
+    this.media = "all";
+  };
   if (!sameOrigin) faLink.crossOrigin = "anonymous";
   document.head.appendChild(faLink);
 }
@@ -86,22 +98,37 @@ function injectFavicons(sameOrigin, config) {
   if (config.favicon === false) return;
   const iconBase = sameOrigin ? "/icons/" : `${BASE_URL}/icons/`;
 
-  document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]').forEach(el => el.remove());
+  document
+    .querySelectorAll(
+      'link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]',
+    )
+    .forEach((el) => el.remove());
 
   const iconLinks = [
-    { rel: "icon", type: "image/png", sizes: "96x96", href: `${iconBase}favicon-96x96-transparent.png` },
+    {
+      rel: "icon",
+      type: "image/png",
+      sizes: "96x96",
+      href: `${iconBase}favicon-96x96-transparent.png`,
+    },
     { rel: "icon", type: "image/svg+xml", href: `${iconBase}favicon.svg` },
     { rel: "shortcut icon", href: `${iconBase}favicon-transparent.ico` },
-    { rel: "apple-touch-icon", sizes: "180x180", href: `${iconBase}apple-touch-icon-180x180-transparent.png` }
+    {
+      rel: "apple-touch-icon",
+      sizes: "180x180",
+      href: `${iconBase}apple-touch-icon-180x180-transparent.png`,
+    },
   ];
 
   // Avoid cross-origin webmanifest warnings on subdomains.
   if (sameOrigin) {
-    document.querySelectorAll('link[rel="manifest"]').forEach(el => el.remove());
+    document
+      .querySelectorAll('link[rel="manifest"]')
+      .forEach((el) => el.remove());
     iconLinks.push({ rel: "manifest", href: `${iconBase}site.webmanifest` });
   }
 
-  iconLinks.forEach(f => {
+  iconLinks.forEach((f) => {
     const link = document.createElement("link");
     link.rel = f.rel;
     if (f.type) link.type = f.type;
@@ -114,19 +141,29 @@ function injectFavicons(sameOrigin, config) {
 
 function applyChromeVisibility(root, config) {
   if (!config.showLanguage) {
-    root.querySelectorAll('[data-nav-chrome="lang"]').forEach(node => node.remove());
+    root
+      .querySelectorAll('[data-nav-chrome="lang"]')
+      .forEach((node) => node.remove());
   }
   if (!config.showAppsGrid) {
-    root.querySelectorAll('[data-nav-chrome="apps"]').forEach(node => node.remove());
+    root
+      .querySelectorAll('[data-nav-chrome="apps"]')
+      .forEach((node) => node.remove());
   }
   if (!config.showAccountButton) {
-    root.querySelectorAll('[data-nav-chrome="account"]').forEach(node => node.remove());
+    root
+      .querySelectorAll('[data-nav-chrome="account"]')
+      .forEach((node) => node.remove());
   }
   if (!config.showThemeToggle) {
-    root.querySelectorAll('[data-nav-chrome="theme"]').forEach(node => node.remove());
+    root
+      .querySelectorAll('[data-nav-chrome="theme"]')
+      .forEach((node) => node.remove());
   }
   if (!config.showMobileMenu) {
-    const mobileMenu = root.querySelector('#hamburger-toggle')?.closest('.flex-none');
+    const mobileMenu = root
+      .querySelector("#hamburger-toggle")
+      ?.closest(".flex-none");
     if (mobileMenu) mobileMenu.remove();
   }
 }
@@ -153,7 +190,9 @@ function safeIconClass(value) {
 }
 
 function renderAppsGrid(shellRoot, apps) {
-  const grids = shellRoot.querySelectorAll('[data-apps-grid], [data-apps-grid-sidebar]');
+  const grids = shellRoot.querySelectorAll(
+    "[data-apps-grid], [data-apps-grid-sidebar]",
+  );
   if (!grids.length) return;
 
   const entries = Array.isArray(apps) ? apps : [];
@@ -173,13 +212,15 @@ function renderAppsGrid(shellRoot, apps) {
       anchor.className = `group flex flex-col items-center gap-1.5 ${padding} rounded-md hover:bg-base-200 transition-colors duration-200 no-underline hover:no-underline text-base-content`;
 
       const iconWrap = document.createElement("div");
-      iconWrap.className = "w-10 h-10 rounded-md bg-base-300/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors";
+      iconWrap.className =
+        "w-10 h-10 rounded-md bg-base-300/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors";
 
       const iconNode = document.createElement("i");
       iconNode.className = `${icon} text-lg`;
 
       const label = document.createElement("span");
-      label.className = "text-[10px] font-medium opacity-70 group-hover:opacity-100";
+      label.className =
+        "text-[10px] font-medium opacity-70 group-hover:opacity-100";
       label.textContent = name;
 
       iconWrap.appendChild(iconNode);
@@ -203,8 +244,12 @@ function hydrate(shellRoot) {
   const config = getShellRuntimeConfig();
   const sameOrigin = isSameOriginHost();
 
-  const hasMainStyles = !!document.querySelector('link[rel="stylesheet"][href*="/css/main.css"], link[rel="stylesheet"][href*="/css/dui.css"], link[data-shell-style="main"]');
-  const hasFaviconLinks = !!document.querySelector('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]');
+  const hasMainStyles = !!document.querySelector(
+    'link[rel="stylesheet"][href*="/css/main.css"], link[rel="stylesheet"][href*="/css/dui.css"], link[data-shell-style="main"]',
+  );
+  const hasFaviconLinks = !!document.querySelector(
+    'link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]',
+  );
 
   // On subdomains always inject shared assets.
   // On same-origin shell test pages, inject only if missing.
@@ -228,11 +273,17 @@ function hydrate(shellRoot) {
   initAuth(shellRoot, (authStatus) => {
     const role = authStatus?.role || "guest";
     const access = checkAccess(config, authStatus);
-    const contentSlot = shellRoot.querySelector('.site-nav-slot') || shellRoot.querySelector('.drawer-content');
+    const contentSlot =
+      shellRoot.querySelector(".site-nav-slot") ||
+      shellRoot.querySelector(".drawer-content");
 
     if (!access.allowed) {
       if (contentSlot) {
-        renderAccessWall(contentSlot, access.reason, document.title || "This app");
+        renderAccessWall(
+          contentSlot,
+          access.reason,
+          document.title || "This app",
+        );
       }
       return;
     }

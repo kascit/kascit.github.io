@@ -60,7 +60,8 @@ export function initTaxonomyFilter() {
   if (nodes.length === 0) return;
 
   const items = nodes.map((node, index) => {
-    const rawName = node.getAttribute("data-term-name") || node.textContent || "";
+    const rawName =
+      node.getAttribute("data-term-name") || node.textContent || "";
     return {
       node,
       index,
@@ -108,7 +109,11 @@ export function initTaxonomyFilter() {
     });
 
     ranked
-      .sort((a, b) => b.score - a.score || a.item.normalized.localeCompare(b.item.normalized))
+      .sort(
+        (a, b) =>
+          b.score - a.score ||
+          a.item.normalized.localeCompare(b.item.normalized),
+      )
       .forEach((entry, order) => {
         entry.item.node.style.order = String(order);
       });

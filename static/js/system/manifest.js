@@ -3,11 +3,37 @@ const CACHE_KEY = "dhanur_manifest_v1";
 const CACHE_TTL_MS = 60 * 60 * 1000;
 
 const FALLBACK_APPS = [
-  { name: "Home", url: "https://dhanur.me", icon: "fa-solid fa-globe", minRole: "guest" },
-  { name: "Linkr", url: "https://linkr.dhanur.me", icon: "fa-solid fa-link", minRole: "guest" },
-  { name: "Tasks", url: "https://tasks.dhanur.me", icon: "fa-solid fa-list-check", minRole: "guest" },
-  { name: "Auth", url: "https://auth.dhanur.me", icon: "fa-solid fa-fingerprint", minRole: "guest" },
-  { name: "Status", url: "https://up.dhanur.me", icon: "fa-solid fa-signal", minRole: "admin", category: "Admin" },
+  {
+    name: "Home",
+    url: "https://dhanur.me",
+    icon: "fa-solid fa-globe",
+    minRole: "guest",
+  },
+  {
+    name: "Linkr",
+    url: "https://linkr.dhanur.me",
+    icon: "fa-solid fa-link",
+    minRole: "guest",
+  },
+  {
+    name: "Tasks",
+    url: "https://tasks.dhanur.me",
+    icon: "fa-solid fa-list-check",
+    minRole: "guest",
+  },
+  {
+    name: "Auth",
+    url: "https://auth.dhanur.me",
+    icon: "fa-solid fa-fingerprint",
+    minRole: "guest",
+  },
+  {
+    name: "Status",
+    url: "https://up.dhanur.me",
+    icon: "fa-solid fa-signal",
+    minRole: "admin",
+    category: "Admin",
+  },
 ];
 
 let manifestState = null;
@@ -73,7 +99,9 @@ export function getManifestSync() {
 
 export function filterAppsByRole(apps, role = "guest") {
   const level = roleLevel(role);
-  return (Array.isArray(apps) ? apps : []).filter((app) => roleLevel(app?.minRole || "guest") <= level);
+  return (Array.isArray(apps) ? apps : []).filter(
+    (app) => roleLevel(app?.minRole || "guest") <= level,
+  );
 }
 
 export async function fetchManifest(role = "guest") {
@@ -91,7 +119,9 @@ export async function fetchManifest(role = "guest") {
         cache: "no-cache",
       });
       if (!response.ok) {
-        throw new Error(`Manifest request failed with status ${response.status}`);
+        throw new Error(
+          `Manifest request failed with status ${response.status}`,
+        );
       }
       const data = await response.json();
       if (!data || !Array.isArray(data.apps)) {

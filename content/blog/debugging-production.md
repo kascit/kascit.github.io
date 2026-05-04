@@ -10,6 +10,7 @@ thumbnail_image = "images/thumbs/code.jpg"
 tags = ["systems", "debugging", "automation", "tooling"]
 categories = ["engineering"]
 +++
+
 It's 3 AM. You get a Slack notification: "The site is down." You check your local environment - everything works fine. You check staging - also works fine. But production is broken.
 
 This is the story of every developer's life. Here's how I learned to debug production issues like a detective instead of like a panicked developer.
@@ -46,11 +47,13 @@ Look for repeatable patterns in the evidence, including time-based spikes, endpo
 ## Real Case Study: The Mysterious 500 Errors
 
 ### The Crime
+
 Random 500 errors affecting 2% of requests. No pattern in logs. Local environment perfect.
 
 ### The Investigation
 
 **Step 1: Gather Evidence**
+
 ```bash
 # Check error rates
 grep "HTTP/5.0" nginx-access.log | wc -l
@@ -64,6 +67,7 @@ grep "HTTP/5.0" nginx-access.log | awk '{print $1}' | sort | uniq -c | sort -nr
 Most errors came from 3 specific IP addresses, all from the same corporate network.
 
 **Step 3: Reproduce**
+
 ```bash
 # Test with headers from those IPs
 curl -H "User-Agent: CorporateBot/1.0" https://api.example.com/endpoint
@@ -74,6 +78,7 @@ curl -H "User-Agent: CorporateBot/1.0" https://api.example.com/endpoint
 Our rate limiting was too aggressive for that specific user agent, causing race conditions in the database connection pool.
 
 ### The Solution
+
 ```python
 # Fixed the rate limiting logic
 def should_rate_limit(user_agent, ip):
@@ -85,16 +90,17 @@ def should_rate_limit(user_agent, ip):
 ## Tools Every Detective Needs
 
 ### 1. Structured Logging
+
 ```javascript
 // Bad
 console.log("User created");
 
-// Good  
+// Good
 logger.info("User created", {
   userId: user.id,
   email: user.email,
   timestamp: new Date().toISOString(),
-  requestId: ctx.requestId
+  requestId: ctx.requestId,
 });
 ```
 
@@ -107,16 +113,17 @@ An error tracking platform such as Sentry, Rollbar, or Honeybadger gives you sta
 Monitoring dashboards are the second half of the story. Whether you use Grafana, Datadog, or Prometheus-based stacks, trend lines tell you when the issue started and what changed around it.
 
 ### 4. Health Checks
+
 ```javascript
-app.get('/health', async (req, res) => {
+app.get("/health", async (req, res) => {
   const checks = {
     database: await checkDatabase(),
     redis: await checkRedis(),
-    external_api: await checkExternalAPI()
+    external_api: await checkExternalAPI(),
   };
-  
-  const allHealthy = Object.values(checks).every(check => check.healthy);
-  
+
+  const allHealthy = Object.values(checks).every((check) => check.healthy);
+
   res.status(allHealthy ? 200 : 503).json(checks);
 });
 ```
@@ -144,16 +151,20 @@ After the incident, complete a postmortem, improve alerting, harden the code pat
 ## Advanced Techniques
 
 ### Canary Deployments
+
 Deploy to a small subset of users first:
+
 ```bash
 # Deploy to 10% of traffic
 kubectl patch deployment app -p '{"spec":{"template":{"metadata":{"labels":{"canary":"true"}}}}}'
 ```
 
 ### Feature Flags
+
 Turn off problematic features without redeploying:
+
 ```javascript
-if (featureFlags.isEnabled('new-payment-system')) {
+if (featureFlags.isEnabled("new-payment-system")) {
   return newPaymentProcessor();
 } else {
   return legacyPaymentProcessor();
@@ -161,7 +172,9 @@ if (featureFlags.isEnabled('new-payment-system')) {
 ```
 
 ### Database Snapshots
+
 For data-related issues:
+
 ```bash
 # Create a snapshot for investigation
 pg_dump production_db > production-snapshot.sql
@@ -195,4 +208,4 @@ Stay calm, be systematic, and remember: the bug is always reproducible - you jus
 
 ---
 
-*What's your worst production debugging story? I'd love to hear it in the comments.*
+_What's your worst production debugging story? I'd love to hear it in the comments._

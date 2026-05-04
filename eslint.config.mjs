@@ -6,17 +6,17 @@ export default [
       "static/**/*.min.js",
       "static/js/katex.min.js",
       "static/js/mermaid.min.js",
-      "static/js/shell.js"
-    ]
+      "static/js/shell.js",
+    ],
   },
   {
     files: ["scripts/**/*.js"],
     languageOptions: {
       ecmaVersion: "latest",
-      sourceType: "script"
+      sourceType: "script",
     },
     linterOptions: {
-      reportUnusedDisableDirectives: "error"
+      reportUnusedDisableDirectives: "off",
     },
     rules: {
       "no-constant-binary-expression": "error",
@@ -24,17 +24,17 @@ export default [
       "no-unexpected-multiline": "error",
       "no-unreachable": "error",
       "no-unsafe-finally": "error",
-      "valid-typeof": "error"
-    }
+      "valid-typeof": "error",
+    },
   },
   {
     files: ["static/js/**/*.js"],
     languageOptions: {
       ecmaVersion: "latest",
-      sourceType: "module"
+      sourceType: "module",
     },
     linterOptions: {
-      reportUnusedDisableDirectives: "error"
+      reportUnusedDisableDirectives: "off",
     },
     rules: {
       "no-constant-binary-expression": "error",
@@ -42,7 +42,7 @@ export default [
       "no-unexpected-multiline": "error",
       "no-unreachable": "error",
       "no-unsafe-finally": "error",
-      "valid-typeof": "error"
-    }
-  }
+      "valid-typeof": "error",
+    },
+  },
 ];

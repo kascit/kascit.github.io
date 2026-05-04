@@ -2,6 +2,7 @@
 {% import "macros/projects.html" as macros_projects %}
 {% import "macros/nav.html" as macros_nav %}
 {% import "macros/taxonomy_chips.html" as taxonomy_chips %}
+{% import "macros/content_footer.html" as macros_content_footer %}
 
 {% block header %}
     {{ macros_header::header(config=config, lang=lang, page=page) }}
@@ -35,6 +36,37 @@
   </div>
 </div>
 
+{% set post_thumbnail = page.extra.thumbnail_image | default(value=page.extra.thumbnail | default(value=page.extra.image | default(value=""))) %}
+{% if post_thumbnail != "" %}
+    {% if post_thumbnail is starting_with("http://") or post_thumbnail is starting_with("https://") %}
+        {% set post_thumbnail_url = post_thumbnail %}
+    {% else %}
+        {% set post_thumbnail_url = get_url(path=post_thumbnail) | safe %}
+    {% endif %}
+<div class="not-prose mb-8 md:mb-10 overflow-hidden rounded-2xl border border-base-content/10 bg-base-200/30 shadow-sm post-hero-thumb aspect-video">
+    <img src="{{ post_thumbnail_url | safe }}"
+         class="post-hero-thumb__bg"
+         aria-hidden="true"
+         alt=""
+         loading="eager"
+         fetchpriority="high"
+         decoding="async" />
+    <img src="{{ post_thumbnail_url | safe }}"
+         class="post-hero-thumb__bg post-hero-thumb__bg--expanded"
+         aria-hidden="true"
+         alt=""
+         loading="eager"
+         fetchpriority="high"
+         decoding="async" />
+    <img src="{{ post_thumbnail_url | safe }}"
+         alt="{{ page.extra.thumbnail_alt | default(value=page.title) }}"
+         class="post-hero-thumb__img"
+         loading="eager"
+         fetchpriority="high"
+         decoding="async" />
+</div>
+{% endif %}
+
 {{ page.content | safe }}
 
 {% set project_live = page.extra.project.live_url | default(value="") %}
@@ -43,11 +75,16 @@
 {% set project_url_label = page.extra.project.url_label | default(value="Visit") %}
 {% set project_external = page.extra.project.external | default(value=false) %}
 {% if project_live or project_github or project_url %}
-<section class="not-prose mt-8 rounded-2xl border border-base-content/10 bg-base-200/30 p-4 sm:p-5 md:p-6">
+<section class="not-prose mt-8 rounded-box border border-base-content/10 bg-base-200/30 p-4 sm:p-5 md:p-6">
   <h2 class="text-sm font-semibold uppercase tracking-[0.08em] text-base-content/70 mt-0 mb-3">Project Links</h2>
-  {{ macros_projects::project_links(live_url=project_live, github_url=project_github, url=project_url, url_label=project_url_label, external=project_external) }}
+  <div class="flex flex-wrap gap-2.5">
+    {{ macros_projects::project_links(live_url=project_live, github_url=project_github, url=project_url, url_label=project_url_label, external=project_external) }}
+  </div>
 </section>
 {% endif %}
+
+{{ macros_content_footer::content_footer(config=config, item=page) }}
+
 {% endblock content %}
 
 {% block prev_link %}
@@ -55,5 +92,4 @@
 {% endblock prev_link %}
 
 {% block next_link %}
-{{ macros_nav::render_button(url="/links/", title="Links", subtitle="Next", direction="next") }}
 {% endblock next_link %}

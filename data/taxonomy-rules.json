@@ -17,7 +17,10 @@
     "productivity",
     "debugging",
     "writing",
-    "meta"
+    "meta",
+    "monitoring",
+    "fullstack",
+    "identity"
   ],
   "tag_priority": [
     "backend",
@@ -37,7 +40,10 @@
     "productivity",
     "debugging",
     "writing",
-    "meta"
+    "meta",
+    "monitoring",
+    "fullstack",
+    "identity"
   ],
   "tag_rules": [
     {
@@ -149,21 +155,11 @@
     },
     {
       "tag": "gaming",
-      "keywords": [
-        "game",
-        "gaming",
-        "tic tac toe",
-        "word",
-        "rhythm"
-      ]
+      "keywords": ["game", "gaming", "tic tac toe", "word", "rhythm"]
     },
     {
       "tag": "portfolio",
-      "keywords": [
-        "portfolio",
-        "personal website",
-        "personal platform"
-      ]
+      "keywords": ["portfolio", "personal website", "personal platform"]
     },
     {
       "tag": "infra",
@@ -189,12 +185,7 @@
     },
     {
       "tag": "security",
-      "keywords": [
-        "security",
-        "cryptography",
-        "applied cryptography",
-        "auth"
-      ]
+      "keywords": ["security", "cryptography", "applied cryptography", "auth"]
     },
     {
       "tag": "data",
@@ -210,22 +201,11 @@
     },
     {
       "tag": "product",
-      "keywords": [
-        "product",
-        "saas",
-        "pricing",
-        "business",
-        "strategy"
-      ]
+      "keywords": ["product", "saas", "pricing", "business", "strategy"]
     },
     {
       "tag": "productivity",
-      "keywords": [
-        "productivity",
-        "workflow",
-        "task manager",
-        "tasks"
-      ]
+      "keywords": ["productivity", "workflow", "task manager", "tasks"]
     },
     {
       "tag": "debugging",
@@ -239,12 +219,7 @@
     },
     {
       "tag": "writing",
-      "keywords": [
-        "writing",
-        "documentation",
-        "technical writing",
-        "docs"
-      ]
+      "keywords": ["writing", "documentation", "technical writing", "docs"]
     },
     {
       "tag": "meta",
@@ -255,6 +230,25 @@
         "general",
         "personal notes"
       ]
+    },
+    {
+      "tag": "monitoring",
+      "keywords": [
+        "monitoring",
+        "uptime",
+        "cron",
+        "status",
+        "health",
+        "observability"
+      ]
+    },
+    {
+      "tag": "fullstack",
+      "keywords": ["fullstack", "full-stack", "stack", "web app"]
+    },
+    {
+      "tag": "identity",
+      "keywords": ["identity", "sso", "jwt", "authentication", "authorization"]
     }
   ],
   "blog_category_rules": [
@@ -273,18 +267,15 @@
         "security",
         "data",
         "debugging",
-        "writing"
+        "writing",
+        "monitoring",
+        "fullstack",
+        "identity"
       ]
     },
     {
       "category": "notes",
-      "tags": [
-        "meta",
-        "product",
-        "productivity",
-        "gaming",
-        "portfolio"
-      ]
+      "tags": ["meta", "product", "productivity", "gaming", "portfolio"]
     }
   ],
   "default_blog_category": "notes"

@@ -8,7 +8,14 @@ const { spawnSync } = require("child_process");
 const ROOT = path.resolve(__dirname, "..");
 const TARGET_DIRS = ["templates", "static"];
 const VALID_EXTENSIONS = new Set([".xml", ".xsl"]);
-const SKIP_DIRS = new Set(["public", "resources", ".git", ".github", "node_modules", ".tmp-out"]);
+const SKIP_DIRS = new Set([
+  "public",
+  "resources",
+  ".git",
+  ".github",
+  "node_modules",
+  ".tmp-out",
+]);
 
 function walkFiles(dirPath, files) {
   const entries = fs.readdirSync(dirPath, { withFileTypes: true });
@@ -46,7 +53,7 @@ function validateFile(filePath) {
   const result = spawnSync("xmllint", ["--noout", filePath], {
     cwd: ROOT,
     shell: true,
-    encoding: "utf8"
+    encoding: "utf8",
   });
 
   if (result.status === 0) {
@@ -59,7 +66,7 @@ function validateFile(filePath) {
 
   return {
     filePath,
-    msg: detail
+    msg: detail,
   };
 }
 
@@ -67,7 +74,7 @@ function main() {
   const xmllintCheck = spawnSync("xmllint", ["--version"], {
     cwd: ROOT,
     shell: true,
-    stdio: "ignore"
+    stdio: "ignore",
   });
 
   if (xmllintCheck.status !== 0) {

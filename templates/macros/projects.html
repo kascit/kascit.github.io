@@ -7,7 +7,6 @@
 {% endmacro status_badge %}
 
 {% macro project_links(live_url="", github_url="", url="", url_label="Visit", external=false) %}
-<div class="flex flex-wrap gap-2.5">
   {% if live_url %}
   <a href="{{ live_url }}" target="_blank" rel="noopener" class="project-card-btn btn-live"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live</a>
   {% endif %}
@@ -19,5 +18,5 @@
   {% if url and url != live_url and url != github_url %}
   <a href="{{ url }}" {% if external %}target="_blank" rel="noopener"{% endif %} class="project-card-btn"><i class="fa-solid fa-link"></i> {{ url_label }}</a>
   {% endif %}
-</div>
 {% endmacro project_links %}
+

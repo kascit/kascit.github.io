@@ -8,7 +8,11 @@
 import { hasOptionalConsent } from "../telemetry/cookie-consent.js";
 
 function renderConsentPlaceholder(mount) {
-  if (mount.querySelector("[data-comments-consent]") || mount.querySelector("iframe.giscus-frame")) return;
+  if (
+    mount.querySelector("[data-comments-consent]") ||
+    mount.querySelector("iframe.giscus-frame")
+  )
+    return;
 
   const shell = document.createElement("div");
   shell.className = "comments-consent-block";
@@ -16,7 +20,8 @@ function renderConsentPlaceholder(mount) {
 
   const text = document.createElement("p");
   text.className = "comments-consent-block__text";
-  text.textContent = "Comments are disabled until optional cookies are enabled.";
+  text.textContent =
+    "Comments are disabled until optional cookies are enabled.";
 
   const actions = document.createElement("div");
   actions.className = "comments-consent-block__actions";
@@ -27,9 +32,10 @@ function renderConsentPlaceholder(mount) {
   allowBtn.setAttribute("data-cookie-consent-action", "all");
   allowBtn.textContent = "Allow All Cookies";
 
-  const privacyLink = document.createElement("a");
+  const privacyLink = document.createElement("button");
+  privacyLink.type = "button";
   privacyLink.className = "cookie-consent-btn cookie-consent-btn--quiet";
-  privacyLink.href = "/privacy/";
+  privacyLink.onclick = () => (window.location.href = "/privacy/");
   privacyLink.textContent = "Privacy settings";
 
   actions.appendChild(allowBtn);
@@ -40,9 +46,13 @@ function renderConsentPlaceholder(mount) {
 }
 
 function clearCommentMount(mount) {
-  mount.querySelectorAll("iframe.giscus-frame, script[src*='giscus'], [data-comments-consent]").forEach((node) => {
-    node.remove();
-  });
+  mount
+    .querySelectorAll(
+      "iframe.giscus-frame, script[src*='giscus'], [data-comments-consent]",
+    )
+    .forEach((node) => {
+      node.remove();
+    });
 }
 
 export function initComments() {
@@ -56,8 +66,11 @@ export function initComments() {
       return;
     }
 
-    mount.querySelectorAll("[data-comments-consent]").forEach((node) => node.remove());
-    if (mount.querySelector("iframe.giscus-frame, script[src*='giscus']")) return;
+    mount
+      .querySelectorAll("[data-comments-consent]")
+      .forEach((node) => node.remove());
+    if (mount.querySelector("iframe.giscus-frame, script[src*='giscus']"))
+      return;
 
     const isDark = document.documentElement.classList.contains("dark");
     const giscusTheme = isDark ? "dark" : "light";
@@ -65,11 +78,26 @@ export function initComments() {
     const script = document.createElement("script");
     script.src = "https://giscus.app/client.js";
     script.setAttribute("data-repo", mount.getAttribute("data-repo") || "");
-    script.setAttribute("data-repo-id", mount.getAttribute("data-repo-id") || "");
-    script.setAttribute("data-category", mount.getAttribute("data-category") || "");
-    script.setAttribute("data-category-id", mount.getAttribute("data-category-id") || "");
-    script.setAttribute("data-mapping", mount.getAttribute("data-mapping") || "pathname");
-    script.setAttribute("data-strict", mount.getAttribute("data-strict") || "0");
+    script.setAttribute(
+      "data-repo-id",
+      mount.getAttribute("data-repo-id") || "",
+    );
+    script.setAttribute(
+      "data-category",
+      mount.getAttribute("data-category") || "",
+    );
+    script.setAttribute(
+      "data-category-id",
+      mount.getAttribute("data-category-id") || "",
+    );
+    script.setAttribute(
+      "data-mapping",
+      mount.getAttribute("data-mapping") || "pathname",
+    );
+    script.setAttribute(
+      "data-strict",
+      mount.getAttribute("data-strict") || "0",
+    );
     script.setAttribute("data-reactions-enabled", "1");
     script.setAttribute("data-emit-metadata", "1");
     script.setAttribute("data-input-position", "top");
@@ -93,7 +121,7 @@ function updateGiscusTheme(theme) {
   if (!iframe) return;
   iframe.contentWindow.postMessage(
     { giscus: { setConfig: { theme } } },
-    "https://giscus.app"
+    "https://giscus.app",
   );
 }
 

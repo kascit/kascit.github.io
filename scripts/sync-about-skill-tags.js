@@ -3,8 +3,7 @@
 
 const fs = require("fs");
 const path = require("path");
-const { tomlString, tomlArray, compactUnique, ROOT } = require("./lib/shared");
-const { loadTaxonomyRules, deriveSemanticTagsFromValues } = require("./lib/taxonomy");
+const { tomlArray, compactUnique, ROOT } = require("./lib/shared");
 
 const ABOUT_FILE = path.join(ROOT, "content", "about.md");
 
@@ -14,7 +13,8 @@ function readText(filePath) {
 
 function extractAboutSkillTags(raw) {
   const tags = [];
-  const tagChipRegex = /\{\{\s*tag_chip\(\s*name\s*=\s*"([^"]+)"[^)]*\)\s*\}\}/g;
+  const tagChipRegex =
+    /\{\{\s*tag_chip\(\s*name\s*=\s*"([^"]+)"[^)]*\)\s*\}\}/g;
 
   let match;
   while ((match = tagChipRegex.exec(raw)) !== null) {
@@ -24,41 +24,12 @@ function extractAboutSkillTags(raw) {
   return compactUnique(tags);
 }
 
-function extractExistingTaxonomyTags(raw) {
-  const parsed = parseFrontMatter(raw);
-  const taxMatch = parsed.frontMatterBody.match(/\[taxonomies\]([\s\S]*?)(\n\[[^\]]+\]|$)/m);
-  if (!taxMatch) return [];
-
-  const block = taxMatch[1] || "";
-  const tagsLine = block.match(/^\s*tags\s*=\s*\[[^\]]*\]\s*$/m);
-  if (!tagsLine) return [];
-
-  const values = [];
-  const regex = /"([^"]+)"/g;
-  let match;
-  while ((match = regex.exec(tagsLine[0])) !== null) {
-    values.push(match[1]);
-  }
-
-  return compactUnique(values);
-}
-
-function toCanonicalTags(input, rules) {
-  const canonical = new Set(
-    (rules.canonical_tags || [])
-      .map((tag) => String(tag || "").trim().toLowerCase())
-      .filter(Boolean)
-  );
-
-  return compactUnique(input || [])
-    .map((item) => String(item || "").trim().toLowerCase())
-    .filter((tag) => Boolean(tag) && (canonical.size === 0 || canonical.has(tag)));
-}
-
 function parseFrontMatter(raw) {
   const match = raw.match(/^(\+\+\+\s*\n)([\s\S]*?)(\n\+\+\+\s*\n?)([\s\S]*)$/);
   if (!match) {
-    throw new Error("content/about.md does not contain valid TOML frontmatter.");
+    throw new Error(
+      "content/about.md does not contain valid TOML frontmatter.",
+    );
   }
 
   return {
@@ -103,39 +74,42 @@ function stripTaxonomiesTable(frontMatterBody) {
 function buildAboutWithSyncedTaxonomies(raw, tags) {
   const parsed = parseFrontMatter(raw);
   const strippedFrontMatter = stripTaxonomiesTable(parsed.frontMatterBody);
-  const frontMatterParts = [strippedFrontMatter, "", "[taxonomies]", `tags = ${tomlArray(tags)}`];
-  const nextFrontMatter = frontMatterParts.join("\n").replace(/\n{3,}/g, "\n\n").trimEnd();
+  const frontMatterParts = [
+    strippedFrontMatter,
+    "",
+    "[taxonomies]",
+    `tags = ${tomlArray(tags)}`,
+  ];
+  const nextFrontMatter = frontMatterParts
+    .join("\n")
+    .replace(/\n{3,}/g, "\n\n")
+    .trimEnd();
 
   return `${parsed.prefix}${nextFrontMatter}\n+++\n${parsed.contentBody}`;
 }
 
 function main() {
   const aboutRaw = readText(ABOUT_FILE);
-  const rules = loadTaxonomyRules();
   const rawSkills = extractAboutSkillTags(aboutRaw);
-  const aboutSkillTags = toCanonicalTags(
-    deriveSemanticTagsFromValues(rawSkills, rules, { maxTags: 8 }),
-    rules
-  );
-  const existingTags = toCanonicalTags(extractExistingTaxonomyTags(aboutRaw), rules);
 
   if (rawSkills.length === 0) {
     console.error("No tag_chip entries were found in content/about.md");
     process.exit(1);
   }
 
-  const safeTags = aboutSkillTags.length > 0 ? aboutSkillTags : existingTags;
-  if (safeTags.length === 0) {
-    console.error("Unable to derive canonical About tags from taxonomy rules.");
-    process.exit(1);
-  }
+  // Direct 1:1 sync of skills to tags
+  const safeTags = compactUnique(
+    rawSkills.map((s) => s.trim()).filter(Boolean),
+  );
 
   const nextAbout = buildAboutWithSyncedTaxonomies(aboutRaw, safeTags);
   if (nextAbout !== aboutRaw) {
     fs.writeFileSync(ABOUT_FILE, nextAbout, "utf8");
   }
 
-  console.log(`About skill tags synced into content/about.md: ${safeTags.length}`);
+  console.log(
+    `About skill tags synced into content/about.md: ${safeTags.length}`,
+  );
 }
 
 main();

@@ -33,8 +33,7 @@ function removePreviouslyGeneratedPages(dirPath) {
     const filePath = path.join(dirPath, entry.name);
     const raw = fs.readFileSync(filePath, "utf8");
     const isGeneratedProjectPage =
-      raw.includes("[extra.project]") &&
-      /\bgenerated\s*=\s*true\b/.test(raw);
+      raw.includes("[extra.project]") && /\bgenerated\s*=\s*true\b/.test(raw);
 
     if (isGeneratedProjectPage) {
       fs.rmSync(filePath, { force: true });
@@ -43,7 +42,9 @@ function removePreviouslyGeneratedPages(dirPath) {
 }
 
 function renderPage(project) {
-  const title = String(project.title || project.slug || "Untitled Project").trim();
+  const title = String(
+    project.title || project.slug || "Untitled Project",
+  ).trim();
   const description = String(project.description || "").trim();
   const extendedDescription = String(project.extended_description || "").trim();
   const problem = String(project.problem || "").trim();
@@ -67,7 +68,16 @@ function renderPage(project) {
   const repoLanguage = String(project.repo_language || "").trim();
   const repoUpdatedAt = String(project.repo_updated_at || "").trim();
   const repoArchived = Boolean(project.repo_archived);
-  const repoStars = Number.isFinite(project.repo_stars) ? Number(project.repo_stars) : 0;
+  const repoStars = Number.isFinite(project.repo_stars)
+    ? Number(project.repo_stars)
+    : 0;
+  const repoForks = Number.isFinite(project.repo_forks)
+    ? Number(project.repo_forks)
+    : 0;
+  const repoOpenIssues = Number.isFinite(project.repo_open_issues)
+    ? Number(project.repo_open_issues)
+    : 0;
+  const repoLicense = String(project.repo_license || "").trim();
   const repoTopics = compactUnique(project.repo_topics || []);
   const thumbnailImage = String(project.thumbnail_image || "").trim();
   const thumbnailAlt = String(project.thumbnail_alt || title).trim();
@@ -81,30 +91,44 @@ function renderPage(project) {
   };
   const badge = statusBadgeMap[status.toLowerCase()] || "";
 
-  const bodyParts = [
-    "## Overview",
-    "",
-    description || "Project details.",
-    "",
-  ];
+  const bodyParts = ["## Overview", "", description || "Project details.", ""];
 
   if (extendedDescription) {
     bodyParts.push(extendedDescription, "");
   }
 
   if (highlights.length > 0) {
-    bodyParts.push("## Highlights", "", ...highlights.map((item) => `- ${item}`), "");
+    bodyParts.push(
+      "## Highlights",
+      "",
+      ...highlights.map((item) => `- ${item}`),
+      "",
+    );
   }
 
   if (techs.length > 0) {
-    bodyParts.push("## Tech Focus", "", ...techs.map((item) => `- ${item}`), "");
+    bodyParts.push(
+      "## Tech Focus",
+      "",
+      ...techs.map((item) => `- ${item}`),
+      "",
+    );
   }
 
-  if (repoLanguage || repoTopics.length > 0 || repoUpdatedAt || repoStars > 0 || repoArchived) {
+  if (
+    repoLanguage ||
+    repoTopics.length > 0 ||
+    repoUpdatedAt ||
+    repoStars > 0 ||
+    repoArchived
+  ) {
     const snapshot = [];
     if (repoLanguage) snapshot.push(`- Primary language: ${repoLanguage}`);
     snapshot.push(`- Archived: ${repoArchived ? "Yes" : "No"}`);
+    if (repoLicense) snapshot.push(`- License: ${repoLicense}`);
     snapshot.push(`- Stars: ${repoStars}`);
+    snapshot.push(`- Forks: ${repoForks}`);
+    snapshot.push(`- Open Issues: ${repoOpenIssues}`);
     if (repoUpdatedAt) snapshot.push(`- Last update: ${repoUpdatedAt}`);
     if (repoTopics.length > 0) {
       snapshot.push(`- Topics: ${repoTopics.join(", ")}`);
@@ -194,7 +218,8 @@ function main() {
   ensureDir(PROJECTS_DIR);
   removeLegacyGeneratedDir();
   removePreviouslyGeneratedPages(PROJECTS_DIR);
-  fs.rmSync(path.join(PROJECTS_DIR, "_skill-tags-seed.md"), { force: true });
+  const seedFile = path.join(PROJECTS_DIR, "_skill-tags-seed.md");
+  fs.rmSync(seedFile, { force: true });
 
   let written = 0;
   for (const project of projects) {
@@ -206,7 +231,9 @@ function main() {
     written += 1;
   }
 
-  console.log(`Synced ${written} project page(s) into ${path.relative(ROOT, PROJECTS_DIR)}`);
+  console.log(
+    `Synced ${written} project page(s) into ${path.relative(ROOT, PROJECTS_DIR)}`,
+  );
 }
 
 main();

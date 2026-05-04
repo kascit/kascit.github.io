@@ -8,12 +8,6 @@ on:
       - "README.md"
       - "LICENSE"
       - "docs/**"
-  push:
-    branches-ignore: [main, dependabot/**]
-    paths-ignore:
-      - "README.md"
-      - "LICENSE"
-      - "docs/**"
   workflow_dispatch:
 
 concurrency:

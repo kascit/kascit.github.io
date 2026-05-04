@@ -10,6 +10,7 @@ thumbnail_image = "images/thumbs/arch.jpg"
 tags = ["tooling", "automation", "systems", "frontend"]
 categories = ["engineering"]
 +++
+
 Yes, I'm that person. I use Arch Linux. I will tell you about it. Repeatedly.
 
 But seriously, after a year of daily-driving Arch for development, I've got opinions and a setup that (mostly) doesn't break every update. Let me walk you through it.

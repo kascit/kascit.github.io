@@ -23,7 +23,7 @@
       if (!raw) return 0;
       var value = Number(raw);
       return Number.isFinite(value) ? value : 0;
-    } catch (_) {
+    } catch {
       return 0;
     }
   }
@@ -31,7 +31,7 @@
   function writeTimestamp(key) {
     try {
       localStorage.setItem(key, String(Date.now()));
-    } catch (_) {
+    } catch {
       // localStorage can fail in strict privacy mode
     }
   }
@@ -88,7 +88,7 @@
       if (maybePromise && typeof maybePromise.then === "function") {
         return maybePromise;
       }
-    } catch (_) {
+    } catch {
       return Promise.resolve("denied");
     }
 

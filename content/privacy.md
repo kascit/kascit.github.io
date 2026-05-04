@@ -26,14 +26,14 @@ You can choose one of two modes:
 - **Allow All Cookies**: enables necessary cookies plus optional services (analytics, error monitoring, comments).
 
 <div class="not-prose privacy-consent-panel">
-	<div class="privacy-consent-panel__head">
-		<strong>Current preference:</strong>
-		<span class="privacy-consent-panel__status" data-cookie-consent-status>Not set</span>
-	</div>
-	<div class="privacy-consent-panel__actions">
-		<button type="button" class="cookie-consent-btn" data-cookie-consent-action="necessary">Necessary Only</button>
-		<button type="button" class="cookie-consent-btn cookie-consent-btn--primary" data-cookie-consent-action="all">Allow All Cookies</button>
-	</div>
+    <div class="privacy-consent-panel__head">
+        <strong>Current preference:</strong>
+        <span class="privacy-consent-panel__status" data-cookie-consent-status>Not set</span>
+    </div>
+    <div class="privacy-consent-panel__actions">
+        <button type="button" class="cookie-consent-btn" data-cookie-consent-action="necessary">Necessary Only</button>
+        <button type="button" class="cookie-consent-btn cookie-consent-btn--primary" data-cookie-consent-action="all">Allow All Cookies</button>
+    </div>
 </div>
 
 ## Necessary Cookies & Storage

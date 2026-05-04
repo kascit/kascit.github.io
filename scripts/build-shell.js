@@ -1,9 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
-const fs = require("fs");
-const path = require("path");
-const { createPackageRunner, requireEnvVar, ROOT } = require("./lib/shared");
+const { createPackageRunner, requireEnvVar } = require("./lib/shared");
 
 const esbuildVersion = requireEnvVar("ESBUILD_VERSION");
 const inputPath = "static/js/core/shell.js";
@@ -43,7 +41,7 @@ function main() {
   try {
     runPkg(pnpmArgs, npxArgs);
     console.log("✅ Shell bundle built successfully.");
-  } catch (e) {
+  } catch {
     console.error("❌ Build failed");
     process.exit(1);
   }

@@ -12,7 +12,7 @@ const OUT_FILE = path.join(ROOT, "static", "widgets", "latest-posts-data.json");
 function readFileSafe(filePath) {
   try {
     return fs.readFileSync(filePath, "utf8");
-  } catch (_error) {
+  } catch {
     return "";
   }
 }

@@ -24,7 +24,7 @@ function readSiteConfig() {
 
   try {
     return JSON.parse(node.textContent || "{}");
-  } catch (_error) {
+  } catch {
     return {};
   }
 }
@@ -42,7 +42,7 @@ function normalizeLocalUrl(value) {
     if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return "";
     if (parsed.origin !== window.location.origin) return "";
     return `${parsed.pathname}${parsed.search}${parsed.hash}`;
-  } catch (_error) {
+  } catch {
     return "";
   }
 }
@@ -81,7 +81,7 @@ function normalizeEndpointUrl(value, trustedHosts) {
 
     if (!isTrustedHost(parsed.hostname, trustedHosts)) return "";
     return parsed.toString();
-  } catch (_error) {
+  } catch {
     return "";
   }
 }
@@ -280,7 +280,7 @@ async function loadProfileContext(config) {
       profileCache.value = sanitized;
       profileCache.expiresAt = Date.now() + PROFILE_CACHE_TTL_MS;
       return sanitized;
-    } catch (_error) {
+    } catch {
       return null;
     } finally {
       window.clearTimeout(timeout);
@@ -349,7 +349,7 @@ function pruneStoredContexts() {
             key,
             ts: parsed && Number(parsed.ts) ? Number(parsed.ts) : 0,
           };
-        } catch (_error) {
+        } catch {
           return { key, ts: 0 };
         }
       })
@@ -358,7 +358,7 @@ function pruneStoredContexts() {
       .forEach((item) => {
         window.sessionStorage.removeItem(item.key);
       });
-  } catch (_error) {
+  } catch {
     // Ignore storage failures.
   }
 }
@@ -394,7 +394,7 @@ export function getAskAiSessionHistory() {
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     return trimHistory(parsed);
-  } catch (_error) {
+  } catch {
     return [];
   }
 }
@@ -402,7 +402,7 @@ export function getAskAiSessionHistory() {
 export function clearAskAiSessionHistory() {
   try {
     window.sessionStorage.removeItem(ASK_AI_HISTORY_KEY);
-  } catch (_error) {
+  } catch {
     // Ignore storage failures.
   }
 }
@@ -412,7 +412,7 @@ function saveAskAiSessionHistory(history) {
 
   try {
     window.sessionStorage.setItem(ASK_AI_HISTORY_KEY, JSON.stringify(trimmed));
-  } catch (_error) {
+  } catch {
     // Ignore storage failures.
   }
 
@@ -546,7 +546,7 @@ export async function requestAskAiAnswer(query, options = {}) {
   let payload = null;
   try {
     payload = await response.json();
-  } catch (_error) {
+  } catch {
     payload = null;
   }
 
@@ -591,7 +591,7 @@ export function getStoredAskAiContext(ctxKey) {
     const parsed = JSON.parse(raw);
     if (!parsed || typeof parsed !== "object") return null;
     return parsed.payload || null;
-  } catch (_error) {
+  } catch {
     return null;
   }
 }
@@ -607,7 +607,7 @@ function storeAskAiContext(payload) {
       wrapped,
     );
     pruneStoredContexts();
-  } catch (_error) {
+  } catch {
     // Ignore storage failures; caller still gets payload return.
   }
 
@@ -673,7 +673,7 @@ async function copyToClipboard(text) {
     try {
       await navigator.clipboard.writeText(text);
       return true;
-    } catch (_error) {
+    } catch {
       return false;
     }
   }

@@ -538,7 +538,7 @@ ci-build: _assert-zola-version sync-generated verify-generated-clean
 
 [doc("Run strict integrated quality checks (JS/CSS/XML/XSL/Tera)")]
 [group('ci')]
-quality: _assert-zola-version sync-generated verify-generated-clean
+quality: _assert-zola-version sync-generated
     @node scripts/just-log.js info "Running integrated quality checks"
     @node scripts/just-run.js "quality checks" -- node scripts/run-quality-checks.js
     @node scripts/just-log.js ok "All quality checks passed"
@@ -566,10 +566,7 @@ prep-push BRANCH_NAME MESSAGE="chore: prep for push": format sync-generated qual
 [doc("Prepare for push: branch (if on main), format, sync, check, commit, and push")]
 [group('ci')]
 prep-push BRANCH_NAME MESSAGE="chore: prep for push": format sync-generated quality
-    @if ((git rev-parse --abbrev-ref HEAD) -eq "main") { git checkout -b "{{BRANCH_NAME}}" }
-    @git add .
-    @if (git status --porcelain) { git commit -m "{{MESSAGE}}" }
-    @git push -u origin HEAD
+    powershell.exe -NoProfile -Command "$ErrorActionPreference = 'Stop'; if ((git rev-parse --abbrev-ref HEAD) -eq 'main') { git checkout -b '{{BRANCH_NAME}}' }; git add .; if (git status --porcelain) { git commit -m '{{MESSAGE}}' }; git push -u origin HEAD"
 
 # ---------------------------------------------------------------------------
 # Info

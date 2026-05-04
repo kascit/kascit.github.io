@@ -10,7 +10,7 @@ const APPS_KEY = "apps_collapsed";
 function readStorageFlag(key) {
   try {
     return localStorage.getItem(key) === "1";
-  } catch (_error) {
+  } catch {
     return false;
   }
 }
@@ -18,7 +18,7 @@ function readStorageFlag(key) {
 function writeStorageFlag(key, enabled) {
   try {
     localStorage.setItem(key, enabled ? "1" : "0");
-  } catch (_error) {
+  } catch {
     // Ignore storage write failures.
   }
 }

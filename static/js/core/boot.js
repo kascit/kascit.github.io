@@ -31,7 +31,7 @@
   function getStorageFlag(key) {
     try {
       return window.localStorage.getItem(key) === "1";
-    } catch (_error) {
+    } catch {
       return false;
     }
   }
@@ -41,7 +41,7 @@
     if (!m) return null;
     try {
       return decodeURIComponent(m[1]);
-    } catch (_error) {
+    } catch {
       return m[1];
     }
   };
@@ -103,7 +103,9 @@
             },
           });
         }
-      } catch (_error) {}
+      } catch {
+        // ignore
+      }
 
       try {
         if (!Object.prototype.hasOwnProperty.call(navigator, name)) {
@@ -115,10 +117,12 @@
             },
           });
         }
-      } catch (_error2) {
+      } catch {
         try {
           navigator[name] = value;
-        } catch (_error3) {}
+        } catch {
+          // ignore
+        }
       }
     }
 

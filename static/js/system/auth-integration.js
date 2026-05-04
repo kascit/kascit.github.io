@@ -96,7 +96,7 @@ function formatCreditsReset(periodEnd) {
       "Dec",
     ];
     return `resets ${months[d.getUTCMonth()]} ${d.getUTCDate()}`;
-  } catch (e) {
+  } catch {
     return "";
   }
 }

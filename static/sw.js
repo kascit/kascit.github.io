@@ -110,7 +110,7 @@ async function getStoredLatest() {
     if (!res) return null;
     const json = await res.json();
     return json;
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -124,7 +124,7 @@ async function setStoredLatest(info) {
         headers: { "Content-Type": "application/json" },
       }),
     );
-  } catch (e) {
+  } catch {
     // ignore
   }
 }
@@ -141,7 +141,7 @@ async function setRuntimeJson(path, payload) {
         },
       }),
     );
-  } catch (_e) {
+  } catch {
     // ignore runtime cache failures
   }
 }
@@ -152,7 +152,7 @@ async function getRuntimeJson(path) {
     const res = await cache.match(path);
     if (!res) return null;
     return await res.json();
-  } catch (_e) {
+  } catch {
     return null;
   }
 }
@@ -196,7 +196,7 @@ async function handleShareTargetPost(request) {
 
     await setRuntimeJson("/__runtime/share-target", payload);
     return Response.redirect("/share-target/?shared=1", 303);
-  } catch (_e) {
+  } catch {
     return Response.redirect("/share-target/?error=1", 303);
   }
 }
@@ -294,7 +294,7 @@ function parseLatestFromRSS(xmlText) {
     const pubDate = getTag("pubDate") || "";
     const guid = getTag("guid") || link;
     return { title, link, pubDate, guid };
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -336,7 +336,7 @@ async function checkLatestAndNotify() {
         badge: "/icons/favicon-96x96.png",
       });
     }
-  } catch (e) {
+  } catch {
     // ignore
   }
 }
@@ -346,7 +346,7 @@ self.addEventListener("push", (event) => {
   let data = {};
   try {
     data = event.data ? event.data.json() : {};
-  } catch (_) {
+  } catch {
     data = { title: "New update", body: event.data ? event.data.text() : "" };
   }
 
@@ -522,7 +522,7 @@ self.addEventListener("notificationclick", (event) => {
   if (url) {
     event.waitUntil(
       (async () => {
-        const allClients = await clients.matchAll({
+        const allClients = await self.clients.matchAll({
           type: "window",
           includeUncontrolled: true,
         });
@@ -532,11 +532,11 @@ self.addEventListener("notificationclick", (event) => {
             if (clientUrl.pathname === new URL(url, location.origin).pathname) {
               return client.focus();
             }
-          } catch (_) {
+          } catch {
             /* ignore */
           }
         }
-        return clients.openWindow(url);
+        return self.clients.openWindow(url);
       })(),
     );
   }

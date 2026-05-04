@@ -30,7 +30,7 @@
     try {
       var ts = Number(window.sessionStorage.getItem(ATTEMPT_KEY) || "0");
       return Date.now() - ts < ATTEMPT_WINDOW_MS;
-    } catch (_) {
+    } catch {
       return false;
     }
   }
@@ -38,7 +38,7 @@
   function rememberAttempt() {
     try {
       window.sessionStorage.setItem(ATTEMPT_KEY, String(Date.now()));
-    } catch (_) {
+    } catch {
       // Ignore storage failures.
     }
   }

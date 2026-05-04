@@ -82,7 +82,7 @@ docker run -d \
 
 Use `.dockerignore` aggressively so large folders and local-only artifacts never make it into image context.
 
-```
+```text
 node_modules/
 .git/
 *.log

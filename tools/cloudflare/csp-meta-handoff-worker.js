@@ -1,5 +1,6 @@
+/* global HTMLRewriter */
 export default {
-  async fetch(request, env, ctx) {
+  async fetch(request) {
     const response = await fetch(request);
     const contentType = response.headers.get("content-type");
 

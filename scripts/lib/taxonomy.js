@@ -10,7 +10,7 @@ const RULES_FILE = path.join(ROOT, "data", "taxonomy-rules.json");
 function normalizeAtom(value) {
   return String(value || "")
     .toLowerCase()
-    .replace(/[\-_]+/g, " ")
+    .replace(/[-_]+/g, " ")
     .replace(/[^\p{L}\p{N}\s+]/gu, " ")
     .replace(/\s+/g, " ")
     .trim();

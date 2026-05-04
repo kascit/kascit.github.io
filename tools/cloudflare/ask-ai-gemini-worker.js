@@ -25,7 +25,7 @@ function sanitizeString(value, maxLen) {
 function parseJsonSafe(text) {
   try {
     return JSON.parse(text);
-  } catch (_error) {
+  } catch {
     return null;
   }
 }

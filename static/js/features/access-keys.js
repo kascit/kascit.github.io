@@ -100,7 +100,7 @@ function isPath(el, path) {
     const p1 = url.pathname.replace(/\/$/, "");
     const p2 = path.replace(/\/$/, "");
     return p1 === p2;
-  } catch (e) {
+  } catch {
     return false;
   }
 }

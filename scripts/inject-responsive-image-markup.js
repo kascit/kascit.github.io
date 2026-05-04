@@ -51,7 +51,7 @@ function shouldHandleSource(src) {
         return null;
       }
       pathname = parsed.pathname;
-    } catch (_error) {
+    } catch {
       return null;
     }
   }

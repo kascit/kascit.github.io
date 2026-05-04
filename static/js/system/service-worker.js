@@ -27,7 +27,7 @@ async function registerPeriodicSync(registration) {
     await registration.periodicSync.register(PERIODIC_SYNC_TAG, {
       minInterval: 24 * 60 * 60 * 1000,
     });
-  } catch (_) {
+  } catch {
     // Unsupported by browser or blocked by permissions/power policy.
   }
 }
@@ -42,7 +42,7 @@ async function registerBackgroundSync(registration) {
         : [];
     if (tags.includes(ONE_OFF_SYNC_TAG)) return;
     await registration.sync.register(ONE_OFF_SYNC_TAG);
-  } catch (_) {
+  } catch {
     // Unsupported by browser or blocked by permissions/power policy.
   }
 }
@@ -54,7 +54,7 @@ async function requestNotificationPermission() {
   // Only prompt after a SW is active — avoids cold-start permission spam
   try {
     return await Notification.requestPermission();
-  } catch (_) {
+  } catch {
     return "error";
   }
 }

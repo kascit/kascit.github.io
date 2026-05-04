@@ -6,10 +6,6 @@ const path = require("path");
 const https = require("https");
 const { execSync } = require("child_process");
 const { ROOT, compactUnique } = require("./lib/shared");
-const {
-  loadTaxonomyRules,
-  deriveSemanticTagsFromValues,
-} = require("./lib/taxonomy");
 
 const DATA_FILE = path.join(ROOT, "data", "projects.json");
 const API_BASE = "https://api.github.com";
@@ -153,7 +149,7 @@ function deriveStatus(existingStatus, repoArchived, hasPublicUrl) {
   return String(existingStatus || "").trim() || "live";
 }
 
-async function syncProjectFromGitHub(project, token, rules) {
+async function syncProjectFromGitHub(project, token) {
   const repoRef = parseRepoFromUrl(project.github_url);
   if (!repoRef) return { project, synced: false, reason: "no-github-url" };
 
@@ -217,7 +213,6 @@ async function main() {
     process.exit(1);
   }
 
-  const rules = loadTaxonomyRules();
   const data = readProjects();
 
   let syncedCount = 0;
@@ -227,7 +222,7 @@ async function main() {
     const project = data.projects[i];
 
     try {
-      const result = await syncProjectFromGitHub(project, token, rules);
+      const result = await syncProjectFromGitHub(project, token);
       if (result.synced) {
         syncedCount += 1;
         console.log(`synced: ${result.reason}`);

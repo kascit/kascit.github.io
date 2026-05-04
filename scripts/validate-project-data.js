@@ -6,7 +6,6 @@ const path = require("path");
 
 const ROOT = path.resolve(__dirname, "..");
 const DATA_FILE = path.join(ROOT, "data", "projects.json");
-const TAXONOMY_RULES_FILE = path.join(ROOT, "data", "taxonomy-rules.json");
 const ALLOWED_GROUPS = new Set([
   "featured",
   "ecosystem",
@@ -43,7 +42,7 @@ function isValidUrlLike(value) {
   }
 }
 
-function validateProject(project, index, seenSlugs, errors, canonicalTags) {
+function validateProject(project, index, seenSlugs, errors) {
   const id = `[project ${index + 1}]`;
 
   if (!isNonEmptyString(project.slug)) {
@@ -193,7 +192,7 @@ function main() {
   const errors = [];
   const seenSlugs = new Set();
   projects.forEach((project, index) =>
-    validateProject(project, index, seenSlugs, errors, new Set()),
+    validateProject(project, index, seenSlugs, errors),
   );
 
   if (errors.length > 0) {

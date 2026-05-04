@@ -33,7 +33,7 @@ const heldKeys = new Set();
 function readSessionStorage(key) {
   try {
     return window.sessionStorage.getItem(key);
-  } catch (_error) {
+  } catch (e) {
     return null;
   }
 }
@@ -41,7 +41,7 @@ function readSessionStorage(key) {
 function writeSessionStorage(key, value) {
   try {
     window.sessionStorage.setItem(key, value);
-  } catch (_error) {
+  } catch (e) {
     // Ignore storage write failures.
   }
 }
@@ -49,7 +49,7 @@ function writeSessionStorage(key, value) {
 function removeSessionStorage(key) {
   try {
     window.sessionStorage.removeItem(key);
-  } catch (_error) {
+  } catch (e) {
     // Ignore storage remove failures.
   }
 }
@@ -80,7 +80,7 @@ function readAnchorSession() {
     }
 
     return { key, expiresAt };
-  } catch (_error) {
+  } catch (e) {
     removeSessionStorage(ANCHOR_SESSION_KEY);
     return null;
   }
@@ -272,7 +272,7 @@ function isElementLikelySameTabInternalLink(element) {
   try {
     const nextUrl = new URL(href, window.location.origin);
     return nextUrl.origin === window.location.origin;
-  } catch (_error) {
+  } catch (e) {
     return false;
   }
 }

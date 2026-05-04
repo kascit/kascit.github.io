@@ -24,27 +24,6 @@ function extractAboutSkillTags(raw) {
   return compactUnique(tags);
 }
 
-function extractExistingTaxonomyTags(raw) {
-  const parsed = parseFrontMatter(raw);
-  const taxMatch = parsed.frontMatterBody.match(
-    /\[taxonomies\]([\s\S]*?)(\n\[[^\]]+\]|$)/m,
-  );
-  if (!taxMatch) return [];
-
-  const block = taxMatch[1] || "";
-  const tagsLine = block.match(/^\s*tags\s*=\s*\[[^\]]*\]\s*$/m);
-  if (!tagsLine) return [];
-
-  const values = [];
-  const regex = /"([^"]+)"/g;
-  let match;
-  while ((match = regex.exec(tagsLine[0])) !== null) {
-    values.push(match[1]);
-  }
-
-  return compactUnique(values);
-}
-
 function parseFrontMatter(raw) {
   const match = raw.match(/^(\+\+\+\s*\n)([\s\S]*?)(\n\+\+\+\s*\n?)([\s\S]*)$/);
   if (!match) {

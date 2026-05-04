@@ -44,7 +44,7 @@ function sanitizeScriptSrc(src) {
     if (url.origin !== window.location.origin) return "";
     if (!/\.js(?:[?#].*)?$/i.test(url.pathname)) return "";
     return url.pathname + url.search + url.hash;
-  } catch (_error) {
+  } catch (e) {
     return "";
   }
 }
@@ -57,7 +57,7 @@ function safeInternalHref(href) {
     if (parsed.origin !== window.location.origin) return "";
     if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return "";
     return parsed.pathname + parsed.search + parsed.hash;
-  } catch (_error) {
+  } catch (e) {
     return "";
   }
 }
@@ -70,7 +70,7 @@ function readSiteConfig() {
   if (!node) return {};
   try {
     return JSON.parse(node.textContent || "{}");
-  } catch (_error) {
+  } catch (e) {
     return {};
   }
 }
@@ -85,7 +85,6 @@ if (!fuseSrc || !indexSrc) {
   }
 }
 
-var searchLoaded = false;
 var searchReady = false;
 var loadingPromise = null;
 var PAGE_FIND_TRANSFER_KEY = "kascit-page-find-transfer-query-v1";
@@ -173,7 +172,7 @@ function persistPageFindTransferQuery(query) {
 
   try {
     window.sessionStorage.setItem(PAGE_FIND_TRANSFER_KEY, value);
-  } catch (_error) {
+  } catch (e) {
     // Ignore storage errors.
   }
 }
@@ -183,7 +182,7 @@ function consumePageFindTransferQuery() {
     var value = window.sessionStorage.getItem(PAGE_FIND_TRANSFER_KEY) || "";
     window.sessionStorage.removeItem(PAGE_FIND_TRANSFER_KEY);
     return String(value).trim();
-  } catch (_error) {
+  } catch (e) {
     return "";
   }
 }
@@ -683,7 +682,7 @@ function sanitizeResultHref(rawHref) {
     if (protocol !== "http:" && protocol !== "https:") return "#";
     if (parsed.origin !== window.location.origin) return "#";
     return parsed.pathname + parsed.search + parsed.hash;
-  } catch (_error) {
+  } catch (e) {
     return "#";
   }
 }
@@ -1064,7 +1063,7 @@ function initSearch() {
 
     try {
       active.blur();
-    } catch (_error) {
+    } catch (e) {
       // Ignore blur failures.
     }
   }
@@ -1085,7 +1084,7 @@ function initSearch() {
 
     try {
       target.focus({ preventScroll: true });
-    } catch (_error) {
+    } catch (e) {
       target.focus();
     }
 

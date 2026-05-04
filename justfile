@@ -543,6 +543,30 @@ quality: _assert-zola-version sync-generated verify-generated-clean
     @node scripts/just-run.js "quality checks" -- node scripts/run-quality-checks.js
     @node scripts/just-log.js ok "All quality checks passed"
 
+[unix]
+[doc("Prepare for push: branch (if on main), format, sync, check, commit, and push")]
+[group('ci')]
+prep-push BRANCH_NAME MESSAGE="chore: prep for push": format sync-generated quality
+    #!/usr/bin/env bash
+    set -e
+    if [ "$(git rev-parse --abbrev-ref HEAD)" = "main" ]; then
+      git checkout -b "{{BRANCH_NAME}}"
+    fi
+    git add .
+    if [ -n "$(git status --porcelain)" ]; then
+      git commit -m "{{MESSAGE}}"
+    fi
+    git push -u origin HEAD
+
+[windows]
+[doc("Prepare for push: branch (if on main), format, sync, check, commit, and push")]
+[group('ci')]
+prep-push BRANCH_NAME MESSAGE="chore: prep for push": format sync-generated quality
+    @if ((git rev-parse --abbrev-ref HEAD) -eq "main") { git checkout -b "{{BRANCH_NAME}}" }
+    @git add .
+    @if (git status --porcelain) { git commit -m "{{MESSAGE}}" }
+    @git push -u origin HEAD
+
 # ---------------------------------------------------------------------------
 # Info
 # ---------------------------------------------------------------------------

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/css" href="/rss.f9c7c966bfc8.css"?>
+<?xml-stylesheet type="text/css" href="/rss.777a25f84f56.css"?>
 <rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:site="https://dhanur.me/ns/rss-ui" version="2.0" xml:id="top">
   <channel>
       
@@ -256,26 +256,26 @@ Our rate limiting was too aggressive for that specific user agent, causing race 
 <pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="javascript"><span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">//</span><span style="color: light-dark(#6A737D, #6A737D);"> Bad</span></span>
 <span class="giallo-l"><span>console</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">log</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">User created</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>)</span><span>;</span></span>
 <span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">//</span><span style="color: light-dark(#6A737D, #6A737D);"> Good  </span></span>
+<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">//</span><span style="color: light-dark(#6A737D, #6A737D);"> Good</span></span>
 <span class="giallo-l"><span>logger</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">info</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">User created</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span> {</span></span>
 <span class="giallo-l"><span>  userId</span><span>:</span><span> user</span><span>.</span><span>id</span><span>,</span></span>
 <span class="giallo-l"><span>  email</span><span>:</span><span> user</span><span>.</span><span>email</span><span>,</span></span>
 <span class="giallo-l"><span>  timestamp</span><span>:</span><span style="color: light-dark(#D73A49, #F97583);"> new</span><span style="color: light-dark(#6F42C1, #B392F0);"> Date</span><span>(</span><span>)</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">toISOString</span><span>(</span><span>)</span><span>,</span></span>
-<span class="giallo-l"><span>  requestId</span><span>:</span><span> ctx</span><span>.</span><span>requestId</span></span>
+<span class="giallo-l"><span>  requestId</span><span>:</span><span> ctx</span><span>.</span><span>requestId</span><span>,</span></span>
 <span class="giallo-l"><span>}</span><span>)</span><span>;</span></span></code></pre><h3 id="2-error-tracking">2. Error Tracking</h3>
 <p>An error tracking platform such as Sentry, Rollbar, or Honeybadger gives you stack traces and request context without waiting for manual reproduction.</p>
 <h3 id="3-monitoring-dashboards">3. Monitoring Dashboards</h3>
 <p>Monitoring dashboards are the second half of the story. Whether you use Grafana, Datadog, or Prometheus-based stacks, trend lines tell you when the issue started and what changed around it.</p>
 <h3 id="4-health-checks">4. Health Checks</h3>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="javascript"><span class="giallo-l"><span>app</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">get</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">&#39;</span><span style="color: light-dark(#032F62, #9ECBFF);">/health</span><span style="color: light-dark(#032F62, #9ECBFF);">&#39;</span><span>,</span><span style="color: light-dark(#D73A49, #F97583);"> async</span><span> (</span><span style="color: light-dark(#E36209, #FFAB70);">req</span><span>,</span><span style="color: light-dark(#E36209, #FFAB70);"> res</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> =&gt;</span><span> {</span></span>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="javascript"><span class="giallo-l"><span>app</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">get</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">/health</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span style="color: light-dark(#D73A49, #F97583);"> async</span><span> (</span><span style="color: light-dark(#E36209, #FFAB70);">req</span><span>,</span><span style="color: light-dark(#E36209, #FFAB70);"> res</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> =&gt;</span><span> {</span></span>
 <span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  const</span><span style="color: light-dark(#005CC5, #79B8FF);"> checks</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> {</span></span>
 <span class="giallo-l"><span>    database</span><span>:</span><span style="color: light-dark(#D73A49, #F97583);"> await</span><span style="color: light-dark(#6F42C1, #B392F0);"> checkDatabase</span><span>(</span><span>)</span><span>,</span></span>
 <span class="giallo-l"><span>    redis</span><span>:</span><span style="color: light-dark(#D73A49, #F97583);"> await</span><span style="color: light-dark(#6F42C1, #B392F0);"> checkRedis</span><span>(</span><span>)</span><span>,</span></span>
-<span class="giallo-l"><span>    external_api</span><span>:</span><span style="color: light-dark(#D73A49, #F97583);"> await</span><span style="color: light-dark(#6F42C1, #B392F0);"> checkExternalAPI</span><span>(</span><span>)</span></span>
+<span class="giallo-l"><span>    external_api</span><span>:</span><span style="color: light-dark(#D73A49, #F97583);"> await</span><span style="color: light-dark(#6F42C1, #B392F0);"> checkExternalAPI</span><span>(</span><span>)</span><span>,</span></span>
 <span class="giallo-l"><span>  }</span><span>;</span></span>
-<span class="giallo-l"><span>  </span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  const</span><span style="color: light-dark(#005CC5, #79B8FF);"> allHealthy</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> Object</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">values</span><span>(</span><span>checks</span><span>)</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">every</span><span>(</span><span style="color: light-dark(#E36209, #FFAB70);">check</span><span style="color: light-dark(#D73A49, #F97583);"> =&gt;</span><span> check</span><span>.</span><span>healthy</span><span>)</span><span>;</span></span>
-<span class="giallo-l"><span>  </span></span>
+<span class="giallo-l"></span>
+<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  const</span><span style="color: light-dark(#005CC5, #79B8FF);"> allHealthy</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> Object</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">values</span><span>(</span><span>checks</span><span>)</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">every</span><span>(</span><span>(</span><span style="color: light-dark(#E36209, #FFAB70);">check</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> =&gt;</span><span> check</span><span>.</span><span>healthy</span><span>)</span><span>;</span></span>
+<span class="giallo-l"></span>
 <span class="giallo-l"><span>  res</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">status</span><span>(</span><span>allHealthy</span><span style="color: light-dark(#D73A49, #F97583);"> ?</span><span style="color: light-dark(#005CC5, #79B8FF);"> 200</span><span style="color: light-dark(#D73A49, #F97583);"> :</span><span style="color: light-dark(#005CC5, #79B8FF);"> 503</span><span>)</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">json</span><span>(</span><span>checks</span><span>)</span><span>;</span></span>
 <span class="giallo-l"><span>}</span><span>)</span><span>;</span></span></code></pre><h2 id="the-debugging-checklist">The Debugging Checklist</h2>
 <p>When production breaks, run through a fixed response sequence so stress does not dictate decisions.</p>
@@ -293,7 +293,7 @@ Our rate limiting was too aggressive for that specific user agent, causing race 
 <pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">#</span><span style="color: light-dark(#6A737D, #6A737D);"> Deploy to 10% of traffic</span></span>
 <span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">kubectl</span><span style="color: light-dark(#032F62, #9ECBFF);"> patch</span><span style="color: light-dark(#032F62, #9ECBFF);"> deployment</span><span style="color: light-dark(#032F62, #9ECBFF);"> app</span><span style="color: light-dark(#005CC5, #79B8FF);"> -</span><span style="color: light-dark(#005CC5, #79B8FF);">p</span><span style="color: light-dark(#032F62, #9ECBFF);"> &#39;</span><span style="color: light-dark(#032F62, #9ECBFF);">{&quot;spec&quot;:{&quot;template&quot;:{&quot;metadata&quot;:{&quot;labels&quot;:{&quot;canary&quot;:&quot;true&quot;}}}}}</span><span style="color: light-dark(#032F62, #9ECBFF);">&#39;</span></span></code></pre><h3 id="feature-flags">Feature Flags</h3>
 <p>Turn off problematic features without redeploying:</p>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="javascript"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">if</span><span> (</span><span>featureFlags</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">isEnabled</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">&#39;</span><span style="color: light-dark(#032F62, #9ECBFF);">new-payment-system</span><span style="color: light-dark(#032F62, #9ECBFF);">&#39;</span><span>)</span><span>)</span><span> {</span></span>
+<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="javascript"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">if</span><span> (</span><span>featureFlags</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">isEnabled</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">new-payment-system</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>)</span><span>)</span><span> {</span></span>
 <span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  return</span><span style="color: light-dark(#6F42C1, #B392F0);"> newPaymentProcessor</span><span>(</span><span>)</span><span>;</span></span>
 <span class="giallo-l"><span>}</span><span style="color: light-dark(#D73A49, #F97583);"> else</span><span> {</span></span>
 <span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  return</span><span style="color: light-dark(#6F42C1, #B392F0);"> legacyPaymentProcessor</span><span>(</span><span>)</span><span>;</span></span>
@@ -379,7 +379,7 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <h2 id="tools-that-weren-t-worth-it">Tools That Weren’t Worth It</h2>
 <p>By contrast, expensive CRM and premium analytics purchases did not hold up once usage was measured against outcomes. In both cases, complexity rose faster than value, and migration away still consumed months of attention.</p>
 <h2 id="the-self-hosted-alternative">The Self-Hosted Alternative</h2>
-<p>Self-hosting can be the right move when data control or cost predictability matters, and tools like Plausible, GitLab, or Nextcloud can replace paid SaaS layers in the right context. The tradeoff is that you inherit maintenance, security patching, and uptime responsibility directly.</p>
+<p>Self-hosting can be the right move when data control or cost predictability matters, and tools like Plausible, GitLab, or Nextcloud can replace paid SaaS layers in the right context. The trade-off is that you inherit maintenance, security patching, and uptime responsibility directly.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>“Free” SaaS tools are rarely free. They’re marketing tools designed to get you hooked before showing you the price tag.</p>
 <p>The smart approach isn’t to avoid paid tools—it’s to calculate the real cost upfront.</p>
@@ -391,7 +391,7 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
         </item>
       
         <item>
-            <title>Why I Switched from VS Code to Neovim</title>
+            <title>Why I Switched from Visual Studio Code to Neovim</title>
           
           <pubDate>Thu, 15 Jan 2026 00:00:00 +0000</pubDate>
           
@@ -401,7 +401,7 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 
             <description><![CDATA[A journey of pain, frustration, and eventual productivity with terminal-based editors]]></description>
 
-            <content:encoded><![CDATA[<p>Let me start by saying this: I still love VS Code. It’s an amazing editor that probably does 95% of what most developers need. But I switched to Neovim anyway, and here’s why.</p>
+            <content:encoded><![CDATA[<p>Let me start by saying this: I still love Visual Studio Code. It’s an amazing editor that probably does 95% of what most developers need. But I switched to Neovim anyway, and here’s why.</p>
 <h2 id="the-breaking-point">The Breaking Point</h2>
 <p>It was not one dramatic failure. It was a steady accumulation of friction: slower startup as extensions grew, memory usage creeping upward, constant mouse-keyboard context switching, and a persistent feeling that I was managing the editor more than writing code.</p>
 <h2 id="the-first-week-aka-why-i-almost-gave-up">The First Week (aka: Why I Almost Gave Up)</h2>
@@ -435,7 +435,7 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 </ul>
 <p>The exact plugins matter less than the principle: pick a minimal core, make it dependable, and avoid piling on extras before the base workflow is stable.</p>
 <h2 id="what-i-still-miss">What I Still Miss</h2>
-<p>I still miss a few VS Code conveniences, especially rich GitLens context, Live Share collaboration, and niche marketplace extensions with no direct Neovim replacement.</p>
+<p>I still miss a few Visual Studio Code conveniences, especially rich GitLens context, Live Share collaboration, and niche marketplace extensions with no direct Neovim replacement.</p>
 <h2 id="should-you-switch">Should You Switch?</h2>
 <p>You should not switch just for aesthetics. If your current editor already supports your workflow and you do not want to invest learning time, there is no strong reason to move. But if you are terminal-first, enjoy deep tooling control, and are willing to absorb short-term pain for long-term speed, Neovim can be a meaningful upgrade.</p>
 <h2 id="final-thoughts">Final Thoughts</h2>
@@ -443,6 +443,48 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <p>Am I more productive now? Honestly, yes. But more importantly, I enjoy coding more. And that’s worth everything.</p>
 <hr />
 <p><em>P.S. If you do make the switch, bookmark <code>:help</code> and <code>vim-fugitive</code>. You’ll thank me later.</em></p>
+]]></content:encoded>
+        </item>
+      
+        <item>
+            <title>Authy</title>
+          
+          <pubDate>Thu, 01 Jan 2026 00:00:00 +0000</pubDate>
+          
+            <author>Dhanur</author>
+            <link>https://dhanur.me/projects/authy/</link>
+            <guid isPermaLink="true">https://dhanur.me/projects/authy/</guid>
+
+            <description><![CDATA[Centralized single sign-on (SSO) and JWT authentication service for the Dhanur ecosystem.]]></description>
+
+            <content:encoded><![CDATA[<h2 id="overview">Overview</h2>
+<p>Centralized single sign-on (SSO) and JWT authentication service for the Dhanur ecosystem.</p>
+<p>Provides secure identity management and token issuance across all *.dhanur.me applications. Built to centralize auth logic and reduce redundancy in sibling services.</p>
+<h2 id="highlights">Highlights</h2>
+<ul>
+<li>Single Sign-On (SSO) for ecosystem apps</li>
+<li>Secure JWT issuance and validation</li>
+<li>Centralized identity management</li>
+</ul>
+<h2 id="tech-focus">Tech Focus</h2>
+<ul>
+<li>Node.js</li>
+<li>TypeScript</li>
+<li>Express</li>
+<li>JWT</li>
+<li>Authentication</li>
+<li>SSO</li>
+</ul>
+<h2 id="repository-snapshot">Repository Snapshot</h2>
+<ul>
+<li>Primary language: TypeScript</li>
+<li>Archived: No</li>
+<li>Stars: 0</li>
+<li>Forks: 0</li>
+<li>Open Issues: 0</li>
+<li>Last update: 2026-05-04T07:33:22.671Z</li>
+<li>Topics: auth, jwt, sso, nodejs</li>
+</ul>
 ]]></content:encoded>
         </item>
       
@@ -481,6 +523,8 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <li>Primary language: JavaScript</li>
 <li>Archived: No</li>
 <li>Stars: 1</li>
+<li>Forks: 0</li>
+<li>Open Issues: 0</li>
 <li>Last update: 2026-02-26T17:59:39Z</li>
 <li>Topics: css, game, html, javascript, web-game</li>
 </ul>
@@ -528,6 +572,8 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <li>Primary language: JavaScript</li>
 <li>Archived: No</li>
 <li>Stars: 1</li>
+<li>Forks: 0</li>
+<li>Open Issues: 0</li>
 <li>Last update: 2026-04-19T09:17:31Z</li>
 <li>Topics: css, github-pages, html, javascript, personal-website, portfolio</li>
 </ul>
@@ -569,6 +615,8 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <li>Primary language: C++</li>
 <li>Archived: Yes</li>
 <li>Stars: 0</li>
+<li>Forks: 0</li>
+<li>Open Issues: 0</li>
 <li>Last update: 2025-12-29T19:30:37Z</li>
 <li>Topics: attendance-system, aws-iot, aws-lambda, computer-vision, cpp, esp32, face-recognition, iot, python</li>
 </ul>
@@ -614,6 +662,8 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <ul>
 <li>Archived: No</li>
 <li>Stars: 1</li>
+<li>Forks: 0</li>
+<li>Open Issues: 0</li>
 <li>Last update: 2025-11-19T16:28:59Z</li>
 <li>Topics: algorithms, data-structures, dsa, java, learning</li>
 </ul>
@@ -654,6 +704,8 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <li>Primary language: Java</li>
 <li>Archived: No</li>
 <li>Stars: 1</li>
+<li>Forks: 0</li>
+<li>Open Issues: 0</li>
 <li>Last update: 2025-12-28T14:16:43Z</li>
 <li>Topics: algorithms, coding-challenges, cpp, data-structures, interview-prep, java, leetcode, python, rust</li>
 </ul>
@@ -669,31 +721,32 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
             <link>https://dhanur.me/projects/linkr/</link>
             <guid isPermaLink="true">https://dhanur.me/projects/linkr/</guid>
 
-            <description><![CDATA[Fast, privacy-focused link management and routing built for personal infrastructure.]]></description>
+            <description><![CDATA[A minimal, secure, and intelligent URL shortener built with Rust and Supabase.]]></description>
 
             <content:encoded><![CDATA[<h2 id="overview">Overview</h2>
-<p>Fast, privacy-focused link management and routing built for personal infrastructure.</p>
+<p>A minimal, secure, and intelligent URL shortener built with Rust and Supabase.</p>
 <p>Linkr provides robust sub-link routing for my personal domains. Features a slick UI built top to bottom with the new Dhanur UI component library.</p>
 <h2 id="highlights">Highlights</h2>
 <ul>
-<li>Zero-friction link routing</li>
-<li>Integrated with Dhanur UI styling</li>
-<li>Fast programmatic redirects</li>
+<li>Lightning-fast Rust backend with Axum</li>
+<li>Smart deduplication and auto-cleanup</li>
+<li>Security hardened with SSRF protection and CSP</li>
 </ul>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
 <li>Rust</li>
-<li>HTML</li>
-<li>Shell</li>
-<li>Dockerfile</li>
-<li>Batchfile</li>
-<li>CSS</li>
+<li>Axum</li>
+<li>HTMX</li>
+<li>Supabase</li>
+<li>Tailwind CSS</li>
 </ul>
 <h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
 <li>Primary language: Rust</li>
 <li>Archived: No</li>
 <li>Stars: 0</li>
+<li>Forks: 0</li>
+<li>Open Issues: 0</li>
 <li>Last update: 2026-04-04T16:48:28Z</li>
 </ul>
 ]]></content:encoded>
@@ -726,7 +779,7 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <li>Data Structures</li>
 <li>DSA</li>
 <li>Linked List</li>
-<li>Oop</li>
+<li>OOP</li>
 <li>Playlist Manager</li>
 </ul>
 <h2 id="repository-snapshot">Repository Snapshot</h2>
@@ -734,8 +787,55 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <li>Primary language: Java</li>
 <li>Archived: Yes</li>
 <li>Stars: 0</li>
+<li>Forks: 0</li>
+<li>Open Issues: 0</li>
 <li>Last update: 2025-12-29T17:57:30Z</li>
 <li>Topics: data-structures, dsa, java, linked-list, oop, playlist-manager, terminal</li>
+</ul>
+]]></content:encoded>
+        </item>
+      
+        <item>
+            <title>Pulse</title>
+          
+          <pubDate>Thu, 01 Jan 2026 00:00:00 +0000</pubDate>
+          
+            <author>Dhanur</author>
+            <link>https://dhanur.me/projects/pulse/</link>
+            <guid isPermaLink="true">https://dhanur.me/projects/pulse/</guid>
+
+            <description><![CDATA[An open-source uptime and cron monitoring platform. Track HTTP endpoints, monitor background jobs, route alerts, and publish public status pages.]]></description>
+
+            <content:encoded><![CDATA[<h2 id="overview">Overview</h2>
+<p>An open-source uptime and cron monitoring platform. Track HTTP endpoints, monitor background jobs, route alerts, and publish public status pages.</p>
+<p>Built as a comprehensive monitoring solution for the Dhanur ecosystem. Features concurrent active pinging, passive cron heartbeats, robust alerting, and customizable public status pages.</p>
+<h2 id="highlights">Highlights</h2>
+<ul>
+<li>Secure JWT-based authentication</li>
+<li>Active HTTP monitors and passive cron heartbeats</li>
+<li>Configurable public status pages</li>
+<li>Alert routing via Webhooks or Telegram</li>
+</ul>
+<h2 id="tech-focus">Tech Focus</h2>
+<ul>
+<li>TypeScript</li>
+<li>Node.js</li>
+<li>Express</li>
+<li>React</li>
+<li>Tailwind CSS</li>
+<li>MongoDB</li>
+<li>Zod</li>
+<li>Vite</li>
+</ul>
+<h2 id="repository-snapshot">Repository Snapshot</h2>
+<ul>
+<li>Primary language: TypeScript</li>
+<li>Archived: No</li>
+<li>Stars: 1</li>
+<li>Forks: 0</li>
+<li>Open Issues: 0</li>
+<li>Last update: 2026-05-04T07:33:22.654Z</li>
+<li>Topics: uptime-monitor, cron-monitor, react, node, express, mongodb</li>
 </ul>
 ]]></content:encoded>
         </item>
@@ -774,6 +874,8 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <li>Primary language: Python</li>
 <li>Archived: Yes</li>
 <li>Stars: 1</li>
+<li>Forks: 0</li>
+<li>Open Issues: 0</li>
 <li>Last update: 2025-12-29T14:12:22Z</li>
 <li>Topics: automation, browser-automation, learning-project, python, selenium, web-scraping</li>
 </ul>
@@ -813,6 +915,8 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <li>Primary language: HTML</li>
 <li>Archived: No</li>
 <li>Stars: 0</li>
+<li>Forks: 0</li>
+<li>Open Issues: 0</li>
 <li>Last update: 2026-04-04T16:51:26Z</li>
 </ul>
 ]]></content:encoded>
@@ -827,31 +931,33 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
             <link>https://dhanur.me/projects/tasks/</link>
             <guid isPermaLink="true">https://dhanur.me/projects/tasks/</guid>
 
-            <description><![CDATA[Minimal, high-contrast task manager designed for speed. Part of the Dhanur UI ecosystem.]]></description>
+            <description><![CDATA[A production-ready RESTful API for managing tasks, built with Spring Boot 3.5.10 and Java 21.]]></description>
 
             <content:encoded><![CDATA[<h2 id="overview">Overview</h2>
-<p>Minimal, high-contrast task manager designed for speed. Part of the Dhanur UI ecosystem.</p>
+<p>A production-ready RESTful API for managing tasks, built with Spring Boot 3.5.10 and Java 21.</p>
 <p>Built as a production-grade demonstration of the centralized Dhanur UI component system. Incorporates seamless theming, robust keyboard shortcuts, and local workflow persistence.</p>
 <h2 id="highlights">Highlights</h2>
 <ul>
-<li>Keyboard-first navigation and shortcuts</li>
-<li>Dhanur UI standardized design tokens</li>
-<li>Instant local persistence</li>
+<li>Full CRUD operations with pagination</li>
+<li>OpenAPI/Swagger documentation</li>
+<li>Docker support with multi-stage builds</li>
 </ul>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
-<li>HTML</li>
-<li>Java</li>
-<li>JavaScript</li>
-<li>Dockerfile</li>
-<li>API</li>
-<li>Crud API</li>
+<li>Java 21</li>
+<li>Spring Boot</li>
+<li>Spring Data JPA</li>
+<li>Hibernate</li>
+<li>H2</li>
+<li>Docker</li>
 </ul>
 <h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
 <li>Primary language: HTML</li>
 <li>Archived: No</li>
 <li>Stars: 1</li>
+<li>Forks: 0</li>
+<li>Open Issues: 0</li>
 <li>Last update: 2026-04-04T16:48:36Z</li>
 <li>Topics: api, crud-api, docker, h2, hibernate, java, jpa, junit5, maven, openapi, rest-api, spring-boot, spring-data-jpa, swagger, task-manager</li>
 </ul>
@@ -881,9 +987,9 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
 <li>HTML</li>
-<li>Css</li>
+<li>CSS</li>
 <li>Game</li>
-<li>Javascript</li>
+<li>JavaScript</li>
 <li>Tic Tac Toe</li>
 <li>Web Game</li>
 </ul>
@@ -892,6 +998,8 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <li>Primary language: HTML</li>
 <li>Archived: Yes</li>
 <li>Stars: 1</li>
+<li>Forks: 0</li>
+<li>Open Issues: 0</li>
 <li>Last update: 2025-11-19T15:04:02Z</li>
 <li>Topics: css, game, html, javascript, tic-tac-toe, web-game</li>
 </ul>
@@ -932,6 +1040,8 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <li>Primary language: JavaScript</li>
 <li>Archived: No</li>
 <li>Stars: 1</li>
+<li>Forks: 0</li>
+<li>Open Issues: 0</li>
 <li>Last update: 2025-11-19T15:02:55Z</li>
 <li>Topics: aws, cloud, javascript, web-development</li>
 </ul>
@@ -939,470 +1049,44 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
         </item>
       
         <item>
-            <title>WalloWords</title>
+            <title>Up</title>
           
           <pubDate>Thu, 01 Jan 2026 00:00:00 +0000</pubDate>
           
             <author>Dhanur</author>
-            <link>https://dhanur.me/projects/wallowords/</link>
-            <guid isPermaLink="true">https://dhanur.me/projects/wallowords/</guid>
+            <link>https://dhanur.me/projects/up/</link>
+            <guid isPermaLink="true">https://dhanur.me/projects/up/</guid>
 
-            <description><![CDATA[A word-based experiment actively in development.]]></description>
+            <description><![CDATA[Real-time service health dashboard for all dhanur.me services. Written in Go, zero external dependencies, deployed on Render.]]></description>
 
             <content:encoded><![CDATA[<h2 id="overview">Overview</h2>
-<p>A word-based experiment actively in development.</p>
-<p>Currently evolving as a lightweight idea sandbox for word mechanics, interaction rhythm, and UI feel.</p>
+<p>Real-time service health dashboard for all dhanur.me services. Written in Go, zero external dependencies, deployed on Render.</p>
+<p>A lightweight status monitor with concurrent goroutine probes and in-memory rolling history. Designed for absolute minimal resource footprint.</p>
 <h2 id="highlights">Highlights</h2>
 <ul>
-<li>Early gameplay concept iteration</li>
-<li>Frontend interaction prototyping</li>
-<li>Active WIP with frequent direction changes</li>
+<li>Concurrent goroutines probe every service every 30 seconds</li>
+<li>Pure Go standard library with zero external dependencies</li>
+<li>Single embedded HTML file served at root</li>
+<li>In-memory 45-minute rolling window for history</li>
 </ul>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
-<li>Word Game Mechanics</li>
-<li>Frontend Prototyping</li>
-<li>Rapid Iteration</li>
+<li>Go</li>
+<li>Monitoring</li>
+<li>Status Page</li>
+<li>Render</li>
+<li>Concurrency</li>
 </ul>
 <h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
+<li>Primary language: Go</li>
 <li>Archived: No</li>
 <li>Stars: 1</li>
-<li>Last update: 2025-11-19T14:59:48Z</li>
+<li>Forks: 0</li>
+<li>Open Issues: 0</li>
+<li>Last update: 2026-05-01T10:00:00Z</li>
+<li>Topics: go, status-page, monitoring, dashboard</li>
 </ul>
-]]></content:encoded>
-        </item>
-      
-        <item>
-            <title>Building APIs That Don&#x27;t Suck: A Spring Boot Journey</title>
-          
-          <pubDate>Wed, 31 Dec 2025 00:00:00 +0000</pubDate>
-          
-            <author>Dhanur</author>
-            <link>https://dhanur.me/blog/building-scalable-apis/</link>
-            <guid isPermaLink="true">https://dhanur.me/blog/building-scalable-apis/</guid>
-
-            <description><![CDATA[Lessons learned from building REST APIs that people actually want to use (and maintaining them at 3 AM)]]></description>
-
-            <content:encoded><![CDATA[<p>I’ve built a lot of APIs. Some were good. Most were “good enough.” A few were trainwrecks that still haunt me. Here’s what I’ve learned about building REST APIs with Spring Boot that won’t make your teammates (or your future self) want to cry.</p>
-<h2 id="why-spring-boot-though">Why Spring Boot Though?</h2>
-<p>Let’s be honest - Java gets a lot of hate. “Too verbose.” “Boilerplate hell.” “Why is everything an AbstractFactoryBean?”</p>
-<p>Spring Boot fixed most of that. It’s opinionated enough to get you started fast, but flexible enough to not box you in. Plus:</p>
-<p>In practice, it gives you auto-configuration that is usually correct, embedded runtime defaults that eliminate old deployment friction, strong production features out of the box, and an ecosystem large enough that most problems already have a known pattern. The documentation is also unusually usable for a mature Java stack.</p>
-<p>Is it perfect? No. But it’s solid, battle-tested, and won’t randomly explode in production (unlike some frameworks I won’t name).</p>
-<h2 id="the-anatomy-of-a-not-terrible-api">The Anatomy of a Not-Terrible API</h2>
-<p>Let’s build something real - a basic user management API that doesn’t make API consumers want to quit their job.</p>
-<h3 id="project-setup">Project Setup</h3>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="xml"><span class="giallo-l"><span>&lt;</span><span style="color: light-dark(#22863A, #85E89D);">dependencies</span><span>&gt;</span></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">    &lt;!--</span><span style="color: light-dark(#6A737D, #6A737D);"> Core Web stuff </span><span style="color: light-dark(#6A737D, #6A737D);">--&gt;</span></span>
-<span class="giallo-l"><span>    &lt;</span><span style="color: light-dark(#22863A, #85E89D);">dependency</span><span>&gt;</span></span>
-<span class="giallo-l"><span>        &lt;</span><span style="color: light-dark(#22863A, #85E89D);">groupId</span><span>&gt;</span><span>org.springframework.boot</span><span>&lt;/</span><span style="color: light-dark(#22863A, #85E89D);">groupId</span><span>&gt;</span></span>
-<span class="giallo-l"><span>        &lt;</span><span style="color: light-dark(#22863A, #85E89D);">artifactId</span><span>&gt;</span><span>spring-boot-starter-web</span><span>&lt;/</span><span style="color: light-dark(#22863A, #85E89D);">artifactId</span><span>&gt;</span></span>
-<span class="giallo-l"><span>    &lt;/</span><span style="color: light-dark(#22863A, #85E89D);">dependency</span><span>&gt;</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">    &lt;!--</span><span style="color: light-dark(#6A737D, #6A737D);"> Database magic </span><span style="color: light-dark(#6A737D, #6A737D);">--&gt;</span></span>
-<span class="giallo-l"><span>    &lt;</span><span style="color: light-dark(#22863A, #85E89D);">dependency</span><span>&gt;</span></span>
-<span class="giallo-l"><span>        &lt;</span><span style="color: light-dark(#22863A, #85E89D);">groupId</span><span>&gt;</span><span>org.springframework.boot</span><span>&lt;/</span><span style="color: light-dark(#22863A, #85E89D);">groupId</span><span>&gt;</span></span>
-<span class="giallo-l"><span>        &lt;</span><span style="color: light-dark(#22863A, #85E89D);">artifactId</span><span>&gt;</span><span>spring-boot-starter-data-jpa</span><span>&lt;/</span><span style="color: light-dark(#22863A, #85E89D);">artifactId</span><span>&gt;</span></span>
-<span class="giallo-l"><span>    &lt;/</span><span style="color: light-dark(#22863A, #85E89D);">dependency</span><span>&gt;</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">    &lt;!--</span><span style="color: light-dark(#6A737D, #6A737D);"> Validation (please validate your inputs) </span><span style="color: light-dark(#6A737D, #6A737D);">--&gt;</span></span>
-<span class="giallo-l"><span>    &lt;</span><span style="color: light-dark(#22863A, #85E89D);">dependency</span><span>&gt;</span></span>
-<span class="giallo-l"><span>        &lt;</span><span style="color: light-dark(#22863A, #85E89D);">groupId</span><span>&gt;</span><span>org.springframework.boot</span><span>&lt;/</span><span style="color: light-dark(#22863A, #85E89D);">groupId</span><span>&gt;</span></span>
-<span class="giallo-l"><span>        &lt;</span><span style="color: light-dark(#22863A, #85E89D);">artifactId</span><span>&gt;</span><span>spring-boot-starter-validation</span><span>&lt;/</span><span style="color: light-dark(#22863A, #85E89D);">artifactId</span><span>&gt;</span></span>
-<span class="giallo-l"><span>    &lt;/</span><span style="color: light-dark(#22863A, #85E89D);">dependency</span><span>&gt;</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">    &lt;!--</span><span style="color: light-dark(#6A737D, #6A737D);"> PostgreSQL because we&#39;re not animals </span><span style="color: light-dark(#6A737D, #6A737D);">--&gt;</span></span>
-<span class="giallo-l"><span>    &lt;</span><span style="color: light-dark(#22863A, #85E89D);">dependency</span><span>&gt;</span></span>
-<span class="giallo-l"><span>        &lt;</span><span style="color: light-dark(#22863A, #85E89D);">groupId</span><span>&gt;</span><span>org.postgresql</span><span>&lt;/</span><span style="color: light-dark(#22863A, #85E89D);">groupId</span><span>&gt;</span></span>
-<span class="giallo-l"><span>        &lt;</span><span style="color: light-dark(#22863A, #85E89D);">artifactId</span><span>&gt;</span><span>postgresql</span><span>&lt;/</span><span style="color: light-dark(#22863A, #85E89D);">artifactId</span><span>&gt;</span></span>
-<span class="giallo-l"><span>    &lt;/</span><span style="color: light-dark(#22863A, #85E89D);">dependency</span><span>&gt;</span></span>
-<span class="giallo-l"><span>&lt;/</span><span style="color: light-dark(#22863A, #85E89D);">dependencies</span><span>&gt;</span></span></code></pre><h3 id="the-controller-where-http-happens">The Controller (Where HTTP Happens)</h3>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="java"><span class="giallo-l"><span>@</span><span style="color: light-dark(#D73A49, #F97583);">RestController</span></span>
-<span class="giallo-l"><span>@</span><span style="color: light-dark(#D73A49, #F97583);">RequestMapping</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">/api/v1/users</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>)</span><span style="color: light-dark(#6A737D, #6A737D);">  //</span><span style="color: light-dark(#6A737D, #6A737D);"> Version your APIs, past you will thank future you</span></span>
-<span class="giallo-l"><span>@</span><span style="color: light-dark(#D73A49, #F97583);">RequiredArgsConstructor</span><span style="color: light-dark(#6A737D, #6A737D);">  //</span><span style="color: light-dark(#6A737D, #6A737D);"> Lombok instead of constructor boilerplate</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">public</span><span style="color: light-dark(#D73A49, #F97583);"> class</span><span style="color: light-dark(#6F42C1, #B392F0);"> UserController</span><span> {</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    private</span><span style="color: light-dark(#D73A49, #F97583);"> final</span><span> UserService</span><span> userService</span><span>;</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span>    @</span><span style="color: light-dark(#D73A49, #F97583);">GetMapping</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    public</span><span> ResponseEntity</span><span>&lt;</span><span>Page</span><span>&lt;</span><span style="color: light-dark(#D73A49, #F97583);">UserResponse</span><span>&gt;</span><span>&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> getAllUsers</span><span>(</span></span>
-<span class="giallo-l"><span>        @</span><span style="color: light-dark(#D73A49, #F97583);">PageableDefault</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">size</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#005CC5, #79B8FF);"> 20</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> sort</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">createdAt</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> direction</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> DESC</span><span>)</span><span> Pageable</span><span style="color: light-dark(#E36209, #FFAB70);"> pageable</span></span>
-<span class="giallo-l"><span>    )</span><span> {</span></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">        //</span><span style="color: light-dark(#6A737D, #6A737D);"> ALWAYS paginate list endpoints</span></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">        //</span><span style="color: light-dark(#6A737D, #6A737D);"> Your database will thank you</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">        return</span><span> ResponseEntity</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">ok</span><span>(</span><span>userService</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">findAll</span><span>(</span><span>pageable</span><span>)</span><span>)</span><span>;</span></span>
-<span class="giallo-l"><span>    }</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span>    @</span><span style="color: light-dark(#D73A49, #F97583);">GetMapping</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">/{id}</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>)</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    public</span><span> ResponseEntity</span><span>&lt;</span><span style="color: light-dark(#D73A49, #F97583);">UserResponse</span><span>&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> getUser</span><span>(</span><span>@</span><span style="color: light-dark(#D73A49, #F97583);">PathVariable</span><span> Long</span><span style="color: light-dark(#E36209, #FFAB70);"> id</span><span>)</span><span> {</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">        return</span><span> userService</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">findById</span><span>(</span><span>id</span><span>)</span></span>
-<span class="giallo-l"><span>            .</span><span style="color: light-dark(#6F42C1, #B392F0);">map</span><span>(</span><span>ResponseEntity</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span>ok</span><span>)</span></span>
-<span class="giallo-l"><span>            .</span><span style="color: light-dark(#6F42C1, #B392F0);">orElse</span><span>(</span><span>ResponseEntity</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">notFound</span><span>(</span><span>)</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">build</span><span>(</span><span>)</span><span>)</span><span>;</span></span>
-<span class="giallo-l"><span>    }</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span>    @</span><span style="color: light-dark(#D73A49, #F97583);">PostMapping</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    public</span><span> ResponseEntity</span><span>&lt;</span><span style="color: light-dark(#D73A49, #F97583);">UserResponse</span><span>&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> createUser</span><span>(</span></span>
-<span class="giallo-l"><span>        @</span><span style="color: light-dark(#D73A49, #F97583);">Valid</span><span> @</span><span style="color: light-dark(#D73A49, #F97583);">RequestBody</span><span> UserCreateRequest</span><span style="color: light-dark(#E36209, #FFAB70);"> request</span></span>
-<span class="giallo-l"><span>    )</span><span> {</span></span>
-<span class="giallo-l"><span>        UserResponse</span><span> user</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> userService</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">create</span><span>(</span><span>request</span><span>)</span><span>;</span></span>
-<span class="giallo-l"><span>        URI</span><span> location</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> ServletUriComponentsBuilder</span></span>
-<span class="giallo-l"><span>            .</span><span style="color: light-dark(#6F42C1, #B392F0);">fromCurrentRequest</span><span>(</span><span>)</span></span>
-<span class="giallo-l"><span>            .</span><span style="color: light-dark(#6F42C1, #B392F0);">path</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">/{id}</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>)</span></span>
-<span class="giallo-l"><span>            .</span><span style="color: light-dark(#6F42C1, #B392F0);">buildAndExpand</span><span>(</span><span>user</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">getId</span><span>(</span><span>)</span><span>)</span></span>
-<span class="giallo-l"><span>            .</span><span style="color: light-dark(#6F42C1, #B392F0);">toUri</span><span>(</span><span>)</span><span>;</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">        return</span><span> ResponseEntity</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">created</span><span>(</span><span>location</span><span>)</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">body</span><span>(</span><span>user</span><span>)</span><span>;</span></span>
-<span class="giallo-l"><span>    }</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span>    @</span><span style="color: light-dark(#D73A49, #F97583);">PutMapping</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">/{id}</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>)</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    public</span><span> ResponseEntity</span><span>&lt;</span><span style="color: light-dark(#D73A49, #F97583);">UserResponse</span><span>&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> updateUser</span><span>(</span></span>
-<span class="giallo-l"><span>        @</span><span style="color: light-dark(#D73A49, #F97583);">PathVariable</span><span> Long</span><span style="color: light-dark(#E36209, #FFAB70);"> id</span><span>,</span></span>
-<span class="giallo-l"><span>        @</span><span style="color: light-dark(#D73A49, #F97583);">Valid</span><span> @</span><span style="color: light-dark(#D73A49, #F97583);">RequestBody</span><span> UserUpdateRequest</span><span style="color: light-dark(#E36209, #FFAB70);"> request</span></span>
-<span class="giallo-l"><span>    )</span><span> {</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">        return</span><span> ResponseEntity</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">ok</span><span>(</span><span>userService</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">update</span><span>(</span><span>id</span><span>,</span><span> request</span><span>)</span><span>)</span><span>;</span></span>
-<span class="giallo-l"><span>    }</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span>    @</span><span style="color: light-dark(#D73A49, #F97583);">DeleteMapping</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">/{id}</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>)</span></span>
-<span class="giallo-l"><span>    @</span><span style="color: light-dark(#D73A49, #F97583);">ResponseStatus</span><span>(</span><span>HttpStatus</span><span>.</span><span>NO_CONTENT</span><span>)</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    public</span><span style="color: light-dark(#D73A49, #F97583);"> void</span><span style="color: light-dark(#6F42C1, #B392F0);"> deleteUser</span><span>(</span><span>@</span><span style="color: light-dark(#D73A49, #F97583);">PathVariable</span><span> Long</span><span style="color: light-dark(#E36209, #FFAB70);"> id</span><span>)</span><span> {</span></span>
-<span class="giallo-l"><span>        userService</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">delete</span><span>(</span><span>id</span><span>)</span><span>;</span></span>
-<span class="giallo-l"><span>    }</span></span>
-<span class="giallo-l"><span>}</span></span></code></pre><h2 id="the-lessons-i-learned-the-hard-way">The Lessons I Learned the Hard Way</h2>
-<h3 id="1-use-dtos-not-entities">1. Use DTOs, Not Entities</h3>
-<p><strong>Bad:</strong></p>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="java"><span class="giallo-l"><span>@</span><span style="color: light-dark(#D73A49, #F97583);">PostMapping</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">public</span><span> User</span><span style="color: light-dark(#6F42C1, #B392F0);"> create</span><span>(</span><span>@</span><span style="color: light-dark(#D73A49, #F97583);">RequestBody</span><span> User</span><span> user</span><span>)</span><span> {</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    return</span><span> userRepository</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">save</span><span>(</span><span>user</span><span>)</span><span>;</span><span style="color: light-dark(#6A737D, #6A737D);">  //</span><span style="color: light-dark(#6A737D, #6A737D);"> NOPE</span></span>
-<span class="giallo-l"><span>}</span></span></code></pre>
-<p>Why bad? You’re exposing your entire entity structure. Client sends a password hash? Saved. Client sends an admin flag? Now they’re admin. Congrats, you’ve been hacked.</p>
-<p><strong>Good:</strong></p>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="java"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">public</span><span style="color: light-dark(#D73A49, #F97583);"> record</span><span style="color: light-dark(#6F42C1, #B392F0);"> UserCreateRequest</span><span>(</span></span>
-<span class="giallo-l"><span>    @</span><span style="color: light-dark(#D73A49, #F97583);">NotBlank</span><span> String</span><span> username</span><span>,</span></span>
-<span class="giallo-l"><span>    @</span><span style="color: light-dark(#D73A49, #F97583);">Email</span><span> String</span><span> email</span><span>,</span></span>
-<span class="giallo-l"><span>    @</span><span style="color: light-dark(#D73A49, #F97583);">Size</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">min</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#005CC5, #79B8FF);"> 8</span><span>)</span><span> String</span><span> password</span></span>
-<span class="giallo-l"><span>)</span><span> {</span><span>}</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">public</span><span style="color: light-dark(#D73A49, #F97583);"> record</span><span style="color: light-dark(#6F42C1, #B392F0);"> UserResponse</span><span>(</span></span>
-<span class="giallo-l"><span>    Long</span><span> id</span><span>,</span></span>
-<span class="giallo-l"><span>    String</span><span> username</span><span>,</span></span>
-<span class="giallo-l"><span>    String</span><span> email</span><span>,</span></span>
-<span class="giallo-l"><span>    LocalDateTime</span><span> createdAt</span></span>
-<span class="giallo-l"><span>)</span><span> {</span></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">    //</span><span style="color: light-dark(#6A737D, #6A737D);"> No password here, notice?</span></span>
-<span class="giallo-l"><span>}</span></span></code></pre><h3 id="2-exception-handling-that-doesn-t-suck">2. Exception Handling That Doesn’t Suck</h3>
-<p>Global exception handler with <code>@ControllerAdvice</code>:</p>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="java"><span class="giallo-l"><span>@</span><span style="color: light-dark(#D73A49, #F97583);">RestControllerAdvice</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">public</span><span style="color: light-dark(#D73A49, #F97583);"> class</span><span style="color: light-dark(#6F42C1, #B392F0);"> GlobalExceptionHandler</span><span> {</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span>    @</span><span style="color: light-dark(#D73A49, #F97583);">ExceptionHandler</span><span>(</span><span>ResourceNotFoundException</span><span>.</span><span>class</span><span>)</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    public</span><span> ResponseEntity</span><span>&lt;</span><span style="color: light-dark(#D73A49, #F97583);">ErrorResponse</span><span>&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> handleNotFound</span><span>(</span><span>ResourceNotFoundException</span><span style="color: light-dark(#E36209, #FFAB70);"> ex</span><span>)</span><span> {</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">        return</span><span> ResponseEntity</span></span>
-<span class="giallo-l"><span>            .</span><span style="color: light-dark(#6F42C1, #B392F0);">status</span><span>(</span><span>HttpStatus</span><span>.</span><span>NOT_FOUND</span><span>)</span></span>
-<span class="giallo-l"><span>            .</span><span style="color: light-dark(#6F42C1, #B392F0);">body</span><span>(</span><span style="color: light-dark(#D73A49, #F97583);">new</span><span style="color: light-dark(#6F42C1, #B392F0);"> ErrorResponse</span><span>(</span></span>
-<span class="giallo-l"><span>                HttpStatus</span><span>.</span><span>NOT_FOUND</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">value</span><span>(</span><span>)</span><span>,</span></span>
-<span class="giallo-l"><span>                ex</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">getMessage</span><span>(</span><span>)</span><span>,</span></span>
-<span class="giallo-l"><span>                LocalDateTime</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">now</span><span>(</span><span>)</span></span>
-<span class="giallo-l"><span>            )</span><span>)</span><span>;</span></span>
-<span class="giallo-l"><span>    }</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span>    @</span><span style="color: light-dark(#D73A49, #F97583);">ExceptionHandler</span><span>(</span><span>MethodArgumentNotValidException</span><span>.</span><span>class</span><span>)</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    public</span><span> ResponseEntity</span><span>&lt;</span><span style="color: light-dark(#D73A49, #F97583);">ErrorResponse</span><span>&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> handleValidationErrors</span><span>(</span></span>
-<span class="giallo-l"><span>        MethodArgumentNotValidException</span><span style="color: light-dark(#E36209, #FFAB70);"> ex</span></span>
-<span class="giallo-l"><span>    )</span><span> {</span></span>
-<span class="giallo-l"><span>        List</span><span>&lt;</span><span style="color: light-dark(#D73A49, #F97583);">String</span><span>&gt;</span><span> errors</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> ex</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">getBindingResult</span><span>(</span><span>)</span></span>
-<span class="giallo-l"><span>            .</span><span style="color: light-dark(#6F42C1, #B392F0);">getFieldErrors</span><span>(</span><span>)</span></span>
-<span class="giallo-l"><span>            .</span><span style="color: light-dark(#6F42C1, #B392F0);">stream</span><span>(</span><span>)</span></span>
-<span class="giallo-l"><span>            .</span><span style="color: light-dark(#6F42C1, #B392F0);">map</span><span>(</span><span>error </span><span style="color: light-dark(#D73A49, #F97583);">-&gt;</span><span> error</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">getField</span><span>(</span><span>)</span><span style="color: light-dark(#D73A49, #F97583);"> +</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">: </span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#D73A49, #F97583);"> +</span><span> error</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">getDefaultMessage</span><span>(</span><span>)</span><span>)</span></span>
-<span class="giallo-l"><span>            .</span><span style="color: light-dark(#6F42C1, #B392F0);">toList</span><span>(</span><span>)</span><span>;</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">        return</span><span> ResponseEntity</span></span>
-<span class="giallo-l"><span>            .</span><span style="color: light-dark(#6F42C1, #B392F0);">status</span><span>(</span><span>HttpStatus</span><span>.</span><span>BAD_REQUEST</span><span>)</span></span>
-<span class="giallo-l"><span>            .</span><span style="color: light-dark(#6F42C1, #B392F0);">body</span><span>(</span><span style="color: light-dark(#D73A49, #F97583);">new</span><span style="color: light-dark(#6F42C1, #B392F0);"> ErrorResponse</span><span>(</span></span>
-<span class="giallo-l"><span>                HttpStatus</span><span>.</span><span>BAD_REQUEST</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">value</span><span>(</span><span>)</span><span>,</span></span>
-<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">                &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">Validation failed</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span></span>
-<span class="giallo-l"><span>                errors</span><span>,</span></span>
-<span class="giallo-l"><span>                LocalDateTime</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">now</span><span>(</span><span>)</span></span>
-<span class="giallo-l"><span>            )</span><span>)</span><span>;</span></span>
-<span class="giallo-l"><span>    }</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span>    @</span><span style="color: light-dark(#D73A49, #F97583);">ExceptionHandler</span><span>(</span><span>Exception</span><span>.</span><span>class</span><span>)</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    public</span><span> ResponseEntity</span><span>&lt;</span><span style="color: light-dark(#D73A49, #F97583);">ErrorResponse</span><span>&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> handleGenericException</span><span>(</span><span>Exception</span><span style="color: light-dark(#E36209, #FFAB70);"> ex</span><span>)</span><span> {</span></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">        //</span><span style="color: light-dark(#6A737D, #6A737D);"> Log the actual error</span></span>
-<span class="giallo-l"><span>        log</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">error</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">Unexpected error</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span> ex</span><span>)</span><span>;</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">        //</span><span style="color: light-dark(#6A737D, #6A737D);"> Don&#39;t expose internal errors to clients</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">        return</span><span> ResponseEntity</span></span>
-<span class="giallo-l"><span>            .</span><span style="color: light-dark(#6F42C1, #B392F0);">status</span><span>(</span><span>HttpStatus</span><span>.</span><span>INTERNAL_SERVER_ERROR</span><span>)</span></span>
-<span class="giallo-l"><span>            .</span><span style="color: light-dark(#6F42C1, #B392F0);">body</span><span>(</span><span style="color: light-dark(#D73A49, #F97583);">new</span><span style="color: light-dark(#6F42C1, #B392F0);"> ErrorResponse</span><span>(</span></span>
-<span class="giallo-l"><span>                HttpStatus</span><span>.</span><span>INTERNAL_SERVER_ERROR</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">value</span><span>(</span><span>)</span><span>,</span></span>
-<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">                &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">Something went wrong</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span></span>
-<span class="giallo-l"><span>                LocalDateTime</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">now</span><span>(</span><span>)</span></span>
-<span class="giallo-l"><span>            )</span><span>)</span><span>;</span></span>
-<span class="giallo-l"><span>    }</span></span>
-<span class="giallo-l"><span>}</span></span></code></pre><h3 id="3-pagination-is-not-optional">3. Pagination Is Not Optional</h3>
-<p>If your endpoint returns a list, paginate it. Period.</p>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="java"><span class="giallo-l"><span>@</span><span style="color: light-dark(#D73A49, #F97583);">GetMapping</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">public</span><span> ResponseEntity</span><span style="color: light-dark(#D73A49, #F97583);">&lt;</span><span>Page</span><span style="color: light-dark(#D73A49, #F97583);">&lt;</span><span>UserResponse</span><span style="color: light-dark(#D73A49, #F97583);">&gt;&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> getAllUsers</span><span>(</span></span>
-<span class="giallo-l"><span>    @</span><span style="color: light-dark(#D73A49, #F97583);">PageableDefault</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">size</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#005CC5, #79B8FF);"> 20</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> sort</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">createdAt</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> direction</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> DESC</span><span>)</span></span>
-<span class="giallo-l"><span>    Pageable</span><span> pageable</span><span>,</span></span>
-<span class="giallo-l"><span>    @</span><span style="color: light-dark(#D73A49, #F97583);">RequestParam</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">required</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#005CC5, #79B8FF);"> false</span><span>)</span><span> String</span><span> search</span></span>
-<span class="giallo-l"><span>)</span><span> {</span></span>
-<span class="giallo-l"><span>    Page</span><span>&lt;</span><span style="color: light-dark(#D73A49, #F97583);">UserResponse</span><span>&gt;</span><span> users</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> search </span><span style="color: light-dark(#D73A49, #F97583);">!=</span><span style="color: light-dark(#005CC5, #79B8FF);"> null</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">        ?</span><span> userService</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">search</span><span>(</span><span>search</span><span>,</span><span> pageable</span><span>)</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">        :</span><span> userService</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">findAll</span><span>(</span><span>pageable</span><span>)</span><span>;</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    return</span><span> ResponseEntity</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">ok</span><span>(</span><span>users</span><span>)</span><span>;</span></span>
-<span class="giallo-l"><span>}</span></span></code></pre><h3 id="4-database-queries-that-don-t-kill-performance">4. Database Queries That Don’t Kill Performance</h3>
-<p><strong>N+1 queries will destroy you:</strong></p>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="java"><span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">//</span><span style="color: light-dark(#6A737D, #6A737D);"> BAD - fires N+1 queries</span></span>
-<span class="giallo-l"><span>@</span><span style="color: light-dark(#D73A49, #F97583);">OneToMany</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">mappedBy</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">user</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>)</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">private</span><span> List</span><span>&lt;</span><span style="color: light-dark(#D73A49, #F97583);">Order</span><span>&gt;</span><span> orders</span><span>;</span><span style="color: light-dark(#6A737D, #6A737D);">  //</span><span style="color: light-dark(#6A737D, #6A737D);"> Fetches orders lazily = N extra queries</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">//</span><span style="color: light-dark(#6A737D, #6A737D);"> GOOD - fetch with JOIN</span></span>
-<span class="giallo-l"><span>@</span><span style="color: light-dark(#D73A49, #F97583);">Query</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">SELECT u FROM User u LEFT JOIN FETCH u.orders WHERE u.id = :id</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>)</span></span>
-<span class="giallo-l"><span>Optional</span><span style="color: light-dark(#D73A49, #F97583);">&lt;</span><span>User</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> findByIdWithOrders</span><span>(</span><span>@</span><span style="color: light-dark(#D73A49, #F97583);">Param</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">id</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>)</span><span> Long</span><span> id</span><span>)</span><span>;</span></span></code></pre>
-<p><strong>Use projections for list endpoints:</strong></p>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="java"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">public</span><span style="color: light-dark(#D73A49, #F97583);"> interface</span><span style="color: light-dark(#6F42C1, #B392F0);"> UserSummary</span><span> {</span></span>
-<span class="giallo-l"><span>    Long</span><span style="color: light-dark(#6F42C1, #B392F0);"> getId</span><span>(</span><span>)</span><span>;</span></span>
-<span class="giallo-l"><span>    String</span><span style="color: light-dark(#6F42C1, #B392F0);"> getUsername</span><span>(</span><span>)</span><span>;</span></span>
-<span class="giallo-l"><span>    String</span><span style="color: light-dark(#6F42C1, #B392F0);"> getEmail</span><span>(</span><span>)</span><span>;</span></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">    //</span><span style="color: light-dark(#6A737D, #6A737D);"> Only what you need, not the whole entity</span></span>
-<span class="giallo-l"><span>}</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span>@</span><span style="color: light-dark(#D73A49, #F97583);">Query</span><span>(</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">SELECT u.id as id, u.username as username, u.email as email FROM User u</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>)</span></span>
-<span class="giallo-l"><span>Page</span><span style="color: light-dark(#D73A49, #F97583);">&lt;</span><span>UserSummary</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> findAllSummaries</span><span>(</span><span>Pageable</span><span> pageable</span><span>)</span><span>;</span></span></code></pre><h2 id="the-performance-stuff-that-actually-matters">The Performance Stuff That Actually Matters</h2>
-<h3 id="1-caching-use-it">1. Caching (Use it)</h3>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="java"><span class="giallo-l"><span>@</span><span style="color: light-dark(#D73A49, #F97583);">Service</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">public</span><span style="color: light-dark(#D73A49, #F97583);"> class</span><span style="color: light-dark(#6F42C1, #B392F0);"> UserService</span><span> {</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span>    @</span><span style="color: light-dark(#D73A49, #F97583);">Cacheable</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">value</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">users</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> key</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">#id</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>)</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    public</span><span> Optional</span><span>&lt;</span><span style="color: light-dark(#D73A49, #F97583);">UserResponse</span><span>&gt;</span><span style="color: light-dark(#6F42C1, #B392F0);"> findById</span><span>(</span><span>Long</span><span style="color: light-dark(#E36209, #FFAB70);"> id</span><span>)</span><span> {</span></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">        //</span><span style="color: light-dark(#6A737D, #6A737D);"> Only hits DB if not in cache</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">        return</span><span> userRepository</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">findById</span><span>(</span><span>id</span><span>)</span></span>
-<span class="giallo-l"><span>            .</span><span style="color: light-dark(#6F42C1, #B392F0);">map</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">this</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span style="color: light-dark(#D73A49, #F97583);">:</span><span>toResponse</span><span>)</span><span>;</span></span>
-<span class="giallo-l"><span>    }</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span>    @</span><span style="color: light-dark(#D73A49, #F97583);">CacheEvict</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">value</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">users</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> key</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">#id</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>)</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">    public</span><span style="color: light-dark(#D73A49, #F97583);"> void</span><span style="color: light-dark(#6F42C1, #B392F0);"> delete</span><span>(</span><span>Long</span><span style="color: light-dark(#E36209, #FFAB70);"> id</span><span>)</span><span> {</span></span>
-<span class="giallo-l"><span>        userRepository</span><span>.</span><span style="color: light-dark(#6F42C1, #B392F0);">deleteById</span><span>(</span><span>id</span><span>)</span><span>;</span></span>
-<span class="giallo-l"><span>    }</span></span>
-<span class="giallo-l"><span>}</span></span></code></pre><h3 id="2-connection-pooling">2. Connection Pooling</h3>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="ini"><span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">#</span><span style="color: light-dark(#6A737D, #6A737D);"> application.properties</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">spring.datasource.hikari.maximum-pool-size</span><span>=</span><span>10</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">spring.datasource.hikari.minimum-idle</span><span>=</span><span>5</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">spring.datasource.hikari.connection-timeout</span><span>=</span><span>30000</span></span></code></pre><h3 id="3-indexes-add-them-before-your-db-melts">3. Indexes (Add them before your DB melts)</h3>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="java"><span class="giallo-l"><span>@</span><span style="color: light-dark(#D73A49, #F97583);">Entity</span></span>
-<span class="giallo-l"><span>@</span><span style="color: light-dark(#D73A49, #F97583);">Table</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">name</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">users</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> indexes</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span> {</span></span>
-<span class="giallo-l"><span>    @</span><span style="color: light-dark(#D73A49, #F97583);">Index</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">name</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">idx_email</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> columnList</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">email</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>)</span><span>,</span></span>
-<span class="giallo-l"><span>    @</span><span style="color: light-dark(#D73A49, #F97583);">Index</span><span>(</span><span style="color: light-dark(#005CC5, #79B8FF);">name</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">idx_username</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>,</span><span style="color: light-dark(#005CC5, #79B8FF);"> columnList</span><span style="color: light-dark(#D73A49, #F97583);"> =</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">username</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>)</span></span>
-<span class="giallo-l"><span>}</span><span>)</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">public</span><span style="color: light-dark(#D73A49, #F97583);"> class</span><span style="color: light-dark(#6F42C1, #B392F0);"> User</span><span> {</span></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">    //</span><span style="color: light-dark(#6A737D, #6A737D);"> ...</span></span>
-<span class="giallo-l"><span>}</span></span></code></pre><h2 id="things-i-wish-someone-told-me-earlier">Things I Wish Someone Told Me Earlier</h2>
-<p>Version your API from day one, because retrofitting versioned routes later is usually painful. Log the events that matter, especially failures and slow paths, since production debugging depends on observability more than intuition. Write integration tests for critical flows, document behavior with OpenAPI, and add basic rate limiting early rather than waiting for abuse to force a rushed response.</p>
-<h2 id="the-reality-check">The Reality Check</h2>
-<p>Perfect APIs don’t exist. You’ll make tradeoffs. You’ll ship bugs. You’ll realize your architecture needs refactoring 6 months in.</p>
-<p>That’s fine. Ship something that works, iterate, and make it better. Just avoid the obvious pitfalls:</p>
-<p>Avoid exposing entities directly, skipping pagination, ignoring validation, shipping without consistent error handling, leaving query paths vulnerable, or operating blind without logs.</p>
-<p>Do those things right, and you’re already ahead of 70% of APIs out there.</p>
-<h2 id="resources">Resources</h2>
-<p>The <a rel="noopener noreferrer external" target="_blank" href="https://spring.io/projects/spring-boot">Spring Boot docs</a> and <a rel="noopener noreferrer external" target="_blank" href="https://www.baeldung.com/">Baeldung</a> are still the fastest way to validate implementation details, and when either leaves ambiguity, reading the framework source directly tends to clear things up faster than guesswork.</p>
-<p>- Dhanur</p>
-]]></content:encoded>
-        </item>
-      
-        <item>
-            <title>Docker and Kubernetes: A Love-Hate Story</title>
-          
-          <pubDate>Tue, 30 Dec 2025 00:00:00 +0000</pubDate>
-          
-            <author>Dhanur</author>
-            <link>https://dhanur.me/blog/docker-kubernetes-intro/</link>
-            <guid isPermaLink="true">https://dhanur.me/blog/docker-kubernetes-intro/</guid>
-
-            <description><![CDATA[Learning containers and orchestration without losing your sanity (probably impossible)]]></description>
-
-            <content:encoded><![CDATA[<p>So you want to learn about containers and orchestration? Buckle up, because you’re about to enter a world where “it works on my machine” becomes both your mantra and your nightmare.</p>
-<h2 id="docker-the-gateway-drug">Docker: The Gateway Drug</h2>
-<p>Docker sold us on a beautiful dream: package your app with all its dependencies, and it’ll run anywhere™.</p>
-<p>Spoiler: It mostly works, but you’ll still spend hours debugging networking issues.</p>
-<h3 id="why-docker-though">Why Docker Though?</h3>
-<p>Real talk - containers changed the game:</p>
-<p>The promise is straightforward: builds become reproducible, dependencies stop drifting across machines, and environments stay consistent from local to production. The reality is still better than the old world, but it introduces new pain points around YAML sprawl, memory surprises, port conflicts, and confusing volume behavior.</p>
-<p>But honestly? Still worth it.</p>
-<h2 id="your-first-dockerfile-that-actually-works">Your First Dockerfile (That Actually Works)</h2>
-<p>Let’s build something real - a basic Node.js API:</p>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="docker"><span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">#</span><span style="color: light-dark(#6A737D, #6A737D);"> Start with a specific version, not &quot;latest&quot;</span></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">#</span><span style="color: light-dark(#6A737D, #6A737D);"> (future you will thank present you)</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">FROM</span><span> node:18-alpine</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">#</span><span style="color: light-dark(#6A737D, #6A737D);"> Set working directory</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">WORKDIR</span><span> /app</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">#</span><span style="color: light-dark(#6A737D, #6A737D);"> Copy package files first (layer caching magic)</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">COPY</span><span> package*.json ./</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">#</span><span style="color: light-dark(#6A737D, #6A737D);"> Install dependencies</span></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">#</span><span style="color: light-dark(#6A737D, #6A737D);"> --only=production because we&#39;re not savages</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">RUN</span><span> npm ci --only=production</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">#</span><span style="color: light-dark(#6A737D, #6A737D);"> Now copy the actual app</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">COPY</span><span> . .</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">#</span><span style="color: light-dark(#6A737D, #6A737D);"> Expose the port (more for documentation than function)</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">EXPOSE</span><span> 3000</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">#</span><span style="color: light-dark(#6A737D, #6A737D);"> Set environment variable defaults</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">ENV</span><span> NODE_ENV=production</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">#</span><span style="color: light-dark(#6A737D, #6A737D);"> Run the thing</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">CMD</span><span> [</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">node</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>, </span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">server.js</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>]</span></span></code></pre>
-<p>Build it:</p>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">docker</span><span style="color: light-dark(#032F62, #9ECBFF);"> build</span><span style="color: light-dark(#005CC5, #79B8FF);"> -</span><span style="color: light-dark(#005CC5, #79B8FF);">t</span><span style="color: light-dark(#032F62, #9ECBFF);"> my-app:1.0</span><span style="color: light-dark(#032F62, #9ECBFF);"> .</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">#</span><span style="color: light-dark(#6A737D, #6A737D);"> Tag it properly, not like an animal</span></span>
-<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">docker</span><span style="color: light-dark(#032F62, #9ECBFF);"> tag</span><span style="color: light-dark(#032F62, #9ECBFF);"> my-app:1.0</span><span style="color: light-dark(#032F62, #9ECBFF);"> myregistry/my-app:1.0</span></span></code></pre>
-<p>Run it:</p>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">docker</span><span style="color: light-dark(#032F62, #9ECBFF);"> run</span><span style="color: light-dark(#005CC5, #79B8FF);"> -</span><span style="color: light-dark(#005CC5, #79B8FF);">d</span><span style="color: light-dark(#005CC5, #79B8FF);"> \</span></span>
-<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">  -</span><span style="color: light-dark(#005CC5, #79B8FF);">p</span><span style="color: light-dark(#032F62, #9ECBFF);"> 3000:3000</span><span style="color: light-dark(#005CC5, #79B8FF);"> \</span></span>
-<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">  -</span><span style="color: light-dark(#005CC5, #79B8FF);">-name</span><span style="color: light-dark(#032F62, #9ECBFF);"> my-app</span><span style="color: light-dark(#005CC5, #79B8FF);"> \</span></span>
-<span class="giallo-l"><span style="color: light-dark(#005CC5, #79B8FF);">  -</span><span style="color: light-dark(#005CC5, #79B8FF);">-restart</span><span style="color: light-dark(#032F62, #9ECBFF);"> unless-stopped</span><span style="color: light-dark(#005CC5, #79B8FF);"> \</span></span>
-<span class="giallo-l"><span style="color: light-dark(#032F62, #9ECBFF);">  my-app:1.0</span></span></code></pre><h3 id="docker-tips-that-ll-save-your-life">Docker Tips That’ll Save Your Life</h3>
-<p>Use <code>.dockerignore</code> aggressively so large folders and local-only artifacts never make it into image context.</p>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="plain"><span class="giallo-l"><span>node_modules/</span></span>
-<span class="giallo-l"><span>.git/</span></span>
-<span class="giallo-l"><span>*.log</span></span>
-<span class="giallo-l"><span>.env</span></span></code></pre>
-<p>Your images will be 10x smaller. You’re welcome.</p>
-<p>For compiled languages, multi-stage builds drastically cut runtime image size and reduce attack surface.</p>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="docker"><span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">#</span><span style="color: light-dark(#6A737D, #6A737D);"> Build stage</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">FROM</span><span> golang:1.21 </span><span style="color: light-dark(#D73A49, #F97583);">as</span><span> builder</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">WORKDIR</span><span> /app</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">COPY</span><span> . .</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">RUN</span><span> go build -o main .</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">#</span><span style="color: light-dark(#6A737D, #6A737D);"> Runtime stage</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">FROM</span><span> alpine:latest</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">COPY</span><span> --from=builder /app/main /main</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">CMD</span><span> [</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">/main</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span><span>]</span></span></code></pre>
-<p>Went from 800MB to 20MB. Feel that dopamine hit.</p>
-<p>Always add health checks so orchestration can make better restart and routing decisions.</p>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="docker"><span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">HEALTHCHECK</span><span> --interval=30s --timeout=3s \</span></span>
-<span class="giallo-l"><span style="color: light-dark(#D73A49, #F97583);">  CMD</span><span> curl -f http://localhost:3000/health || exit 1</span></span></code></pre><h2 id="docker-compose-when-you-need-more-than-one-container">Docker Compose: When You Need More Than One Container</h2>
-<p>Real apps need databases, caches, queues… Docker Compose orchestrates multiple containers so you don’t have to run 47 terminal commands.</p>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="yaml"><span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">v</span><span style="color: light-dark(#22863A, #85E89D);">ersion</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">3.8</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">s</span><span style="color: light-dark(#22863A, #85E89D);">ervices</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">  #</span><span style="color: light-dark(#6A737D, #6A737D);"> The actual app</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">  a</span><span style="color: light-dark(#22863A, #85E89D);">pp</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">    b</span><span style="color: light-dark(#22863A, #85E89D);">uild</span><span>:</span><span style="color: light-dark(#005CC5, #79B8FF);"> .</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">    p</span><span style="color: light-dark(#22863A, #85E89D);">orts</span><span>:</span></span>
-<span class="giallo-l"><span>      -</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">3000:3000</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">    e</span><span style="color: light-dark(#22863A, #85E89D);">nvironment</span><span>:</span></span>
-<span class="giallo-l"><span>      -</span><span style="color: light-dark(#032F62, #9ECBFF);"> D</span><span style="color: light-dark(#032F62, #9ECBFF);">ATABASE_URL=postgresql://postgres:password@db:5432/myapp</span></span>
-<span class="giallo-l"><span>      -</span><span style="color: light-dark(#032F62, #9ECBFF);"> R</span><span style="color: light-dark(#032F62, #9ECBFF);">EDIS_URL=redis://cache:6379</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">    d</span><span style="color: light-dark(#22863A, #85E89D);">epends_on</span><span>:</span></span>
-<span class="giallo-l"><span>      -</span><span style="color: light-dark(#032F62, #9ECBFF);"> d</span><span style="color: light-dark(#032F62, #9ECBFF);">b</span></span>
-<span class="giallo-l"><span>      -</span><span style="color: light-dark(#032F62, #9ECBFF);"> c</span><span style="color: light-dark(#032F62, #9ECBFF);">ache</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">    r</span><span style="color: light-dark(#22863A, #85E89D);">estart</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> u</span><span style="color: light-dark(#032F62, #9ECBFF);">nless-stopped</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">  #</span><span style="color: light-dark(#6A737D, #6A737D);"> PostgreSQL</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">  d</span><span style="color: light-dark(#22863A, #85E89D);">b</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">    i</span><span style="color: light-dark(#22863A, #85E89D);">mage</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> p</span><span style="color: light-dark(#032F62, #9ECBFF);">ostgres:15-alpine</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">    e</span><span style="color: light-dark(#22863A, #85E89D);">nvironment</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">      P</span><span style="color: light-dark(#22863A, #85E89D);">OSTGRES_PASSWORD</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> p</span><span style="color: light-dark(#032F62, #9ECBFF);">assword</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">      P</span><span style="color: light-dark(#22863A, #85E89D);">OSTGRES_DB</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> m</span><span style="color: light-dark(#032F62, #9ECBFF);">yapp</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">    v</span><span style="color: light-dark(#22863A, #85E89D);">olumes</span><span>:</span></span>
-<span class="giallo-l"><span>      -</span><span style="color: light-dark(#032F62, #9ECBFF);"> p</span><span style="color: light-dark(#032F62, #9ECBFF);">ostgres_data:/var/lib/postgresql/data</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">    p</span><span style="color: light-dark(#22863A, #85E89D);">orts</span><span>:</span></span>
-<span class="giallo-l"><span>      -</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">5432:5432</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">  #</span><span style="color: light-dark(#6A737D, #6A737D);"> Redis for caching/sessions</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">  c</span><span style="color: light-dark(#22863A, #85E89D);">ache</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">    i</span><span style="color: light-dark(#22863A, #85E89D);">mage</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> r</span><span style="color: light-dark(#032F62, #9ECBFF);">edis:7-alpine</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">    p</span><span style="color: light-dark(#22863A, #85E89D);">orts</span><span>:</span></span>
-<span class="giallo-l"><span>      -</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">6379:6379</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">v</span><span style="color: light-dark(#22863A, #85E89D);">olumes</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">  p</span><span style="color: light-dark(#22863A, #85E89D);">ostgres_data</span><span>:</span></span></code></pre>
-<p>Run everything:</p>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">docker-compose</span><span style="color: light-dark(#032F62, #9ECBFF);"> up</span><span style="color: light-dark(#005CC5, #79B8FF);"> -</span><span style="color: light-dark(#005CC5, #79B8FF);">d</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">#</span><span style="color: light-dark(#6A737D, #6A737D);"> View logs</span></span>
-<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">docker-compose</span><span style="color: light-dark(#032F62, #9ECBFF);"> logs</span><span style="color: light-dark(#005CC5, #79B8FF);"> -</span><span style="color: light-dark(#005CC5, #79B8FF);">f</span><span style="color: light-dark(#032F62, #9ECBFF);"> app</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">#</span><span style="color: light-dark(#6A737D, #6A737D);"> Tear it all down</span></span>
-<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">docker-compose</span><span style="color: light-dark(#032F62, #9ECBFF);"> down</span><span style="color: light-dark(#005CC5, #79B8FF);"> -</span><span style="color: light-dark(#005CC5, #79B8FF);">v</span><span style="color: light-dark(#6A737D, #6A737D);">  #</span><span style="color: light-dark(#6A737D, #6A737D);"> -v removes volumes too</span></span></code></pre><h2 id="kubernetes-because-apparently-docker-wasn-t-complicated-enough">Kubernetes: Because Apparently Docker Wasn’t Complicated Enough</h2>
-<p>K8s (because typing “Kubernetes” is apparently too hard) is what you use when Docker Compose can’t scale to your needs. Or when you want to put “Kubernetes” on your resume.</p>
-<h3 id="what-even-is-kubernetes">What Even Is Kubernetes?</h3>
-<p>It’s a container orchestrator. Fancy words for: “Deploy your Docker containers across many machines and K8s handles the chaos.”</p>
-<p><strong>K8s manages:</strong></p>
-<p>Kubernetes handles scaling, self-healing, rollout orchestration, load balancing, and service discovery. What it does not remove is operational complexity, which means you still own configuration discipline, networking clarity, and the debugging burden when cluster behavior differs from expectations.</p>
-<h3 id="baby-s-first-k8s-deployment">Baby’s First K8s Deployment</h3>
-<p>Here’s the smallest useful K8s setup:</p>
-<p><strong>deployment.yaml:</strong></p>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="yaml"><span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">a</span><span style="color: light-dark(#22863A, #85E89D);">piVersion</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> a</span><span style="color: light-dark(#032F62, #9ECBFF);">pps/v1</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">k</span><span style="color: light-dark(#22863A, #85E89D);">ind</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> D</span><span style="color: light-dark(#032F62, #9ECBFF);">eployment</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">m</span><span style="color: light-dark(#22863A, #85E89D);">etadata</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">  n</span><span style="color: light-dark(#22863A, #85E89D);">ame</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> m</span><span style="color: light-dark(#032F62, #9ECBFF);">y-app</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">s</span><span style="color: light-dark(#22863A, #85E89D);">pec</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">  r</span><span style="color: light-dark(#22863A, #85E89D);">eplicas</span><span>:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 3</span><span style="color: light-dark(#6A737D, #6A737D);"> #</span><span style="color: light-dark(#6A737D, #6A737D);"> Run 3 copies of the app</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">  s</span><span style="color: light-dark(#22863A, #85E89D);">elector</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">    m</span><span style="color: light-dark(#22863A, #85E89D);">atchLabels</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">      a</span><span style="color: light-dark(#22863A, #85E89D);">pp</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> m</span><span style="color: light-dark(#032F62, #9ECBFF);">y-app</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">  t</span><span style="color: light-dark(#22863A, #85E89D);">emplate</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">    m</span><span style="color: light-dark(#22863A, #85E89D);">etadata</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">      l</span><span style="color: light-dark(#22863A, #85E89D);">abels</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">        a</span><span style="color: light-dark(#22863A, #85E89D);">pp</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> m</span><span style="color: light-dark(#032F62, #9ECBFF);">y-app</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">    s</span><span style="color: light-dark(#22863A, #85E89D);">pec</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">      c</span><span style="color: light-dark(#22863A, #85E89D);">ontainers</span><span>:</span></span>
-<span class="giallo-l"><span>        -</span><span style="color: light-dark(#22863A, #85E89D);"> n</span><span style="color: light-dark(#22863A, #85E89D);">ame</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> m</span><span style="color: light-dark(#032F62, #9ECBFF);">y-app</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">          i</span><span style="color: light-dark(#22863A, #85E89D);">mage</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> m</span><span style="color: light-dark(#032F62, #9ECBFF);">yregistry/my-app:1.0</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">          p</span><span style="color: light-dark(#22863A, #85E89D);">orts</span><span>:</span></span>
-<span class="giallo-l"><span>            -</span><span style="color: light-dark(#22863A, #85E89D);"> c</span><span style="color: light-dark(#22863A, #85E89D);">ontainerPort</span><span>:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 3000</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">          e</span><span style="color: light-dark(#22863A, #85E89D);">nv</span><span>:</span></span>
-<span class="giallo-l"><span>            -</span><span style="color: light-dark(#22863A, #85E89D);"> n</span><span style="color: light-dark(#22863A, #85E89D);">ame</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> N</span><span style="color: light-dark(#032F62, #9ECBFF);">ODE_ENV</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">              v</span><span style="color: light-dark(#22863A, #85E89D);">alue</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">production</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">          r</span><span style="color: light-dark(#22863A, #85E89D);">esources</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">            l</span><span style="color: light-dark(#22863A, #85E89D);">imits</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">              m</span><span style="color: light-dark(#22863A, #85E89D);">emory</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">512Mi</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">              c</span><span style="color: light-dark(#22863A, #85E89D);">pu</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">500m</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">            r</span><span style="color: light-dark(#22863A, #85E89D);">equests</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">              m</span><span style="color: light-dark(#22863A, #85E89D);">emory</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">256Mi</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">              c</span><span style="color: light-dark(#22863A, #85E89D);">pu</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> &quot;</span><span style="color: light-dark(#032F62, #9ECBFF);">250m</span><span style="color: light-dark(#032F62, #9ECBFF);">&quot;</span></span></code></pre>
-<p><strong>service.yaml:</strong></p>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="yaml"><span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">a</span><span style="color: light-dark(#22863A, #85E89D);">piVersion</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> v</span><span style="color: light-dark(#032F62, #9ECBFF);">1</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">k</span><span style="color: light-dark(#22863A, #85E89D);">ind</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> S</span><span style="color: light-dark(#032F62, #9ECBFF);">ervice</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">m</span><span style="color: light-dark(#22863A, #85E89D);">etadata</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">  n</span><span style="color: light-dark(#22863A, #85E89D);">ame</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> m</span><span style="color: light-dark(#032F62, #9ECBFF);">y-app-service</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">s</span><span style="color: light-dark(#22863A, #85E89D);">pec</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">  s</span><span style="color: light-dark(#22863A, #85E89D);">elector</span><span>:</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">    a</span><span style="color: light-dark(#22863A, #85E89D);">pp</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> m</span><span style="color: light-dark(#032F62, #9ECBFF);">y-app</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">  p</span><span style="color: light-dark(#22863A, #85E89D);">orts</span><span>:</span></span>
-<span class="giallo-l"><span>    -</span><span style="color: light-dark(#22863A, #85E89D);"> p</span><span style="color: light-dark(#22863A, #85E89D);">rotocol</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> T</span><span style="color: light-dark(#032F62, #9ECBFF);">CP</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">      p</span><span style="color: light-dark(#22863A, #85E89D);">ort</span><span>:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 80</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">      t</span><span style="color: light-dark(#22863A, #85E89D);">argetPort</span><span>:</span><span style="color: light-dark(#005CC5, #79B8FF);"> 3000</span></span>
-<span class="giallo-l"><span style="color: light-dark(#22863A, #85E89D);">  t</span><span style="color: light-dark(#22863A, #85E89D);">ype</span><span>:</span><span style="color: light-dark(#032F62, #9ECBFF);"> L</span><span style="color: light-dark(#032F62, #9ECBFF);">oadBalancer</span><span style="color: light-dark(#6A737D, #6A737D);"> #</span><span style="color: light-dark(#6A737D, #6A737D);"> Or ClusterIP, NodePort, etc.</span></span></code></pre>
-<p>Apply it:</p>
-<pre class="giallo" style="color-scheme: light dark; color: light-dark(#24292E, #E1E4E8); background-color: light-dark(#FFFFFF, #24292E);"><code data-lang="shellscript"><span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">kubectl</span><span style="color: light-dark(#032F62, #9ECBFF);"> apply</span><span style="color: light-dark(#005CC5, #79B8FF);"> -</span><span style="color: light-dark(#005CC5, #79B8FF);">f</span><span style="color: light-dark(#032F62, #9ECBFF);"> deployment.yaml</span></span>
-<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">kubectl</span><span style="color: light-dark(#032F62, #9ECBFF);"> apply</span><span style="color: light-dark(#005CC5, #79B8FF);"> -</span><span style="color: light-dark(#005CC5, #79B8FF);">f</span><span style="color: light-dark(#032F62, #9ECBFF);"> service.yaml</span></span>
-<span class="giallo-l"></span>
-<span class="giallo-l"><span style="color: light-dark(#6A737D, #6A737D);">#</span><span style="color: light-dark(#6A737D, #6A737D);"> Check if it worked (narrator: it probably didn&#39;t)</span></span>
-<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">kubectl</span><span style="color: light-dark(#032F62, #9ECBFF);"> get</span><span style="color: light-dark(#032F62, #9ECBFF);"> pods</span></span>
-<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">kubectl</span><span style="color: light-dark(#032F62, #9ECBFF);"> get</span><span style="color: light-dark(#032F62, #9ECBFF);"> services</span></span>
-<span class="giallo-l"><span style="color: light-dark(#6F42C1, #B392F0);">kubectl</span><span style="color: light-dark(#032F62, #9ECBFF);"> logs</span><span style="color: light-dark(#005CC5, #79B8FF);"> -</span><span style="color: light-dark(#005CC5, #79B8FF);">f</span><span style="color: light-dark(#D73A49, #F97583);"> &lt;</span><span style="color: light-dark(#032F62, #9ECBFF);">pod-nam</span><span>e</span><span style="color: light-dark(#D73A49, #F97583);">&gt;</span><span style="color: light-dark(#6A737D, #6A737D);">  #</span><span style="color: light-dark(#6A737D, #6A737D);"> When things inevitably break</span></span></code></pre><h2 id="the-learning-curve">The Learning Curve</h2>
-<p><strong>Week 1:</strong> “This is easy!”<br />
-<strong>Week 2:</strong> “Why isn’t this working?”<br />
-<strong>Week 3:</strong> <em>Googling frantically at 2 AM</em><br />
-<strong>Week 4:</strong> “Oh, that’s actually clever”<br />
-<strong>Week 5:</strong> Back to Week 2</p>
-<h2 id="resources-that-helped-me-not-quit">Resources That Helped Me Not Quit</h2>
-<p>The <a rel="noopener noreferrer external" target="_blank" href="https://docs.docker.com/">Docker docs</a> and <a rel="noopener noreferrer external" target="_blank" href="https://kubernetes.io/docs/">Kubernetes docs</a> are still the best primary references, and community resources like conference talks, issue threads, and practical troubleshooting posts are usually what bridge the gap between theory and production reality.</p>
-<h2 id="final-thoughts">Final Thoughts</h2>
-<p>Docker is genuinely useful and you should learn it. Kubernetes… depends on your scale. If you’re running a personal blog, you don’t need K8s (looking at you, overengineers).</p>
-<p>But if you’re deploying microservices that need to scale, or you’re interviewing for jobs that require it, dive in. Just know it’ll be frustrating before it clicks.</p>
-<p>And remember: everyone Googles kubectl commands. Nobody remembers them all.</p>
-<p>- Dhanur</p>
 ]]></content:encoded>
         </item>
       

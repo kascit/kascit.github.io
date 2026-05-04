@@ -1,7 +1,7 @@
 <div class="carousel w-full">
   {% for image in images %}
   <div id="slide{{ loop.index }}" class="carousel-item relative w-full">
-    <img src="{{ image }}" class="w-full" loading="lazy" />
+    <img src="{{ image }}" class="w-full" sizes="(min-width: 1024px) 768px, 100vw" loading="lazy" />
     <div
       class="absolute left-5 right-5 top-1/2 flex -translate-y-1/2 transform justify-between"
     >

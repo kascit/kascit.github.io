@@ -1,9 +1,101 @@
 {
   "projects": [
     {
-      "slug": "up",
-      "title": "UP",
+      "slug": "pulse",
+      "title": "Pulse",
       "group": "featured",
+      "icon": "fa-solid fa-heart-pulse",
+      "description": "An open-source uptime and cron monitoring platform. Track HTTP endpoints, monitor background jobs, route alerts, and publish public status pages.",
+      "extended_description": "Built as a comprehensive monitoring solution for the Dhanur ecosystem. Features concurrent active pinging, passive cron heartbeats, robust alerting, and customizable public status pages.",
+      "role": "Monitoring Platform",
+      "highlights": [
+        "Secure JWT-based authentication",
+        "Active HTTP monitors and passive cron heartbeats",
+        "Configurable public status pages",
+        "Alert routing via Webhooks or Telegram"
+      ],
+      "thumbnail_image": "/images/projects/pulse.png",
+      "thumbnail_alt": "Pulse project preview",
+      "lang": "TypeScript · Node.js",
+      "status": "live",
+      "techs": [
+        "TypeScript",
+        "Node.js",
+        "Express",
+        "React",
+        "Tailwind CSS",
+        "MongoDB",
+        "Zod",
+        "Vite"
+      ],
+      "tags": [
+        "monitoring",
+        "fullstack",
+        "backend",
+        "frontend",
+        "systems"
+      ],
+      "github_url": "https://github.com/kascit/pulse",
+      "live_url": "https://pulse.dhanur.me",
+      "repo_language": "TypeScript",
+      "repo_topics": [
+        "uptime-monitor",
+        "cron-monitor",
+        "react",
+        "node",
+        "express",
+        "mongodb"
+      ],
+      "repo_updated_at": "2026-05-04T07:33:22.654Z",
+      "repo_archived": false,
+      "repo_stars": 1
+    },
+    {
+      "slug": "authy",
+      "title": "Authy",
+      "group": "ecosystem",
+      "icon": "fa-solid fa-shield-halved",
+      "description": "Centralized single sign-on (SSO) and JWT authentication service for the Dhanur ecosystem.",
+      "extended_description": "Provides secure identity management and token issuance across all *.dhanur.me applications. Built to centralize auth logic and reduce redundancy in sibling services.",
+      "role": "Authentication Service",
+      "highlights": [
+        "Single Sign-On (SSO) for ecosystem apps",
+        "Secure JWT issuance and validation",
+        "Centralized identity management"
+      ],
+      "lang": "TypeScript · Node.js",
+      "status": "live",
+      "techs": [
+        "Node.js",
+        "TypeScript",
+        "Express",
+        "JWT",
+        "Authentication",
+        "SSO"
+      ],
+      "tags": [
+        "backend",
+        "security",
+        "identity",
+        "systems"
+      ],
+      "github_url": "https://github.com/kascit/authy",
+      "live_url": "https://auth.dhanur.me",
+      "repo_language": "TypeScript",
+      "repo_topics": [
+        "auth",
+        "jwt",
+        "sso",
+        "nodejs"
+      ],
+      "repo_updated_at": "2026-05-04T07:33:22.671Z",
+      "repo_archived": false,
+      "repo_stars": 0
+    },
+    {
+      "slug": "up",
+      "title": "Up",
+      "group": "ecosystem",
       "icon": "fa-solid fa-signal",
       "description": "Real-time service health dashboard for all dhanur.me services. Written in Go, zero external dependencies, deployed on Render.",
       "extended_description": "A lightweight status monitor with concurrent goroutine probes and in-memory rolling history. Designed for absolute minimal resource footprint.",
@@ -46,7 +138,7 @@
     {
       "slug": "face-rekognition",
       "title": "Face Rekognition",
-      "group": "learning",
+      "group": "personal",
       "icon": "fa-solid fa-microchip",
       "description": "IoT-powered automated attendance system using ESP32-CAM, AWS IoT Core, Lambda, and AWS Rekognition. Serverless architecture with face detection and real-time processing.",
       "extended_description": "Built as an academic production-grade prototype, this project focused on low-latency recognition events, robust event ingestion, and auditable attendance records across unreliable network conditions.",
@@ -59,8 +151,8 @@
         "DynamoDB persistence for attendance timeline",
         "Serverless architecture optimized for low ops overhead"
       ],
-      "thumbnail_image": "/images/thumbs/default_thumbnail.jpg",
-      "thumbnail_alt": "Face Rekognition project preview",
+      "thumbnail_image": "/images/projects/face-recognition.jpg",
+      "thumbnail_alt": "Face Rekognition",
       "role": "Academic Prototype",
       "lang": "C++ · Python",
       "status": "archived",
@@ -112,7 +204,7 @@
         "Persistent score/session data with localStorage",
         "Responsive layout tuned for laptop and mobile"
       ],
-      "thumbnail_image": "/images/thumbs/default_thumbnail.jpg",
+      "thumbnail_image": "/images/projects/beat-pe.png",
       "thumbnail_alt": "Beat.pe project preview",
       "role": "Game UX Experiment",
       "lang": "JavaScript · CSS",
@@ -159,7 +251,7 @@
         "Colorized CLI flows for usability",
         "Clear separation between model and command actions"
       ],
-      "thumbnail_image": "/images/thumbs/default_thumbnail.jpg",
+      "thumbnail_image": "/images/projects/listly.png",
       "thumbnail_alt": "Listly terminal app preview",
       "role": "CLI Product Build",
       "lang": "Java",
@@ -207,8 +299,8 @@
         "Tailwind + DaisyUI component styling with custom polish",
         "Automated project page sync integrated into build pipeline"
       ],
-      "thumbnail_image": "/images/thumbs/default_thumbnail.jpg",
-      "thumbnail_alt": "dhanur.me project preview",
+      "thumbnail_image": "/images/projects/dhanur-me.png",
+      "thumbnail_alt": "dhanur.me preview",
       "role": "Personal Platform",
       "lang": "JavaScript · HTML",
       "status": "live",
@@ -246,25 +338,25 @@
     {
       "slug": "tasks",
       "title": "Tasks",
-      "group": "featured",
+      "group": "ecosystem",
       "icon": "fa-solid fa-check-double",
-      "description": "Minimal, high-contrast task manager designed for speed. Part of the Dhanur UI ecosystem.",
+      "description": "A production-ready RESTful API for managing tasks, built with Spring Boot 3.5.10 and Java 21.",
       "extended_description": "Built as a production-grade demonstration of the centralized Dhanur UI component system. Incorporates seamless theming, robust keyboard shortcuts, and local workflow persistence.",
       "role": "Productivity Tool",
-      "lang": "HTML · Java",
+      "lang": "Java",
       "status": "live",
       "highlights": [
-        "Keyboard-first navigation and shortcuts",
-        "Dhanur UI standardized design tokens",
-        "Instant local persistence"
+        "Full CRUD operations with pagination",
+        "OpenAPI/Swagger documentation",
+        "Docker support with multi-stage builds"
       ],
       "techs": [
-        "HTML",
-        "Java",
-        "JavaScript",
-        "Dockerfile",
-        "API",
-        "Crud API"
+        "Java 21",
+        "Spring Boot",
+        "Spring Data JPA",
+        "Hibernate",
+        "H2",
+        "Docker"
       ],
       "tags": [
         "backend",
@@ -300,25 +392,24 @@
     {
       "slug": "linkr",
       "title": "Linkr",
-      "group": "featured",
+      "group": "ecosystem",
       "icon": "fa-solid fa-link",
-      "description": "Fast, privacy-focused link management and routing built for personal infrastructure.",
+      "description": "A minimal, secure, and intelligent URL shortener built with Rust and Supabase.",
       "extended_description": "Linkr provides robust sub-link routing for my personal domains. Features a slick UI built top to bottom with the new Dhanur UI component library.",
       "role": "Infrastructure Service",
-      "lang": "Rust · HTML",
+      "lang": "Rust",
       "status": "live",
       "highlights": [
-        "Zero-friction link routing",
-        "Integrated with Dhanur UI styling",
-        "Fast programmatic redirects"
+        "Lightning-fast Rust backend with Axum",
+        "Smart deduplication and auto-cleanup",
+        "Security hardened with SSRF protection and CSP"
       ],
       "techs": [
         "Rust",
-        "HTML",
-        "Shell",
-        "Dockerfile",
-        "Batchfile",
-        "CSS"
+        "Axum",
+        "HTMX",
+        "Supabase",
+        "Tailwind CSS"
       ],
       "tags": [
         "infra",
@@ -338,7 +429,7 @@
     {
       "slug": "stuff",
       "title": "stuff",
-      "group": "featured",
+      "group": "personal",
       "icon": "fa-solid fa-toolbox",
       "description": "A whole lot of personal utility tools and experiments bundled in one repo.",
       "extended_description": "This is my practical junk drawer: tiny CLIs, helper scripts, and quality-of-life automations I keep building whenever something feels repetitive.",
@@ -350,6 +441,8 @@
         "Small utilities designed for fast iteration",
         "Actively evolving with new scripts over time"
       ],
+      "thumbnail_image": "/images/projects/stuff.jpg",
+      "thumbnail_alt": "Stuff",
       "techs": [
         "HTML",
         "TypeScript",
@@ -478,6 +571,8 @@
         "Repeatable QA task automation",
         "Learning-focused Selenium coverage"
       ],
+      "thumbnail_image": "/images/projects/automata.jpg",
+      "thumbnail_alt": "Selenium Automata project preview",
       "lang": "Python",
       "status": "archived",
       "techs": [
@@ -608,6 +703,8 @@
         "Frontend interaction prototyping",
         "Active WIP with frequent direction changes"
       ],
+      "thumbnail_image": "/images/projects/words.jpeg",
+      "thumbnail_alt": "wallowords",
       "lang": "Coming Soon",
       "status": "wip",
       "techs": [

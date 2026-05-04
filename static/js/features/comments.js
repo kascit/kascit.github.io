@@ -27,9 +27,10 @@ function renderConsentPlaceholder(mount) {
   allowBtn.setAttribute("data-cookie-consent-action", "all");
   allowBtn.textContent = "Allow All Cookies";
 
-  const privacyLink = document.createElement("a");
+  const privacyLink = document.createElement("button");
+  privacyLink.type = "button";
   privacyLink.className = "cookie-consent-btn cookie-consent-btn--quiet";
-  privacyLink.href = "/privacy/";
+  privacyLink.onclick = () => window.location.href = "/privacy/";
   privacyLink.textContent = "Privacy settings";
 
   actions.appendChild(allowBtn);

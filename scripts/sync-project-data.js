@@ -142,17 +142,7 @@ function deriveStatus(existingStatus, repoArchived, hasPublicUrl) {
   return String(existingStatus || "").trim() || "live";
 }
 
-function toCanonicalTags(input, rules) {
-  const canonical = new Set(
-    (rules.canonical_tags || [])
-      .map((tag) => String(tag || "").trim().toLowerCase())
-      .filter(Boolean)
-  );
 
-  return compactUnique(input || [])
-    .map((tag) => String(tag || "").trim().toLowerCase())
-    .filter((tag) => Boolean(tag) && (canonical.size === 0 || canonical.has(tag)));
-}
 
 async function syncProjectFromGitHub(project, token, rules) {
   const repoRef = parseRepoFromUrl(project.github_url);
@@ -173,36 +163,17 @@ async function syncProjectFromGitHub(project, token, rules) {
     ...(project.techs || []),
   ]).slice(0, 6);
 
-  const semanticTags = deriveSemanticTagsFromValues(
-    [
-      project.title,
-      project.description,
-      project.role,
-      project.group,
-      ...(project.tags || []),
-      ...repoTopics,
-      ...languageList,
-      repoData.language || "",
-    ],
-    rules,
-    { maxTags: 5 }
-  );
-  const existingTags = toCanonicalTags(project.tags || [], rules);
-  const derivedTags = toCanonicalTags(semanticTags, rules);
-
   project.repo_language = primaryLanguage;
   project.repo_topics = repoTopics;
   project.repo_updated_at = repoData.pushed_at || repoData.updated_at || "";
   project.repo_archived = Boolean(repoData.archived);
   project.repo_stars = Number.isFinite(repoData.stargazers_count) ? Number(repoData.stargazers_count) : 0;
+  project.repo_forks = Number.isFinite(repoData.forks_count) ? Number(repoData.forks_count) : 0;
+  project.repo_open_issues = Number.isFinite(repoData.open_issues_count) ? Number(repoData.open_issues_count) : 0;
+  project.repo_license = repoData.license && repoData.license.name ? repoData.license.name : "";
 
   if (langDisplay) project.lang = langDisplay;
   if (techs.length > 0) project.techs = techs;
-  if (existingTags.length > 0) {
-    project.tags = existingTags;
-  } else if (derivedTags.length > 0) {
-    project.tags = derivedTags;
-  }
 
   const hasPublicUrl = Boolean(String(project.live_url || project.url || "").trim());
   project.status = deriveStatus(project.status, project.repo_archived, hasPublicUrl);

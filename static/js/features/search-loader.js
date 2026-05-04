@@ -31,10 +31,14 @@ import { askAiAboutQuery, getAskAiConfig, isAskAiEnabled } from "../system/ask-a
       return "";
     }
 
-    if (trimmed.indexOf("://") !== -1 || trimmed.indexOf("//") === 0) return "";
-    if (!trimmed.startsWith("/")) return "";
-    if (!/\.js(?:[?#].*)?$/i.test(trimmed)) return "";
-    return trimmed;
+    try {
+      var url = new URL(trimmed, window.location.origin);
+      if (url.origin !== window.location.origin) return "";
+      if (!/\.js(?:[?#].*)?$/i.test(url.pathname)) return "";
+      return url.pathname + url.search + url.hash;
+    } catch (_error) {
+      return "";
+    }
   }
 
   function safeInternalHref(href) {

@@ -167,7 +167,7 @@ footer.footer .social-icon {
 }
 
 .post-action-btn {
-  @apply inline-flex items-center gap-2 text-xs font-medium px-3.5 py-2 rounded-md shadow-sm no-underline;
+  @apply inline-flex appearance-none items-center justify-center gap-2 text-xs font-medium px-3.5 py-2 rounded-md shadow-sm no-underline;
   @apply border border-base-content/14 text-base-content/72 bg-base-200/25 transition-colors duration-200;
 }
 
@@ -465,7 +465,7 @@ html.light :not(.mockup-code) > pre code .z-markup.z-raw.z-inline {
 }
 
 .cookie-consent-btn {
-  @apply inline-flex items-center justify-center rounded-md border border-base-content/14 bg-base-100 px-3 py-2 text-xs font-semibold text-base-content/72 transition-colors duration-150;
+  @apply inline-flex appearance-none no-underline items-center justify-center rounded-md border border-base-content/14 bg-base-100 px-3 py-2 text-xs font-semibold text-base-content/72 transition-colors duration-150;
 }
 
 .cookie-consent-btn:hover {

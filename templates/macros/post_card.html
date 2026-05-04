@@ -14,6 +14,7 @@
     <div class="not-prose mb-3 overflow-hidden rounded-lg border border-base-content/10 bg-base-200/25 relative z-20 post-card-thumb transition-colors duration-300 group-hover:border-base-content/16">
         <img src="{{ card_thumb_url | safe }}"
              alt="{{ post.extra.thumbnail_alt | default(value=post.title) }}"
+             sizes="(min-width: 1280px) 50vw, 100vw"
              class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-[1.02]"
              loading="lazy"
              decoding="async" />

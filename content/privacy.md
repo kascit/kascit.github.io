@@ -44,8 +44,9 @@ Necessary cookies/storage may include:
 - `site_cookie_consent_v1` cookie to remember your cookie choice.
 - Local storage keys for interface behavior (for example sidebar/TOC state and playlist tools).
 - Security and infrastructure cookies set by hosting/CDN providers (including Cloudflare) for DDoS protection, abuse mitigation, and request integrity.
+- **Ahrefs Analytics**: A lightweight, cookieless analytics script used to monitor basic site traffic. It does not store cookies or track personal identifiable information (PII).
 
-These are used for site operation, safety, and usability.
+These are used for site operation, safety, usability, and basic traffic monitoring.
 
 ## Optional Services (Allow All)
 
@@ -71,7 +72,10 @@ Comments are powered by **[Giscus](https://giscus.app)** and stored through GitH
 
 ## Analytics
 
-The site uses Google Analytics only when optional cookies are enabled to understand aggregate traffic patterns like page views, device types, and referrers. This is used to improve content and reliability, not for user-level profiling.
+This site uses two forms of analytics:
+
+1. **Ahrefs Analytics**: A privacy-friendly, cookieless script loaded by default to monitor basic traffic patterns.
+2. **Google Analytics**: A more detailed tracking script loaded *only* if you opt-in by enabling optional cookies. This helps understand aggregate traffic patterns like page views, device types, and referrers to improve content. None of this is used for user-level profiling.
 
 ## What We Collect (summary)
 

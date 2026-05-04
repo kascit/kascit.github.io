@@ -47,6 +47,7 @@
                         <img src="{{ get_url(path=dark_logo_src) | safe }}"
                              alt="{{ logo_text }}"
                              class="h-18 w-auto logo-dark"
+                             sizes="200px"
                              data-logo-type="dark"
                              {% if logo_image_padding != "" %}style="padding: {{ logo_image_padding }};"{% endif %}
                         />
@@ -57,6 +58,7 @@
                         <img src="{{ get_url(path=light_logo_src) | safe }}"
                              alt="{{ logo_text }}"
                              class="h-18 w-auto logo-light invisible"
+                             sizes="200px"
                              data-logo-type="light"
                              {% if logo_image_padding != "" %}style="padding: {{ logo_image_padding }};"{% endif %}
                         />
@@ -68,6 +70,7 @@
                     src="{{ get_url(path=logo_image_path) | safe }}" 
                     alt="{{ logo_text }}" 
                     class="h-18 w-auto"
+                    sizes="200px"
                     {% if logo_image_padding != "" %}style="padding: {{ logo_image_padding }};"{% endif %}
                 />
             {% else %}

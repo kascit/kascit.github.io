@@ -15,6 +15,12 @@ This section highlights the projects that best represent how I think about engin
 
 {{ projects_grid(group="featured", grid_class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12") }}
 
+## Ecosystem
+
+Core infrastructure and shared services that power the dhanur.me application suite.
+
+{{ projects_grid(group="ecosystem", grid_class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12") }}
+
 ## Personal
 
 Personal projects are where I build for curiosity first, then refine toward something people might actually use.

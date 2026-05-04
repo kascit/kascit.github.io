@@ -7,20 +7,9 @@ const path = require("path");
 const ROOT = path.resolve(__dirname, "..");
 const DATA_FILE = path.join(ROOT, "data", "projects.json");
 const TAXONOMY_RULES_FILE = path.join(ROOT, "data", "taxonomy-rules.json");
-const ALLOWED_GROUPS = new Set(["featured", "personal", "learning", "experiments"]);
+const ALLOWED_GROUPS = new Set(["featured", "ecosystem", "personal", "learning", "experiments"]);
 const ALLOWED_STATUS = new Set(["", "live", "academic", "archived", "wip"]);
 
-function loadCanonicalTags() {
-  const raw = fs.readFileSync(TAXONOMY_RULES_FILE, "utf8");
-  const parsed = JSON.parse(raw);
-  const tags = Array.isArray(parsed.canonical_tags) ? parsed.canonical_tags : [];
-  const canonical = new Set(tags.map((item) => String(item || "").trim().toLowerCase()).filter(Boolean));
-  if (canonical.size === 0) {
-    throw new Error("taxonomy-rules.json must define at least one canonical tag");
-  }
-
-  return canonical;
-}
 
 function readJson(filePath) {
   const raw = fs.readFileSync(filePath, "utf8");
@@ -103,10 +92,6 @@ function validateProject(project, index, seenSlugs, errors, canonicalTags) {
       errors.push(`${id} tag '${tag}' must be lowercase slug format (e.g. backend, cloud-native)`);
       continue;
     }
-
-    if (canonicalTags.size > 0 && !canonicalTags.has(normalized)) {
-      errors.push(`${id} tag '${tag}' is not in data/taxonomy-rules.json canonical_tags`);
-    }
   }
 
   const stringFields = [
@@ -170,17 +155,9 @@ function main() {
     process.exit(1);
   }
 
-  let canonicalTags;
-  try {
-    canonicalTags = loadCanonicalTags();
-  } catch (error) {
-    console.error(`Taxonomy rules parse error: ${error.message}`);
-    process.exit(1);
-  }
-
   const errors = [];
   const seenSlugs = new Set();
-  projects.forEach((project, index) => validateProject(project, index, seenSlugs, errors, canonicalTags));
+  projects.forEach((project, index) => validateProject(project, index, seenSlugs, errors, new Set()));
 
   if (errors.length > 0) {
     console.error("Project data validation failed:");

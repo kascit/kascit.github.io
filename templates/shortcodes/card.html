@@ -8,6 +8,7 @@ card(title="My Card") %}Card content here{% end %} #}
       src="{{ img }}"
       alt="{{ title | default(value='Card image') }}"
       class="rounded-md"
+      sizes="(min-width: 1024px) 768px, 100vw"
       loading="lazy"
     />
   </figure>

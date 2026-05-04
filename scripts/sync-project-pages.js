@@ -68,6 +68,9 @@ function renderPage(project) {
   const repoUpdatedAt = String(project.repo_updated_at || "").trim();
   const repoArchived = Boolean(project.repo_archived);
   const repoStars = Number.isFinite(project.repo_stars) ? Number(project.repo_stars) : 0;
+  const repoForks = Number.isFinite(project.repo_forks) ? Number(project.repo_forks) : 0;
+  const repoOpenIssues = Number.isFinite(project.repo_open_issues) ? Number(project.repo_open_issues) : 0;
+  const repoLicense = String(project.repo_license || "").trim();
   const repoTopics = compactUnique(project.repo_topics || []);
   const thumbnailImage = String(project.thumbnail_image || "").trim();
   const thumbnailAlt = String(project.thumbnail_alt || title).trim();
@@ -104,7 +107,10 @@ function renderPage(project) {
     const snapshot = [];
     if (repoLanguage) snapshot.push(`- Primary language: ${repoLanguage}`);
     snapshot.push(`- Archived: ${repoArchived ? "Yes" : "No"}`);
+    if (repoLicense) snapshot.push(`- License: ${repoLicense}`);
     snapshot.push(`- Stars: ${repoStars}`);
+    snapshot.push(`- Forks: ${repoForks}`);
+    snapshot.push(`- Open Issues: ${repoOpenIssues}`);
     if (repoUpdatedAt) snapshot.push(`- Last update: ${repoUpdatedAt}`);
     if (repoTopics.length > 0) {
       snapshot.push(`- Topics: ${repoTopics.join(", ")}`);
@@ -197,37 +203,7 @@ function main() {
   const seedFile = path.join(PROJECTS_DIR, "_skill-tags-seed.md");
   fs.rmSync(seedFile, { force: true });
 
-  const aboutPath = path.join(ROOT, "content", "about.md");
-  if (fs.existsSync(aboutPath)) {
-    let aboutContent = fs.readFileSync(aboutPath, "utf8");
-    const regex = /\{\{\s*tag_chip\(name="([^"]+)"/g;
-    let match;
-    let dynamicTags = [];
-    while ((match = regex.exec(aboutContent)) !== null) {
-      dynamicTags.push(match[1]);
-    }
-    
-    if (dynamicTags.length > 0) {
-      let existingTags = [];
-      const tagsMatch = aboutContent.match(/^tags\s*=\s*\[(.*?)\]/m);
-      if (tagsMatch && tagsMatch[1]) {
-        existingTags = tagsMatch[1].split(',')
-          .map(t => t.trim().replace(/^"|"$/g, ''))
-          .filter(t => t.length > 0);
-      }
-      
-      const allAboutTags = compactUnique([...existingTags, ...dynamicTags]);
-      
-      const updatedContent = aboutContent.replace(
-        /^tags\s*=\s*\[.*?\]/m, 
-        `tags = ${tomlArray(allAboutTags)}`
-      );
-      
-      if (updatedContent !== aboutContent) {
-        fs.writeFileSync(aboutPath, updatedContent, "utf8");
-      }
-    }
-  }
+
 
   let written = 0;
   for (const project of projects) {

@@ -275,6 +275,14 @@ function buildBuiltinShortcutEntries() {
         return true;
       },
     },
+    {
+      keybind: "d b",
+      persistAnchorAcrossNavigation: false,
+      execute: () => {
+        window.history.back();
+        return true;
+      },
+    },
   ];
 
   return specs
@@ -601,6 +609,7 @@ export function initKeyboardShortcuts() {
     const persistedCandidates = buildAnchorCandidates(persistedAnchor.key);
     if (persistedCandidates.length > 0) {
       beginChordCandidatesWithAnchor(persistedCandidates, persistedAnchor.key, persistedAnchor.expiresAt);
+      heldKeys.add(persistedAnchor.key);
     }
   }
 

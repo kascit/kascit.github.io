@@ -14,6 +14,11 @@
   {% set project_external = project.external | default(value=false) %}
   {% set project_status = project.status | default(value="") %}
   <article class="project-card">
+    {% if project.thumbnail_image %}
+    <a href="/projects/{{ project.slug }}/" class="block aspect-video w-full overflow-hidden rounded-md mb-3 border border-base-content/10 bg-base-300/30">
+      <img src="{{ project.thumbnail_image }}" alt="{{ project.thumbnail_alt | default(value=project.title) }}" sizes="(min-width: 1024px) 50vw, 100vw" class="w-full h-full object-cover transition-transform duration-300 hover:scale-105" loading="lazy">
+    </a>
+    {% endif %}
     <div class="project-card-header">
       <div class="project-card-title-group">
         {% if project.icon %}

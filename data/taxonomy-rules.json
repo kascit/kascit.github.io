@@ -17,7 +17,10 @@
     "productivity",
     "debugging",
     "writing",
-    "meta"
+    "meta",
+    "monitoring",
+    "fullstack",
+    "identity"
   ],
   "tag_priority": [
     "backend",
@@ -37,7 +40,10 @@
     "productivity",
     "debugging",
     "writing",
-    "meta"
+    "meta",
+    "monitoring",
+    "fullstack",
+    "identity"
   ],
   "tag_rules": [
     {
@@ -255,6 +261,18 @@
         "general",
         "personal notes"
       ]
+    },
+    {
+      "tag": "monitoring",
+      "keywords": ["monitoring", "uptime", "cron", "status", "health", "observability"]
+    },
+    {
+      "tag": "fullstack",
+      "keywords": ["fullstack", "full-stack", "stack", "web app"]
+    },
+    {
+      "tag": "identity",
+      "keywords": ["identity", "sso", "jwt", "authentication", "authorization"]
     }
   ],
   "blog_category_rules": [
@@ -273,7 +291,10 @@
         "security",
         "data",
         "debugging",
-        "writing"
+        "writing",
+        "monitoring",
+        "fullstack",
+        "identity"
       ]
     },
     {

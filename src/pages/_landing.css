@@ -1,5 +1,18 @@
 /* Landing Page Theme-Specific Styles */
 
+body.is-landing::-webkit-scrollbar,
+html:has(body.is-landing)::-webkit-scrollbar,
+body.is-landing .drawer-content::-webkit-scrollbar {
+  display: none;
+}
+
+body.is-landing,
+html:has(body.is-landing),
+body.is-landing .drawer-content {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* Hero background */
 .hero-background {
   background: radial-gradient(ellipse at bottom, var(--hero-sky-top) 0%, var(--hero-sky-bottom) 100%);

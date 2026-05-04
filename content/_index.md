@@ -26,36 +26,36 @@ cta_buttons = [
 # -----------------------------------------------------------------------------
 [extra.features_section]
 title = "What I Actually Do"
-description = "Mostly building useful things, occasionally summoning weird things, and frequently pretending both were part of the same plan."
+description = "Building robust backend systems, experimenting with new technologies, and documenting the process."
 
 [[extra.features_section.features]]
-title = "Backend Shenanigans"
-desc = "APIs, distributed systems, and the usual dance between elegant architecture and panic-driven hotfixes. Mostly Java and Spring Boot, occasionally pure chaos."
+title = "Backend Engineering"
+desc = "Designing and building distributed systems, RESTful APIs, and scalable services. Primarily working with Java, Spring Boot, and Node.js."
 icon = "fa-solid fa-code"
 
 [[extra.features_section.features]]
-title = "Cloud Chaos Engineering"
-desc = "Cloud-native infrastructure, container choreography, and configs that are definitely deterministic until they meet reality. AWS, Docker, Kubernetes, and humble optimism."
+title = "Cloud Infrastructure"
+desc = "Deploying and managing cloud-native architectures using AWS, Docker, and CI/CD pipelines to ensure reliable delivery."
 icon = "fa-solid fa-cloud"
 
 [[extra.features_section.features]]
-title = "Future Tech Playground"
-desc = "AI experiments, cryptography rabbit holes, web3 prototypes, and game-adjacent ideas that start as jokes and end as weekend projects."
+title = "Prototypes & Research"
+desc = "Exploring new paradigms in software development, from applied cryptography to AI integration and web tooling."
 icon = "fa-brands fa-github"
 
 [[extra.features_section.features]]
-title = "Graphics & Simulation Side Quests"
-desc = "From tiny rendering experiments to shader-curious detours and procedural graphics mischief. Sometimes this becomes a game application, sometimes just a very pretty bug."
+title = "Graphics & Simulation"
+desc = "Developing interactive applications, game-adjacent engines, and procedural graphics to explore lower-level programming concepts."
 icon = "fa-brands fa-linux"
 
 [[extra.features_section.features]]
 title = "System Design"
-desc = "Boxes, arrows, event streams, and scalability plans that survive contact with users. The monolith-vs-microservices debate remains respectfully unresolved."
+desc = "Architecting robust systems focused on event-driven design, data flow, and long-term maintainability."
 icon = "fa-solid fa-diagram-project"
 
 [[extra.features_section.features]]
-title = "Coding Adventures"
-desc = "A running log of builds, breaks, discoveries, and occasional tsoding/sebastian-inspired deep dives into whatever future-tech tangent looked fun at 1 AM."
+title = "Technical Writing"
+desc = "Documenting build processes, debugging deep-dives, and architectural decisions to share knowledge and reference past work."
 icon = "fa-solid fa-pen-nib"
 
 # -----------------------------------------------------------------------------
@@ -79,20 +79,20 @@ subtitle = "Dive into my work, thoughts, and technical journey"
 [[extra.showcase_section.tabs]]
 name = "Projects"
 title = "My Work & Creations"
-description = "A mixed bag of practical systems, odd prototypes, and experiments that drift between backend reliability and future-tech curiosity. Some are production-ready, some are clearly plot twists."
+description = "A comprehensive portfolio of production services, development tools, and experimental prototypes."
 # Note: You need to add an image at static/images/projects.jpg or remove this line
 # image = "/images/projects.jpg"
 
 [[extra.showcase_section.tabs]]
 name = "Blog"
 title = "Technical Writing & Insights"
-description = "Notes from the field: architecture lessons, debugging stories, tooling detours, and occasional philosophical arguments with my own stack choices."
+description = "In-depth articles covering architecture patterns, infrastructure automation, and engineering workflows."
 # image = "/images/blog.jpg"
 
 [[extra.showcase_section.tabs]]
 name = "About"
 title = "Behind the Code"
-description = "The human patch notes: where the ideas come from, what I am currently obsessing over, and why half my best projects began as 'this should be simple.'"
+description = "Background information, current technical focus areas, and the core philosophies that drive my work."
 # image = "/images/about.jpg"
 
 # -----------------------------------------------------------------------------
@@ -100,6 +100,6 @@ description = "The human patch notes: where the ideas come from, what I am curre
 # -----------------------------------------------------------------------------
 [extra.final_cta_section]
 title = "Let's Connect"
-description = "If you are building something ambitious, weird, useful, or suspiciously all three, I am probably interested."
+description = "If you're interested in collaborating on challenging technical problems, feel free to reach out."
 button = { text = "Contact Me", url = "/links/" }
 +++

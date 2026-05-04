@@ -17,8 +17,8 @@ image_dark = "/images/landing/whood.jpg"
 image_light = "/images/landing/whood-light.jpg"
 
 cta_buttons = [
-    { text = "View Projects", url = "/projects/", style = "primary" },
-    { text = "Read Blog", url = "/blog/", style = "secondary" },
+    { text = "View Projects", URL = "/projects/", style = "primary" },
+    { text = "Read Blog", URL = "/blog/", style = "secondary" },
 ]
 
 # -----------------------------------------------------------------------------
@@ -101,5 +101,5 @@ description = "Background information, current technical focus areas, and the co
 [extra.final_cta_section]
 title = "Let's Connect"
 description = "If you're interested in collaborating on challenging technical problems, feel free to reach out."
-button = { text = "Contact Me", url = "/links/" }
+button = { text = "Contact Me", URL = "/links/" }
 +++

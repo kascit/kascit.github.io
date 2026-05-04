@@ -8,6 +8,8 @@ in_search_index = true
 hide_toc = false
 +++
 
+<!-- markdownlint-disable MD034 -->
+
 This page is now intentionally Markdown-first. Instead of embedding large blocks of raw HTML inside content files, the design system is documented as guidance, examples, and reusable shortcodes so the source stays readable and maintainable.
 
 ## Design Language

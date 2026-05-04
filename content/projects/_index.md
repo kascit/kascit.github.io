@@ -40,6 +40,6 @@ Experiments are smaller bets, usually built to explore a pattern, language featu
 {{ projects_grid(group="experiments", grid_class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12") }}
 
 <div class="not-prose mt-16 py-12 border-t border-base-content/10">
-	<p class="text-xl text-center md:text-3xl font-bold tracking-tight mb-8">Want to hack on something together?</p>
-	{{ link_card(url="/links/", external=false, icon="fa-solid fa-envelope", title="Get in Touch", description="Let's build something useful together.", contrast=true) }}
+    <p class="text-xl text-center md:text-3xl font-bold tracking-tight mb-8">Want to hack on something together?</p>
+    {{ link_card(url="/links/", external=false, icon="fa-solid fa-envelope", title="Get in Touch", description="Let's build something useful together.", contrast=true) }}
 </div>

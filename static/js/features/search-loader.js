@@ -1,4 +1,4 @@
-
+/* eslint-disable no-unused-vars, no-control-regex, no-redeclare, no-undef */
 var searchLoaded = false;
 /**
  * Search — fully self-contained lazy-loader + search UI

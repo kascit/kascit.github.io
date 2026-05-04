@@ -12,7 +12,9 @@ const outputPath = "static/js/shell.min.js";
 function main() {
   const { runPkg } = createPackageRunner();
 
-  console.log(`Bundling ${inputPath} to ${outputPath} with esbuild@${esbuildVersion}...`);
+  console.log(
+    `Bundling ${inputPath} to ${outputPath} with esbuild@${esbuildVersion}...`,
+  );
 
   const pnpmArgs = [
     "dlx",

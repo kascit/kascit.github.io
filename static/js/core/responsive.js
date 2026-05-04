@@ -2,7 +2,14 @@
  * Centralized Responsive Behavior Management
  */
 
-const BREAKPOINTS = { MOBILE: 0, SM: 640, MD: 768, LG: 1024, XL: 1280, XXL: 1536 };
+const BREAKPOINTS = {
+  MOBILE: 0,
+  SM: 640,
+  MD: 768,
+  LG: 1024,
+  XL: 1280,
+  XXL: 1536,
+};
 
 const state = {
   isDesktop: false,
@@ -15,7 +22,9 @@ let initialized = false;
 
 function updateResponsiveState() {
   const wasDesktop = state.isDesktop;
-  state.isDesktop = state.mediaQueries.hoverCapable?.matches && state.mediaQueries.finePointer?.matches;
+  state.isDesktop =
+    state.mediaQueries.hoverCapable?.matches &&
+    state.mediaQueries.finePointer?.matches;
   state.isMobile = !state.isDesktop;
   if (wasDesktop !== state.isDesktop) {
     notifyListeners();
@@ -32,34 +41,44 @@ function notifyListeners() {
         isTouchDevice: isTouchDevice(),
         prefersReducedMotion: prefersReducedMotion(),
       });
-    } catch (e) { console.error(e); }
+    } catch (e) {
+      console.error(e);
+    }
   });
 }
 
 export function initResponsive() {
   if (initialized) return;
-  if (typeof window.matchMedia !== 'function') return;
+  if (typeof window.matchMedia !== "function") return;
   initialized = true;
 
   state.mediaQueries.hoverCapable = window.matchMedia("(hover: hover)");
   state.mediaQueries.finePointer = window.matchMedia("(pointer: fine)");
-  state.mediaQueries.largeScreen = window.matchMedia(`(min-width: ${BREAKPOINTS.LG}px)`);
+  state.mediaQueries.largeScreen = window.matchMedia(
+    `(min-width: ${BREAKPOINTS.LG}px)`,
+  );
   state.mediaQueries.touchDevice = window.matchMedia("(pointer: coarse)");
-  state.mediaQueries.reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+  state.mediaQueries.reducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)",
+  );
 
   updateResponsiveState();
 
   Object.values(state.mediaQueries).forEach((mq) => {
     if (mq.addListener) mq.addListener(updateResponsiveState);
-    else if (mq.addEventListener) mq.addEventListener('change', updateResponsiveState);
+    else if (mq.addEventListener)
+      mq.addEventListener("change", updateResponsiveState);
   });
 }
 
 export const isDesktop = () => state.isDesktop;
 export const isMobile = () => state.isMobile;
-export const isLargeScreen = () => state.mediaQueries.largeScreen?.matches || false;
-export const isTouchDevice = () => state.mediaQueries.touchDevice?.matches || false;
-export const prefersReducedMotion = () => state.mediaQueries.reducedMotion?.matches || false;
+export const isLargeScreen = () =>
+  state.mediaQueries.largeScreen?.matches || false;
+export const isTouchDevice = () =>
+  state.mediaQueries.touchDevice?.matches || false;
+export const prefersReducedMotion = () =>
+  state.mediaQueries.reducedMotion?.matches || false;
 
 export function onResponsiveChange(callback) {
   state.listeners.add(callback);

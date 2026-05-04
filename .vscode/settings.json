@@ -10,9 +10,7 @@
   "files.associations": {
     "justfile": "just"
   },
-  "powershell.scriptAnalysis.exclude": [
-    "**/justfile"
-  ],
+  "powershell.scriptAnalysis.exclude": ["**/justfile"],
   "yaml.schemas": {
     "https://json.schemastore.org/github-workflow.json": ".github/workflows/*.yml"
   },

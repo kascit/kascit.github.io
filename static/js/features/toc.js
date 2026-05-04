@@ -15,44 +15,66 @@ const STORAGE_KEY = "toc-collapsed";
 // ─── helpers ────────────────────────────────────────────────────────────────
 
 function safeStorageGet(key) {
-  try { return localStorage.getItem(key); } catch { return null; }
+  try {
+    return localStorage.getItem(key);
+  } catch {
+    return null;
+  }
 }
 
 function safeStorageSet(key, value) {
-  try { localStorage.setItem(key, value); } catch { /* ignore */ }
+  try {
+    localStorage.setItem(key, value);
+  } catch {
+    /* ignore */
+  }
 }
 
 function getTocToggleBtn() {
-  return document.querySelector("[data-toc-toggle]") || document.getElementById("toc-toggle");
+  return (
+    document.querySelector("[data-toc-toggle]") ||
+    document.getElementById("toc-toggle")
+  );
 }
 
 function getTocSidebar() {
-  return document.querySelector("[data-toc-sidebar]") || document.getElementById("toc-sidebar");
+  return (
+    document.querySelector("[data-toc-sidebar]") ||
+    document.getElementById("toc-sidebar")
+  );
 }
 
 // ─── collapse / expand toggle ────────────────────────────────────────────────
 
 function applyCollapsedState(collapsed) {
   document.body.classList.toggle("toc-collapsed", collapsed);
-  document.documentElement.setAttribute("data-toc-collapsed", collapsed ? "1" : "0");
+  document.documentElement.setAttribute(
+    "data-toc-collapsed",
+    collapsed ? "1" : "0",
+  );
 
   const btn = getTocToggleBtn();
   if (!btn) return;
 
-  const showLabel = btn.getAttribute("data-show-label") || "Show table of contents";
-  const hideLabel = btn.getAttribute("data-hide-label") || "Hide table of contents";
+  const showLabel =
+    btn.getAttribute("data-show-label") || "Show table of contents";
+  const hideLabel =
+    btn.getAttribute("data-hide-label") || "Hide table of contents";
   const label = collapsed ? showLabel : hideLabel;
   btn.setAttribute("aria-label", label);
   btn.setAttribute("data-tooltip-label", label);
   btn.removeAttribute("title");
-  document.dispatchEvent(new CustomEvent("tooltips:update", { detail: { element: btn } }));
+  document.dispatchEvent(
+    new CustomEvent("tooltips:update", { detail: { element: btn } }),
+  );
 }
 
 function initTocToggle() {
   const btn = getTocToggleBtn();
   if (!btn) return;
 
-  const prepaintState = document.documentElement.getAttribute("data-toc-collapsed");
+  const prepaintState =
+    document.documentElement.getAttribute("data-toc-collapsed");
   const isCollapsed =
     prepaintState === "1" ||
     (prepaintState === null && safeStorageGet(STORAGE_KEY) === "1");
@@ -77,12 +99,14 @@ function initTocSpyObserver() {
   // we match by both bare-hash (#id), full URL end-match (href$="#id"), and
   // data-toc-id attribute — covering both page.toc children and archive anchors.
   const headings = Array.from(
-    document.querySelectorAll("main h1[id], main h2[id], main h3[id], main h4[id], main [id]")
+    document.querySelectorAll(
+      "main h1[id], main h2[id], main h3[id], main h4[id], main [id]",
+    ),
   ).filter((el) => {
     const id = el.id;
     if (!id) return false;
     const safe = CSS.escape(id);
-    return !!(  
+    return !!(
       tocSidebar.querySelector(`a.toc-link[href="#${safe}"]`) ||
       tocSidebar.querySelector(`.toc-link[data-toc-id="${safe}"]`) ||
       tocSidebar.querySelector(`a.toc-link[href$="#${id}"]`) ||
@@ -109,16 +133,15 @@ function initTocSpyObserver() {
     );
   }
 
-
   let currentActiveId = null;
 
   function setActive(id) {
     if (id === currentActiveId) return;
     currentActiveId = id;
 
-    tocSidebar.querySelectorAll(".toc-link.toc-active").forEach((el) =>
-      el.classList.remove("toc-active")
-    );
+    tocSidebar
+      .querySelectorAll(".toc-link.toc-active")
+      .forEach((el) => el.classList.remove("toc-active"));
 
     const link = getTocLink(id);
     if (!link) return;
@@ -175,7 +198,10 @@ function initTocSpyObserver() {
         // Pick the first visible heading in document order.
         let topHeading = null;
         for (const h of headings) {
-          if (visibleHeadings.has(h)) { topHeading = h; break; }
+          if (visibleHeadings.has(h)) {
+            topHeading = h;
+            break;
+          }
         }
         if (topHeading) setActive(topHeading.id);
       } else {
@@ -188,7 +214,7 @@ function initTocSpyObserver() {
       // Bottom margin: keeps the heading "visible" until 55% below for long sections.
       rootMargin: "-10px 0px -55% 0px",
       threshold: 0,
-    }
+    },
   );
 
   headings.forEach((h) => observer.observe(h));

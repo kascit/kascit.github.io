@@ -26,7 +26,10 @@ export default {
     class MetaTagHandler {
       element(element) {
         const httpEquiv = element.getAttribute("http-equiv");
-        if (httpEquiv && httpEquiv.toLowerCase() === "content-security-policy") {
+        if (
+          httpEquiv &&
+          httpEquiv.toLowerCase() === "content-security-policy"
+        ) {
           element.remove();
         }
       }

@@ -10,6 +10,7 @@ thumbnail_image = "images/thumbs/code2.jpg"
 tags = ["backend", "systems", "automation", "frontend"]
 categories = ["engineering"]
 +++
+
 I've built a lot of APIs. Some were good. Most were "good enough." A few were trainwrecks that still haunt me. Here's what I've learned about building REST APIs with Spring Boot that won't make your teammates (or your future self) want to cry.
 
 ## Why Spring Boot Though?

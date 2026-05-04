@@ -26,9 +26,9 @@ The quickest integration path is to include the shared shell script and configur
     mode: "full",
     nav: [
       { name: "Docs", url: "/docs/", icon: "fa-solid fa-book" },
-      { name: "API", url: "/api/", icon: "fa-solid fa-code" }
+      { name: "API", url: "/api/", icon: "fa-solid fa-code" },
     ],
-    showThemeToggle: true
+    showThemeToggle: true,
   };
 </script>
 <script src="https://dhanur.me/js/shell.js" defer></script>

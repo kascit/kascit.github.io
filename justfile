@@ -543,6 +543,10 @@ quality: _assert-zola-version sync-generated verify-generated-clean
     @node scripts/just-run.js "quality checks" -- node scripts/run-quality-checks.js
     @node scripts/just-log.js ok "All quality checks passed"
 
+[doc("Format the codebase using Prettier")]
+format:
+    pnpm dlx prettier@3 --write .
+
 [unix]
 [doc("Prepare for push: branch (if on main), format, sync, check, commit, and push")]
 [group('ci')]

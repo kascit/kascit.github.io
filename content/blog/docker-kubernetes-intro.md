@@ -10,6 +10,7 @@ thumbnail_image = "images/thumbs/ship.jpg"
 tags = ["devops", "systems"]
 categories = ["engineering"]
 +++
+
 So you want to learn about containers and orchestration? Buckle up, because you're about to enter a world where "it works on my machine" becomes both your mantra and your nightmare.
 
 ## Docker: The Gateway Drug

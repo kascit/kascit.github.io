@@ -8,7 +8,8 @@ const ONE_OFF_SYNC_TAG = "sync-site-refresh";
 
 function postLatestCheckToWorker(registration) {
   if (!registration) return;
-  const target = registration.active || registration.waiting || registration.installing;
+  const target =
+    registration.active || registration.waiting || registration.installing;
   if (target) {
     target.postMessage({ type: "CHECK_LATEST_POST" });
   }
@@ -18,9 +19,10 @@ async function registerPeriodicSync(registration) {
   if (!("periodicSync" in registration)) return;
 
   try {
-    const tags = typeof registration.periodicSync.getTags === "function"
-      ? await registration.periodicSync.getTags()
-      : [];
+    const tags =
+      typeof registration.periodicSync.getTags === "function"
+        ? await registration.periodicSync.getTags()
+        : [];
     if (tags.includes(PERIODIC_SYNC_TAG)) return;
     await registration.periodicSync.register(PERIODIC_SYNC_TAG, {
       minInterval: 24 * 60 * 60 * 1000,
@@ -34,9 +36,10 @@ async function registerBackgroundSync(registration) {
   if (!("sync" in registration)) return;
 
   try {
-    const tags = typeof registration.sync.getTags === "function"
-      ? await registration.sync.getTags()
-      : [];
+    const tags =
+      typeof registration.sync.getTags === "function"
+        ? await registration.sync.getTags()
+        : [];
     if (tags.includes(ONE_OFF_SYNC_TAG)) return;
     await registration.sync.register(ONE_OFF_SYNC_TAG);
   } catch (_) {
@@ -107,9 +110,13 @@ export function initServiceWorker() {
   }
 
   // Register at load for minimal page contention.
-  window.addEventListener("load", () => {
-    startServiceWorker(swPath);
-  }, { once: true });
+  window.addEventListener(
+    "load",
+    () => {
+      startServiceWorker(swPath);
+    },
+    { once: true },
+  );
 
   // Safety net for scanners / environments that check quickly.
   window.setTimeout(() => {

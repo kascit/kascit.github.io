@@ -66,7 +66,7 @@ function main() {
       "static/js/data",
       "static/js/system",
     ],
-    "Lint JavaScript"
+    "Lint JavaScript",
   );
 
   runPkg(
@@ -84,7 +84,7 @@ function main() {
       ".stylelintrc.json",
       "src/**/*.css",
     ],
-    "Lint CSS"
+    "Lint CSS",
   );
 
   run("node", ["scripts/validate-xml-xsl.js"], "Validate XML/XSL");

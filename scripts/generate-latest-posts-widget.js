@@ -33,7 +33,8 @@ function parseFrontMatterToml(raw) {
 
   for (const line of frontMatter.split(/\r?\n/)) {
     const trimmed = line.trim();
-    if (!trimmed || trimmed.startsWith("#") || trimmed.startsWith("[")) continue;
+    if (!trimmed || trimmed.startsWith("#") || trimmed.startsWith("["))
+      continue;
 
     const kv = trimmed.match(/^([A-Za-z0-9_]+)\s*=\s*(.+)$/);
     if (!kv) continue;
@@ -41,7 +42,10 @@ function parseFrontMatterToml(raw) {
     const key = kv[1];
     const valueRaw = kv[2].trim();
 
-    if ((valueRaw.startsWith("\"") && valueRaw.endsWith("\"")) || (valueRaw.startsWith("'") && valueRaw.endsWith("'"))) {
+    if (
+      (valueRaw.startsWith('"') && valueRaw.endsWith('"')) ||
+      (valueRaw.startsWith("'") && valueRaw.endsWith("'"))
+    ) {
       result[key] = valueRaw.slice(1, -1);
     } else {
       result[key] = valueRaw;
@@ -54,7 +58,8 @@ function parseFrontMatterToml(raw) {
 function parseBlogPosts() {
   if (!fs.existsSync(BLOG_DIR)) return [];
 
-  const files = fs.readdirSync(BLOG_DIR)
+  const files = fs
+    .readdirSync(BLOG_DIR)
     .filter((f) => f.endsWith(".md") && f !== "_index.md")
     .map((f) => path.join(BLOG_DIR, f));
 
@@ -70,7 +75,9 @@ function parseBlogPosts() {
     const title = String(fm.title || slug || "Untitled").trim();
     const description = String(fm.description || "").trim();
     const dateRaw = String(fm.date || "").trim();
-    const parsedDate = Number.isNaN(Date.parse(dateRaw)) ? 0 : Date.parse(dateRaw);
+    const parsedDate = Number.isNaN(Date.parse(dateRaw))
+      ? 0
+      : Date.parse(dateRaw);
 
     posts.push({
       title,
@@ -95,9 +102,10 @@ function buildPayload() {
   }));
 
   const latestParsed = sortedPosts.length > 0 ? sortedPosts[0].parsedDate : 0;
-  const timestamp = latestParsed > 0
-    ? new Date(latestParsed).toISOString()
-    : "1970-01-01T00:00:00.000Z";
+  const timestamp =
+    latestParsed > 0
+      ? new Date(latestParsed).toISOString()
+      : "1970-01-01T00:00:00.000Z";
 
   return {
     updatedAt: timestamp,

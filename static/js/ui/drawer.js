@@ -24,7 +24,10 @@ function writeStorageFlag(key, enabled) {
 }
 
 function getDrawerCheckbox() {
-  return document.querySelector("[data-drawer-checkbox]") || document.getElementById("my-drawer-2");
+  return (
+    document.querySelector("[data-drawer-checkbox]") ||
+    document.getElementById("my-drawer-2")
+  );
 }
 
 export function initDrawer() {
@@ -62,19 +65,26 @@ export function initDrawer() {
 }
 
 function initSidebarToggle() {
-  const toggleBtn = document.querySelector("[data-sidebar-toggle]") || document.getElementById("sidebar-toggle");
+  const toggleBtn =
+    document.querySelector("[data-sidebar-toggle]") ||
+    document.getElementById("sidebar-toggle");
   if (!toggleBtn) return;
 
   const drawer = toggleBtn.closest(".drawer");
   if (!drawer) return;
 
-  const collapsedIcon = toggleBtn.querySelector(".sidebar-toggle-icon-collapsed");
+  const collapsedIcon = toggleBtn.querySelector(
+    ".sidebar-toggle-icon-collapsed",
+  );
   const expandedIcon = toggleBtn.querySelector(".sidebar-toggle-icon-expanded");
 
   function applyCollapsed(collapsed) {
     drawer.classList.toggle("sidebar-collapsed", collapsed);
     toggleBtn.classList.toggle("sidebar-toggle--collapsed", collapsed);
-    document.documentElement.setAttribute("data-sidebar-collapsed", collapsed ? "1" : "0");
+    document.documentElement.setAttribute(
+      "data-sidebar-collapsed",
+      collapsed ? "1" : "0",
+    );
     if (collapsedIcon) collapsedIcon.classList.toggle("hidden", !collapsed);
     if (expandedIcon) expandedIcon.classList.toggle("hidden", collapsed);
 
@@ -82,13 +92,16 @@ function initSidebarToggle() {
     toggleBtn.setAttribute("aria-label", label);
     toggleBtn.setAttribute("data-tooltip-label", label);
     toggleBtn.removeAttribute("title");
-    document.dispatchEvent(new CustomEvent("tooltips:update", {
-      detail: { element: toggleBtn },
-    }));
+    document.dispatchEvent(
+      new CustomEvent("tooltips:update", {
+        detail: { element: toggleBtn },
+      }),
+    );
   }
 
   // Restore persisted state
-  const attrSaved = document.documentElement.getAttribute("data-sidebar-collapsed") === "1";
+  const attrSaved =
+    document.documentElement.getAttribute("data-sidebar-collapsed") === "1";
   const saved = attrSaved || readStorageFlag(SIDEBAR_KEY);
   applyCollapsed(saved);
 
@@ -133,8 +146,12 @@ function resolveLocalPath(href) {
 }
 
 function initSidebarCurrentPage() {
-  const sidebarRoot = document.querySelector("[data-sidebar-root]") || document.getElementById("sidebar");
-  const navRoot = sidebarRoot ? sidebarRoot.querySelector("[data-sidebar-nav]") : document.querySelector("#sidebar [data-sidebar-nav]");
+  const sidebarRoot =
+    document.querySelector("[data-sidebar-root]") ||
+    document.getElementById("sidebar");
+  const navRoot = sidebarRoot
+    ? sidebarRoot.querySelector("[data-sidebar-nav]")
+    : document.querySelector("#sidebar [data-sidebar-nav]");
   if (!navRoot) return;
 
   const currentPath = normalizePath(window.location.pathname);
@@ -156,13 +173,21 @@ function initSidebarCurrentPage() {
   }
 
   if (!best && currentPath === "/") {
-    const rootLink = links.find((link) => resolveLocalPath(link.getAttribute("href")) === "/");
+    const rootLink = links.find(
+      (link) => resolveLocalPath(link.getAttribute("href")) === "/",
+    );
     if (rootLink) best = { link: rootLink, score: 0 };
   }
 
-  navRoot.querySelectorAll(".sidebar-link-active").forEach((el) => el.classList.remove("sidebar-link-active"));
-  navRoot.querySelectorAll(".sidebar-parent-active").forEach((el) => el.classList.remove("sidebar-parent-active"));
-  navRoot.querySelectorAll('a[aria-current="page"]').forEach((el) => el.removeAttribute("aria-current"));
+  navRoot
+    .querySelectorAll(".sidebar-link-active")
+    .forEach((el) => el.classList.remove("sidebar-link-active"));
+  navRoot
+    .querySelectorAll(".sidebar-parent-active")
+    .forEach((el) => el.classList.remove("sidebar-parent-active"));
+  navRoot
+    .querySelectorAll('a[aria-current="page"]')
+    .forEach((el) => el.removeAttribute("aria-current"));
 
   if (!best?.link) return;
 

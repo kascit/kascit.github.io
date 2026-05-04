@@ -17,12 +17,16 @@ if (fs.existsSync(manifestPath)) {
   try {
     manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
   } catch (err) {
-    console.error(`ERROR: Failed to parse responsive-manifest.json: ${err.message}`);
+    console.error(
+      `ERROR: Failed to parse responsive-manifest.json: ${err.message}`,
+    );
   }
 }
 
 function collectHtmlFiles(rootDir) {
-  return collectFiles(rootDir, (_abs, entry) => entry.name.toLowerCase().endsWith(".html"));
+  return collectFiles(rootDir, (_abs, entry) =>
+    entry.name.toLowerCase().endsWith(".html"),
+  );
 }
 
 function splitUrl(value) {
@@ -53,8 +57,8 @@ function shouldHandleSource(src) {
   }
 
   if (IMAGE_EXT_RE.test(pathname)) {
-     const { base } = splitUrl(pathname);
-     return base.startsWith("/") ? base : `/${base}`;
+    const { base } = splitUrl(pathname);
+    return base.startsWith("/") ? base : `/${base}`;
   }
 
   return null;
@@ -81,7 +85,7 @@ function injectIntoImgTag(tag) {
 
   const srcValue = srcMatch[2] || srcMatch[3] || "";
   const manifestKey = shouldHandleSource(srcValue);
-  
+
   if (!manifestKey) return tag;
   const data = manifest[manifestKey];
   if (!data) return tag;
@@ -89,48 +93,57 @@ function injectIntoImgTag(tag) {
   // Build the correct srcset from exactly what was generated
   let srcset = "";
   if (data.variants && data.variants.length > 0) {
-      srcset = data.variants.map((width) => `${buildVariantPath(srcValue, width)} ${width}w`).join(", ");
+    srcset = data.variants
+      .map((width) => `${buildVariantPath(srcValue, width)} ${width}w`)
+      .join(", ");
   }
 
   let injectedTag = tag;
-  
+
   // Inject srcset
   if (!/\ssrcset\s*=/i.test(injectedTag) && srcset) {
-      const hasSizes = /\ssizes\s*=/i.test(injectedTag);
-      const inject = hasSizes ? ` srcset="${srcset}"` : ` srcset="${srcset}" sizes="100vw"`;
-      injectedTag = injectedTag.replace(/\s*\/?>$/, `${inject}$&`);
+    const hasSizes = /\ssizes\s*=/i.test(injectedTag);
+    const inject = hasSizes
+      ? ` srcset="${srcset}"`
+      : ` srcset="${srcset}" sizes="100vw"`;
+    injectedTag = injectedTag.replace(/\s*\/?>$/, `${inject}$&`);
   }
 
   // Inject width and height to prevent CLS
   if (!/\swidth\s*=/i.test(injectedTag) && data.width) {
-      injectedTag = injectedTag.replace(/\s*\/?>$/, ` width="${data.width}"$&`);
+    injectedTag = injectedTag.replace(/\s*\/?>$/, ` width="${data.width}"$&`);
   }
   if (!/\sheight\s*=/i.test(injectedTag) && data.height) {
-      injectedTag = injectedTag.replace(/\s*\/?>$/, ` height="${data.height}"$&`);
+    injectedTag = injectedTag.replace(/\s*\/?>$/, ` height="${data.height}"$&`);
   }
 
   // Inject lazy loading
   if (!/\sloading\s*=/i.test(injectedTag)) {
-      injectedTag = injectedTag.replace(/\s*\/?>$/, ` loading="lazy"$&`);
+    injectedTag = injectedTag.replace(/\s*\/?>$/, ` loading="lazy"$&`);
   }
   if (!/\sdecoding\s*=/i.test(injectedTag)) {
-      injectedTag = injectedTag.replace(/\s*\/?>$/, ` decoding="async"$&`);
+    injectedTag = injectedTag.replace(/\s*\/?>$/, ` decoding="async"$&`);
   }
 
   // Inject LQIP (Low Quality Image Placeholder) via style
-  if (data.lqip && !/\sstyle\s*=[^>]*background-image[^>]*>/i.test(injectedTag)) {
-      const styleMatch = injectedTag.match(/\sstyle\s*=\s*(["'])(.*?)\1/i);
-      const lqipStyle = `background-image: url('${data.lqip}'); background-size: cover; background-position: center;`;
-      
-      if (styleMatch) {
-          // Append to existing style attribute
-          const existingStyle = styleMatch[2];
-          const newStyle = existingStyle.trim().endsWith(";") ? `${existingStyle} ${lqipStyle}` : `${existingStyle}; ${lqipStyle}`;
-          injectedTag = injectedTag.replace(styleMatch[0], ` style="${newStyle}"`);
-      } else {
-          // Create new style attribute
-          injectedTag = injectedTag.replace(/\s*\/?>$/, ` style="${lqipStyle}"$&`);
-      }
+  if (
+    data.lqip &&
+    !/\sstyle\s*=[^>]*background-image[^>]*>/i.test(injectedTag)
+  ) {
+    const styleMatch = injectedTag.match(/\sstyle\s*=\s*(["'])(.*?)\1/i);
+    const lqipStyle = `background-image: url('${data.lqip}'); background-size: cover; background-position: center;`;
+
+    if (styleMatch) {
+      // Append to existing style attribute
+      const existingStyle = styleMatch[2];
+      const newStyle = existingStyle.trim().endsWith(";")
+        ? `${existingStyle} ${lqipStyle}`
+        : `${existingStyle}; ${lqipStyle}`;
+      injectedTag = injectedTag.replace(styleMatch[0], ` style="${newStyle}"`);
+    } else {
+      // Create new style attribute
+      injectedTag = injectedTag.replace(/\s*\/?>$/, ` style="${lqipStyle}"$&`);
+    }
   }
 
   return injectedTag;
@@ -155,13 +168,17 @@ function processHtmlFile(filePath) {
 
 function main() {
   if (!fs.existsSync(outputDir) || !fs.statSync(outputDir).isDirectory()) {
-    console.error(`ERROR: Output directory '${outputDirLabel}' does not exist.`);
+    console.error(
+      `ERROR: Output directory '${outputDirLabel}' does not exist.`,
+    );
     process.exit(1);
   }
 
   // Verify manifest loading
   if (Object.keys(manifest).length === 0) {
-      console.warn("WARN: responsive-manifest.json was not found or empty. Generation might not have run or no images were found.");
+    console.warn(
+      "WARN: responsive-manifest.json was not found or empty. Generation might not have run or no images were found.",
+    );
   }
 
   const htmlFiles = collectHtmlFiles(outputDir);
@@ -182,7 +199,7 @@ function main() {
   }
 
   console.log(
-    `Injected responsive srcset, LQIP, and CLS attributes into ${injectedTags} <img> tag(s) across ${changedFiles} HTML file(s).`
+    `Injected responsive srcset, LQIP, and CLS attributes into ${injectedTags} <img> tag(s) across ${changedFiles} HTML file(s).`,
   );
 }
 

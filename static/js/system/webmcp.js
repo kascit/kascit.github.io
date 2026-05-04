@@ -65,7 +65,7 @@ function syncCompatStore() {
 function makeInvalidStateError(message) {
   try {
     return new DOMException(message, "InvalidStateError");
-  } catch (e) {
+  } catch {
     const err = new Error(message);
     err.name = "InvalidStateError";
     return err;
@@ -202,7 +202,7 @@ function defineNavigatorProperty(name, value) {
       });
       return true;
     }
-  } catch (e) {
+  } catch {
     // Ignore and fallback to direct definition on navigator.
   }
 
@@ -219,11 +219,11 @@ function defineNavigatorProperty(name, value) {
       },
     });
     return true;
-  } catch (e) {
+  } catch {
     try {
       navigator[name] = value;
       return true;
-    } catch (e) {
+    } catch {
       return false;
     }
   }
@@ -286,7 +286,7 @@ function safeHref(rawHref) {
     if (parsed.protocol !== "http:" && parsed.protocol !== "https:")
       return null;
     return `${parsed.pathname}${parsed.search}${parsed.hash}`;
-  } catch (e) {
+  } catch {
     return null;
   }
 }
@@ -469,7 +469,7 @@ async function getPwaStatus() {
       const registration = await navigator.serviceWorker.getRegistration();
       hasRegistration = Boolean(registration);
       activeScope = registration ? registration.scope : null;
-    } catch (e) {
+    } catch {
       hasRegistration = false;
       activeScope = null;
     }
@@ -1003,7 +1003,7 @@ function registerImperativeTools(modelContext) {
       modelContext.registerTool(tool);
       _registeredTools.set(toolName, tool);
       syncCompatStore();
-    } catch (e) {
+    } catch {
       // Ignore duplicate registrations to keep hot reload/idempotent init stable.
     }
   });

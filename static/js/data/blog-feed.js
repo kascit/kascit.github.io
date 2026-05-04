@@ -6,9 +6,15 @@ import { isLargeScreen, prefersReducedMotion } from "../core/responsive.js";
 
 export function initBlogFeed() {
   const mount = document.querySelector("[data-blog-feed-mount]");
-  const feed = (mount && mount.querySelector("[data-blog-feed]")) || document.getElementById("blog-feed");
-  const sentinel = (mount && mount.querySelector("[data-blog-feed-sentinel]")) || document.getElementById("blog-feed-sentinel");
-  const scroller = (mount && mount.querySelector("[data-blog-feed-scroller]")) || document.getElementById("blog-feed-scroller");
+  const feed =
+    (mount && mount.querySelector("[data-blog-feed]")) ||
+    document.getElementById("blog-feed");
+  const sentinel =
+    (mount && mount.querySelector("[data-blog-feed-sentinel]")) ||
+    document.getElementById("blog-feed-sentinel");
+  const scroller =
+    (mount && mount.querySelector("[data-blog-feed-scroller]")) ||
+    document.getElementById("blog-feed-scroller");
   if (!feed || !sentinel || !scroller) return;
 
   const items = Array.from(feed.querySelectorAll("[data-feed-item]"));
@@ -38,7 +44,8 @@ export function initBlogFeed() {
 
   function nearBottom() {
     const threshold = 140;
-    const distance = scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight;
+    const distance =
+      scroller.scrollHeight - scroller.scrollTop - scroller.clientHeight;
     return distance <= threshold;
   }
 
@@ -92,10 +99,12 @@ export function initBlogFeed() {
     () => {
       scheduleRevealWhileNearBottom();
     },
-    { passive: true }
+    { passive: true },
   );
 
-  window.addEventListener("resize", scheduleRevealWhileNearBottom, { passive: true });
+  window.addEventListener("resize", scheduleRevealWhileNearBottom, {
+    passive: true,
+  });
 
   sentinel.addEventListener("click", () => {
     if (hiddenItems().length > 0) {

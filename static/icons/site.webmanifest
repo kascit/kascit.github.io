@@ -135,11 +135,7 @@
       "files": [
         {
           "name": "media",
-          "accept": [
-            "image/*",
-            "video/*",
-            "text/plain"
-          ]
+          "accept": ["image/*", "video/*", "text/plain"]
         }
       ]
     }
@@ -153,11 +149,7 @@
       }
     }
   ],
-  "categories": [
-    "developer",
-    "productivity",
-    "education"
-  ],
+  "categories": ["developer", "productivity", "education"],
   "edge_side_panel": {
     "preferred_width": 400
   },

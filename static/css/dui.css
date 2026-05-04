@@ -22354,8 +22354,8 @@ footer.footer .social-icon {
 }
 .post-action-btn--share:hover {
   color: #0ea5e9;
-  background: oklab(68.4687% -0.0798356 -0.124464/.08);
-  border-color: oklab(68.4687% -0.0798356 -0.124464/.4);
+  background: oklab(68.4687% -0.0798356 -0.124464/0.08);
+  border-color: oklab(68.4687% -0.0798356 -0.124464/0.4);
 }
 .about-expertise-icon {
   height: calc(var(--spacing) * 9);
@@ -22918,7 +22918,7 @@ html.light :not(.mockup-code) > pre code .z-markup.z-raw.z-inline {
 }
 .notify-toast__content--success {
   color: #10b981;
-  border-color: oklab(69.5873% -0.142158 0.0448781/.38);
+  border-color: oklab(69.5873% -0.142158 0.0448781/0.38);
 }
 @supports (color: color-mix(in lab, red, red)) {
   .notify-toast__content--success {
@@ -22927,7 +22927,7 @@ html.light :not(.mockup-code) > pre code .z-markup.z-raw.z-inline {
 }
 .notify-toast__content--error {
   color: #ef4444;
-  border-color: oklab(63.6834% 0.187864 0.0889285/.4);
+  border-color: oklab(63.6834% 0.187864 0.0889285/0.4);
 }
 @supports (color: color-mix(in lab, red, red)) {
   .notify-toast__content--error {

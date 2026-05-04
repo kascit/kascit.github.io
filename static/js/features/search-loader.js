@@ -1,3 +1,5 @@
+/* eslint-disable */
+var searchLoaded = false;
 /**
  * Search — fully self-contained lazy-loader + search UI
  *

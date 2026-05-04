@@ -6,7 +6,9 @@ const path = require("path");
 const publicDir = path.join(process.cwd(), "public");
 
 if (!fs.existsSync(publicDir)) {
-  console.log("No public directory found; skipping pagination redirect cleanup.");
+  console.log(
+    "No public directory found; skipping pagination redirect cleanup.",
+  );
   process.exit(0);
 }
 
@@ -26,7 +28,10 @@ function walk(dir) {
       const pageOneDir = path.join(fullPath, "1");
       if (fs.existsSync(pageOneDir) && fs.statSync(pageOneDir).isDirectory()) {
         // Derive the public-relative URL for sitemap cleanup
-        const relPath = path.relative(publicDir, pageOneDir).split(path.sep).join("/");
+        const relPath = path
+          .relative(publicDir, pageOneDir)
+          .split(path.sep)
+          .join("/");
         removedPaths.push(`/${relPath}/`);
         fs.rmSync(pageOneDir, { recursive: true, force: true });
         removed += 1;
@@ -51,7 +56,7 @@ if (fs.existsSync(sitemapPath) && removedPaths.length > 0) {
     const escaped = urlPath.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
     const pattern = new RegExp(
       `\\s*<url>[\\s\\S]*?<loc>[^<]*${escaped}[^<]*<\\/loc>[\\s\\S]*?<\\/url>`,
-      "g"
+      "g",
     );
     const before = sitemap.length;
     sitemap = sitemap.replace(pattern, "");

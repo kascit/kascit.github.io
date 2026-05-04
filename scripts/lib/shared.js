@@ -73,7 +73,9 @@ function resolveImageMagickCommand() {
 function runMagick(command, args) {
   const result = runCapture(command, args);
   if (result.status !== 0) {
-    throw new Error((result.stderr || result.stdout || "ImageMagick command failed").trim());
+    throw new Error(
+      (result.stderr || result.stdout || "ImageMagick command failed").trim(),
+    );
   }
 }
 
@@ -84,8 +86,12 @@ function runMagick(command, args) {
 function requireEnvVar(name) {
   const value = process.env[name];
   if (!value) {
-    process.stderr.write(`ERROR: Required environment variable ${name} is not set.\n`);
-    process.stderr.write("Ensure versions.env is loaded (run via 'just' or 'source versions.env').\n");
+    process.stderr.write(
+      `ERROR: Required environment variable ${name} is not set.\n`,
+    );
+    process.stderr.write(
+      "Ensure versions.env is loaded (run via 'just' or 'source versions.env').\n",
+    );
     process.exit(1);
   }
   return value;
@@ -99,19 +105,28 @@ function createPackageRunner() {
 
   if (canRun("corepack", ["--version"])) {
     runInherit("corepack", ["enable"], undefined, { shell: true });
-    runInherit("corepack", ["prepare", `pnpm@${pnpmVersion}`, "--activate"], undefined, { shell: true });
+    runInherit(
+      "corepack",
+      ["prepare", `pnpm@${pnpmVersion}`, "--activate"],
+      undefined,
+      { shell: true },
+    );
     if (canRun("pnpm", ["--version"])) {
       return { runner: "pnpm", runPkg: makeRunPkgFn("pnpm") };
     }
   }
 
   if (!canRun("npx", ["--version"])) {
-    process.stderr.write("ERROR: neither pnpm/corepack nor npx is available.\n");
+    process.stderr.write(
+      "ERROR: neither pnpm/corepack nor npx is available.\n",
+    );
     process.exit(1);
   }
 
   const prefix = supportsColor() ? `${ANSI.red}[WARN]${ANSI.reset}` : "[WARN]";
-  process.stderr.write(`${prefix} pnpm unavailable locally; falling back to npx.\n`);
+  process.stderr.write(
+    `${prefix} pnpm unavailable locally; falling back to npx.\n`,
+  );
   return { runner: "npx", runPkg: makeRunPkgFn("npx") };
 }
 
@@ -153,14 +168,19 @@ function collectFiles(rootDir, filterFn) {
 }
 
 function toPosixRel(absPath, root) {
-  return path.relative(root || ROOT, absPath).split(path.sep).join("/");
+  return path
+    .relative(root || ROOT, absPath)
+    .split(path.sep)
+    .join("/");
 }
 
 function assertInsideRoot(absPath, label) {
   const target = path.resolve(absPath);
   const rel = path.relative(ROOT, target);
   if (rel.startsWith("..") || path.isAbsolute(rel)) {
-    throw new Error(`${label || "Path"} must be inside repository root: ${target}`);
+    throw new Error(
+      `${label || "Path"} must be inside repository root: ${target}`,
+    );
   }
   return target;
 }

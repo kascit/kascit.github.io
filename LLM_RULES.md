@@ -37,7 +37,7 @@ site.webmanifest → static/icons/site.webmanifest (NOT fingerprinted)
 ICONS
 source: static/icons/favicon.svg (only committed file beside site.webmanifest)
 all PNGs/ICOs: generated at build time into public/icons/ by scripts/generate-icons.js
-static/icons/_.png and _.ico are gitignored — never commit them
+static/icons/_.png and_.ico are gitignored — never commit them
 
 SECURITY
 NO secrets committed.
@@ -53,7 +53,7 @@ responsive: use static/js/core/responsive.js helpers. no ad-hoc breakpoints in J
 daisyUI: data-tip XOR title. never both.
 typography: HTML class="not-prose". NO CSS @apply not-prose.
 access-keys: SEMANTIC_RULES in access-keys.js = single source of truth for keyboard hints. no data-hint in templates except override cases. elements inside [data-toc-sidebar] are excluded from semantic rules (internal anchors).
-TOC: single initToc() from toc.js covers ALL pages (blog, archive, taxonomy). getTocLink uses href$=#id for full-URL zola children AND data-toc-id for summary parents AND bare #id for archive anchors.
+TOC: single initToc() from toc.js covers ALL pages (blog, archive, taxonomy). getTocLink uses href$=#ID for full-URL zola children AND data-toc-ID for summary parents AND bare #ID for archive anchors.
 notify-banner: path is js/ui/notify-banner.js (not root-level js/).
 
 ZOLA / TERA

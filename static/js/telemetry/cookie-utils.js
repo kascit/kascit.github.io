@@ -15,14 +15,10 @@ export function readCookie(name) {
 }
 
 export function writeCookie(name, value, options = {}) {
-  const {
-    maxAgeSeconds,
-    domain,
-    path = "/",
-    sameSite = "Lax",
-  } = options;
+  const { maxAgeSeconds, domain, path = "/", sameSite = "Lax" } = options;
 
-  const maxAgePart = typeof maxAgeSeconds === "number" ? `; Max-Age=${maxAgeSeconds}` : "";
+  const maxAgePart =
+    typeof maxAgeSeconds === "number" ? `; Max-Age=${maxAgeSeconds}` : "";
   const domainPart = domain ? `; Domain=${domain}` : "";
   document.cookie = `${name}=${encodeURIComponent(value)}; Path=${path}; SameSite=${sameSite}; Secure${maxAgePart}${domainPart}`;
 }

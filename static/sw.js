@@ -42,7 +42,7 @@ const DO_NOT_CACHE = [
   /analytics/,
   /giscus/,
   /^\/sw\.js$/,
-  /^\/js\/ui\/notify-banner\.[a-f0-9]*\.js$/,  // fingerprinted; loaded per-page only when needed
+  /^\/js\/ui\/notify-banner\.[a-f0-9]*\.js$/, // fingerprinted; loaded per-page only when needed
   /^\/__runtime\//,
   /^\/share-target\/$/,
   /^\/open-file\/$/,
@@ -210,19 +210,12 @@ function hasWidgetRuntime() {
 }
 
 function getWidgetTemplateUrl(definition) {
-  return (
-    definition?.msAcTemplate ||
-    definition?.ms_ac_template ||
-    ""
-  );
+  return definition?.msAcTemplate || definition?.ms_ac_template || "";
 }
 
 function getWidgetDataUrl(definition) {
   return (
-    definition?.data ||
-    definition?.msAcData ||
-    definition?.ms_ac_data ||
-    ""
+    definition?.data || definition?.msAcData || definition?.ms_ac_data || ""
   );
 }
 
@@ -366,9 +359,7 @@ self.addEventListener("push", (event) => {
     data: { url: data.url || "/" },
   };
 
-  event.waitUntil(
-    self.registration.showNotification(title, options)
-  );
+  event.waitUntil(self.registration.showNotification(title, options));
 });
 
 // Periodic Background Sync - check RSS
@@ -402,7 +393,10 @@ self.addEventListener("fetch", (event) => {
   }
 
   // Runtime metadata endpoint used by feature pages.
-  if (request.method === "GET" && url.pathname === "/__runtime/share-target.json") {
+  if (
+    request.method === "GET" &&
+    url.pathname === "/__runtime/share-target.json"
+  ) {
     event.respondWith(
       (async () => {
         const payload = await getRuntimeJson("/__runtime/share-target");
@@ -427,7 +421,9 @@ self.addEventListener("fetch", (event) => {
   const shouldCache = CACHEABLE_PATTERNS.some((pattern) =>
     pattern.test(url.pathname),
   );
-  const acceptsHtml = (request.headers.get("accept") || "").includes("text/html");
+  const acceptsHtml = (request.headers.get("accept") || "").includes(
+    "text/html",
+  );
   const isDocumentRequest =
     request.mode === "navigate" ||
     request.destination === "document" ||
@@ -473,8 +469,7 @@ self.addEventListener("fetch", (event) => {
         const cache = await caches.open(CACHE_NAME);
         const key = documentCacheKey(url);
         const cachedResponse =
-          (await cache.match(key)) ||
-          (await cache.match(request));
+          (await cache.match(key)) || (await cache.match(request));
 
         const networkFetch = fetch(request)
           .then((response) => {
@@ -495,11 +490,13 @@ self.addEventListener("fetch", (event) => {
           return networkResponse;
         }
 
-        return (await caches.match("/offline/")) ||
+        return (
+          (await caches.match("/offline/")) ||
           new Response("Offline", {
             status: 503,
             statusText: "Service Unavailable",
-          });
+          })
+        );
       })(),
     );
   } else {

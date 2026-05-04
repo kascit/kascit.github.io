@@ -17,7 +17,7 @@ next_subtitle = "Next"
 enabled = false
 
 [taxonomies]
-tags = ["java", "python", "go", "c / c++", "javascript", "lua", "sql", "bash", "spring boot", "node.js", "postgresql", "mongodb", "redis", "dynamodb", "aws", "gcp", "docker", "kubernetes", "ci/cd", "terraform", "neovim", "linux", "git", "postman", "ai systems", "applied cryptography", "computer graphics"]
+tags = ["Java", "Python", "Go", "C / C++", "JavaScript", "Lua", "SQL", "Bash", "Spring Boot", "Node.js", "PostgreSQL", "MongoDB", "Redis", "DynamoDB", "AWS", "GCP", "Docker", "Kubernetes", "CI/CD", "Terraform", "Neovim", "Linux", "Git", "Postman", "AI Systems", "Applied Cryptography", "Computer Graphics"]
 +++
 <div class="prose max-w-none prose-base-content lg:prose-lg mb-12">
 

@@ -4,7 +4,14 @@
 const fs = require("fs");
 const path = require("path");
 const { spawnSync } = require("child_process");
-const { resolveImageMagickCommand, runMagick, runCapture, collectFiles, toPosixRel, ROOT } = require("./lib/shared");
+const {
+  resolveImageMagickCommand,
+  runMagick,
+  runCapture,
+  collectFiles,
+  toPosixRel,
+  ROOT,
+} = require("./lib/shared");
 
 const sourceModeArg = (process.argv[2] || "static").trim().toLowerCase();
 if (sourceModeArg !== "static" && sourceModeArg !== "public") {
@@ -12,14 +19,16 @@ if (sourceModeArg !== "static" && sourceModeArg !== "public") {
   process.exit(1);
 }
 
-const sourceDir = sourceModeArg === "public"
-  ? path.resolve(ROOT, "public")
-  : path.resolve(ROOT, "static", "images");
+const sourceDir =
+  sourceModeArg === "public"
+    ? path.resolve(ROOT, "public")
+    : path.resolve(ROOT, "static", "images");
 const TARGET_WIDTHS = [240, 360, 480, 640, 768, 1024, 1280, 1600, 1920, 2560];
 
 const SOURCE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".webp"]);
 // Allow matching any old generated files to skip
-const GENERATED_RE = /-(240|320|360|480|640|768|800|1024|1200|1280|1600|1920|2560|3840|fallback)\.(webp|jpe?g)$/i;
+const GENERATED_RE =
+  /-(240|320|360|480|640|768|800|1024|1200|1280|1600|1920|2560|3840|fallback)\.(webp|jpe?g)$/i;
 
 function isSourceImage(abs, entry) {
   const ext = path.extname(entry.name).toLowerCase();
@@ -67,8 +76,11 @@ function replaceExtension(filePath, suffixWithExtension) {
 function getImageMetadata(command, sourcePath) {
   // ImageMagick 6 uses standalone `identify`, whereas ImageMagick 7 uses `magick identify`
   const idCmd = command === "convert" ? "identify" : command;
-  const args = command === "convert" ? ["-format", "%w|%h", sourcePath] : ["identify", "-format", "%w|%h", sourcePath];
-  
+  const args =
+    command === "convert"
+      ? ["-format", "%w|%h", sourcePath]
+      : ["identify", "-format", "%w|%h", sourcePath];
+
   const result = runCapture(idCmd, args);
   if (result.status !== 0) {
     throw new Error(`Failed to get dimensions for ${sourcePath}`);
@@ -79,7 +91,11 @@ function getImageMetadata(command, sourcePath) {
 
 function getLQIPBase64(command, sourcePath) {
   // Use image magick to resize to 16px wide and output to stdout as webp
-  const result = spawnSync(command, [sourcePath, "-resize", "16x", "-quality", "20", "webp:-"], { stdio: ["ignore", "pipe", "pipe"] });
+  const result = spawnSync(
+    command,
+    [sourcePath, "-resize", "16x", "-quality", "20", "webp:-"],
+    { stdio: ["ignore", "pipe", "pipe"] },
+  );
   if (result.status !== 0) {
     console.warn(`WARN: Failed to generate LQIP for ${sourcePath}`);
     return null;
@@ -104,7 +120,7 @@ function optimizeResponsiveSet(command, sourcePath) {
     generated.push(output);
     validBreakpoints.push(targetWidth);
     if (targetWidth >= actualWidth) {
-       break; // Stop at the first width that matches or exceeds original
+      break; // Stop at the first width that matches or exceeds original
     }
   }
 
@@ -119,13 +135,17 @@ function optimizeResponsiveSet(command, sourcePath) {
 
 function main() {
   if (!fs.existsSync(sourceDir) || !fs.statSync(sourceDir).isDirectory()) {
-    console.error(`ERROR: Source directory for mode '${sourceModeArg}' does not exist: ${sourceDir}`);
+    console.error(
+      `ERROR: Source directory for mode '${sourceModeArg}' does not exist: ${sourceDir}`,
+    );
     process.exit(1);
   }
 
   const command = resolveImageMagickCommand();
   if (!command) {
-    console.log("Responsive image generation skipped: ImageMagick is not installed (magick/convert not found).");
+    console.log(
+      "Responsive image generation skipped: ImageMagick is not installed (magick/convert not found).",
+    );
     return;
   }
 
@@ -153,15 +173,21 @@ function main() {
         height: result.meta.height,
         variants: result.validBreakpoints,
         fallback: `/${replaceExtension(posixRel, "-fallback.jpg")}`,
-        lqip: result.lqip
+        lqip: result.lqip,
       };
     } catch (error) {
       failed += 1;
-      console.warn(`WARN: Failed to generate responsive assets for ${toPosixRel(sourceFile)}: ${error.message}`);
+      console.warn(
+        `WARN: Failed to generate responsive assets for ${toPosixRel(sourceFile)}: ${error.message}`,
+      );
     }
   }
 
-  fs.writeFileSync(path.join(sourceDir, "responsive-manifest.json"), JSON.stringify(manifest, null, 2), "utf8");
+  fs.writeFileSync(
+    path.join(sourceDir, "responsive-manifest.json"),
+    JSON.stringify(manifest, null, 2),
+    "utf8",
+  );
 
   if (processed === 0) {
     console.error("ERROR: No responsive assets were generated successfully.");
@@ -169,7 +195,7 @@ function main() {
   }
 
   console.log(
-    `Generated responsive assets for ${processed} source image(s): ${generatedCount} written, ${failed} failed.`
+    `Generated responsive assets for ${processed} source image(s): ${generatedCount} written, ${failed} failed.`,
   );
 }
 

@@ -7,11 +7,9 @@ template = "section.html"
 enabled = false
 +++
 
-
 {{ email_card(user="pbagnpg", domain="qunahe.zr", icon="fa-solid fa-envelope", title="Send an Email", description="Drop me a message", contrast=true) }}
 
 This page is the clean index of where to find me online. If you need to reach me quickly, email is the fastest route and everything else is grouped by context below.
-
 
 ## Code & Professional
 

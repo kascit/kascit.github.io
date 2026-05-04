@@ -1,5 +1,5 @@
 +++
-title = "Why I Switched from VS Code to Neovim"
+title = "Why I Switched from Visual Studio Code to Neovim"
 date = 2026-01-15
 description = "A journey of pain, frustration, and eventual productivity with terminal-based editors"
 
@@ -11,7 +11,7 @@ tags = ["tooling", "systems", "productivity", "backend"]
 categories = ["engineering"]
 +++
 
-Let me start by saying this: I still love VS Code. It's an amazing editor that probably does 95% of what most developers need. But I switched to Neovim anyway, and here's why.
+Let me start by saying this: I still love Visual Studio Code. It's an amazing editor that probably does 95% of what most developers need. But I switched to Neovim anyway, and here's why.
 
 ## The Breaking Point
 
@@ -68,7 +68,7 @@ The exact plugins matter less than the principle: pick a minimal core, make it d
 
 ## What I Still Miss
 
-I still miss a few VS Code conveniences, especially rich GitLens context, Live Share collaboration, and niche marketplace extensions with no direct Neovim replacement.
+I still miss a few Visual Studio Code conveniences, especially rich GitLens context, Live Share collaboration, and niche marketplace extensions with no direct Neovim replacement.
 
 ## Should You Switch?
 

@@ -280,7 +280,7 @@ spring.datasource.hikari.minimum-idle=5
 spring.datasource.hikari.connection-timeout=30000
 ```
 
-### 3. Indexes (Add them before your DB melts)
+### 3. Indices (Add them before your DB melts)
 
 ```java
 @Entity
@@ -299,7 +299,7 @@ Version your API from day one, because retrofitting versioned routes later is us
 
 ## The Reality Check
 
-Perfect APIs don't exist. You'll make tradeoffs. You'll ship bugs. You'll realize your architecture needs refactoring 6 months in.
+Perfect APIs don't exist. You'll make trade-offs. You'll ship bugs. You'll realize your architecture needs refactoring 6 months in.
 
 That's fine. Ship something that works, iterate, and make it better. Just avoid the obvious pitfalls:
 

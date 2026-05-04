@@ -7,7 +7,7 @@ description = "Learning containers and orchestration without losing your sanity 
 thumbnail_image = "images/thumbs/ship.jpg"
 
 [taxonomies]
-tags = ["devops", "systems"]
+tags = ["DevOps", "systems"]
 categories = ["engineering"]
 +++
 

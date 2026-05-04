@@ -93,7 +93,7 @@ By contrast, expensive CRM and premium analytics purchases did not hold up once 
 
 ## The Self-Hosted Alternative
 
-Self-hosting can be the right move when data control or cost predictability matters, and tools like Plausible, GitLab, or Nextcloud can replace paid SaaS layers in the right context. The tradeoff is that you inherit maintenance, security patching, and uptime responsibility directly.
+Self-hosting can be the right move when data control or cost predictability matters, and tools like Plausible, GitLab, or Nextcloud can replace paid SaaS layers in the right context. The trade-off is that you inherit maintenance, security patching, and uptime responsibility directly.
 
 ## Conclusion
 

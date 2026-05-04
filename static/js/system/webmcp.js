@@ -653,6 +653,8 @@ const TOOL_REGISTRY = Object.assign(Object.create(null), {
   },
 });
 
+const SAFE_TOOL_MAP = new Map(Object.entries(TOOL_REGISTRY));
+
 const TOOL_SPECS = {
   "tools.list": {
     description: "List all available imperative WebMCP tools exposed by this page.",
@@ -851,13 +853,13 @@ async function callTool(toolName, args = {}) {
     throw new Error("Tool name is required");
   }
 
-  // Prevent prototype-pollution dispatch: only dispatch to own enumerable keys
-  // on TOOL_REGISTRY, never to inherited properties like 'constructor' or '__proto__'.
-  if (!Object.prototype.hasOwnProperty.call(TOOL_REGISTRY, toolName)) {
+  // Prevent prototype-pollution dispatch by using a Map lookup.
+  // This satisfies CodeQL js/unvalidated-dynamic-method-call.
+  if (!SAFE_TOOL_MAP.has(toolName)) {
     throw new Error(`Unknown tool: ${toolName}`);
   }
 
-  const tool = TOOL_REGISTRY[toolName];
+  const tool = SAFE_TOOL_MAP.get(toolName);
 
   if (typeof tool !== "function") {
     throw new Error(`Tool is not executable: ${toolName}`);

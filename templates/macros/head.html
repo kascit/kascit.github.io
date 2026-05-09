@@ -45,9 +45,7 @@
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="application-name" content="{{ config.title | default(value='dhanur.me') }}">
 
-    <!-- Resource hints for optional integrations are loaded only after user consent. -->
-    <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin>
-    <link rel="preconnect" href="https://analytics.ahrefs.com" crossorigin>
+    <!-- Resource hints: only preconnect to origins needed before first paint. -->
     <link rel="preconnect" href="https://auth.dhanur.me" crossorigin>
     {% set theme_colorset = self::get_theme_colorset(config=config) | trim %}
     <!-- Critical prepaint bootstrap lives in js/boot.js and must run synchronously. -->
@@ -193,7 +191,7 @@
       <link rel="icon" type="image/svg+xml" href="{{ favicon_svg | safe }}" />
       <link rel="shortcut icon" href="{{ favicon_ico | safe }}" />
       <link rel="apple-touch-icon" sizes="180x180" href="{{ apple_touch_icon | safe }}" />
-      <link rel="manifest" href="{{ site_webmanifest | safe }}" />
+      <link rel="manifest" href="{{ site_webmanifest | safe }}" fetchpriority="low" />
 
       <!-- CSS -->
     <!-- Preload critical stylesheets for faster rendering -->
@@ -202,7 +200,6 @@
     <link rel="stylesheet" href="{{ get_url(path="css/lqip.css") | safe }}">
       <!-- Font Awesome subset keeps icon CSS minimal while preserving UI icons. -->
     <link rel="stylesheet" href="{{ get_url(path="css/font-awesome.subset.css") | safe }}">
-    <link rel="prefetch" href="{{ get_url(path="js/core/main.js") | safe }}" as="script">
 
     <meta name="js-modules"
             data-katex-css="{{ get_url(path="css/katex.min.css") | safe }}"

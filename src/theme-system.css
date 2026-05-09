@@ -71,6 +71,26 @@ html[data-theme="light"] {
   --scrollbar-thumb-color-strong: rgba(156, 163, 175, 0.8);
 }
 
+/* ──────────────────────────────────────────────────────────────────────────
+   Prepaint theme-variant visibility.
+   boot.js sets html.dark / html.light synchronously before first paint,
+   so these rules resolve the correct logo and hero variant immediately
+   — no JS module load required. theme-engine.js later takes over with
+   inline styles for crossfade during runtime toggles.
+   ────────────────────────────────────────────────────────────────────── */
+
+/* Dark mode: show dark variants, hide light variants */
+html.dark .logo-dark  { opacity: 1;  visibility: visible; }
+html.dark .logo-light { opacity: 0;  visibility: hidden;  pointer-events: none; }
+html.dark .hero-dark  { display: block; }
+html.dark .hero-light { display: none; }
+
+/* Light mode: show light variants, hide dark variants */
+html.light .logo-dark  { opacity: 0;  visibility: hidden;  pointer-events: none; }
+html.light .logo-light { opacity: 1;  visibility: visible; }
+html.light .hero-dark  { display: none; }
+html.light .hero-light { display: block; }
+
 /* Theme switch smoothing: opt-in only during JS-triggered mode changes. */
 html.is-theme-switching,
 html.is-theme-switching body,

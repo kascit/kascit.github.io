@@ -41,10 +41,10 @@
                     s.src = src;
                     document.head.appendChild(s);
                 }
-                if ("requestIdleCallback" in window) {
-                    requestIdleCallback(load, { timeout: 2500 });
+                if (document.readyState === "loading") {
+                    document.addEventListener("DOMContentLoaded", load, { once: true });
                 } else {
-                    setTimeout(load, 1200);
+                    load();
                 }
             })();
         </script>

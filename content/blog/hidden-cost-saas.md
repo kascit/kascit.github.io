@@ -10,6 +10,7 @@ thumbnail_image = "images/thumbs/chain.jpg"
 tags = ["systems", "tooling", "product", "automation"]
 categories = ["engineering"]
 +++
+
 We've all been there. You find a "free" tool that solves exactly the problem you're having. You sign up, start using it, and everything seems great. Six months later, you're paying $47/month for three different "freemium" tools that you can't live without.
 
 This is the hidden cost of free SaaS.
@@ -23,14 +24,17 @@ Sound familiar?
 ## Real Examples from My Journey
 
 ### The Project Management Tool
+
 Started with: Free Trello board
 Ended with: $25/month Jira subscription + 10 hours of migration
 
 ### The Design Tool
+
 Started with: Free Figma account  
 Ended with: $45/month Professional plan because we hit the 3-file limit
 
 ### The Analytics Tool
+
 Started with: Free Google Analytics
 Ended with: $99/month Mixpanel because we needed real-time data
 
@@ -63,11 +67,13 @@ Instead of "Is it free?", ask "What's the TCO?"
 ### Total Cost of Ownership = Direct Cost + Hidden Costs
 
 **Direct Costs:**
+
 - Subscription fees
 - Implementation costs
 - Training costs
 
 **Hidden Costs:**
+
 - Migration time
 - Learning curve
 - Integration complexity
@@ -87,7 +93,7 @@ By contrast, expensive CRM and premium analytics purchases did not hold up once 
 
 ## The Self-Hosted Alternative
 
-Self-hosting can be the right move when data control or cost predictability matters, and tools like Plausible, GitLab, or Nextcloud can replace paid SaaS layers in the right context. The tradeoff is that you inherit maintenance, security patching, and uptime responsibility directly.
+Self-hosting can be the right move when data control or cost predictability matters, and tools like Plausible, GitLab, or Nextcloud can replace paid SaaS layers in the right context. The trade-off is that you inherit maintenance, security patching, and uptime responsibility directly.
 
 ## Conclusion
 
@@ -101,4 +107,4 @@ Sometimes the most expensive tool is the one that starts out free.
 
 ---
 
-*What's your most expensive "free" tool story? I'd love to hear it.*
+_What's your most expensive "free" tool story? I'd love to hear it._

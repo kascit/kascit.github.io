@@ -73,10 +73,16 @@ function normalizeCodeText(value, options = {}) {
 }
 
 function inferLanguage(codeBlock, pre) {
-  const fromData = (pre.getAttribute("data-lang") || codeBlock.getAttribute("data-lang") || "").trim();
+  const fromData = (
+    pre.getAttribute("data-lang") ||
+    codeBlock.getAttribute("data-lang") ||
+    ""
+  ).trim();
   if (fromData) return fromData.toLowerCase();
 
-  const languageClass = Array.from(codeBlock.classList).find((cls) => cls.startsWith("language-"));
+  const languageClass = Array.from(codeBlock.classList).find((cls) =>
+    cls.startsWith("language-"),
+  );
   if (languageClass) {
     return languageClass.slice("language-".length).toLowerCase();
   }
@@ -164,7 +170,9 @@ function bindMetricSyncEvents() {
   metricSyncBound = true;
 
   window.addEventListener("resize", scheduleMetricSync, { passive: true });
-  window.addEventListener("orientationchange", scheduleMetricSync, { passive: true });
+  window.addEventListener("orientationchange", scheduleMetricSync, {
+    passive: true,
+  });
   window.addEventListener("load", scheduleMetricSync, { once: true });
   document.addEventListener("themeChanged", scheduleMetricSync);
 
@@ -225,9 +233,16 @@ function enhanceCodeBlock(codeBlock) {
   if (pre.getAttribute("data-codeblock-enhanced") === "1") return;
 
   const rawCodeText = codeBlock.textContent || codeBlock.innerText || "";
-  const normalizedCode = normalizeCodeText(rawCodeText, { trimLeadingNewline: true, trimTrailingNewline: true });
-  const codeForLineCount = normalizeCodeText(rawCodeText, { trimLeadingNewline: true, trimTrailingNewline: false });
-  const lines = codeForLineCount.length === 0 ? [""] : codeForLineCount.split("\n");
+  const normalizedCode = normalizeCodeText(rawCodeText, {
+    trimLeadingNewline: true,
+    trimTrailingNewline: true,
+  });
+  const codeForLineCount = normalizeCodeText(rawCodeText, {
+    trimLeadingNewline: true,
+    trimTrailingNewline: false,
+  });
+  const lines =
+    codeForLineCount.length === 0 ? [""] : codeForLineCount.split("\n");
   const lineCount = Math.max(1, lines.length);
 
   const language = inferLanguage(codeBlock, pre);

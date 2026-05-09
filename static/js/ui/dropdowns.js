@@ -46,10 +46,11 @@ export function initDropdowns(rootElement = document) {
     if (!btn) return;
     const panel = dd.querySelector(".dropdown-panel");
 
-    const hasTooltip = btn.classList.contains("tooltip")
-      && (btn.hasAttribute("data-tooltip-label")
-        || btn.hasAttribute("data-tip")
-        || !!btn.querySelector(":scope > .tooltip-content"));
+    const hasTooltip =
+      btn.classList.contains("tooltip") &&
+      (btn.hasAttribute("data-tooltip-label") ||
+        btn.hasAttribute("data-tip") ||
+        !!btn.querySelector(":scope > .tooltip-content"));
     dd.setAttribute("data-dropdown-tooltip", hasTooltip ? "1" : "0");
 
     btn.addEventListener("click", (e) => {

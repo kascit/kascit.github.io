@@ -10,7 +10,7 @@ const RULES_FILE = path.join(ROOT, "data", "taxonomy-rules.json");
 function normalizeAtom(value) {
   return String(value || "")
     .toLowerCase()
-    .replace(/[\-_]+/g, " ")
+    .replace(/[-_]+/g, " ")
     .replace(/[^\p{L}\p{N}\s+]/gu, " ")
     .replace(/\s+/g, " ")
     .trim();
@@ -41,7 +41,9 @@ function loadTaxonomyRules() {
   const parsed = JSON.parse(raw);
 
   parsed.canonical_tags = compactUnique(parsed.canonical_tags || []);
-  parsed.tag_priority = compactUnique(parsed.tag_priority || parsed.canonical_tags || []);
+  parsed.tag_priority = compactUnique(
+    parsed.tag_priority || parsed.canonical_tags || [],
+  );
   parsed.tag_rules = Array.isArray(parsed.tag_rules) ? parsed.tag_rules : [];
   parsed.blog_category_rules = Array.isArray(parsed.blog_category_rules)
     ? parsed.blog_category_rules
@@ -51,7 +53,9 @@ function loadTaxonomyRules() {
 }
 
 function deriveSemanticTagsFromValues(values, rules, options) {
-  const maxTags = Number.isFinite(options && options.maxTags) ? Number(options.maxTags) : 0;
+  const maxTags = Number.isFinite(options && options.maxTags)
+    ? Number(options.maxTags)
+    : 0;
   const atoms = toAtoms(values);
   const scores = new Map();
 
@@ -59,7 +63,9 @@ function deriveSemanticTagsFromValues(values, rules, options) {
     const tag = normalizeAtom(rule.tag);
     if (!tag) continue;
 
-    const keywords = compactUnique(rule.keywords || []).map(normalizeAtom).filter(Boolean);
+    const keywords = compactUnique(rule.keywords || [])
+      .map(normalizeAtom)
+      .filter(Boolean);
     if (keywords.length === 0) continue;
 
     let score = 0;
@@ -76,7 +82,9 @@ function deriveSemanticTagsFromValues(values, rules, options) {
     }
   }
 
-  const order = new Map((rules.tag_priority || []).map((tag, index) => [normalizeAtom(tag), index]));
+  const order = new Map(
+    (rules.tag_priority || []).map((tag, index) => [normalizeAtom(tag), index]),
+  );
   const sorted = Array.from(scores.keys()).sort((a, b) => {
     const as = scores.get(a) || 0;
     const bs = scores.get(b) || 0;
@@ -93,7 +101,9 @@ function deriveSemanticTagsFromValues(values, rules, options) {
 }
 
 function deriveBlogCategory(tags, rules) {
-  const normalizedTags = new Set((tags || []).map(normalizeAtom).filter(Boolean));
+  const normalizedTags = new Set(
+    (tags || []).map(normalizeAtom).filter(Boolean),
+  );
 
   for (const rule of rules.blog_category_rules || []) {
     const category = String(rule.category || "").trim();

@@ -32,7 +32,9 @@ function main() {
   const text = message || "";
 
   if (supportsColor()) {
-    process.stdout.write(`${level.color}[${level.label}]${ANSI.reset} ${text}\n`);
+    process.stdout.write(
+      `${level.color}[${level.label}]${ANSI.reset} ${text}\n`,
+    );
     return;
   }
 

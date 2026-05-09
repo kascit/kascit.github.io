@@ -2,28 +2,46 @@
  * Lazy loading for KaTeX and Mermaid.js
  */
 import { getConfig } from "../core/config.js";
-import { appendScriptOnce, appendStylesheetOnce } from "../core/resource-loader.js";
+import {
+  appendScriptOnce,
+  appendStylesheetOnce,
+} from "../core/resource-loader.js";
 
 function renderKatex(katexInlineElements, katexBlockElements) {
   if (typeof window.katex === "undefined") return;
 
   katexInlineElements.forEach((elem) => {
     const texContent = elem.textContent || elem.innerText;
-    try { window.katex.render(texContent, elem, { throwOnError: false, displayMode: false }); } catch (e) { console.error(e); }
+    try {
+      window.katex.render(texContent, elem, {
+        throwOnError: false,
+        displayMode: false,
+      });
+    } catch (e) {
+      console.error(e);
+    }
   });
 
   katexBlockElements.forEach((elem) => {
     const texContent = elem.textContent || elem.innerText;
-    try { window.katex.render(texContent, elem, { throwOnError: false, displayMode: true }); } catch (e) { console.error(e); }
+    try {
+      window.katex.render(texContent, elem, {
+        throwOnError: false,
+        displayMode: true,
+      });
+    } catch (e) {
+      console.error(e);
+    }
   });
 }
 
 export function initLazyPlugins() {
   const config = getConfig();
-  
+
   const katexInlineElements = document.querySelectorAll(".katex-inline");
   const katexBlockElements = document.querySelectorAll(".katex-block");
-  const hasKatex = katexInlineElements.length > 0 || katexBlockElements.length > 0;
+  const hasKatex =
+    katexInlineElements.length > 0 || katexBlockElements.length > 0;
   const hasMermaid = document.querySelector(".mermaid");
 
   if (hasKatex && config.katexCss && config.katexJs) {
@@ -40,10 +58,13 @@ export function initLazyPlugins() {
   }
 
   // Pre-initialize Mermaid globally so it binds to the theme system properly later
-  window.initMermaid = async function() {
+  window.initMermaid = async function () {
     const isDark = document.documentElement.classList.contains("dark");
     if (typeof window.mermaid !== "undefined") {
-      window.mermaid.initialize({ startOnLoad: false, theme: isDark ? "dark" : "default" });
+      window.mermaid.initialize({
+        startOnLoad: false,
+        theme: isDark ? "dark" : "default",
+      });
       const mermaidElements = document.querySelectorAll(".mermaid");
       if (mermaidElements.length > 0) {
         await window.mermaid.run({ nodes: mermaidElements });

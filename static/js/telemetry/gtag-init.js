@@ -11,9 +11,11 @@ export function initGtag(gtagId) {
   if (!id) return false;
 
   window.dataLayer = window.dataLayer || [];
-  window.gtag = window.gtag || function gtag() {
-    window.dataLayer.push(arguments);
-  };
+  window.gtag =
+    window.gtag ||
+    function gtag() {
+      window.dataLayer.push(arguments);
+    };
 
   window.gtag("js", new Date());
   window.gtag("config", id);

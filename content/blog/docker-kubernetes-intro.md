@@ -7,9 +7,10 @@ description = "Learning containers and orchestration without losing your sanity 
 thumbnail_image = "images/thumbs/ship.jpg"
 
 [taxonomies]
-tags = ["devops", "systems"]
+tags = ["DevOps", "systems"]
 categories = ["engineering"]
 +++
+
 So you want to learn about containers and orchestration? Buckle up, because you're about to enter a world where "it works on my machine" becomes both your mantra and your nightmare.
 
 ## Docker: The Gateway Drug
@@ -81,7 +82,7 @@ docker run -d \
 
 Use `.dockerignore` aggressively so large folders and local-only artifacts never make it into image context.
 
-```
+```text
 node_modules/
 .git/
 *.log

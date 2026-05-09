@@ -11,8 +11,19 @@
  *   { protocol: "dhanur.webmcp.v1", type: "webmcp.call", id, tool, args }
  */
 
-import { cycleThemeMode, getResolvedTheme, getThemeMode, setThemeMode } from "../core/theme-engine.js";
-import { askAiAboutQuery, buildAskAiContext, getAskAiConfig, getStoredAskAiContext, isAskAiEnabled } from "./ask-ai.js";
+import {
+  cycleThemeMode,
+  getResolvedTheme,
+  getThemeMode,
+  setThemeMode,
+} from "../core/theme-engine.js";
+import {
+  askAiAboutQuery,
+  buildAskAiContext,
+  getAskAiConfig,
+  getStoredAskAiContext,
+  isAskAiEnabled,
+} from "./ask-ai.js";
 
 const PROTOCOL = "dhanur.webmcp.v1";
 const VERSION = "1.2.0";
@@ -23,8 +34,14 @@ let _allowedOrigins = new Set([window.location.origin]);
 let _toolsRegistered = false;
 
 const _compatStore = (() => {
-  if (window.__webmcpCompatStore && typeof window.__webmcpCompatStore === "object") {
-    if (!window.__webmcpCompatStore.tools || typeof window.__webmcpCompatStore.tools !== "object") {
+  if (
+    window.__webmcpCompatStore &&
+    typeof window.__webmcpCompatStore === "object"
+  ) {
+    if (
+      !window.__webmcpCompatStore.tools ||
+      typeof window.__webmcpCompatStore.tools !== "object"
+    ) {
       window.__webmcpCompatStore.tools = {};
     }
     return window.__webmcpCompatStore;
@@ -48,7 +65,7 @@ function syncCompatStore() {
 function makeInvalidStateError(message) {
   try {
     return new DOMException(message, "InvalidStateError");
-  } catch (_error) {
+  } catch {
     const err = new Error(message);
     err.name = "InvalidStateError";
     return err;
@@ -85,14 +102,19 @@ function createModelContextCompat() {
       const execute = tool.execute;
 
       if (!name || !description || typeof execute !== "function") {
-        throw makeInvalidStateError("Tool name, description, and execute callback are required");
+        throw makeInvalidStateError(
+          "Tool name, description, and execute callback are required",
+        );
       }
 
       if (_registeredTools.has(name)) {
         throw makeInvalidStateError(`Tool already registered: ${name}`);
       }
 
-      const inputSchema = Object.prototype.hasOwnProperty.call(tool, "inputSchema")
+      const inputSchema = Object.prototype.hasOwnProperty.call(
+        tool,
+        "inputSchema",
+      )
         ? tool.inputSchema
         : {};
 
@@ -114,10 +136,14 @@ function createModelContextCompat() {
           syncCompatStore();
           return;
         }
-        signal.addEventListener("abort", () => {
-          _registeredTools.delete(name);
-          syncCompatStore();
-        }, { once: true });
+        signal.addEventListener(
+          "abort",
+          () => {
+            _registeredTools.delete(name);
+            syncCompatStore();
+          },
+          { once: true },
+        );
       }
     },
 
@@ -176,7 +202,7 @@ function defineNavigatorProperty(name, value) {
       });
       return true;
     }
-  } catch (_error) {
+  } catch {
     // Ignore and fallback to direct definition on navigator.
   }
 
@@ -193,11 +219,11 @@ function defineNavigatorProperty(name, value) {
       },
     });
     return true;
-  } catch (_error) {
+  } catch {
     try {
       navigator[name] = value;
       return true;
-    } catch (_assignError) {
+    } catch {
       return false;
     }
   }
@@ -243,9 +269,11 @@ function originAllowed(origin) {
 }
 
 function postResponse(event, payload) {
-  if (!event || !event.source || typeof event.source.postMessage !== "function") return;
+  if (!event || !event.source || typeof event.source.postMessage !== "function")
+    return;
 
-  const targetOrigin = event.origin && event.origin !== "null" ? event.origin : "*";
+  const targetOrigin =
+    event.origin && event.origin !== "null" ? event.origin : "*";
   event.source.postMessage(payload, targetOrigin);
 }
 
@@ -255,9 +283,10 @@ function safeHref(rawHref) {
   try {
     const parsed = new URL(rawHref, window.location.origin);
     if (parsed.origin !== window.location.origin) return null;
-    if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return null;
+    if (parsed.protocol !== "http:" && parsed.protocol !== "https:")
+      return null;
     return `${parsed.pathname}${parsed.search}${parsed.hash}`;
-  } catch (_error) {
+  } catch {
     return null;
   }
 }
@@ -288,22 +317,33 @@ function findFirstLink(selectors) {
 }
 
 function getSearchModal() {
-  return document.querySelector("[data-search-modal]") || document.getElementById("search-modal");
+  return (
+    document.querySelector("[data-search-modal]") ||
+    document.getElementById("search-modal")
+  );
 }
 
 function getSearchInput() {
-  return document.querySelector("[data-search-input]") || document.getElementById("search");
+  return (
+    document.querySelector("[data-search-input]") ||
+    document.getElementById("search")
+  );
 }
 
 function getSearchItemsContainer() {
-  return document.querySelector("[data-search-results-items]") || document.querySelector(".search-results__items");
+  return (
+    document.querySelector("[data-search-results-items]") ||
+    document.querySelector(".search-results__items")
+  );
 }
 
 function readSearchResults(limit = 20) {
   const container = getSearchItemsContainer();
   if (!container) return [];
 
-  const nodes = Array.from(container.querySelectorAll(".search-result-item")).slice(0, Math.max(0, Number(limit) || 20));
+  const nodes = Array.from(
+    container.querySelectorAll(".search-result-item"),
+  ).slice(0, Math.max(0, Number(limit) || 20));
   return nodes
     .map((node) => {
       const link = node.querySelector(".search-result-link");
@@ -364,7 +404,11 @@ function clickToggleToState(selector, shouldEnable, isEnabledFn) {
 }
 
 function listHeadings() {
-  const headings = Array.from(document.querySelectorAll("main h1[id], main h2[id], main h3[id], main h4[id], main h5[id], main h6[id]"));
+  const headings = Array.from(
+    document.querySelectorAll(
+      "main h1[id], main h2[id], main h3[id], main h4[id], main h5[id], main h6[id]",
+    ),
+  );
 
   return headings.map((heading) => ({
     id: heading.id,
@@ -386,12 +430,22 @@ function getTocCollapsed() {
   const attr = document.documentElement.getAttribute("data-toc-collapsed");
   if (attr === "1") return true;
 
-  return Boolean(document.body && document.body.classList.contains("toc-collapsed"));
+  return Boolean(
+    document.body && document.body.classList.contains("toc-collapsed"),
+  );
 }
 
 function getNavigationState() {
-  const prev = findFirstLink([".prev-nav-item a", "a[rel='prev']", "a[data-prev]"]);
-  const next = findFirstLink([".next-nav-item a", "a[rel='next']", "a[data-next]"]);
+  const prev = findFirstLink([
+    ".prev-nav-item a",
+    "a[rel='prev']",
+    "a[data-prev]",
+  ]);
+  const next = findFirstLink([
+    ".next-nav-item a",
+    "a[rel='next']",
+    "a[data-next]",
+  ]);
 
   return {
     prev,
@@ -403,7 +457,9 @@ function getNavigationState() {
 async function getPwaStatus() {
   const supportsSW = "serviceWorker" in navigator;
   const isSecure = window.isSecureContext;
-  const controllerActive = Boolean(navigator.serviceWorker && navigator.serviceWorker.controller);
+  const controllerActive = Boolean(
+    navigator.serviceWorker && navigator.serviceWorker.controller,
+  );
 
   let hasRegistration = false;
   let activeScope = null;
@@ -413,7 +469,7 @@ async function getPwaStatus() {
       const registration = await navigator.serviceWorker.getRegistration();
       hasRegistration = Boolean(registration);
       activeScope = registration ? registration.scope : null;
-    } catch (_error) {
+    } catch {
       hasRegistration = false;
       activeScope = null;
     }
@@ -432,7 +488,10 @@ async function copyToClipboard(text) {
   const value = String(text || "");
   if (!value) throw new Error("Nothing to copy");
 
-  if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+  if (
+    navigator.clipboard &&
+    typeof navigator.clipboard.writeText === "function"
+  ) {
     await navigator.clipboard.writeText(value);
     return { copied: true, value };
   }
@@ -486,16 +545,28 @@ function getAppState() {
 // This satisfies CodeQL js/unvalidated-dynamic-method-call.
 const TOOL_REGISTRY = Object.assign(Object.create(null), {
   "tools.list": async () => Object.keys(TOOL_REGISTRY),
-  "system.ping": async () => ({ now: Date.now(), protocol: PROTOCOL, runtime: _runtime }),
+  "system.ping": async () => ({
+    now: Date.now(),
+    protocol: PROTOCOL,
+    runtime: _runtime,
+  }),
   "app.getState": async () => getAppState(),
 
   "nav.prev": async () => {
-    const target = findFirstLink([".prev-nav-item a", "a[rel='prev']", "a[data-prev]"]);
+    const target = findFirstLink([
+      ".prev-nav-item a",
+      "a[rel='prev']",
+      "a[data-prev]",
+    ]);
     if (!target) throw new Error("Previous link not found");
     return navigateTo(target.href);
   },
   "nav.next": async () => {
-    const target = findFirstLink([".next-nav-item a", "a[rel='next']", "a[data-next]"]);
+    const target = findFirstLink([
+      ".next-nav-item a",
+      "a[rel='next']",
+      "a[data-next]",
+    ]);
     if (!target) throw new Error("Next link not found");
     return navigateTo(target.href);
   },
@@ -514,7 +585,10 @@ const TOOL_REGISTRY = Object.assign(Object.create(null), {
     return { ok: true };
   },
 
-  "theme.get": async () => ({ mode: getThemeMode(), resolved: getResolvedTheme() }),
+  "theme.get": async () => ({
+    mode: getThemeMode(),
+    resolved: getResolvedTheme(),
+  }),
   "theme.set": async (args = {}) => {
     const mode = String(args.mode || "").toLowerCase();
     const applied = setThemeMode(mode);
@@ -585,16 +659,40 @@ const TOOL_REGISTRY = Object.assign(Object.create(null), {
     });
   },
 
-  "toc.open": async () => ({ collapsed: clickToggleToState("[data-toc-toggle], #toc-toggle", false, getTocCollapsed) }),
-  "toc.close": async () => ({ collapsed: clickToggleToState("[data-toc-toggle], #toc-toggle", true, getTocCollapsed) }),
+  "toc.open": async () => ({
+    collapsed: clickToggleToState(
+      "[data-toc-toggle], #toc-toggle",
+      false,
+      getTocCollapsed,
+    ),
+  }),
+  "toc.close": async () => ({
+    collapsed: clickToggleToState(
+      "[data-toc-toggle], #toc-toggle",
+      true,
+      getTocCollapsed,
+    ),
+  }),
   "toc.toggle": async () => {
     const clicked = clickIfPresent("[data-toc-toggle], #toc-toggle");
     if (!clicked) throw new Error("TOC toggle not found");
     return { collapsed: getTocCollapsed() };
   },
 
-  "sidebar.open": async () => ({ collapsed: clickToggleToState("[data-sidebar-toggle], #sidebar-toggle", false, getSidebarCollapsed) }),
-  "sidebar.close": async () => ({ collapsed: clickToggleToState("[data-sidebar-toggle], #sidebar-toggle", true, getSidebarCollapsed) }),
+  "sidebar.open": async () => ({
+    collapsed: clickToggleToState(
+      "[data-sidebar-toggle], #sidebar-toggle",
+      false,
+      getSidebarCollapsed,
+    ),
+  }),
+  "sidebar.close": async () => ({
+    collapsed: clickToggleToState(
+      "[data-sidebar-toggle], #sidebar-toggle",
+      true,
+      getSidebarCollapsed,
+    ),
+  }),
   "sidebar.toggle": async () => {
     const clicked = clickIfPresent("[data-sidebar-toggle], #sidebar-toggle");
     if (!clicked) throw new Error("Sidebar toggle not found");
@@ -618,7 +716,9 @@ const TOOL_REGISTRY = Object.assign(Object.create(null), {
     return { id: safeId };
   },
   "content.copyPermalink": async (args = {}) => {
-    const id = String(args.id || "").trim().replace(/^#/, "");
+    const id = String(args.id || "")
+      .trim()
+      .replace(/^#/, "");
     const href = id
       ? `${window.location.origin}${window.location.pathname}#${id}`
       : `${window.location.origin}${window.location.pathname}${window.location.search}${window.location.hash}`;
@@ -657,7 +757,8 @@ const SAFE_TOOL_MAP = new Map(Object.entries(TOOL_REGISTRY));
 
 const TOOL_SPECS = {
   "tools.list": {
-    description: "List all available imperative WebMCP tools exposed by this page.",
+    description:
+      "List all available imperative WebMCP tools exposed by this page.",
     inputSchema: { type: "object", additionalProperties: false },
     annotations: { readOnlyHint: true },
   },
@@ -667,13 +768,23 @@ const TOOL_SPECS = {
     annotations: { readOnlyHint: true },
   },
   "app.getState": {
-    description: "Get page state including route, theme, UI toggles, and connectivity.",
+    description:
+      "Get page state including route, theme, UI toggles, and connectivity.",
     inputSchema: { type: "object", additionalProperties: false },
     annotations: { readOnlyHint: true },
   },
-  "nav.prev": { description: "Navigate to the previous item/page link.", inputSchema: { type: "object", additionalProperties: false } },
-  "nav.next": { description: "Navigate to the next item/page link.", inputSchema: { type: "object", additionalProperties: false } },
-  "nav.home": { description: "Navigate to the site home page.", inputSchema: { type: "object", additionalProperties: false } },
+  "nav.prev": {
+    description: "Navigate to the previous item/page link.",
+    inputSchema: { type: "object", additionalProperties: false },
+  },
+  "nav.next": {
+    description: "Navigate to the next item/page link.",
+    inputSchema: { type: "object", additionalProperties: false },
+  },
+  "nav.home": {
+    description: "Navigate to the site home page.",
+    inputSchema: { type: "object", additionalProperties: false },
+  },
   "nav.goto": {
     description: "Navigate to an internal route.",
     inputSchema: {
@@ -685,9 +796,18 @@ const TOOL_SPECS = {
       additionalProperties: false,
     },
   },
-  "nav.reload": { description: "Reload the current page.", inputSchema: { type: "object", additionalProperties: false } },
-  "nav.back": { description: "Navigate browser history back.", inputSchema: { type: "object", additionalProperties: false } },
-  "nav.forward": { description: "Navigate browser history forward.", inputSchema: { type: "object", additionalProperties: false } },
+  "nav.reload": {
+    description: "Reload the current page.",
+    inputSchema: { type: "object", additionalProperties: false },
+  },
+  "nav.back": {
+    description: "Navigate browser history back.",
+    inputSchema: { type: "object", additionalProperties: false },
+  },
+  "nav.forward": {
+    description: "Navigate browser history forward.",
+    inputSchema: { type: "object", additionalProperties: false },
+  },
   "theme.get": {
     description: "Read current theme mode and resolved theme.",
     inputSchema: { type: "object", additionalProperties: false },
@@ -704,12 +824,25 @@ const TOOL_SPECS = {
       additionalProperties: false,
     },
   },
-  "theme.toggle": { description: "Cycle theme mode through auto/light/dark.", inputSchema: { type: "object", additionalProperties: false } },
-  "search.open": { description: "Open the search modal.", inputSchema: { type: "object", additionalProperties: false } },
-  "search.close": { description: "Close the search modal.", inputSchema: { type: "object", additionalProperties: false } },
-  "search.toggle": { description: "Toggle search modal visibility.", inputSchema: { type: "object", additionalProperties: false } },
+  "theme.toggle": {
+    description: "Cycle theme mode through auto/light/dark.",
+    inputSchema: { type: "object", additionalProperties: false },
+  },
+  "search.open": {
+    description: "Open the search modal.",
+    inputSchema: { type: "object", additionalProperties: false },
+  },
+  "search.close": {
+    description: "Close the search modal.",
+    inputSchema: { type: "object", additionalProperties: false },
+  },
+  "search.toggle": {
+    description: "Toggle search modal visibility.",
+    inputSchema: { type: "object", additionalProperties: false },
+  },
   "search.query": {
-    description: "Set a search query in the modal and return the current rendered results.",
+    description:
+      "Set a search query in the modal and return the current rendered results.",
     inputSchema: {
       type: "object",
       properties: {
@@ -736,7 +869,8 @@ const TOOL_SPECS = {
     annotations: { readOnlyHint: true },
   },
   "ai.buildContext": {
-    description: "Build an Ask AI context payload from query, page state, and profile context.",
+    description:
+      "Build an Ask AI context payload from query, page state, and profile context.",
     inputSchema: {
       type: "object",
       properties: {
@@ -749,7 +883,8 @@ const TOOL_SPECS = {
     annotations: { readOnlyHint: true },
   },
   "ai.context.get": {
-    description: "Read a previously stored Ask AI context payload from session storage by key.",
+    description:
+      "Read a previously stored Ask AI context payload from session storage by key.",
     inputSchema: {
       type: "object",
       properties: {
@@ -761,7 +896,8 @@ const TOOL_SPECS = {
     annotations: { readOnlyHint: true },
   },
   "ai.ask": {
-    description: "Execute Ask AI for a query using current runtime configuration.",
+    description:
+      "Execute Ask AI for a query using current runtime configuration.",
     inputSchema: {
       type: "object",
       properties: {
@@ -773,12 +909,30 @@ const TOOL_SPECS = {
       additionalProperties: false,
     },
   },
-  "toc.open": { description: "Expand/open the table of contents panel.", inputSchema: { type: "object", additionalProperties: false } },
-  "toc.close": { description: "Collapse/close the table of contents panel.", inputSchema: { type: "object", additionalProperties: false } },
-  "toc.toggle": { description: "Toggle the table of contents panel.", inputSchema: { type: "object", additionalProperties: false } },
-  "sidebar.open": { description: "Expand/open the sidebar panel.", inputSchema: { type: "object", additionalProperties: false } },
-  "sidebar.close": { description: "Collapse/close the sidebar panel.", inputSchema: { type: "object", additionalProperties: false } },
-  "sidebar.toggle": { description: "Toggle sidebar panel state.", inputSchema: { type: "object", additionalProperties: false } },
+  "toc.open": {
+    description: "Expand/open the table of contents panel.",
+    inputSchema: { type: "object", additionalProperties: false },
+  },
+  "toc.close": {
+    description: "Collapse/close the table of contents panel.",
+    inputSchema: { type: "object", additionalProperties: false },
+  },
+  "toc.toggle": {
+    description: "Toggle the table of contents panel.",
+    inputSchema: { type: "object", additionalProperties: false },
+  },
+  "sidebar.open": {
+    description: "Expand/open the sidebar panel.",
+    inputSchema: { type: "object", additionalProperties: false },
+  },
+  "sidebar.close": {
+    description: "Collapse/close the sidebar panel.",
+    inputSchema: { type: "object", additionalProperties: false },
+  },
+  "sidebar.toggle": {
+    description: "Toggle sidebar panel state.",
+    inputSchema: { type: "object", additionalProperties: false },
+  },
   "content.listHeadings": {
     description: "List all heading anchors found in main content.",
     inputSchema: { type: "object", additionalProperties: false },
@@ -805,14 +959,23 @@ const TOOL_SPECS = {
       additionalProperties: false,
     },
   },
-  "playlist.prev": { description: "Navigate to previous playlist item if available.", inputSchema: { type: "object", additionalProperties: false } },
-  "playlist.next": { description: "Navigate to next playlist item if available.", inputSchema: { type: "object", additionalProperties: false } },
+  "playlist.prev": {
+    description: "Navigate to previous playlist item if available.",
+    inputSchema: { type: "object", additionalProperties: false },
+  },
+  "playlist.next": {
+    description: "Navigate to next playlist item if available.",
+    inputSchema: { type: "object", additionalProperties: false },
+  },
   "pwa.status": {
     description: "Get service worker and PWA capability status.",
     inputSchema: { type: "object", additionalProperties: false },
     annotations: { readOnlyHint: true },
   },
-  "pwa.checkForUpdate": { description: "Trigger service worker update check.", inputSchema: { type: "object", additionalProperties: false } },
+  "pwa.checkForUpdate": {
+    description: "Trigger service worker update check.",
+    inputSchema: { type: "object", additionalProperties: false },
+  },
 };
 
 function registerImperativeTools(modelContext) {
@@ -840,7 +1003,7 @@ function registerImperativeTools(modelContext) {
       modelContext.registerTool(tool);
       _registeredTools.set(toolName, tool);
       syncCompatStore();
-    } catch (_error) {
+    } catch {
       // Ignore duplicate registrations to keep hot reload/idempotent init stable.
     }
   });
@@ -967,16 +1130,18 @@ export function initWebMCP(options = {}) {
     window.webmcp = window.WebMCP;
     _initialized = true;
 
-    document.dispatchEvent(new CustomEvent("webmcp:ready", {
-      detail: {
-        protocol: PROTOCOL,
-        version: VERSION,
-        runtime: _runtime,
-        tools: Object.keys(TOOL_REGISTRY),
-        modelContext: Boolean(navigator.modelContext),
-        modelContextTesting: Boolean(navigator.modelContextTesting),
-      },
-    }));
+    document.dispatchEvent(
+      new CustomEvent("webmcp:ready", {
+        detail: {
+          protocol: PROTOCOL,
+          version: VERSION,
+          runtime: _runtime,
+          tools: Object.keys(TOOL_REGISTRY),
+          modelContext: Boolean(navigator.modelContext),
+          modelContextTesting: Boolean(navigator.modelContextTesting),
+        },
+      }),
+    );
   } else if (window.WebMCP) {
     window.WebMCP.runtime = _runtime;
     window.webmcp = window.WebMCP;

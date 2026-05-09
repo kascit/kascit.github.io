@@ -56,13 +56,14 @@ function renderShortcut(el) {
     return;
   }
 
-  const platform = (navigator.userAgentData?.platform) || navigator.platform || "";
+  const platform =
+    navigator.userAgentData?.platform || navigator.platform || "";
   const isMac = /mac/i.test(platform);
   const primary = isMac ? "⌘" : "Ctrl";
   const altLabel = isMac ? "Option" : "Alt";
   const metaLabel = isMac ? "⌘" : "Win";
 
-  const parts = spec.split("+").map(key => {
+  const parts = spec.split("+").map((key) => {
     const lower = key.trim().toLowerCase();
     if (lower === "primary") return primary;
     if (lower === "alt") return altLabel;

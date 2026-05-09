@@ -78,7 +78,7 @@
     <div class="flex justify-center gap-6 flex-wrap">
       {% for button in section.extra.hero.cta_buttons %}
       <a
-        href="{{ button.url | safe }}"
+        href="{{ button.url | default(value=button.URL) | safe }}"
         class="group relative px-8 py-4 rounded-box text-lg font-semibold transition-colors duration-200 {% if button.style == 'primary' %} hero-cta-primary {% else %} hero-cta-secondary {% endif %}"
       >
         <span class="relative z-10">{{ button.text }}</span>
@@ -420,7 +420,7 @@
 
     {% if section.extra.final_cta_section.button %}
     <a
-      href="{{ section.extra.final_cta_section.button.url | safe }}"
+      href="{{ section.extra.final_cta_section.button.url | default(value=section.extra.final_cta_section.button.URL) | safe }}"
       class="group relative inline-flex items-center px-12 py-4 text-xl font-bold text-slate-200 bg-gradient-to-r from-slate-600 to-gray-700 rounded-box shadow-lg transition-colors duration-200 hover:shadow-md"
     >
       <span class="relative z-10">{{ section.extra.final_cta_section.button.text }}</span>

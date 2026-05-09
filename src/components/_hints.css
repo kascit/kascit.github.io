@@ -46,7 +46,10 @@
     0 0 0 0.5px oklch(0% 0 0 / 0.08);
 
   /* Transition for narrowing state changes */
-  transition: opacity 80ms ease, transform 80ms ease, background-color 80ms ease;
+  transition:
+    opacity 80ms ease,
+    transform 80ms ease,
+    background-color 80ms ease;
 }
 
 /* Scroll indicator badges — caret chars near scrollbar */
@@ -154,4 +157,3 @@
     animation: none;
   }
 }
-

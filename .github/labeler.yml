@@ -1,28 +1,29 @@
 # Add labels based on modified file paths
 frontend:
   - changed-files:
-    - any-glob-to-any-file: ['static/js/**', 'static/css/**', 'src/**/*.css', 'src/**/*.js']
+      - any-glob-to-any-file:
+          ["static/js/**", "static/css/**", "src/**/*.css", "src/**/*.js"]
 
 content:
   - changed-files:
-    - any-glob-to-any-file: ['content/**/*', 'data/**/*']
+      - any-glob-to-any-file: ["content/**/*", "data/**/*"]
 
 templates:
   - changed-files:
-    - any-glob-to-any-file: ['templates/**/*']
+      - any-glob-to-any-file: ["templates/**/*"]
 
 scripts:
   - changed-files:
-    - any-glob-to-any-file: ['scripts/**/*', 'justfile']
+      - any-glob-to-any-file: ["scripts/**/*", "justfile"]
 
 ci:
   - changed-files:
-    - any-glob-to-any-file: ['.github/**/*']
+      - any-glob-to-any-file: [".github/**/*"]
 
 documentation:
   - changed-files:
-    - any-glob-to-any-file: ['docs/**/*', 'README.md']
+      - any-glob-to-any-file: ["docs/**/*", "README.md"]
 
 dependencies:
   - changed-files:
-    - any-glob-to-any-file: ['versions.env']
+      - any-glob-to-any-file: ["versions.env"]

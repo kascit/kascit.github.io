@@ -2,19 +2,14 @@
  * Taxonomy RSS subscription helper.
  * Static-site friendly approach:
  * - Select terms (tags/categories)
- * - Persist selection in cookies across taxonomy pages
+ * - Persist selection in localStorage across taxonomy pages
  * - Copy feed URLs
  * - Export selected feeds as OPML for feed readers
  */
 
 import { isDesktop, onResponsiveChange } from "../core/responsive.js";
-import { readCookie, writeCookie } from "../telemetry/cookie-utils.js";
 
-const TAXONOMY_SELECTION_COOKIE = "taxonomy-rss-selection-v1";
-const TAXONOMY_SELECTION_COOKIE_MAX_AGE = 60 * 60 * 24 * 180;
 const TAXONOMY_SELECTION_STORAGE_KEY = "taxonomy-rss-selection-store-v1";
-const TAXONOMY_SELECTION_STORAGE_SENTINEL = "__ls__";
-const MAX_COOKIE_PAYLOAD_SIZE = 3500;
 
 function xmlEscape(value) {
   return String(value || "")
@@ -26,10 +21,12 @@ function xmlEscape(value) {
 }
 
 function safeFilePart(value) {
-  return String(value || "")
-    .toLowerCase()
-    .replace(/[^a-z0-9_-]+/g, "-")
-    .replace(/^-+|-+$/g, "") || "taxonomy";
+  return (
+    String(value || "")
+      .toLowerCase()
+      .replace(/[^a-z0-9_-]+/g, "-")
+      .replace(/^-+|-+$/g, "") || "taxonomy"
+  );
 }
 
 function downloadTextFile(fileName, content, mimeType) {
@@ -88,47 +85,21 @@ function serializeSelection(items) {
   return JSON.stringify(compact);
 }
 
-function loadCookieSelection() {
-  const raw = readCookie(TAXONOMY_SELECTION_COOKIE);
-  if (raw === TAXONOMY_SELECTION_STORAGE_SENTINEL) {
-    try {
-      return parseSelectionPayload(localStorage.getItem(TAXONOMY_SELECTION_STORAGE_KEY) || "[]");
-    } catch (_error) {
-      return [];
-    }
+function loadSelection() {
+  try {
+    return parseSelectionPayload(
+      localStorage.getItem(TAXONOMY_SELECTION_STORAGE_KEY) || "[]",
+    );
+  } catch (_error) {
+    return [];
   }
-
-  return parseSelectionPayload(raw);
 }
 
-function saveCookieSelection(items) {
+function saveSelection(items) {
   try {
-    const payload = serializeSelection(items);
-
-    if (payload.length > MAX_COOKIE_PAYLOAD_SIZE) {
-      localStorage.setItem(TAXONOMY_SELECTION_STORAGE_KEY, payload);
-      writeCookie(
-        TAXONOMY_SELECTION_COOKIE,
-        TAXONOMY_SELECTION_STORAGE_SENTINEL,
-        {
-          maxAgeSeconds: TAXONOMY_SELECTION_COOKIE_MAX_AGE,
-          path: "/",
-          sameSite: "Lax",
-          secure: window.location.protocol === "https:",
-        }
-      );
-      return;
-    }
-
-    localStorage.removeItem(TAXONOMY_SELECTION_STORAGE_KEY);
-    writeCookie(TAXONOMY_SELECTION_COOKIE, payload, {
-      maxAgeSeconds: TAXONOMY_SELECTION_COOKIE_MAX_AGE,
-      path: "/",
-      sameSite: "Lax",
-      secure: window.location.protocol === "https:",
-    });
+    localStorage.setItem(TAXONOMY_SELECTION_STORAGE_KEY, serializeSelection(items));
   } catch (_error) {
-    // ignore cookie write failures
+    // ignore storage write failures
   }
 }
 
@@ -136,7 +107,10 @@ function buildOpml(selectedTerms) {
   const title = "custom taxonomy feeds";
   const now = new Date().toUTCString();
   const outlines = selectedTerms
-    .map((term) => `    <outline text="${xmlEscape(term.name)}" title="${xmlEscape(term.name)}" type="rss" xmlUrl="${xmlEscape(term.feed)}" htmlUrl="${xmlEscape(term.page)}" category="${xmlEscape(term.taxonomy)}" />`)
+    .map(
+      (term) =>
+        `    <outline text="${xmlEscape(term.name)}" title="${xmlEscape(term.name)}" type="rss" xmlUrl="${xmlEscape(term.feed)}" htmlUrl="${xmlEscape(term.page)}" category="${xmlEscape(term.taxonomy)}" />`,
+    )
     .join("\n");
 
   return `<?xml version="1.0" encoding="UTF-8"?>\n<opml version="2.0">\n  <head>\n    <title>${xmlEscape(title)}</title>\n    <dateCreated>${xmlEscape(now)}</dateCreated>\n  </head>\n  <body>\n${outlines}\n  </body>\n</opml>\n`;
@@ -153,17 +127,32 @@ export function initTaxonomySubscribe() {
   const copyBtn = rail.querySelector("[data-taxonomy-subscribe-copy]");
   const opmlBtn = rail.querySelector("[data-taxonomy-subscribe-opml]");
   const clearBtn = rail.querySelector("[data-taxonomy-subscribe-clear]");
-  const addVisibleBtn = rail.querySelector("[data-taxonomy-subscribe-add-visible]");
+  const addVisibleBtn = rail.querySelector(
+    "[data-taxonomy-subscribe-add-visible]",
+  );
 
-  if (!selectedWrap || !emptyNode || !metaNode || !singleLink || !copyBtn || !opmlBtn || !clearBtn || !addVisibleBtn) {
+  if (
+    !selectedWrap ||
+    !emptyNode ||
+    !metaNode ||
+    !singleLink ||
+    !copyBtn ||
+    !opmlBtn ||
+    !clearBtn ||
+    !addVisibleBtn
+  ) {
     return;
   }
 
-  const termNodes = Array.from(document.querySelectorAll("[data-taxonomy-term][data-term-feed]"));
+  const termNodes = Array.from(
+    document.querySelectorAll("[data-taxonomy-term][data-term-feed]"),
+  );
   if (termNodes.length === 0) return;
 
   const taxonomyName = rail.getAttribute("data-taxonomy-name") || "taxonomy";
-  const selected = new Map(loadCookieSelection().map((term) => [term.feed, term]));
+  const selected = new Map(
+    loadSelection().map((term) => [term.feed, term]),
+  );
 
   function getTermData(node) {
     return {
@@ -241,7 +230,7 @@ export function initTaxonomySubscribe() {
       singleLink.setAttribute("aria-disabled", "true");
     }
 
-    saveCookieSelection(values);
+    saveSelection(values);
   }
 
   function toggleNode(node) {
@@ -295,7 +284,9 @@ export function initTaxonomySubscribe() {
     if (!feed || !selected.has(feed)) return;
 
     selected.delete(feed);
-    const node = termNodes.find((termNode) => termNode.getAttribute("data-term-feed") === feed);
+    const node = termNodes.find(
+      (termNode) => termNode.getAttribute("data-term-feed") === feed,
+    );
     if (node) setNodeSelected(node, false);
     renderSelected();
   });
@@ -333,7 +324,11 @@ export function initTaxonomySubscribe() {
       }, 1200);
     } catch (_error) {
       // Clipboard can fail in non-secure contexts; fallback to download.
-      downloadTextFile(`${safeFilePart(taxonomyName)}-feeds.txt`, `${text}\n`, "text/plain;charset=utf-8");
+      downloadTextFile(
+        `${safeFilePart(taxonomyName)}-feeds.txt`,
+        `${text}\n`,
+        "text/plain;charset=utf-8",
+      );
     }
   });
 

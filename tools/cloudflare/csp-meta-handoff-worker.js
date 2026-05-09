@@ -1,5 +1,6 @@
+/* global HTMLRewriter */
 export default {
-  async fetch(request, env, ctx) {
+  async fetch(request) {
     const response = await fetch(request);
     const contentType = response.headers.get("content-type");
 
@@ -26,7 +27,10 @@ export default {
     class MetaTagHandler {
       element(element) {
         const httpEquiv = element.getAttribute("http-equiv");
-        if (httpEquiv && httpEquiv.toLowerCase() === "content-security-policy") {
+        if (
+          httpEquiv &&
+          httpEquiv.toLowerCase() === "content-security-policy"
+        ) {
           element.remove();
         }
       }

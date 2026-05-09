@@ -2,14 +2,16 @@
 .surface-chip {
   @apply inline-flex items-center rounded-lg px-2.5 py-1 text-xs font-medium leading-tight;
   background: color-mix(in oklab, var(--color-base-content) 7%, transparent);
-  border: 1px solid color-mix(in oklab, var(--color-base-content) 14%, transparent);
+  border: 1px solid
+    color-mix(in oklab, var(--color-base-content) 14%, transparent);
   color: color-mix(in oklab, var(--color-base-content) 86%, transparent);
 }
 
 .surface-chip-link {
   @apply inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium leading-tight no-underline transition-colors duration-150;
   background: color-mix(in oklab, var(--color-base-content) 7%, transparent);
-  border: 1px solid color-mix(in oklab, var(--color-base-content) 14%, transparent);
+  border: 1px solid
+    color-mix(in oklab, var(--color-base-content) 14%, transparent);
   color: color-mix(in oklab, var(--color-base-content) 86%, transparent);
   min-height: 2rem;
   max-width: 100%;
@@ -40,7 +42,8 @@
 .ui-kind-pill {
   @apply inline-flex items-center shrink-0 text-xs font-medium px-2.5 py-1 rounded-md uppercase tracking-wide;
   color: color-mix(in oklab, var(--color-base-content) 65%, transparent);
-  border: 1px solid color-mix(in oklab, var(--color-base-content) 14%, transparent);
+  border: 1px solid
+    color-mix(in oklab, var(--color-base-content) 14%, transparent);
   background: color-mix(in oklab, var(--color-base-content) 4%, transparent);
 }
 
@@ -66,7 +69,8 @@
   @apply inline-flex shrink-0 items-center rounded-md px-1.5 py-0.5 text-[10px] font-semibold;
   color: color-mix(in oklab, var(--color-base-content) 62%, transparent);
   background: color-mix(in oklab, var(--color-base-content) 6%, transparent);
-  border: 1px solid color-mix(in oklab, var(--color-base-content) 12%, transparent);
+  border: 1px solid
+    color-mix(in oklab, var(--color-base-content) 12%, transparent);
 }
 
 .catalog-card__row {
@@ -170,23 +174,33 @@
 
 .taxonomy-term-pick:hover {
   @apply border-base-content/28 text-base-content bg-base-100;
-  box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-primary) 18%, transparent);
+  box-shadow: 0 0 0 2px
+    color-mix(in oklab, var(--color-primary) 18%, transparent);
 }
 
 .taxonomy-term-item.is-selected .taxonomy-term-btn {
   border-color: color-mix(in oklab, var(--color-primary) 36%, transparent);
-  background: color-mix(in oklab, var(--color-primary) 8%, var(--color-base-100));
+  background: color-mix(
+    in oklab,
+    var(--color-primary) 8%,
+    var(--color-base-100)
+  );
 }
 
 .taxonomy-term-item.is-selected .taxonomy-term-pick {
   border-color: color-mix(in oklab, var(--color-primary) 48%, transparent);
   background: color-mix(in oklab, var(--color-primary) 20%, transparent);
-  color: color-mix(in oklab, var(--color-primary) 90%, var(--color-base-content));
+  color: color-mix(
+    in oklab,
+    var(--color-primary) 90%,
+    var(--color-base-content)
+  );
 }
 
 .taxonomy-term-btn:hover {
   @apply no-underline border-base-content/24 bg-base-200/22 text-base-content;
-  box-shadow: 0 1px 0 color-mix(in oklab, var(--color-base-content) 10%, transparent);
+  box-shadow: 0 1px 0
+    color-mix(in oklab, var(--color-base-content) 10%, transparent);
 }
 
 .taxonomy-term-btn__name {
@@ -195,7 +209,8 @@
 
 .taxonomy-term-btn__count {
   @apply inline-flex items-center justify-center rounded-md text-[10px] font-semibold px-1.5 py-0.5 shrink-0;
-  border: 1px solid color-mix(in oklab, var(--color-base-content) 20%, transparent);
+  border: 1px solid
+    color-mix(in oklab, var(--color-base-content) 20%, transparent);
   background: color-mix(in oklab, var(--color-base-content) 12%, transparent);
   color: color-mix(in oklab, var(--color-base-content) 74%, transparent);
 }
@@ -228,7 +243,8 @@
 
 .taxonomy-subscribe-badge {
   @apply text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-md;
-  border: 1px solid color-mix(in oklab, var(--color-base-content) 18%, transparent);
+  border: 1px solid
+    color-mix(in oklab, var(--color-base-content) 18%, transparent);
   color: color-mix(in oklab, var(--color-base-content) 74%, transparent);
   background: color-mix(in oklab, var(--color-base-content) 10%, transparent);
 }
@@ -252,13 +268,25 @@
 
 .taxonomy-subscribe-btn--primary {
   border-color: color-mix(in oklab, var(--color-primary) 44%, transparent);
-  background: color-mix(in oklab, var(--color-primary) 14%, var(--color-base-100));
-  color: color-mix(in oklab, var(--color-primary) 92%, var(--color-base-content));
+  background: color-mix(
+    in oklab,
+    var(--color-primary) 14%,
+    var(--color-base-100)
+  );
+  color: color-mix(
+    in oklab,
+    var(--color-primary) 92%,
+    var(--color-base-content)
+  );
 }
 
 .taxonomy-subscribe-btn--primary:hover {
   border-color: color-mix(in oklab, var(--color-primary) 56%, transparent);
-  background: color-mix(in oklab, var(--color-primary) 22%, var(--color-base-100));
+  background: color-mix(
+    in oklab,
+    var(--color-primary) 22%,
+    var(--color-base-100)
+  );
 }
 
 .taxonomy-subscribe-btn:disabled {
@@ -315,13 +343,25 @@
 
 .taxonomy-subscribe-link--primary {
   border-color: color-mix(in oklab, var(--color-primary) 44%, transparent);
-  background: color-mix(in oklab, var(--color-primary) 14%, var(--color-base-100));
-  color: color-mix(in oklab, var(--color-primary) 92%, var(--color-base-content));
+  background: color-mix(
+    in oklab,
+    var(--color-primary) 14%,
+    var(--color-base-100)
+  );
+  color: color-mix(
+    in oklab,
+    var(--color-primary) 92%,
+    var(--color-base-content)
+  );
 }
 
 .taxonomy-subscribe-link--primary:hover {
   border-color: color-mix(in oklab, var(--color-primary) 56%, transparent);
-  background: color-mix(in oklab, var(--color-primary) 22%, var(--color-base-100));
+  background: color-mix(
+    in oklab,
+    var(--color-primary) 22%,
+    var(--color-base-100)
+  );
 }
 
 .taxonomy-subscribe-link.is-disabled,
@@ -343,13 +383,18 @@
 
 .taxonomy-playlist-pick:hover {
   @apply border-base-content/28 text-base-content bg-base-100;
-  box-shadow: 0 0 0 2px color-mix(in oklab, var(--color-primary) 18%, transparent);
+  box-shadow: 0 0 0 2px
+    color-mix(in oklab, var(--color-primary) 18%, transparent);
 }
 
 .taxonomy-playlist-post.is-selected .taxonomy-playlist-pick {
   border-color: color-mix(in oklab, var(--color-primary) 48%, transparent);
   background: color-mix(in oklab, var(--color-primary) 20%, transparent);
-  color: color-mix(in oklab, var(--color-primary) 90%, var(--color-base-content));
+  color: color-mix(
+    in oklab,
+    var(--color-primary) 90%,
+    var(--color-base-content)
+  );
 }
 
 @media (max-width: 1023px) {
@@ -387,7 +432,8 @@
 
 .taxonomy-playlist-badge {
   @apply text-[10px] font-semibold uppercase tracking-wide px-1.5 py-0.5 rounded-md;
-  border: 1px solid color-mix(in oklab, var(--color-base-content) 18%, transparent);
+  border: 1px solid
+    color-mix(in oklab, var(--color-base-content) 18%, transparent);
   color: color-mix(in oklab, var(--color-base-content) 74%, transparent);
   background: color-mix(in oklab, var(--color-base-content) 10%, transparent);
 }
@@ -411,13 +457,25 @@
 
 .taxonomy-playlist-btn--primary {
   border-color: color-mix(in oklab, var(--color-primary) 44%, transparent);
-  background: color-mix(in oklab, var(--color-primary) 14%, var(--color-base-100));
-  color: color-mix(in oklab, var(--color-primary) 92%, var(--color-base-content));
+  background: color-mix(
+    in oklab,
+    var(--color-primary) 14%,
+    var(--color-base-100)
+  );
+  color: color-mix(
+    in oklab,
+    var(--color-primary) 92%,
+    var(--color-base-content)
+  );
 }
 
 .taxonomy-playlist-btn--primary:hover {
   border-color: color-mix(in oklab, var(--color-primary) 56%, transparent);
-  background: color-mix(in oklab, var(--color-primary) 22%, var(--color-base-100));
+  background: color-mix(
+    in oklab,
+    var(--color-primary) 22%,
+    var(--color-base-100)
+  );
 }
 
 .taxonomy-playlist-btn:disabled {
@@ -450,7 +508,11 @@
 
 .taxonomy-playlist-row.is-drag-over {
   border-color: color-mix(in oklab, var(--color-primary) 36%, transparent);
-  background: color-mix(in oklab, var(--color-primary) 9%, var(--color-base-100));
+  background: color-mix(
+    in oklab,
+    var(--color-primary) 9%,
+    var(--color-base-100)
+  );
 }
 
 .taxonomy-playlist-row + .taxonomy-playlist-row {
@@ -505,19 +567,27 @@
 
 .status-pill--neutral {
   color: color-mix(in oklab, var(--color-base-content) 72%, transparent);
-  border: 1px solid color-mix(in oklab, var(--color-base-content) 18%, transparent);
+  border: 1px solid
+    color-mix(in oklab, var(--color-base-content) 18%, transparent);
   background: color-mix(in oklab, var(--color-base-content) 7%, transparent);
 }
 
 .status-pill--pending {
-  color: color-mix(in oklab, var(--color-warning) 75%, var(--color-base-content));
+  color: color-mix(
+    in oklab,
+    var(--color-warning) 75%,
+    var(--color-base-content)
+  );
   border: 1px solid color-mix(in oklab, var(--color-warning) 28%, transparent);
   background: color-mix(in oklab, var(--color-warning) 12%, transparent);
 }
 
 .status-pill--online {
-  color: color-mix(in oklab, var(--color-success) 85%, var(--color-base-content));
+  color: color-mix(
+    in oklab,
+    var(--color-success) 85%,
+    var(--color-base-content)
+  );
   border: 1px solid color-mix(in oklab, var(--color-success) 34%, transparent);
   background: color-mix(in oklab, var(--color-success) 12%, transparent);
 }
-

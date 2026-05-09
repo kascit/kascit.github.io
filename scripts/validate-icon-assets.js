@@ -50,7 +50,11 @@ function main() {
       }
       seen.add(ref);
 
-      const diskPath = path.join(ROOT, "static", ref.replace(/^\/icons\//, "icons/"));
+      const diskPath = path.join(
+        ROOT,
+        "static",
+        ref.replace(/^\/icons\//, "icons/"),
+      );
       const fileName = path.basename(ref);
       if (!fs.existsSync(diskPath) && !GENERATED_ICON_FILES.has(fileName)) {
         missing.push({ ref, source: relPath });
@@ -66,7 +70,9 @@ function main() {
     process.exit(1);
   }
 
-  console.log(`Icon asset references validated (${seen.size} unique references).`);
+  console.log(
+    `Icon asset references validated (${seen.size} unique references).`,
+  );
 }
 
 try {

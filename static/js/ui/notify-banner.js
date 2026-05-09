@@ -23,7 +23,7 @@
       if (!raw) return 0;
       var value = Number(raw);
       return Number.isFinite(value) ? value : 0;
-    } catch (_) {
+    } catch {
       return 0;
     }
   }
@@ -31,7 +31,7 @@
   function writeTimestamp(key) {
     try {
       localStorage.setItem(key, String(Date.now()));
-    } catch (_) {
+    } catch {
       // localStorage can fail in strict privacy mode
     }
   }
@@ -59,11 +59,7 @@
     if (!toast || !toastAlert || !toastMsg) return;
 
     var variant =
-      type === "success"
-        ? "success"
-        : type === "error"
-        ? "error"
-        : "info";
+      type === "success" ? "success" : type === "error" ? "error" : "info";
 
     toastAlert.classList.remove(
       "notify-toast__content--success",
@@ -92,7 +88,7 @@
       if (maybePromise && typeof maybePromise.then === "function") {
         return maybePromise;
       }
-    } catch (_) {
+    } catch {
       return Promise.resolve("denied");
     }
 
@@ -105,7 +101,9 @@
     navigator.serviceWorker.ready
       .then(function (registration) {
         var target =
-          registration.active || registration.waiting || registration.installing;
+          registration.active ||
+          registration.waiting ||
+          registration.installing;
         if (target) {
           target.postMessage({ type: "CHECK_LATEST_POST" });
         }
@@ -123,8 +121,7 @@
     typeof Notification !== "undefined" &&
     Notification.permission === "granted";
   var notificationsDenied =
-    typeof Notification !== "undefined" &&
-    Notification.permission === "denied";
+    typeof Notification !== "undefined" && Notification.permission === "denied";
   var canPrompt =
     typeof Notification !== "undefined" &&
     Notification.permission === "default";
@@ -185,7 +182,10 @@
             hideBanner();
             writeTimestamp(DISMISS_KEY);
             requestLatestCheckFromWorker();
-            showToast("Awesome. New posts will trigger notifications.", "success");
+            showToast(
+              "Awesome. New posts will trigger notifications.",
+              "success",
+            );
             return;
           }
 
@@ -202,7 +202,10 @@
           showToast("Permission was not granted this time.", "info");
         })
         .catch(function () {
-          showToast("Could not request notification permission right now.", "error");
+          showToast(
+            "Could not request notification permission right now.",
+            "error",
+          );
         })
         .then(function () {
           setEnableBusy(false);

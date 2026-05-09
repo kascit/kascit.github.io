@@ -4,7 +4,12 @@
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
-const { ROOT, assertInsideRoot, collectFiles, toPosixRel } = require("./lib/shared");
+const {
+  ROOT,
+  assertInsideRoot,
+  collectFiles,
+  toPosixRel,
+} = require("./lib/shared");
 
 const PUBLIC_DIR = path.resolve(ROOT, "public");
 const SITE_ORIGIN = "https://dhanur.me";
@@ -22,12 +27,7 @@ const FINGERPRINTABLE_EXTENSIONS = new Set([
   "woff",
   "woff2",
 ]);
-const FINGERPRINTABLE_PREFIXES = [
-  "images/",
-  "fonts/",
-  "css/",
-  "js/",
-];
+const FINGERPRINTABLE_PREFIXES = ["images/", "fonts/", "css/", "js/"];
 const REWRITE_EXTENSIONS = new Set([
   ".html",
   ".xml",
@@ -41,17 +41,28 @@ const REWRITE_EXTENSIONS = new Set([
 const STABLE_LOADER_ENTRIES = [];
 
 function fileHash(contents) {
-  return crypto.createHash("sha256").update(contents).digest("hex").slice(0, 12);
+  return crypto
+    .createHash("sha256")
+    .update(contents)
+    .digest("hex")
+    .slice(0, 12);
 }
 
 function listPublicFiles() {
-  return collectFiles(PUBLIC_DIR).map((absPath) => toPosixRel(absPath, PUBLIC_DIR));
+  return collectFiles(PUBLIC_DIR).map((absPath) =>
+    toPosixRel(absPath, PUBLIC_DIR),
+  );
 }
 
 function shouldFingerprint(relPath) {
   const normalized = String(relPath || "").toLowerCase();
-  
-  if (normalized === "sw.js" || normalized === "sw.min.js" || normalized === "js/shell.min.js") return false;
+
+  if (
+    normalized === "sw.js" ||
+    normalized === "sw.min.js" ||
+    normalized === "js/shell.min.js"
+  )
+    return false;
 
   const parsed = path.posix.parse(normalized);
 
@@ -60,7 +71,9 @@ function shouldFingerprint(relPath) {
   const ext = parsed.ext.replace(/^\./, "");
   if (FINGERPRINTABLE_EXTENSIONS.has(ext)) return true;
 
-  return FINGERPRINTABLE_PREFIXES.some((prefix) => normalized.startsWith(prefix));
+  return FINGERPRINTABLE_PREFIXES.some((prefix) =>
+    normalized.startsWith(prefix),
+  );
 }
 
 function shouldRewrite(relPath) {
@@ -80,8 +93,12 @@ function makeReplacementPairsForFile(relPath, mappings) {
     pairs.push([`${SITE_ORIGIN}${oldAbs}`, `${SITE_ORIGIN}${newAbs}`]);
     pairs.push([oldAbs, newAbs]);
 
-    const oldRel = path.posix.relative(fromDir, mapping.sourceRel) || path.posix.basename(mapping.sourceRel);
-    const newRel = path.posix.relative(fromDir, mapping.fingerprintedRel) || path.posix.basename(mapping.fingerprintedRel);
+    const oldRel =
+      path.posix.relative(fromDir, mapping.sourceRel) ||
+      path.posix.basename(mapping.sourceRel);
+    const newRel =
+      path.posix.relative(fromDir, mapping.fingerprintedRel) ||
+      path.posix.basename(mapping.fingerprintedRel);
 
     pairs.push([oldRel, newRel]);
     pairs.push([`./${oldRel}`, `./${newRel}`]);
@@ -92,8 +109,12 @@ function makeReplacementPairsForFile(relPath, mappings) {
 }
 
 function rewriteReferences(mappings) {
-  const stableSourceSet = new Set(STABLE_LOADER_ENTRIES.map((entry) => entry.sourceRel));
-  const rewriteMappings = mappings.filter((mapping) => !stableSourceSet.has(mapping.sourceRel));
+  const stableSourceSet = new Set(
+    STABLE_LOADER_ENTRIES.map((entry) => entry.sourceRel),
+  );
+  const rewriteMappings = mappings.filter(
+    (mapping) => !stableSourceSet.has(mapping.sourceRel),
+  );
   const files = listPublicFiles().filter(shouldRewrite);
 
   let touched = 0;
@@ -119,7 +140,10 @@ function rewriteReferences(mappings) {
 }
 
 function toPublicAbsolutePath(relPath) {
-  return assertInsideRoot(path.join(PUBLIC_DIR, ...relPath.split("/")), "Public target path");
+  return assertInsideRoot(
+    path.join(PUBLIC_DIR, ...relPath.split("/")),
+    "Public target path",
+  );
 }
 
 function stableLoaderContent(kind, targetRel) {
@@ -141,7 +165,9 @@ function stableLoaderContent(kind, targetRel) {
 }
 
 function emitStableLoaders(mappings) {
-  const mappingBySource = new Map(mappings.map((mapping) => [mapping.sourceRel, mapping.fingerprintedRel]));
+  const mappingBySource = new Map(
+    mappings.map((mapping) => [mapping.sourceRel, mapping.fingerprintedRel]),
+  );
   const written = [];
 
   for (const entry of STABLE_LOADER_ENTRIES) {
@@ -151,7 +177,11 @@ function emitStableLoaders(mappings) {
     const stableAbs = toPublicAbsolutePath(entry.stableRel);
     const stableDir = path.dirname(stableAbs);
     fs.mkdirSync(stableDir, { recursive: true });
-    fs.writeFileSync(stableAbs, stableLoaderContent(entry.kind, targetRel), "utf8");
+    fs.writeFileSync(
+      stableAbs,
+      stableLoaderContent(entry.kind, targetRel),
+      "utf8",
+    );
     written.push({ stableRel: entry.stableRel, targetRel });
   }
 
@@ -172,7 +202,11 @@ function writeAssetManifest(mappings, stableLoaders) {
     })),
   };
 
-  fs.writeFileSync(manifestPath, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+  fs.writeFileSync(
+    manifestPath,
+    `${JSON.stringify(payload, null, 2)}\n`,
+    "utf8",
+  );
 }
 
 function main() {
@@ -195,7 +229,10 @@ function main() {
     const fingerprintedRel = parsed.dir
       ? path.posix.join(parsed.dir, fingerprintedName)
       : fingerprintedName;
-    const fingerprintedAbs = path.join(PUBLIC_DIR, ...fingerprintedRel.split("/"));
+    const fingerprintedAbs = path.join(
+      PUBLIC_DIR,
+      ...fingerprintedRel.split("/"),
+    );
 
     if (fs.existsSync(fingerprintedAbs)) {
       fs.rmSync(fingerprintedAbs, { force: true });
@@ -208,7 +245,9 @@ function main() {
   mappings.sort((a, b) => a.sourceRel.localeCompare(b.sourceRel));
 
   if (mappings.length === 0) {
-    console.log("No fingerprint targets found; skipping asset fingerprint step.");
+    console.log(
+      "No fingerprint targets found; skipping asset fingerprint step.",
+    );
     return;
   }
 
@@ -216,7 +255,9 @@ function main() {
   const stableLoaders = emitStableLoaders(mappings);
   writeAssetManifest(mappings, stableLoaders);
 
-  console.log(`Fingerprinted ${mappings.length} assets (original files removed) and rewrote ${touchedFiles} files.`);
+  console.log(
+    `Fingerprinted ${mappings.length} assets (original files removed) and rewrote ${touchedFiles} files.`,
+  );
   for (const mapping of mappings) {
     console.log(` - /${mapping.sourceRel} -> /${mapping.fingerprintedRel}`);
   }

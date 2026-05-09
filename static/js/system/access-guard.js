@@ -52,14 +52,22 @@ export function checkAccess(config = {}, authStatus = null) {
   return { allowed: true };
 }
 
-export function renderAccessWall(slot, reason = "auth_required", appName = "This app") {
+export function renderAccessWall(
+  slot,
+  reason = "auth_required",
+  appName = "This app",
+) {
   if (!slot) return;
 
   ensureAccessWallStyles();
 
   const isAdminRequired = reason === "admin_required";
-  const iconClass = isAdminRequired ? "fa-solid fa-shield-halved" : "fa-solid fa-lock";
-  const title = isAdminRequired ? "Admin access required" : "Sign in to continue";
+  const iconClass = isAdminRequired
+    ? "fa-solid fa-shield-halved"
+    : "fa-solid fa-lock";
+  const title = isAdminRequired
+    ? "Admin access required"
+    : "Sign in to continue";
   const subtitle = isAdminRequired
     ? `${appName} is restricted to administrator sessions.`
     : `${appName} requires a dhanur.me account to continue.`;

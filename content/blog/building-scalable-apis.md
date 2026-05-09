@@ -10,6 +10,7 @@ thumbnail_image = "images/thumbs/code2.jpg"
 tags = ["backend", "systems", "automation", "frontend"]
 categories = ["engineering"]
 +++
+
 I've built a lot of APIs. Some were good. Most were "good enough." A few were trainwrecks that still haunt me. Here's what I've learned about building REST APIs with Spring Boot that won't make your teammates (or your future self) want to cry.
 
 ## Why Spring Boot Though?
@@ -279,7 +280,7 @@ spring.datasource.hikari.minimum-idle=5
 spring.datasource.hikari.connection-timeout=30000
 ```
 
-### 3. Indexes (Add them before your DB melts)
+### 3. Indices (Add them before your DB melts)
 
 ```java
 @Entity
@@ -298,7 +299,7 @@ Version your API from day one, because retrofitting versioned routes later is us
 
 ## The Reality Check
 
-Perfect APIs don't exist. You'll make tradeoffs. You'll ship bugs. You'll realize your architecture needs refactoring 6 months in.
+Perfect APIs don't exist. You'll make trade-offs. You'll ship bugs. You'll realize your architecture needs refactoring 6 months in.
 
 That's fine. Ship something that works, iterate, and make it better. Just avoid the obvious pitfalls:
 

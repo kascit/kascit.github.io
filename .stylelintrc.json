@@ -5,9 +5,7 @@
     "declaration-block-no-duplicate-properties": [
       true,
       {
-        "ignore": [
-          "consecutive-duplicates-with-different-values"
-        ]
+        "ignore": ["consecutive-duplicates-with-different-values"]
       }
     ],
     "declaration-block-no-shorthand-property-overrides": true,
@@ -21,17 +19,13 @@
     "property-no-unknown": [
       true,
       {
-        "ignoreProperties": [
-          "themes"
-        ]
+        "ignoreProperties": ["themes"]
       }
     ],
     "selector-pseudo-class-no-unknown": [
       true,
       {
-        "ignorePseudoClasses": [
-          "global"
-        ]
+        "ignorePseudoClasses": ["global"]
       }
     ],
     "selector-pseudo-element-no-unknown": true,

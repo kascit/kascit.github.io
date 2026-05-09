@@ -1,0 +1,3 @@
+[codespell]
+ignore-words-list = doubleclick,te,ue
+skip = *.min.js,public,static/js/shell.min.js

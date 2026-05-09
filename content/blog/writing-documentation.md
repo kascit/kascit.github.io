@@ -10,6 +10,7 @@ thumbnail_image = "images/thumbs/typing.jpg"
 tags = ["writing", "systems", "automation", "tooling"]
 categories = ["engineering"]
 +++
+
 Most documentation fails for a simple reason: it is written once, merged, and then abandoned while the product keeps changing. The first draft is usually good enough for the sprint demo, but not resilient enough for real users who arrive months later with different assumptions and different urgency.
 
 The second reason is perspective drift. Experts forget what is obvious only after years of context, so they accidentally skip setup steps, naming conventions, and error expectations that new readers need before they can even begin.

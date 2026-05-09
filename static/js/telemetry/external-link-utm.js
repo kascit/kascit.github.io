@@ -23,7 +23,10 @@ function isTrackableExternalLink(anchor) {
   }
 
   // Exempt all *.dhanur.me domains and dhanur.me itself
-  if (linkUrl.hostname === "dhanur.me" || linkUrl.hostname.endsWith(".dhanur.me")) {
+  if (
+    linkUrl.hostname === "dhanur.me" ||
+    linkUrl.hostname.endsWith(".dhanur.me")
+  ) {
     return false;
   }
 

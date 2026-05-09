@@ -6,7 +6,7 @@
 
 export function getConfig() {
   if (window.__siteConfig) return window.__siteConfig;
-  
+
   // 1. Try to load native Zola JSON payload
   const jsonEl = document.getElementById("site-config");
   if (jsonEl) {

@@ -33,7 +33,7 @@ const heldKeys = new Set();
 function readSessionStorage(key) {
   try {
     return window.sessionStorage.getItem(key);
-  } catch (_error) {
+  } catch {
     return null;
   }
 }
@@ -41,7 +41,7 @@ function readSessionStorage(key) {
 function writeSessionStorage(key, value) {
   try {
     window.sessionStorage.setItem(key, value);
-  } catch (_error) {
+  } catch {
     // Ignore storage write failures.
   }
 }
@@ -49,7 +49,7 @@ function writeSessionStorage(key, value) {
 function removeSessionStorage(key) {
   try {
     window.sessionStorage.removeItem(key);
-  } catch (_error) {
+  } catch {
     // Ignore storage remove failures.
   }
 }
@@ -80,14 +80,16 @@ function readAnchorSession() {
     }
 
     return { key, expiresAt };
-  } catch (_error) {
+  } catch {
     removeSessionStorage(ANCHOR_SESSION_KEY);
     return null;
   }
 }
 
 function canonicalizeToken(token) {
-  const value = String(token || "").trim().toLowerCase();
+  const value = String(token || "")
+    .trim()
+    .toLowerCase();
 
   if (value === "control") return "ctrl";
   if (value === "cmd" || value === "command") return "meta";
@@ -113,7 +115,10 @@ function parseSingleStepSpec(spec) {
   const source = String(spec || "").trim();
   if (!source) return null;
 
-  const parts = source.split("+").map((part) => canonicalizeToken(part)).filter(Boolean);
+  const parts = source
+    .split("+")
+    .map((part) => canonicalizeToken(part))
+    .filter(Boolean);
   if (parts.length === 0) return null;
 
   const descriptor = {
@@ -159,10 +164,15 @@ function parseKeybindSpec(spec) {
   const source = String(spec || "").trim();
   if (!source) return null;
 
-  const rawSteps = source.split(/\s+/).map((step) => step.trim()).filter(Boolean);
+  const rawSteps = source
+    .split(/\s+/)
+    .map((step) => step.trim())
+    .filter(Boolean);
   if (rawSteps.length === 0) return null;
 
-  const steps = rawSteps.map((step) => parseSingleStepSpec(step)).filter(Boolean);
+  const steps = rawSteps
+    .map((step) => parseSingleStepSpec(step))
+    .filter(Boolean);
   if (steps.length !== rawSteps.length) return null;
 
   return { steps };
@@ -180,9 +190,12 @@ function isEditableTarget(target) {
   if (target.isContentEditable) return true;
 
   const tagName = target.tagName ? target.tagName.toLowerCase() : "";
-  if (tagName === "input" || tagName === "textarea" || tagName === "select") return true;
+  if (tagName === "input" || tagName === "textarea" || tagName === "select")
+    return true;
 
-  return !!target.closest("input, textarea, select, [contenteditable=''], [contenteditable='true']");
+  return !!target.closest(
+    "input, textarea, select, [contenteditable=''], [contenteditable='true']",
+  );
 }
 
 function isSafePlainShortcutTarget(target) {
@@ -251,13 +264,15 @@ function isElementLikelySameTabInternalLink(element) {
   const href = String(element.getAttribute("href") || "").trim();
   if (!href || href.startsWith("#")) return false;
 
-  const target = String(element.getAttribute("target") || "").trim().toLowerCase();
+  const target = String(element.getAttribute("target") || "")
+    .trim()
+    .toLowerCase();
   if (target && target !== "_self") return false;
 
   try {
     const nextUrl = new URL(href, window.location.origin);
     return nextUrl.origin === window.location.origin;
-  } catch (_error) {
+  } catch {
     return false;
   }
 }
@@ -265,7 +280,10 @@ function isElementLikelySameTabInternalLink(element) {
 function buildBuiltinShortcutEntries() {
   const specs = [
     { keybind: "d h", execute: () => executeSelectorClick(HOME_SELECTORS) },
-    { keybind: "d arrowleft", execute: () => executeSelectorClick(PREV_SELECTORS) },
+    {
+      keybind: "d arrowleft",
+      execute: () => executeSelectorClick(PREV_SELECTORS),
+    },
     { keybind: "d arrowright", execute: executeNextShortcut },
     {
       keybind: "d f",
@@ -292,7 +310,8 @@ function buildBuiltinShortcutEntries() {
 
       return {
         descriptors: [descriptor],
-        persistAnchorAcrossNavigation: item.persistAnchorAcrossNavigation !== false,
+        persistAnchorAcrossNavigation:
+          item.persistAnchorAcrossNavigation !== false,
         execute: item.execute,
       };
     })
@@ -356,10 +375,15 @@ function armChordTimeout() {
   }, CHORD_TIMEOUT_MS);
 }
 
-function beginChordCandidatesWithAnchor(candidates, anchorKey, anchorSessionExpiry = 0) {
+function beginChordCandidatesWithAnchor(
+  candidates,
+  anchorKey,
+  anchorSessionExpiry = 0,
+) {
   pendingChords = candidates;
   activeAnchorKey = anchorKey || "";
-  activeAnchorSessionExpiry = Number(anchorSessionExpiry) > Date.now() ? Number(anchorSessionExpiry) : 0;
+  activeAnchorSessionExpiry =
+    Number(anchorSessionExpiry) > Date.now() ? Number(anchorSessionExpiry) : 0;
   armChordTimeout();
 }
 
@@ -420,7 +444,8 @@ function handlePendingChord(event) {
 
     matched = true;
 
-    const isFinalStep = candidate.stepIndex >= candidate.descriptor.steps.length - 1;
+    const isFinalStep =
+      candidate.stepIndex >= candidate.descriptor.steps.length - 1;
     if (isFinalStep) {
       if (!executed) {
         executed = runAction(candidate.entry);
@@ -476,12 +501,17 @@ function collectShortcutEntries() {
     const descriptors = parseKeybindList(element.getAttribute("data-keybind"));
     if (descriptors.length === 0) return;
 
-    const action = String(element.getAttribute("data-keybind-action") || DEFAULT_ACTION).trim().toLowerCase();
+    const action = String(
+      element.getAttribute("data-keybind-action") || DEFAULT_ACTION,
+    )
+      .trim()
+      .toLowerCase();
     if (!SUPPORTED_ACTIONS.has(action)) return;
 
     shortcutEntries.push({
       descriptors,
-      persistAnchorAcrossNavigation: isElementLikelySameTabInternalLink(element),
+      persistAnchorAcrossNavigation:
+        isElementLikelySameTabInternalLink(element),
       execute() {
         if (!isElementActionable(element)) return false;
 
@@ -608,7 +638,11 @@ export function initKeyboardShortcuts() {
   if (persistedAnchor) {
     const persistedCandidates = buildAnchorCandidates(persistedAnchor.key);
     if (persistedCandidates.length > 0) {
-      beginChordCandidatesWithAnchor(persistedCandidates, persistedAnchor.key, persistedAnchor.expiresAt);
+      beginChordCandidatesWithAnchor(
+        persistedCandidates,
+        persistedAnchor.key,
+        persistedAnchor.expiresAt,
+      );
       heldKeys.add(persistedAnchor.key);
     }
   }

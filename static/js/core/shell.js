@@ -28,10 +28,13 @@ const DEFAULT_SHELL_CONFIG = {
 
 function getShellRuntimeConfig() {
   const rawConfig = getConfig() || {};
-  const nestedShell = rawConfig.shell && typeof rawConfig.shell === 'object' ? rawConfig.shell : {};
+  const nestedShell =
+    rawConfig.shell && typeof rawConfig.shell === "object"
+      ? rawConfig.shell
+      : {};
   const merged = { ...DEFAULT_SHELL_CONFIG, ...rawConfig, ...nestedShell };
 
-  if (typeof merged.shellPath !== 'string' || merged.shellPath.trim() === '') {
+  if (typeof merged.shellPath !== "string" || merged.shellPath.trim() === "") {
     merged.shellPath = DEFAULT_SHELL_CONFIG.shellPath;
   }
 
@@ -46,15 +49,20 @@ function maybeRegisterServiceWorker(config) {
   if (config.enablePwa === false) return;
   if (!("serviceWorker" in navigator) || !window.isSecureContext) return;
 
-  const swPath = typeof config.swPath === 'string' && config.swPath.trim() !== ''
-    ? config.swPath
-    : '/sw.js';
+  const swPath =
+    typeof config.swPath === "string" && config.swPath.trim() !== ""
+      ? config.swPath
+      : "/sw.js";
 
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register(swPath).catch(() => {
-      // Subdomains can opt out or provide their own /sw.js.
-    });
-  }, { once: true });
+  window.addEventListener(
+    "load",
+    () => {
+      navigator.serviceWorker.register(swPath).catch(() => {
+        // Subdomains can opt out or provide their own /sw.js.
+      });
+    },
+    { once: true },
+  );
 }
 
 // Helpers to inject CSS and favicon assets into foreign documents.
@@ -62,22 +70,26 @@ function injectCSS(sameOrigin, config) {
   if (config.noCss) return;
   if (document.querySelector('link[data-shell-style="main"]')) return;
 
-  const cssBase = sameOrigin ? '' : BASE_URL;
-  const shellCssHref = sameOrigin ? `${cssBase}/css/main.css` : `${cssBase}/css/dui.css`;
+  const cssBase = sameOrigin ? "" : BASE_URL;
+  const shellCssHref = sameOrigin
+    ? `${cssBase}/css/main.css`
+    : `${cssBase}/css/dui.css`;
 
   const mainLink = document.createElement("link");
   mainLink.rel = "stylesheet";
   mainLink.href = shellCssHref;
-  mainLink.setAttribute('data-shell-style', 'main');
+  mainLink.setAttribute("data-shell-style", "main");
   if (!sameOrigin) mainLink.crossOrigin = "anonymous";
   document.head.appendChild(mainLink);
 
   const faLink = document.createElement("link");
   faLink.rel = "stylesheet";
   faLink.href = `${cssBase}/css/font-awesome.min.css`;
-  faLink.setAttribute('data-shell-style', 'fa');
+  faLink.setAttribute("data-shell-style", "fa");
   faLink.media = "print";
-  faLink.onload = function () { this.media = "all"; };
+  faLink.onload = function () {
+    this.media = "all";
+  };
   if (!sameOrigin) faLink.crossOrigin = "anonymous";
   document.head.appendChild(faLink);
 }
@@ -86,28 +98,46 @@ function injectFavicons(sameOrigin, config) {
   if (config.favicon === false) return;
   const iconBase = sameOrigin ? "/icons/" : `${BASE_URL}/icons/`;
 
-  document.querySelectorAll('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]').forEach(el => el.remove());
+  document
+    .querySelectorAll(
+      'link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]',
+    )
+    .forEach((el) => el.remove());
 
   // For cross-origin subdomains, skip .ico files to avoid CORB errors.
   // Browsers block opaque cross-origin .ico reads even with CORS headers.
   const iconLinks = [
-    { rel: "icon", type: "image/png", sizes: "96x96", href: `${iconBase}favicon-96x96-transparent.png` },
+    {
+      rel: "icon",
+      type: "image/png",
+      sizes: "96x96",
+      href: `${iconBase}favicon-96x96-transparent.png`,
+    },
     { rel: "icon", type: "image/svg+xml", href: `${iconBase}favicon.svg` },
-    { rel: "apple-touch-icon", sizes: "180x180", href: `${iconBase}apple-touch-icon-180x180-transparent.png` }
+    {
+      rel: "apple-touch-icon",
+      sizes: "180x180",
+      href: `${iconBase}apple-touch-icon-180x180-transparent.png`,
+    },
   ];
 
   // Only include .ico for same-origin (avoids CORB on subdomains)
   if (sameOrigin) {
-    iconLinks.push({ rel: "shortcut icon", href: `${iconBase}favicon-transparent.ico` });
+    iconLinks.push({
+      rel: "shortcut icon",
+      href: `${iconBase}favicon-transparent.ico`,
+    });
   }
 
   // Avoid cross-origin webmanifest warnings on subdomains.
   if (sameOrigin) {
-    document.querySelectorAll('link[rel="manifest"]').forEach(el => el.remove());
+    document
+      .querySelectorAll('link[rel="manifest"]')
+      .forEach((el) => el.remove());
     iconLinks.push({ rel: "manifest", href: `${iconBase}site.webmanifest` });
   }
 
-  iconLinks.forEach(f => {
+  iconLinks.forEach((f) => {
     const link = document.createElement("link");
     link.rel = f.rel;
     if (f.type) link.type = f.type;
@@ -120,24 +150,32 @@ function injectFavicons(sameOrigin, config) {
 
 function applyChromeVisibility(root, config) {
   if (!config.showLanguage) {
-    root.querySelectorAll('[data-nav-chrome="lang"]').forEach(node => node.remove());
+    root
+      .querySelectorAll('[data-nav-chrome="lang"]')
+      .forEach((node) => node.remove());
   }
   if (!config.showAppsGrid) {
-    root.querySelectorAll('[data-nav-chrome="apps"]').forEach(node => node.remove());
+    root
+      .querySelectorAll('[data-nav-chrome="apps"]')
+      .forEach((node) => node.remove());
   }
   if (!config.showAccountButton) {
-    root.querySelectorAll('[data-nav-chrome="account"]').forEach(node => node.remove());
+    root
+      .querySelectorAll('[data-nav-chrome="account"]')
+      .forEach((node) => node.remove());
   }
   if (!config.showThemeToggle) {
-    root.querySelectorAll('[data-nav-chrome="theme"]').forEach(node => node.remove());
+    root
+      .querySelectorAll('[data-nav-chrome="theme"]')
+      .forEach((node) => node.remove());
   }
   if (!config.showMobileMenu) {
-    const mobileBtn = root.querySelector('#shell-mobile-toggle');
+    const mobileBtn = root.querySelector("#shell-mobile-toggle");
     if (mobileBtn) {
-      const wrapper = mobileBtn.closest('.flex-none');
+      const wrapper = mobileBtn.closest(".flex-none");
       if (wrapper) wrapper.remove();
     }
-    const mobilePanel = root.querySelector('[data-shell-mobile-panel]');
+    const mobilePanel = root.querySelector("[data-shell-mobile-panel]");
     if (mobilePanel) mobilePanel.remove();
   }
 }
@@ -164,7 +202,9 @@ function safeIconClass(value) {
 }
 
 function renderAppsGrid(shellRoot, apps) {
-  const grids = shellRoot.querySelectorAll('[data-apps-grid], [data-apps-grid-sidebar], [data-apps-grid-mobile]');
+  const grids = shellRoot.querySelectorAll(
+    "[data-apps-grid], [data-apps-grid-sidebar], [data-apps-grid-mobile]",
+  );
   if (!grids.length) return;
 
   const entries = Array.isArray(apps) ? apps : [];
@@ -184,13 +224,15 @@ function renderAppsGrid(shellRoot, apps) {
       anchor.className = `group flex flex-col items-center gap-1.5 ${padding} rounded-md hover:bg-base-200 transition-colors duration-200 no-underline hover:no-underline text-base-content`;
 
       const iconWrap = document.createElement("div");
-      iconWrap.className = "w-10 h-10 rounded-md bg-base-300/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors";
+      iconWrap.className =
+        "w-10 h-10 rounded-md bg-base-300/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors";
 
       const iconNode = document.createElement("i");
       iconNode.className = `${icon} text-lg`;
 
       const label = document.createElement("span");
-      label.className = "text-[10px] font-medium opacity-70 group-hover:opacity-100";
+      label.className =
+        "text-[10px] font-medium opacity-70 group-hover:opacity-100";
       label.textContent = name;
 
       iconWrap.appendChild(iconNode);
@@ -212,37 +254,37 @@ function updateAppsGridForRole(shellRoot, role) {
 
 // --- Mobile panel logic ---
 function initMobilePanel(shellRoot) {
-  const panel = shellRoot.querySelector('[data-shell-mobile-panel]');
+  const panel = shellRoot.querySelector("[data-shell-mobile-panel]");
   if (!panel) return;
 
-  const toggle = shellRoot.querySelector('#shell-mobile-toggle');
-  const backdrop = panel.querySelector('[data-shell-mobile-backdrop]');
-  const drawer = panel.querySelector('[data-shell-mobile-drawer]');
-  const closeBtn = panel.querySelector('[data-shell-mobile-close]');
+  const toggle = shellRoot.querySelector("#shell-mobile-toggle");
+  const backdrop = panel.querySelector("[data-shell-mobile-backdrop]");
+  const drawer = panel.querySelector("[data-shell-mobile-drawer]");
+  const closeBtn = panel.querySelector("[data-shell-mobile-close]");
 
   function openPanel() {
-    panel.classList.remove('hidden');
+    panel.classList.remove("hidden");
     // Force reflow before adding transition class
     void drawer.offsetWidth;
-    drawer.style.transform = 'translateX(0)';
-    document.body.style.overflow = 'hidden';
+    drawer.style.transform = "translateX(0)";
+    document.body.style.overflow = "hidden";
   }
 
   function closePanel() {
-    drawer.style.transform = 'translateX(-100%)';
-    document.body.style.overflow = '';
+    drawer.style.transform = "translateX(-100%)";
+    document.body.style.overflow = "";
     setTimeout(() => {
-      panel.classList.add('hidden');
+      panel.classList.add("hidden");
     }, 300);
   }
 
-  if (toggle) toggle.addEventListener('click', openPanel);
-  if (backdrop) backdrop.addEventListener('click', closePanel);
-  if (closeBtn) closeBtn.addEventListener('click', closePanel);
+  if (toggle) toggle.addEventListener("click", openPanel);
+  if (backdrop) backdrop.addEventListener("click", closePanel);
+  if (closeBtn) closeBtn.addEventListener("click", closePanel);
 
   // Close on escape
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && !panel.classList.contains('hidden')) {
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !panel.classList.contains("hidden")) {
       closePanel();
     }
   });
@@ -250,14 +292,16 @@ function initMobilePanel(shellRoot) {
 
 // --- Mobile auth sync ---
 function syncMobileAuth(shellRoot, authStatus) {
-  const panel = shellRoot.querySelector('[data-shell-mobile-panel]');
+  const panel = shellRoot.querySelector("[data-shell-mobile-panel]");
   if (!panel) return;
 
   const isAuthed = authStatus?.authenticated === true;
   const user = authStatus?.user;
 
   const guestAvatar = panel.querySelector('[data-auth="mobile-guest-avatar"]');
-  const authedAvatar = panel.querySelector('[data-auth="mobile-authed-avatar"]');
+  const authedAvatar = panel.querySelector(
+    '[data-auth="mobile-authed-avatar"]',
+  );
   const nameEl = panel.querySelector('[data-auth="mobile-name"]');
   const emailEl = panel.querySelector('[data-auth="mobile-email"]');
   const loginBtn = panel.querySelector('[data-auth="mobile-login-btn"]');
@@ -265,25 +309,25 @@ function syncMobileAuth(shellRoot, authStatus) {
   const accountBtn = panel.querySelector('[data-auth="mobile-account-btn"]');
 
   if (isAuthed && user) {
-    if (guestAvatar) guestAvatar.classList.add('hidden');
+    if (guestAvatar) guestAvatar.classList.add("hidden");
     if (authedAvatar) {
-      authedAvatar.classList.remove('hidden');
-      const img = authedAvatar.querySelector('img');
-      if (img) img.src = user.avatar_url || '';
+      authedAvatar.classList.remove("hidden");
+      const img = authedAvatar.querySelector("img");
+      if (img) img.src = user.avatar_url || "";
     }
-    if (nameEl) nameEl.textContent = user.name || 'User';
-    if (emailEl) emailEl.textContent = user.email || '';
-    if (loginBtn) loginBtn.classList.add('hidden');
-    if (logoutBtn) logoutBtn.classList.remove('hidden');
-    if (accountBtn) accountBtn.classList.remove('hidden');
+    if (nameEl) nameEl.textContent = user.name || "User";
+    if (emailEl) emailEl.textContent = user.email || "";
+    if (loginBtn) loginBtn.classList.add("hidden");
+    if (logoutBtn) logoutBtn.classList.remove("hidden");
+    if (accountBtn) accountBtn.classList.remove("hidden");
   } else {
-    if (guestAvatar) guestAvatar.classList.remove('hidden');
-    if (authedAvatar) authedAvatar.classList.add('hidden');
-    if (nameEl) nameEl.textContent = 'Guest';
-    if (emailEl) emailEl.textContent = 'Not signed in';
-    if (loginBtn) loginBtn.classList.remove('hidden');
-    if (logoutBtn) logoutBtn.classList.add('hidden');
-    if (accountBtn) accountBtn.classList.add('hidden');
+    if (guestAvatar) guestAvatar.classList.remove("hidden");
+    if (authedAvatar) authedAvatar.classList.add("hidden");
+    if (nameEl) nameEl.textContent = "Guest";
+    if (emailEl) emailEl.textContent = "Not signed in";
+    if (loginBtn) loginBtn.classList.remove("hidden");
+    if (logoutBtn) logoutBtn.classList.add("hidden");
+    if (accountBtn) accountBtn.classList.add("hidden");
   }
 
   // Wire up mobile logout
@@ -291,10 +335,12 @@ function syncMobileAuth(shellRoot, authStatus) {
     logoutBtn.onclick = (e) => {
       e.preventDefault();
       const auth = window.AUTH;
-      if (auth && typeof auth.logout === 'function') {
+      if (auth && typeof auth.logout === "function") {
         const result = auth.logout();
-        if (result && typeof result.then === 'function') {
-          result.then(() => window.location.reload()).catch(() => window.location.reload());
+        if (result && typeof result.then === "function") {
+          result
+            .then(() => window.location.reload())
+            .catch(() => window.location.reload());
         } else {
           window.location.reload();
         }
@@ -307,10 +353,10 @@ function syncMobileAuth(shellRoot, authStatus) {
     loginBtn.onclick = (e) => {
       e.preventDefault();
       const auth = window.AUTH;
-      if (auth && typeof auth.login === 'function') {
+      if (auth && typeof auth.login === "function") {
         auth.login();
       } else {
-        window.location.href = 'https://auth.dhanur.me';
+        window.location.href = "https://auth.dhanur.me";
       }
     };
   }
@@ -320,8 +366,12 @@ function hydrate(shellRoot) {
   const config = getShellRuntimeConfig();
   const sameOrigin = isSameOriginHost();
 
-  const hasMainStyles = !!document.querySelector('link[rel="stylesheet"][href*="/css/main.css"], link[rel="stylesheet"][href*="/css/dui.css"], link[data-shell-style="main"]');
-  const hasFaviconLinks = !!document.querySelector('link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]');
+  const hasMainStyles = !!document.querySelector(
+    'link[rel="stylesheet"][href*="/css/main.css"], link[rel="stylesheet"][href*="/css/dui.css"], link[data-shell-style="main"]',
+  );
+  const hasFaviconLinks = !!document.querySelector(
+    'link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]',
+  );
 
   // On subdomains always inject shared assets.
   // On same-origin shell test pages, inject only if missing.
@@ -346,11 +396,17 @@ function hydrate(shellRoot) {
   initAuth(shellRoot, (authStatus) => {
     const role = authStatus?.role || "guest";
     const access = checkAccess(config, authStatus);
-    const contentSlot = shellRoot.querySelector('.site-nav-slot') || shellRoot.querySelector('.drawer-content');
+    const contentSlot =
+      shellRoot.querySelector(".site-nav-slot") ||
+      shellRoot.querySelector(".drawer-content");
 
     if (!access.allowed) {
       if (contentSlot) {
-        renderAccessWall(contentSlot, access.reason, document.title || "This app");
+        renderAccessWall(
+          contentSlot,
+          access.reason,
+          document.title || "This app",
+        );
       }
       return;
     }

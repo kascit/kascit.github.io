@@ -1,0 +1,21 @@
+{
+  "rules": {
+    "terminology": {
+      "exclude": [
+        "URL",
+        "Java",
+        "JavaScript",
+        "SQL",
+        "Bash",
+        "Node.js",
+        "PostgreSQL",
+        "MongoDB",
+        "Docker",
+        "Linux",
+        "Git",
+        "Website",
+        "Local storage"
+      ]
+    }
+  }
+}

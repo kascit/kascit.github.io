@@ -11,9 +11,10 @@ if (mode !== "static" && mode !== "public") {
   process.exit(1);
 }
 
-const outputDir = mode === "public"
-  ? path.resolve(ROOT, "public")
-  : path.resolve(ROOT, "static");
+const outputDir =
+  mode === "public"
+    ? path.resolve(ROOT, "public")
+    : path.resolve(ROOT, "static");
 
 const sourceCssPath = path.join(outputDir, "css", "font-awesome.min.css");
 const targetCssPath = path.join(outputDir, "css", "font-awesome.subset.css");
@@ -26,12 +27,19 @@ const SCAN_DIRS = [
   path.resolve(ROOT, "config.toml"),
 ];
 
-const SCAN_EXTENSIONS = new Set([".html", ".tera", ".md", ".toml", ".json", ".js"]);
+const SCAN_EXTENSIONS = new Set([
+  ".html",
+  ".tera",
+  ".md",
+  ".toml",
+  ".json",
+  ".js",
+]);
 
 function readText(filePath) {
   try {
     return fs.readFileSync(filePath, "utf8");
-  } catch (_error) {
+  } catch {
     return "";
   }
 }
@@ -144,20 +152,25 @@ function main() {
 
   const used = collectIconClasses();
   if (used.size === 0) {
-    console.warn("WARN: No Font Awesome classes found in repo scan; subset may be empty.");
+    console.warn(
+      "WARN: No Font Awesome classes found in repo scan; subset may be empty.",
+    );
   }
 
   const sourceCss = readText(sourceCssPath);
   const blocks = parseBlocks(sourceCss);
   const kept = blocks.filter((block) => shouldKeepBlock(block, used));
 
-  const banner = "/* Auto-generated Font Awesome subset. Do not edit by hand. */";
+  const banner =
+    "/* Auto-generated Font Awesome subset. Do not edit by hand. */";
   const payload = `${banner}\n${kept.join("\n")}\n`;
 
   fs.mkdirSync(path.dirname(targetCssPath), { recursive: true });
   fs.writeFileSync(targetCssPath, payload, "utf8");
 
-  console.log(`Generated Font Awesome subset with ${kept.length} rule block(s) at ${path.relative(ROOT, targetCssPath).replace(/\\/g, "/")}.`);
+  console.log(
+    `Generated Font Awesome subset with ${kept.length} rule block(s) at ${path.relative(ROOT, targetCssPath).replace(/\\/g, "/")}.`,
+  );
 }
 
 main();

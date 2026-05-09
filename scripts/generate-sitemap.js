@@ -54,14 +54,14 @@ function escapeXml(value) {
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;")
-    .replace(/\"/g, "&quot;")
+    .replace(/"/g, "&quot;")
     .replace(/'/g, "&apos;");
 }
 
 function buildSitemap(baseUrl, urls) {
   const lines = [
-    "<?xml version=\"1.0\" encoding=\"UTF-8\"?>",
-    "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\">",
+    '<?xml version="1.0" encoding="UTF-8"?>',
+    '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
   ];
 
   for (const url of urls) {
@@ -76,7 +76,9 @@ function buildSitemap(baseUrl, urls) {
 
 function main() {
   if (!fs.existsSync(PUBLIC_DIR) || !fs.statSync(PUBLIC_DIR).isDirectory()) {
-    console.error("Public output missing; build the site before generating sitemap.");
+    console.error(
+      "Public output missing; build the site before generating sitemap.",
+    );
     process.exit(1);
   }
 

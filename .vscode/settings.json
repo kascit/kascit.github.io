@@ -24,6 +24,7 @@
     "dotenv",
     "Duolingo",
     "fontawesome",
+    "GISCUS",
     "hikari",
     "Honeybadger",
     "isnt",

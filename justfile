@@ -292,6 +292,8 @@ css: setup-build-deps
     @node scripts/just-run.js "compile main css" -- {{ tailwind }} -i {{ css_in }} -o {{ css_out }} --minify
     @node scripts/just-log.js info "Compiling shell CSS bundle"
     @node scripts/just-run.js "compile shell css" -- {{ tailwind }} -i {{ dui_css_in }} -o {{ dui_css_out }} --minify
+    @node scripts/just-log.js info "Generating Font Awesome subset"
+    @node scripts/just-run.js "generate font awesome subset" -- node scripts/generate-fa-subset.js static
     @node scripts/just-log.js ok "CSS build complete"
 
 [doc("Compile and bundle shell.js")]
@@ -336,12 +338,18 @@ optimize-static:
 _post-build:
     @node scripts/just-log.js info "Cleaning Zola pagination redirect stubs"
     @node scripts/just-run.js "clean pagination redirects" -- node scripts/clean-pagination-redirects.js
+    @node scripts/just-log.js info "Generating sitemap"
+    @node scripts/just-run.js "generate sitemap" -- node scripts/generate-sitemap.js
     @node scripts/just-log.js info "Generating responsive public image variants"
     @node scripts/just-run.js "generate responsive images" -- node scripts/generate-responsive-images.js public
     @node scripts/just-log.js info "Generating public icon assets"
     @node scripts/just-run.js "generate icons" -- node scripts/generate-icons.js public public/icons/favicon.svg
+    @node scripts/just-log.js info "Generating public Font Awesome subset"
+    @node scripts/just-run.js "generate font awesome subset" -- node scripts/generate-fa-subset.js public
     @node scripts/just-log.js info "Injecting responsive image markup"
     @node scripts/just-run.js "inject responsive image markup" -- node scripts/inject-responsive-image-markup.js public
+    @node scripts/just-log.js info "Generating LQIP stylesheet"
+    @node scripts/just-run.js "generate LQIP stylesheet" -- node scripts/generate-lqip-css.js public
     @node scripts/just-log.js info "Optimizing static image assets"
     @node scripts/just-run.js "optimize static assets" -- node scripts/optimize-static-assets.js public
     @node scripts/just-log.js info "Optimizing JavaScript"

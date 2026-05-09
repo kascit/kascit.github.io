@@ -46,6 +46,9 @@
     <meta name="application-name" content="{{ config.title | default(value='dhanur.me') }}">
 
     <!-- Resource hints for optional integrations are loaded only after user consent. -->
+    <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin>
+    <link rel="preconnect" href="https://analytics.ahrefs.com" crossorigin>
+    <link rel="preconnect" href="https://auth.dhanur.me" crossorigin>
     {% set theme_colorset = self::get_theme_colorset(config=config) | trim %}
     <!-- Critical prepaint bootstrap lives in js/boot.js and must run synchronously. -->
     {%- set cookie_domain = config.base_url | replace(from="https://", to="") | replace(from="http://", to="") -%}
@@ -132,7 +135,22 @@
     {# Google Analytics and Sentry are loaded client-side only after cookie consent. #}
     {# Ahrefs Analytics: lightweight site-analytics script, no consent gate required. #}
     {% if config.extra.ahrefs_analytics_key is defined and config.extra.ahrefs_analytics_key != "" %}
-    <script src="https://analytics.ahrefs.com/analytics.js" data-key="{{ config.extra.ahrefs_analytics_key | safe }}" async></script>
+    <script data-telemetry="ahrefs">
+      (function(){
+        function load(){
+          var s=document.createElement("script");
+          s.src="https://analytics.ahrefs.com/analytics.js";
+          s.async=true;
+          s.setAttribute("data-key","{{ config.extra.ahrefs_analytics_key | safe }}");
+          document.head.appendChild(s);
+        }
+        if ("requestIdleCallback" in window) {
+          requestIdleCallback(load, { timeout: 3000 });
+        } else {
+          setTimeout(load, 1500);
+        }
+      })();
+    </script>
     {% endif %}
 
       {{ macros_seo::meta_tags(config=config, current_url=current_url, resolved_title=resolved_title, resolved_description=resolved_description, resolved_meta_type=resolved_meta_type, page=page | default(value=false)) }}
@@ -181,10 +199,10 @@
     <!-- Preload critical stylesheets for faster rendering -->
     <link rel="preload" href="{{ get_url(path="css/main.css") | safe }}" as="style">
     <link rel="stylesheet" href="{{ get_url(path="css/main.css") | safe }}">
-      <!-- Keep icon font stylesheet eager to avoid icon pop-in across page navigations -->
-    <link rel="preload" href="{{ get_url(path="css/font-awesome.min.css") | safe }}" as="style">
-      <link rel="stylesheet" href="{{ get_url(path="css/font-awesome.min.css") | safe }}">
-    <link rel="modulepreload" href="{{ get_url(path="js/core/main.js") | safe }}">
+    <link rel="stylesheet" href="{{ get_url(path="css/lqip.css") | safe }}">
+      <!-- Font Awesome subset keeps icon CSS minimal while preserving UI icons. -->
+    <link rel="stylesheet" href="{{ get_url(path="css/font-awesome.subset.css") | safe }}">
+    <link rel="prefetch" href="{{ get_url(path="js/core/main.js") | safe }}" as="script">
 
     <meta name="js-modules"
             data-katex-css="{{ get_url(path="css/katex.min.css") | safe }}"

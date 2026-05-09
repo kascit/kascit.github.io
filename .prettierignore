@@ -1,3 +1,7 @@
 # Ignore Tera/Zola templates - formatter breaks the syntax
 templates/
 *.html
+content/about.md
+static/css/main.css
+static/css/dui.css
+static/js/shell.min.js

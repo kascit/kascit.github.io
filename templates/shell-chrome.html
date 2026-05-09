@@ -1,9 +1,9 @@
 <div class="navbar site-topbar fixed top-0 left-0 right-0 z-50 h-16">
-    <!-- Mobile hamburger -->
+    <!-- Mobile hamburger (button, not label, so it works on subdomains without a drawer) -->
     <div class="flex-none lg:hidden">
-        <label id="hamburger-toggle" for="my-drawer-2" aria-label="Open menu" class="btn btn-ghost btn-circle btn-sm transition-colors duration-200">
+        <button id="shell-mobile-toggle" type="button" aria-label="Open menu" class="btn btn-ghost btn-circle btn-sm transition-colors duration-200">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
-        </label>
+        </button>
     </div>
 
     <!-- Logo -->
@@ -109,5 +109,60 @@
                 </div>
             </li>
         </ul>
+    </div>
+</div>
+
+<!-- Mobile slide-out panel (for subdomains without a drawer) -->
+<div id="shell-mobile-panel" class="fixed inset-0 z-[100] hidden" data-shell-mobile-panel>
+    <div class="absolute inset-0 bg-black/50 transition-opacity" data-shell-mobile-backdrop></div>
+    <div class="absolute top-0 left-0 bottom-0 w-72 bg-base-100 shadow-2xl flex flex-col overflow-y-auto transform -translate-x-full transition-transform duration-300" data-shell-mobile-drawer>
+        <!-- Mobile panel header -->
+        <div class="flex items-center justify-between px-4 py-3 border-b border-base-content/10">
+            <a href="https://dhanur.me/" class="font-bold text-lg text-base-content no-underline hover:no-underline">dhanur.me</a>
+            <button type="button" class="btn btn-ghost btn-circle btn-sm" data-shell-mobile-close aria-label="Close menu">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+
+        <!-- Mobile apps grid -->
+        <div class="px-4 py-4 border-b border-base-content/10" data-nav-chrome="apps">
+            <div class="text-xs font-semibold uppercase tracking-wider text-base-content/50 mb-3">Apps</div>
+            <div class="grid grid-cols-3 gap-2" data-apps-grid-mobile>
+                <div class="col-span-3 flex justify-center py-4 opacity-50"><span class="loading loading-spinner loading-sm"></span></div>
+            </div>
+        </div>
+
+        <!-- Mobile account section -->
+        <div class="px-4 py-3 border-b border-base-content/10" data-nav-chrome="account">
+            <div class="flex items-center gap-3 mb-3">
+                <div data-auth="mobile-guest-avatar" class="w-9 h-9 rounded-full bg-base-300 flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-user text-base-content/50 text-sm"></i>
+                </div>
+                <div data-auth="mobile-authed-avatar" class="hidden w-9 h-9 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-1 overflow-hidden shrink-0">
+                    <img src="" alt="Profile" class="w-full h-full object-cover" />
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="font-semibold text-sm truncate" data-auth="mobile-name">Guest</div>
+                    <div class="text-xs opacity-60 truncate" data-auth="mobile-email">Not signed in</div>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <a href="https://auth.dhanur.me" class="btn btn-primary btn-sm flex-1 no-underline hover:no-underline" data-auth="mobile-login-btn">Sign In</a>
+                <button type="button" class="btn btn-ghost btn-sm flex-1 text-error/80 hover:text-error hidden" data-auth="mobile-logout-btn">Sign Out</button>
+                <a href="https://auth.dhanur.me" class="btn btn-ghost btn-sm flex-1 hidden no-underline hover:no-underline" data-auth="mobile-account-btn">Account</a>
+            </div>
+        </div>
+
+        <!-- Mobile theme toggle -->
+        <div class="px-4 py-3" data-nav-chrome="theme">
+            <div class="flex items-center gap-2.5">
+                <i class="fa-solid fa-circle-half-stroke w-4 text-center opacity-60"></i>
+                <div class="theme-switcher w-full bg-base-300/70 text-xs font-medium">
+                    <button data-theme-mode="light" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer"><i class="fa-solid fa-sun mr-1"></i>Light</button>
+                    <button data-theme-mode="dark" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer"><i class="fa-solid fa-moon mr-1"></i>Dark</button>
+                    <button data-theme-mode="auto" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer"><i class="fa-solid fa-circle-half-stroke mr-1"></i>Auto</button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>

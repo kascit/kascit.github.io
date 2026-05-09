@@ -2,7 +2,7 @@
  * Main Web Application Entrypoint (ES Module)
  */
 
-import { initResponsive, isMobile } from "./responsive.js";
+import { initResponsive } from "./responsive.js";
 import { initTheme } from "./theme-engine.js";
 import { initAuth } from "../system/auth-integration.js";
 import { initDropdowns } from "../ui/dropdowns.js";
@@ -14,25 +14,7 @@ import { initTooltips } from "../ui/tooltips.js";
 import { initExternalLinkUtm } from "../telemetry/external-link-utm.js";
 
 // Structural UX natively bundled
-import { initToc } from "../features/toc.js";
-import { initSearchLoader } from "../features/search-loader.js";
-import { initShowcaseRotate } from "../ui/showcase-rotate.js";
-import { initCodeBlocks } from "../ui/code-blocks.js";
-import { initClipboard } from "../features/clipboard.js";
-import { initShortcuts } from "../features/shortcuts.js";
-import { initKeyboardShortcuts } from "../features/keyboard-shortcuts.js";
-import { initAccessKeys } from "../features/access-keys.js";
-import { initScrollToTop } from "../ui/scroll-top.js";
-import { initLazyPlugins } from "../ui/lazy-plugins.js";
-import { initEmailLinks } from "../ui/email-links.js";
-
-// Deferred UX & Heavy components natively bundled
-import { initLayoutRecommendation } from "../data/layout-recommendation.js";
-import { initBlogFeed } from "../data/blog-feed.js";
-import { initTaxonomyFilter } from "../data/taxonomy-filter.js";
-import { initTaxonomySubscribe } from "../data/taxonomy-subscribe.js";
-import { initTaxonomyPlaylist } from "../data/taxonomy-playlist.js";
-import { initComments } from "../features/comments.js";
+// Deferred UX & Heavy components are loaded lazily on demand.
 
 function runSafely(task, label) {
   try {
@@ -127,13 +109,7 @@ DDDDDDDDDDb·······················PDDDDDDDDDDDDDDDPP··�
 ······································c(·PPPP(c············
 ···························································
 \x1b[0m`);
-  runSafely(() => {
-    initResponsive();
-    if (isMobile()) {
-      const starfield = document.querySelector(".landing-starfield");
-      if (starfield) starfield.remove();
-    }
-  }, "responsive");
+  runSafely(() => initResponsive(), "responsive");
 
   // Align classes with prepaint attrs before transitions are enabled.
   runSafely(() => syncPrepaintLayoutState(), "prepaint layout sync");
@@ -145,7 +121,6 @@ DDDDDDDDDDb·······················PDDDDDDDDDDDDDDDPP··�
   runSafely(() => initTheme(document), "theme");
   runSafely(() => initDrawer(), "drawer");
   runSafely(() => initDropdowns(document), "dropdowns");
-  runSafely(() => initTooltips(document), "tooltips");
   runSafely(() => initExternalLinkUtm(document), "external link utm");
   runSafely(() => initCookieConsent(), "cookie consent");
   runSafely(() => initAuth(document), "auth");
@@ -159,19 +134,40 @@ DDDDDDDDDDb·······················PDDDDDDDDDDDDDDDPP··�
   // UX niceties after initial paint.
   runAfterFirstPaint(() => {
     if (hasAny(["[data-toc-sidebar]", "[data-toc-toggle]"])) {
-      runSafely(() => initToc(), "toc");
+      runSafely(
+        () => import("../features/toc.js").then((mod) => mod.initToc()),
+        "toc",
+      );
     }
 
+    runSafely(() => initTooltips(document), "tooltips");
+
     if (has("[data-search-mount]")) {
-      runSafely(() => initSearchLoader(), "search loader");
+      runSafely(
+        () =>
+          import("../features/search-loader.js").then((mod) =>
+            mod.initSearchLoader(),
+          ),
+        "search loader",
+      );
     }
 
     if (has('input[name="showcase_tabs"]')) {
-      runSafely(() => initShowcaseRotate(), "showcase rotate");
+      runSafely(
+        () =>
+          import("../ui/showcase-rotate.js").then((mod) =>
+            mod.initShowcaseRotate(),
+          ),
+        "showcase rotate",
+      );
     }
 
     if (has("pre > code")) {
-      runSafely(() => initCodeBlocks(), "code blocks");
+      runSafely(
+        () =>
+          import("../ui/code-blocks.js").then((mod) => mod.initCodeBlocks()),
+        "code blocks",
+      );
     }
 
     if (
@@ -185,57 +181,121 @@ DDDDDDDDDDb·······················PDDDDDDDDDDDDDDDPP··�
         "main h6[id]",
       ])
     ) {
-      runSafely(() => initClipboard(), "clipboard");
+      runSafely(
+        () =>
+          import("../features/clipboard.js").then((mod) => mod.initClipboard()),
+        "clipboard",
+      );
     }
 
     if (hasAny(["[data-shortcut]", "[data-desktop-only='true']"])) {
-      runSafely(() => initShortcuts(), "shortcuts");
+      runSafely(
+        () =>
+          import("../features/shortcuts.js").then((mod) => mod.initShortcuts()),
+        "shortcuts",
+      );
     }
 
     if (has("[data-keybind]") || isHomeRoute()) {
-      runSafely(() => initKeyboardShortcuts(), "keyboard shortcuts");
+      runSafely(
+        () =>
+          import("../features/keyboard-shortcuts.js").then((mod) =>
+            mod.initKeyboardShortcuts(),
+          ),
+        "keyboard shortcuts",
+      );
     }
 
-    runSafely(() => initAccessKeys(), "access keys");
+    runSafely(
+      () =>
+        import("../features/access-keys.js").then((mod) =>
+          mod.initAccessKeys(),
+        ),
+      "access keys",
+    );
 
-    runSafely(() => initScrollToTop(), "scroll top");
+    runSafely(
+      () => import("../ui/scroll-top.js").then((mod) => mod.initScrollToTop()),
+      "scroll top",
+    );
 
     if (has("[data-rot13-email]")) {
-      runSafely(() => initEmailLinks(document), "email links");
+      runSafely(
+        () =>
+          import("../ui/email-links.js").then((mod) =>
+            mod.initEmailLinks(document),
+          ),
+        "email links",
+      );
     }
 
     if (hasAny([".katex-inline", ".katex-block", ".mermaid"])) {
-      runSafely(() => initLazyPlugins(), "lazy plugins");
+      runSafely(
+        () =>
+          import("../ui/lazy-plugins.js").then((mod) => mod.initLazyPlugins()),
+        "lazy plugins",
+      );
     }
   });
 
   // Heavier/optional page features during idle time natively bundled.
   runWhenIdle(() => {
     if (has("[data-sidebar-toggle]") && has("[data-toc-toggle]")) {
-      runSafely(() => initLayoutRecommendation(), "layout recommendation");
+      runSafely(
+        () =>
+          import("../data/layout-recommendation.js").then((mod) =>
+            mod.initLayoutRecommendation(),
+          ),
+        "layout recommendation",
+      );
     }
 
     if (hasAny(["[data-blog-feed]", "[data-blog-feed-mount]"])) {
-      runSafely(() => initBlogFeed(), "blog feed");
+      runSafely(
+        () => import("../data/blog-feed.js").then((mod) => mod.initBlogFeed()),
+        "blog feed",
+      );
     }
 
     if (has("[data-taxonomy-filter]")) {
-      runSafely(() => initTaxonomyFilter(), "taxonomy filter");
+      runSafely(
+        () =>
+          import("../data/taxonomy-filter.js").then((mod) =>
+            mod.initTaxonomyFilter(),
+          ),
+        "taxonomy filter",
+      );
     }
 
     if (has("[data-taxonomy-subscribe]")) {
-      runSafely(() => initTaxonomySubscribe(), "taxonomy subscribe");
+      runSafely(
+        () =>
+          import("../data/taxonomy-subscribe.js").then((mod) =>
+            mod.initTaxonomySubscribe(),
+          ),
+        "taxonomy subscribe",
+      );
     }
 
     if (
       has("[data-taxonomy-playlist]") ||
       new URLSearchParams(window.location.search).has("pl")
     ) {
-      runSafely(() => initTaxonomyPlaylist(), "taxonomy playlist");
+      runSafely(
+        () =>
+          import("../data/taxonomy-playlist.js").then((mod) =>
+            mod.initTaxonomyPlaylist(),
+          ),
+        "taxonomy playlist",
+      );
     }
 
     if (has("[data-comments-mount]")) {
-      runSafely(() => initComments(), "comments");
+      runSafely(
+        () =>
+          import("../features/comments.js").then((mod) => mod.initComments()),
+        "comments",
+      );
     }
   });
 

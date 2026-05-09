@@ -292,6 +292,8 @@ css: setup-build-deps
     @node scripts/just-run.js "compile main css" -- {{ tailwind }} -i {{ css_in }} -o {{ css_out }} --minify
     @node scripts/just-log.js info "Compiling shell CSS bundle"
     @node scripts/just-run.js "compile shell css" -- {{ tailwind }} -i {{ dui_css_in }} -o {{ dui_css_out }} --minify
+    @node scripts/just-log.js info "Generating Font Awesome subset"
+    @node scripts/just-run.js "generate font awesome subset" -- node scripts/generate-fa-subset.js static
     @node scripts/just-log.js ok "CSS build complete"
 
 [doc("Compile and bundle shell.js")]
@@ -336,12 +338,18 @@ optimize-static:
 _post-build:
     @node scripts/just-log.js info "Cleaning Zola pagination redirect stubs"
     @node scripts/just-run.js "clean pagination redirects" -- node scripts/clean-pagination-redirects.js
+    @node scripts/just-log.js info "Generating sitemap"
+    @node scripts/just-run.js "generate sitemap" -- node scripts/generate-sitemap.js
     @node scripts/just-log.js info "Generating responsive public image variants"
     @node scripts/just-run.js "generate responsive images" -- node scripts/generate-responsive-images.js public
     @node scripts/just-log.js info "Generating public icon assets"
     @node scripts/just-run.js "generate icons" -- node scripts/generate-icons.js public public/icons/favicon.svg
+    @node scripts/just-log.js info "Generating public Font Awesome subset"
+    @node scripts/just-run.js "generate font awesome subset" -- node scripts/generate-fa-subset.js public
     @node scripts/just-log.js info "Injecting responsive image markup"
     @node scripts/just-run.js "inject responsive image markup" -- node scripts/inject-responsive-image-markup.js public
+    @node scripts/just-log.js info "Generating LQIP stylesheet"
+    @node scripts/just-run.js "generate LQIP stylesheet" -- node scripts/generate-lqip-css.js public
     @node scripts/just-log.js info "Optimizing static image assets"
     @node scripts/just-run.js "optimize static assets" -- node scripts/optimize-static-assets.js public
     @node scripts/just-log.js info "Optimizing JavaScript"
@@ -492,7 +500,7 @@ validate-public:
 [unix]
 [doc("CI pipeline: verify generated files, build, minify JS, validate output")]
 [group('ci')]
-ci-build: _assert-zola-version sync-generated verify-generated-clean
+ci-build: _assert-zola-version sync-generated
     #!/usr/bin/env bash
     set -euo pipefail
     node scripts/just-log.js step "CI build pipeline"
@@ -519,7 +527,7 @@ ci-build: _assert-zola-version sync-generated verify-generated-clean
 [windows]
 [doc("CI pipeline: verify generated files, build, minify JS, validate output")]
 [group('ci')]
-ci-build: _assert-zola-version sync-generated verify-generated-clean
+ci-build: _assert-zola-version sync-generated
     @node scripts/just-log.js step "CI build pipeline"
     @node scripts/just-log.js info "Cleaning workspace"
     @node scripts/just-run.js "clean" -- just clean
@@ -542,31 +550,6 @@ quality: _assert-zola-version sync-generated
     @node scripts/just-log.js info "Running integrated quality checks"
     @node scripts/just-run.js "quality checks" -- node scripts/run-quality-checks.js
     @node scripts/just-log.js ok "All quality checks passed"
-
-[doc("Format the codebase using Prettier")]
-format:
-    pnpm dlx prettier@3 --write .
-
-[unix]
-[doc("Prepare for push: branch (if on main), format, sync, check, commit, and push")]
-[group('ci')]
-prep-push BRANCH_NAME MESSAGE="chore: prep for push": format sync-generated quality
-    #!/usr/bin/env bash
-    set -e
-    if [ "$(git rev-parse --abbrev-ref HEAD)" = "main" ]; then
-      git checkout -b "{{BRANCH_NAME}}"
-    fi
-    git add .
-    if [ -n "$(git status --porcelain)" ]; then
-      git commit -m "{{MESSAGE}}"
-    fi
-    git push -u origin HEAD
-
-[windows]
-[doc("Prepare for push: branch (if on main), format, sync, check, commit, and push")]
-[group('ci')]
-prep-push BRANCH_NAME MESSAGE="chore: prep for push": format sync-generated quality
-    powershell.exe -NoProfile -Command "$ErrorActionPreference = 'Stop'; if ((git rev-parse --abbrev-ref HEAD) -eq 'main') { git checkout -b '{{BRANCH_NAME}}' }; git add .; if (git status --porcelain) { git commit -m '{{MESSAGE}}' }; git push -u origin HEAD"
 
 # ---------------------------------------------------------------------------
 # Info

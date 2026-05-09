@@ -32,5 +32,20 @@
 {% endmacro site_config %}
 
 {% macro app_main_script() %}
-    <script type="module" src="{{ get_url(path='js/core/main.js') | safe }}"></script>
+        <script>
+            (function(){
+                var src = "{{ get_url(path='js/core/main.js') | safe }}";
+                function load(){
+                    var s = document.createElement("script");
+                    s.type = "module";
+                    s.src = src;
+                    document.head.appendChild(s);
+                }
+                if (document.readyState === "loading") {
+                    document.addEventListener("DOMContentLoaded", load, { once: true });
+                } else {
+                    load();
+                }
+            })();
+        </script>
 {% endmacro app_main_script %}

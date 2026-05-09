@@ -99,7 +99,7 @@ function main() {
 
   // Direct 1:1 sync of skills to tags
   const safeTags = compactUnique(
-    rawSkills.map((s) => s.trim()).filter(Boolean),
+    rawSkills.map((s) => s.trim().toLowerCase()).filter(Boolean),
   );
 
   const nextAbout = buildAboutWithSyncedTaxonomies(aboutRaw, safeTags);

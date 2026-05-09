@@ -104,6 +104,8 @@ function injectFavicons(sameOrigin, config) {
     )
     .forEach((el) => el.remove());
 
+  // For cross-origin subdomains, skip .ico files to avoid CORB errors.
+  // Browsers block opaque cross-origin .ico reads even with CORS headers.
   const iconLinks = [
     {
       rel: "icon",
@@ -112,13 +114,20 @@ function injectFavicons(sameOrigin, config) {
       href: `${iconBase}favicon-96x96-transparent.png`,
     },
     { rel: "icon", type: "image/svg+xml", href: `${iconBase}favicon.svg` },
-    { rel: "shortcut icon", href: `${iconBase}favicon-transparent.ico` },
     {
       rel: "apple-touch-icon",
       sizes: "180x180",
       href: `${iconBase}apple-touch-icon-180x180-transparent.png`,
     },
   ];
+
+  // Only include .ico for same-origin (avoids CORB on subdomains)
+  if (sameOrigin) {
+    iconLinks.push({
+      rel: "shortcut icon",
+      href: `${iconBase}favicon-transparent.ico`,
+    });
+  }
 
   // Avoid cross-origin webmanifest warnings on subdomains.
   if (sameOrigin) {
@@ -161,10 +170,13 @@ function applyChromeVisibility(root, config) {
       .forEach((node) => node.remove());
   }
   if (!config.showMobileMenu) {
-    const mobileMenu = root
-      .querySelector("#hamburger-toggle")
-      ?.closest(".flex-none");
-    if (mobileMenu) mobileMenu.remove();
+    const mobileBtn = root.querySelector("#shell-mobile-toggle");
+    if (mobileBtn) {
+      const wrapper = mobileBtn.closest(".flex-none");
+      if (wrapper) wrapper.remove();
+    }
+    const mobilePanel = root.querySelector("[data-shell-mobile-panel]");
+    if (mobilePanel) mobilePanel.remove();
   }
 }
 
@@ -191,7 +203,7 @@ function safeIconClass(value) {
 
 function renderAppsGrid(shellRoot, apps) {
   const grids = shellRoot.querySelectorAll(
-    "[data-apps-grid], [data-apps-grid-sidebar]",
+    "[data-apps-grid], [data-apps-grid-sidebar], [data-apps-grid-mobile]",
   );
   if (!grids.length) return;
 
@@ -240,6 +252,116 @@ function updateAppsGridForRole(shellRoot, role) {
   return Promise.resolve(visibleApps);
 }
 
+// --- Mobile panel logic ---
+function initMobilePanel(shellRoot) {
+  const panel = shellRoot.querySelector("[data-shell-mobile-panel]");
+  if (!panel) return;
+
+  const toggle = shellRoot.querySelector("#shell-mobile-toggle");
+  const backdrop = panel.querySelector("[data-shell-mobile-backdrop]");
+  const drawer = panel.querySelector("[data-shell-mobile-drawer]");
+  const closeBtn = panel.querySelector("[data-shell-mobile-close]");
+
+  function openPanel() {
+    panel.classList.remove("hidden");
+    // Force reflow before adding transition class
+    void drawer.offsetWidth;
+    drawer.style.transform = "translateX(0)";
+    document.body.style.overflow = "hidden";
+  }
+
+  function closePanel() {
+    drawer.style.transform = "translateX(-100%)";
+    document.body.style.overflow = "";
+    setTimeout(() => {
+      panel.classList.add("hidden");
+    }, 300);
+  }
+
+  if (toggle) toggle.addEventListener("click", openPanel);
+  if (backdrop) backdrop.addEventListener("click", closePanel);
+  if (closeBtn) closeBtn.addEventListener("click", closePanel);
+
+  // Close on escape
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !panel.classList.contains("hidden")) {
+      closePanel();
+    }
+  });
+}
+
+// --- Mobile auth sync ---
+function syncMobileAuth(shellRoot, authStatus) {
+  const panel = shellRoot.querySelector("[data-shell-mobile-panel]");
+  if (!panel) return;
+
+  const isAuthed = authStatus?.authenticated === true;
+  const user = authStatus?.user;
+
+  const guestAvatar = panel.querySelector('[data-auth="mobile-guest-avatar"]');
+  const authedAvatar = panel.querySelector(
+    '[data-auth="mobile-authed-avatar"]',
+  );
+  const nameEl = panel.querySelector('[data-auth="mobile-name"]');
+  const emailEl = panel.querySelector('[data-auth="mobile-email"]');
+  const loginBtn = panel.querySelector('[data-auth="mobile-login-btn"]');
+  const logoutBtn = panel.querySelector('[data-auth="mobile-logout-btn"]');
+  const accountBtn = panel.querySelector('[data-auth="mobile-account-btn"]');
+
+  if (isAuthed && user) {
+    if (guestAvatar) guestAvatar.classList.add("hidden");
+    if (authedAvatar) {
+      authedAvatar.classList.remove("hidden");
+      const img = authedAvatar.querySelector("img");
+      if (img) img.src = user.avatar_url || "";
+    }
+    if (nameEl) nameEl.textContent = user.name || "User";
+    if (emailEl) emailEl.textContent = user.email || "";
+    if (loginBtn) loginBtn.classList.add("hidden");
+    if (logoutBtn) logoutBtn.classList.remove("hidden");
+    if (accountBtn) accountBtn.classList.remove("hidden");
+  } else {
+    if (guestAvatar) guestAvatar.classList.remove("hidden");
+    if (authedAvatar) authedAvatar.classList.add("hidden");
+    if (nameEl) nameEl.textContent = "Guest";
+    if (emailEl) emailEl.textContent = "Not signed in";
+    if (loginBtn) loginBtn.classList.remove("hidden");
+    if (logoutBtn) logoutBtn.classList.add("hidden");
+    if (accountBtn) accountBtn.classList.add("hidden");
+  }
+
+  // Wire up mobile logout
+  if (logoutBtn) {
+    logoutBtn.onclick = (e) => {
+      e.preventDefault();
+      const auth = window.AUTH;
+      if (auth && typeof auth.logout === "function") {
+        const result = auth.logout();
+        if (result && typeof result.then === "function") {
+          result
+            .then(() => window.location.reload())
+            .catch(() => window.location.reload());
+        } else {
+          window.location.reload();
+        }
+      }
+    };
+  }
+
+  // Wire up mobile login
+  if (loginBtn) {
+    loginBtn.onclick = (e) => {
+      e.preventDefault();
+      const auth = window.AUTH;
+      if (auth && typeof auth.login === "function") {
+        auth.login();
+      } else {
+        window.location.href = "https://auth.dhanur.me";
+      }
+    };
+  }
+}
+
 function hydrate(shellRoot) {
   const config = getShellRuntimeConfig();
   const sameOrigin = isSameOriginHost();
@@ -269,6 +391,7 @@ function hydrate(shellRoot) {
   initResponsive();
   initTheme(shellRoot);
   initDropdowns(shellRoot);
+  initMobilePanel(shellRoot);
 
   initAuth(shellRoot, (authStatus) => {
     const role = authStatus?.role || "guest";
@@ -289,6 +412,7 @@ function hydrate(shellRoot) {
     }
 
     updateAppsGridForRole(shellRoot, role);
+    syncMobileAuth(shellRoot, authStatus);
   });
 }
 

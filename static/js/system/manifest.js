@@ -6,7 +6,7 @@ const FALLBACK_APPS = [
   {
     name: "Home",
     url: "https://dhanur.me",
-    icon: "fa-solid fa-globe",
+    icon: "fa-solid fa-house",
     minRole: "guest",
   },
   {
@@ -18,7 +18,7 @@ const FALLBACK_APPS = [
   {
     name: "Tasks",
     url: "https://tasks.dhanur.me",
-    icon: "fa-solid fa-list-check",
+    icon: "fa-solid fa-clipboard-list",
     minRole: "guest",
   },
   {
@@ -30,9 +30,9 @@ const FALLBACK_APPS = [
   {
     name: "Status",
     url: "https://up.dhanur.me",
-    icon: "fa-solid fa-signal",
-    minRole: "admin",
-    category: "Admin",
+    icon: "fa-solid fa-heart-pulse",
+    minRole: "guest",
+    category: "Core",
   },
 ];
 

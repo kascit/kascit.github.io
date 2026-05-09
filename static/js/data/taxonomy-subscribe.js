@@ -2,19 +2,14 @@
  * Taxonomy RSS subscription helper.
  * Static-site friendly approach:
  * - Select terms (tags/categories)
- * - Persist selection in cookies across taxonomy pages
+ * - Persist selection in localStorage across taxonomy pages
  * - Copy feed URLs
  * - Export selected feeds as OPML for feed readers
  */
 
 import { isDesktop, onResponsiveChange } from "../core/responsive.js";
-import { readCookie, writeCookie } from "../telemetry/cookie-utils.js";
 
-const TAXONOMY_SELECTION_COOKIE = "taxonomy-rss-selection-v1";
-const TAXONOMY_SELECTION_COOKIE_MAX_AGE = 60 * 60 * 24 * 180;
 const TAXONOMY_SELECTION_STORAGE_KEY = "taxonomy-rss-selection-store-v1";
-const TAXONOMY_SELECTION_STORAGE_SENTINEL = "__ls__";
-const MAX_COOKIE_PAYLOAD_SIZE = 3500;
 
 function xmlEscape(value) {
   return String(value || "")
@@ -90,49 +85,21 @@ function serializeSelection(items) {
   return JSON.stringify(compact);
 }
 
-function loadCookieSelection() {
-  const raw = readCookie(TAXONOMY_SELECTION_COOKIE);
-  if (raw === TAXONOMY_SELECTION_STORAGE_SENTINEL) {
-    try {
-      return parseSelectionPayload(
-        localStorage.getItem(TAXONOMY_SELECTION_STORAGE_KEY) || "[]",
-      );
-    } catch (_error) {
-      return [];
-    }
+function loadSelection() {
+  try {
+    return parseSelectionPayload(
+      localStorage.getItem(TAXONOMY_SELECTION_STORAGE_KEY) || "[]",
+    );
+  } catch (_error) {
+    return [];
   }
-
-  return parseSelectionPayload(raw);
 }
 
-function saveCookieSelection(items) {
+function saveSelection(items) {
   try {
-    const payload = serializeSelection(items);
-
-    if (payload.length > MAX_COOKIE_PAYLOAD_SIZE) {
-      localStorage.setItem(TAXONOMY_SELECTION_STORAGE_KEY, payload);
-      writeCookie(
-        TAXONOMY_SELECTION_COOKIE,
-        TAXONOMY_SELECTION_STORAGE_SENTINEL,
-        {
-          maxAgeSeconds: TAXONOMY_SELECTION_COOKIE_MAX_AGE,
-          path: "/",
-          sameSite: "Lax",
-          secure: window.location.protocol === "https:",
-        },
-      );
-      return;
-    }
-
-    localStorage.removeItem(TAXONOMY_SELECTION_STORAGE_KEY);
-    writeCookie(TAXONOMY_SELECTION_COOKIE, payload, {
-      maxAgeSeconds: TAXONOMY_SELECTION_COOKIE_MAX_AGE,
-      path: "/",
-      sameSite: "Lax",
-      secure: window.location.protocol === "https:",
-    });
+    localStorage.setItem(TAXONOMY_SELECTION_STORAGE_KEY, serializeSelection(items));
   } catch (_error) {
-    // ignore cookie write failures
+    // ignore storage write failures
   }
 }
 
@@ -184,7 +151,7 @@ export function initTaxonomySubscribe() {
 
   const taxonomyName = rail.getAttribute("data-taxonomy-name") || "taxonomy";
   const selected = new Map(
-    loadCookieSelection().map((term) => [term.feed, term]),
+    loadSelection().map((term) => [term.feed, term]),
   );
 
   function getTermData(node) {
@@ -263,7 +230,7 @@ export function initTaxonomySubscribe() {
       singleLink.setAttribute("aria-disabled", "true");
     }
 
-    saveCookieSelection(values);
+    saveSelection(values);
   }
 
   function toggleNode(node) {

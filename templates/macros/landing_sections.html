@@ -30,22 +30,22 @@
       <div class="hero-dark absolute inset-0">
         <img src="{{ get_url(path=dark_src) | safe }}" alt="Hero Background Dark"
           class="w-full h-full rounded-none object-cover object-center opacity-{{ dark_image_opacity }}"
-          width="3840" height="2160" fetchpriority="high" decoding="async" />
+          width="3840" height="2160" fetchpriority="high" loading="eager" decoding="async" />
       </div>
 
       <div class="hero-light hidden absolute inset-0">
         <img src="{{ get_url(path=light_src) | safe }}" alt="Hero Background Light"
           class="w-full h-full rounded-none object-cover object-center opacity-{{ light_image_opacity }}"
-          width="3840" height="2160" fetchpriority="high" decoding="async" />
+          width="3840" height="2160" fetchpriority="high" loading="eager" decoding="async" />
       </div>
     {% elif dark_src != "" %}
       <img src="{{ get_url(path=dark_src) | safe }}" alt="Hero Background"
         class="w-full h-full rounded-none object-cover object-center opacity-{{ dark_image_opacity }}"
-        width="3840" height="2160" fetchpriority="high" decoding="async" />
+        width="3840" height="2160" fetchpriority="high" loading="eager" decoding="async" />
     {% elif light_src != "" %}
       <img src="{{ get_url(path=light_src) | safe }}" alt="Hero Background"
         class="w-full h-full rounded-none object-cover object-center opacity-{{ light_image_opacity }}"
-        width="3840" height="2160" fetchpriority="high" decoding="async" />
+        width="3840" height="2160" fetchpriority="high" loading="eager" decoding="async" />
     {% endif %}
 
   </div>

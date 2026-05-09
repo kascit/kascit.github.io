@@ -1,5 +1,4 @@
-/* eslint-disable no-unused-vars, no-control-regex, no-redeclare, no-undef */
-var searchLoaded = false;
+/* global Fuse */
 /**
  * Search — fully self-contained lazy-loader + search UI
  *
@@ -30,7 +29,8 @@ function sanitizeScriptSrc(src) {
   var trimmed = String(src).trim();
   if (!trimmed) return "";
 
-  if (/[\u0000-\u001f\u007f]/.test(trimmed)) return "";
+  // eslint-disable-next-line no-control-regex
+  if (/[\x00-\x1f\x7f]/.test(trimmed)) return "";
 
   var lower = trimmed.toLowerCase();
   if (
@@ -46,7 +46,7 @@ function sanitizeScriptSrc(src) {
     if (url.origin !== window.location.origin) return "";
     if (!/\.js(?:[?#].*)?$/i.test(url.pathname)) return "";
     return url.pathname + url.search + url.hash;
-  } catch (e) {
+  } catch {
     return "";
   }
 }
@@ -59,7 +59,7 @@ function safeInternalHref(href) {
     if (parsed.origin !== window.location.origin) return "";
     if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return "";
     return parsed.pathname + parsed.search + parsed.hash;
-  } catch (e) {
+  } catch {
     return "";
   }
 }
@@ -72,7 +72,7 @@ function readSiteConfig() {
   if (!node) return {};
   try {
     return JSON.parse(node.textContent || "{}");
-  } catch (e) {
+  } catch {
     return {};
   }
 }
@@ -174,7 +174,7 @@ function persistPageFindTransferQuery(query) {
 
   try {
     window.sessionStorage.setItem(PAGE_FIND_TRANSFER_KEY, value);
-  } catch (e) {
+  } catch {
     // Ignore storage errors.
   }
 }
@@ -184,7 +184,7 @@ function consumePageFindTransferQuery() {
     var value = window.sessionStorage.getItem(PAGE_FIND_TRANSFER_KEY) || "";
     window.sessionStorage.removeItem(PAGE_FIND_TRANSFER_KEY);
     return String(value).trim();
-  } catch (e) {
+  } catch {
     return "";
   }
 }
@@ -615,31 +615,31 @@ function makeTeaser(body, terms) {
   var windowWeights = [];
   var windowSize = Math.min(weighted.length, TEASER_MAX_WORDS);
   var curSum = 0;
-  for (var n = 0; n < windowSize; n++) {
-    curSum += weighted[n][1];
+  for (var wi = 0; wi < windowSize; wi++) {
+    curSum += weighted[wi][1];
   }
   windowWeights.push(curSum);
-  for (var n = 0; n < weighted.length - windowSize; n++) {
-    curSum -= weighted[n][1];
-    curSum += weighted[n + windowSize][1];
+  for (var wj = 0; wj < weighted.length - windowSize; wj++) {
+    curSum -= weighted[wj][1];
+    curSum += weighted[wj + windowSize][1];
     windowWeights.push(curSum);
   }
 
   var maxSumIndex = 0;
   if (termFound) {
     var maxFound = 0;
-    for (var n = windowWeights.length - 1; n >= 0; n--) {
-      if (windowWeights[n] > maxFound) {
-        maxFound = windowWeights[n];
-        maxSumIndex = n;
+    for (var wk = windowWeights.length - 1; wk >= 0; wk--) {
+      if (windowWeights[wk] > maxFound) {
+        maxFound = windowWeights[wk];
+        maxSumIndex = wk;
       }
     }
   }
 
   var teaser = [];
   var startIndex = weighted[maxSumIndex][2];
-  for (var n = maxSumIndex; n < maxSumIndex + windowSize; n++) {
-    var w = weighted[n];
+  for (var wl = maxSumIndex; wl < maxSumIndex + windowSize; wl++) {
+    var w = weighted[wl];
     if (startIndex < w[2]) {
       teaser.push(body.substring(startIndex, w[2]));
       startIndex = w[2];
@@ -684,7 +684,7 @@ function sanitizeResultHref(rawHref) {
     if (protocol !== "http:" && protocol !== "https:") return "#";
     if (parsed.origin !== window.location.origin) return "#";
     return parsed.pathname + parsed.search + parsed.hash;
-  } catch (e) {
+  } catch {
     return "#";
   }
 }
@@ -1065,7 +1065,7 @@ function initSearch() {
 
     try {
       active.blur();
-    } catch (e) {
+    } catch {
       // Ignore blur failures.
     }
   }
@@ -1086,7 +1086,7 @@ function initSearch() {
 
     try {
       target.focus({ preventScroll: true });
-    } catch (e) {
+    } catch {
       target.focus();
     }
 
@@ -1255,7 +1255,6 @@ function loadSearchLibraries(callback) {
     return loadingPromise;
   }
 
-  searchLoaded = true;
   setSearchInputState("loading");
 
   function appendScript(src) {
@@ -1322,7 +1321,7 @@ function loadSearchLibraries(callback) {
     })
     .catch(function (error) {
       console.error("[Search] Failed to load search libraries:", error);
-      searchLoaded = false;
+
       setSearchInputState("error");
       throw error;
     })

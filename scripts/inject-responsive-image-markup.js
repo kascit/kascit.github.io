@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 "use strict";
 
+const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
 const { ROOT, collectFiles } = require("./lib/shared");
@@ -76,6 +77,15 @@ function buildVariantPath(src, width) {
   return `${withVariant}${suffix}`;
 }
 
+function lqipClassName(manifestKey) {
+  const hash = crypto
+    .createHash("sha1")
+    .update(String(manifestKey))
+    .digest("hex")
+    .slice(0, 10);
+  return `lqip-${hash}`;
+}
+
 function injectIntoImgTag(tag) {
   if (!/^<img\b/i.test(tag)) return tag;
   if (/\sdata-no-responsive\b/i.test(tag)) return tag;
@@ -117,33 +127,32 @@ function injectIntoImgTag(tag) {
     injectedTag = injectedTag.replace(/\s*\/?>$/, ` height="${data.height}"$&`);
   }
 
-  // Inject lazy loading
-  if (!/\sloading\s*=/i.test(injectedTag)) {
+  // Inject LQIP class name for CSP-safe placeholders
+  if (data.lqip && !/\sdata-no-lqip\b/i.test(injectedTag)) {
+    const className = lqipClassName(manifestKey);
+    const classMatch = injectedTag.match(/\sclass\s*=\s*(["'])(.*?)\1/i);
+    if (classMatch) {
+      const existing = classMatch[2];
+      if (!new RegExp(`\\b${className}\\b`).test(existing)) {
+        const next = `${existing} ${className}`.trim();
+        injectedTag = injectedTag.replace(classMatch[0], ` class="${next}"`);
+      }
+    } else {
+      injectedTag = injectedTag.replace(/\s*\/?>$/, ` class="${className}"$&`);
+    }
+  }
+
+  // Inject lazy loading unless the tag is explicitly eager or fetchpriority=high
+  if (
+    !/\sloading\s*=/i.test(injectedTag) &&
+    !/\sdata-eager\b/i.test(injectedTag) &&
+    !/\sdata-no-lazy\b/i.test(injectedTag) &&
+    !/\sfetchpriority\s*=\s*(?:(["'])high\1|high\b)/i.test(injectedTag)
+  ) {
     injectedTag = injectedTag.replace(/\s*\/?>$/, ` loading="lazy"$&`);
   }
   if (!/\sdecoding\s*=/i.test(injectedTag)) {
     injectedTag = injectedTag.replace(/\s*\/?>$/, ` decoding="async"$&`);
-  }
-
-  // Inject LQIP (Low Quality Image Placeholder) via style
-  if (
-    data.lqip &&
-    !/\sstyle\s*=[^>]*background-image[^>]*>/i.test(injectedTag)
-  ) {
-    const styleMatch = injectedTag.match(/\sstyle\s*=\s*(["'])(.*?)\1/i);
-    const lqipStyle = `background-image: url('${data.lqip}'); background-size: cover; background-position: center;`;
-
-    if (styleMatch) {
-      // Append to existing style attribute
-      const existingStyle = styleMatch[2];
-      const newStyle = existingStyle.trim().endsWith(";")
-        ? `${existingStyle} ${lqipStyle}`
-        : `${existingStyle}; ${lqipStyle}`;
-      injectedTag = injectedTag.replace(styleMatch[0], ` style="${newStyle}"`);
-    } else {
-      // Create new style attribute
-      injectedTag = injectedTag.replace(/\s*\/?>$/, ` style="${lqipStyle}"$&`);
-    }
   }
 
   return injectedTag;
@@ -199,7 +208,7 @@ function main() {
   }
 
   console.log(
-    `Injected responsive srcset, LQIP, and CLS attributes into ${injectedTags} <img> tag(s) across ${changedFiles} HTML file(s).`,
+    `Injected responsive srcset, LQIP class, and CLS attributes into ${injectedTags} <img> tag(s) across ${changedFiles} HTML file(s).`,
   );
 }
 

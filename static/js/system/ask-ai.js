@@ -263,7 +263,6 @@ async function loadProfileContext(config) {
     const abortOnPageExit = () => controller.abort();
 
     window.addEventListener("pagehide", abortOnPageExit, { once: true });
-    window.addEventListener("beforeunload", abortOnPageExit, { once: true });
 
     try {
       const response = await fetch(config.profileUrl, {
@@ -285,7 +284,6 @@ async function loadProfileContext(config) {
     } finally {
       window.clearTimeout(timeout);
       window.removeEventListener("pagehide", abortOnPageExit);
-      window.removeEventListener("beforeunload", abortOnPageExit);
       profileCache.promise = null;
     }
   })();

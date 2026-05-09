@@ -28,7 +28,13 @@
         "Zod",
         "Vite"
       ],
-      "tags": ["monitoring", "fullstack", "backend", "frontend", "systems"],
+      "tags": [
+        "monitoring",
+        "fullstack",
+        "backend",
+        "frontend",
+        "systems"
+      ],
       "github_url": "https://github.com/kascit/pulse",
       "live_url": "https://pulse.dhanur.me",
       "repo_language": "TypeScript",
@@ -67,11 +73,21 @@
         "Authentication",
         "SSO"
       ],
-      "tags": ["backend", "security", "identity", "systems"],
+      "tags": [
+        "backend",
+        "security",
+        "identity",
+        "systems"
+      ],
       "github_url": "https://github.com/kascit/authy",
       "live_url": "https://auth.dhanur.me",
       "repo_language": "TypeScript",
-      "repo_topics": ["auth", "jwt", "sso", "nodejs"],
+      "repo_topics": [
+        "auth",
+        "jwt",
+        "sso",
+        "nodejs"
+      ],
       "repo_updated_at": "2026-05-04T07:33:22.671Z",
       "repo_archived": false,
       "repo_stars": 0
@@ -92,12 +108,29 @@
       ],
       "lang": "Go",
       "status": "live",
-      "techs": ["Go", "Monitoring", "Status Page", "Render", "Concurrency"],
-      "tags": ["infra", "systems", "backend", "devops", "tooling"],
+      "techs": [
+        "Go",
+        "Monitoring",
+        "Status Page",
+        "Render",
+        "Concurrency"
+      ],
+      "tags": [
+        "infra",
+        "systems",
+        "backend",
+        "devops",
+        "tooling"
+      ],
       "github_url": "https://github.com/kascit/up",
       "live_url": "https://up.dhanur.me",
       "repo_language": "Go",
-      "repo_topics": ["go", "status-page", "monitoring", "dashboard"],
+      "repo_topics": [
+        "go",
+        "status-page",
+        "monitoring",
+        "dashboard"
+      ],
       "repo_updated_at": "2026-05-01T10:00:00Z",
       "repo_archived": false,
       "repo_stars": 1
@@ -131,7 +164,13 @@
         "AWS Lambda",
         "Computer Vision"
       ],
-      "tags": ["systems", "cloud", "infra", "backend", "automation"],
+      "tags": [
+        "systems",
+        "cloud",
+        "infra",
+        "backend",
+        "automation"
+      ],
       "github_url": "https://github.com/kascit/face-rekognition",
       "repo_language": "C++",
       "repo_topics": [
@@ -178,11 +217,23 @@
         "Web Game",
         "Browser Game Loop"
       ],
-      "tags": ["frontend", "gaming", "systems", "automation", "portfolio"],
+      "tags": [
+        "frontend",
+        "gaming",
+        "systems",
+        "automation",
+        "portfolio"
+      ],
       "github_url": "https://github.com/kascit/Beat.pe",
       "live_url": "https://kascit.github.io/Beat.pe/",
       "repo_language": "JavaScript",
-      "repo_topics": ["css", "game", "html", "javascript", "web-game"],
+      "repo_topics": [
+        "css",
+        "game",
+        "html",
+        "javascript",
+        "web-game"
+      ],
       "repo_updated_at": "2026-02-26T17:59:39Z",
       "repo_archived": false,
       "repo_stars": 1
@@ -213,7 +264,13 @@
         "OOP",
         "Playlist Manager"
       ],
-      "tags": ["systems", "tooling", "algorithms", "frontend", "backend"],
+      "tags": [
+        "systems",
+        "tooling",
+        "algorithms",
+        "frontend",
+        "backend"
+      ],
       "github_url": "https://github.com/kascit/listly",
       "repo_language": "Java",
       "repo_topics": [
@@ -255,7 +312,13 @@
         "Github Pages",
         "Personal Website"
       ],
-      "tags": ["portfolio", "frontend", "systems", "data", "backend"],
+      "tags": [
+        "portfolio",
+        "frontend",
+        "systems",
+        "data",
+        "backend"
+      ],
       "github_url": "https://github.com/kascit/kascit.github.io",
       "url": "/",
       "url_label": "Visit",
@@ -295,7 +358,13 @@
         "H2",
         "Docker"
       ],
-      "tags": ["backend", "systems", "frontend", "productivity", "devops"],
+      "tags": [
+        "backend",
+        "systems",
+        "frontend",
+        "productivity",
+        "devops"
+      ],
       "github_url": "https://github.com/kascit/tasks",
       "live_url": "https://tasks.dhanur.me",
       "repo_language": "HTML",
@@ -335,8 +404,20 @@
         "Smart deduplication and auto-cleanup",
         "Security hardened with SSRF protection and CSP"
       ],
-      "techs": ["Rust", "Axum", "HTMX", "Supabase", "Tailwind CSS"],
-      "tags": ["infra", "systems", "frontend", "backend", "portfolio"],
+      "techs": [
+        "Rust",
+        "Axum",
+        "HTMX",
+        "Supabase",
+        "Tailwind CSS"
+      ],
+      "tags": [
+        "infra",
+        "systems",
+        "frontend",
+        "backend",
+        "portfolio"
+      ],
       "github_url": "https://github.com/kascit/linkr",
       "live_url": "https://linkr.dhanur.me",
       "repo_language": "Rust",
@@ -369,7 +450,13 @@
         "Shell Scripting",
         "Automation"
       ],
-      "tags": ["tooling", "frontend", "infra", "algorithms", "debugging"],
+      "tags": [
+        "tooling",
+        "frontend",
+        "infra",
+        "algorithms",
+        "debugging"
+      ],
       "github_url": "https://github.com/kascit/stuff",
       "repo_language": "HTML",
       "repo_topics": [],
@@ -392,8 +479,21 @@
         "Interview-style problem progression"
       ],
       "lang": "Java · Python",
-      "techs": ["Java", "Python", "JavaScript", "C++", "Rust", "C"],
-      "tags": ["systems", "algorithms", "backend", "frontend", "devops"],
+      "techs": [
+        "Java",
+        "Python",
+        "JavaScript",
+        "C++",
+        "Rust",
+        "C"
+      ],
+      "tags": [
+        "systems",
+        "algorithms",
+        "backend",
+        "frontend",
+        "devops"
+      ],
       "github_url": "https://github.com/kascit/leetcode-solutions",
       "url": "https://leetcode.com/u/kascit/",
       "url_label": "Profile",
@@ -437,7 +537,13 @@
         "Learning",
         "Collections"
       ],
-      "tags": ["algorithms", "systems", "backend", "data", "frontend"],
+      "tags": [
+        "algorithms",
+        "systems",
+        "backend",
+        "data",
+        "frontend"
+      ],
       "github_url": "https://github.com/kascit/java-data-structures-and-algorithms",
       "repo_language": "",
       "repo_topics": [
@@ -477,7 +583,13 @@
         "Selenium",
         "Web Scraping"
       ],
-      "tags": ["automation", "frontend", "systems", "productivity", "backend"],
+      "tags": [
+        "automation",
+        "frontend",
+        "systems",
+        "productivity",
+        "backend"
+      ],
       "github_url": "https://github.com/kascit/coursera-automata",
       "repo_language": "Python",
       "repo_topics": [
@@ -507,8 +619,21 @@
       ],
       "lang": "HTML",
       "status": "archived",
-      "techs": ["HTML", "CSS", "Game", "JavaScript", "Tic Tac Toe", "Web Game"],
-      "tags": ["frontend", "gaming", "systems", "automation", "devops"],
+      "techs": [
+        "HTML",
+        "CSS",
+        "Game",
+        "JavaScript",
+        "Tic Tac Toe",
+        "Web Game"
+      ],
+      "tags": [
+        "frontend",
+        "gaming",
+        "systems",
+        "automation",
+        "devops"
+      ],
       "github_url": "https://github.com/kascit/tic-tac-toe",
       "repo_language": "HTML",
       "repo_topics": [
@@ -537,11 +662,29 @@
         "Automation-first developer workflow"
       ],
       "lang": "JavaScript · HTML",
-      "techs": ["JavaScript", "HTML", "CSS", "AWS", "Cloud", "Web Development"],
-      "tags": ["tooling", "frontend", "cloud", "systems", "automation"],
+      "techs": [
+        "JavaScript",
+        "HTML",
+        "CSS",
+        "AWS",
+        "Cloud",
+        "Web Development"
+      ],
+      "tags": [
+        "tooling",
+        "frontend",
+        "cloud",
+        "systems",
+        "automation"
+      ],
       "github_url": "https://github.com/kascit/toAWS",
       "repo_language": "JavaScript",
-      "repo_topics": ["aws", "cloud", "javascript", "web-development"],
+      "repo_topics": [
+        "aws",
+        "cloud",
+        "javascript",
+        "web-development"
+      ],
       "repo_updated_at": "2025-11-19T15:02:55Z",
       "repo_archived": false,
       "repo_stars": 1,
@@ -569,7 +712,13 @@
         "Frontend Prototyping",
         "Rapid Iteration"
       ],
-      "tags": ["gaming", "systems", "infra", "tooling", "debugging"],
+      "tags": [
+        "gaming",
+        "systems",
+        "infra",
+        "tooling",
+        "debugging"
+      ],
       "github_url": "https://github.com/kascit/wallowords",
       "repo_language": "",
       "repo_topics": [],

@@ -86,7 +86,6 @@
 .fa-feed,.fa-rss{--fa:"\f09e"}
 .fa-globe{--fa:"\f0ac"}
 .fa-wrench{--fa:"\f0ad"}
-.fa-list-check,.fa-tasks{--fa:"\f0ae"}
 .fa-chain,.fa-link{--fa:"\f0c1"}
 .fa-cloud{--fa:"\f0c2"}
 .fa-envelope{--fa:"\f0e0"}
@@ -114,6 +113,7 @@
 .fa-right-to-bracket,.fa-sign-in-alt{--fa:"\f2f6"}
 .fa-clipboard{--fa:"\f328"}
 .fa-shield-alt,.fa-shield-halved{--fa:"\f3ed"}
+.fa-clipboard-list{--fa:"\f46d"}
 .fa-book-open{--fa:"\f518"}
 .fa-palette{--fa:"\f53f"}
 .fa-diagram-project,.fa-project-diagram{--fa:"\f542"}

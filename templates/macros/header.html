@@ -33,7 +33,7 @@
     {% endif %}
     <!-- Logo (centered on mobile) -->
     <div class="flex-1 flex justify-center items-center lg:flex lg:justify-start">
-        <a href="/" data-keybind="d h" data-keybind-action="click" data-tooltip-label="Go to home" data-tooltip-shortcut="d h" data-tooltip-position="bottom" class="btn btn-ghost hover:bg-transparent hover:border-transparent normal-case text-xl font-bold text-base-content logo-firefly site-logo-link tooltip tooltip-bottom">
+        <a href="{{ config.base_url | safe }}/" data-keybind="d h" data-keybind-action="click" data-tooltip-label="Go to home" data-tooltip-shortcut="d h" data-tooltip-position="bottom" class="btn btn-ghost hover:bg-transparent hover:border-transparent normal-case text-xl font-bold text-base-content logo-firefly site-logo-link tooltip tooltip-bottom">
             {% if has_theme_specific_logos %}
                 {# Theme-specific logos stacked in same space to prevent layout shift on switch #}
                 {% set dark_logo_src = logo_dark_image_path %}

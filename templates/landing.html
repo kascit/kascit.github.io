@@ -101,7 +101,7 @@
 </div>
 
 <script type="module">
-  import { initResponsive, isMobile } from '{{ config.base_url }}/js/core/responsive.js';
+  import { initResponsive, isMobile } from '{{ config.base_url | safe }}/js/core/responsive.js';
   
   function checkStars() {
     initResponsive();

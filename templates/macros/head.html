@@ -141,9 +141,7 @@
       {% set resolved_meta_type = meta_type %}
     {% endif %}
 
-    <title>
-      {{ resolved_title }}
-    </title>
+    <title>{{- resolved_title -}}</title>
 
     <link rel="canonical" href="{{ current_url | safe }}" />
 

@@ -61,6 +61,10 @@
     <!-- Resource hints: only preconnect to origins needed before first paint. -->
     <link rel="preconnect" href="https://auth.dhanur.me" crossorigin>
     {% set theme_colorset = self::get_theme_colorset(config=config) | trim %}
+    <!-- Trusted Types: pass-through default policy for 3rd-party compat (GTM, Sentry, Cloudflare). -->
+    <script>
+    if(window.trustedTypes&&trustedTypes.createPolicy){trustedTypes.createPolicy('default',{createHTML:function(s){return s},createScript:function(s){return s},createScriptURL:function(s){return s}});}
+    </script>
     <!-- Critical prepaint bootstrap lives in js/boot.js and must run synchronously. -->
     {%- set cookie_domain = config.base_url | replace(from="https://", to="") | replace(from="http://", to="") -%}
     <script data-cookie-domain="{{ cookie_domain }}"

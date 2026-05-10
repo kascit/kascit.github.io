@@ -642,7 +642,6 @@ function makeTeaser(body, terms) {
     var w = weighted[wl];
     if (startIndex < w[2]) {
       teaser.push(body.substring(startIndex, w[2]));
-      startIndex = w[2];
     }
     if (w[1] === TERM_WEIGHT) teaser.push("<b>");
     startIndex = w[2] + w[0].length;

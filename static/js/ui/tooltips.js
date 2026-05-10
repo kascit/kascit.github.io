@@ -97,9 +97,10 @@ function tokenLabel(token) {
 }
 
 function resolvePositionClass(element) {
-  const explicit = canonicalizeToken(
-    element.getAttribute("data-tooltip-position"),
-  );
+  const rawPos = element.getAttribute("data-tooltip-position");
+  const explicit = String(rawPos || "")
+    .trim()
+    .toLowerCase();
   if (explicit) {
     const candidate = `tooltip-${explicit}`;
     if (POSITION_CLASSES.includes(candidate)) return candidate;

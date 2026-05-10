@@ -110,7 +110,7 @@
       }
 
       var raw = new URL(location.href).searchParams.get("q") || "";
-      var decoded = raw;
+      var decoded;
       try {
         decoded = decodeURIComponent(raw);
       } catch (_e) {

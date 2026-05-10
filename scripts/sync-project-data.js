@@ -57,7 +57,7 @@ function githubRequest(endpoint, token) {
     Accept: "application/vnd.github+json",
   };
 
-  if (token) headers.Authorization = `Bearer ${token}`;
+  if (token) headers.Authorization = `Bearer ${token}`; // lgtm[js/file-access-to-http] token sourced from env or gh CLI
 
   return new Promise((resolve, reject) => {
     const req = https.request(

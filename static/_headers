@@ -8,7 +8,7 @@ Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
 X-Content-Type-Options: nosniff
 X-XSS-Protection: 0
 Referrer-Policy: strict-origin-when-cross-origin
-Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), interest-cohort=()
+Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), browsing-topics=()
 
 # =============================================================================
 # CACHE HEADERS FOR STATIC ASSETS 

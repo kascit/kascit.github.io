@@ -3,16 +3,6 @@
 {% import "macros/nav.html" as macros_nav %}
 
 {% block extra_head %}
-{% if section.extra.hero is defined %}
-  {% set dark_src = section.extra.hero.image_dark | default(value=section.extra.hero.image | default(value="")) %}
-  {% set light_src = section.extra.hero.image_light | default(value=section.extra.hero.image | default(value="")) %}
-  {% if light_src != "" %}
-  <link rel="preload" as="image" href="{{ get_url(path=light_src) | safe }}" media="(prefers-color-scheme: light)">
-  {% endif %}
-  {% if dark_src != "" %}
-  <link rel="preload" as="image" href="{{ get_url(path=dark_src) | safe }}" media="(prefers-color-scheme: dark)">
-  {% endif %}
-{% endif %}
 {% endblock extra_head %}
 {% block prev_link %}{% endblock prev_link %}
 {% block next_link %}
@@ -111,7 +101,7 @@
 </div>
 
 <script type="module">
-  import { initResponsive, isMobile } from '{{ config.base_url }}/js/core/responsive.js';
+  import { initResponsive, isMobile } from '{{ config.base_url | safe }}/js/core/responsive.js';
   
   function checkStars() {
     initResponsive();

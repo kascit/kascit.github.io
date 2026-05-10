@@ -61,7 +61,7 @@
   "author": {
     "@type": "Person",
     "name": "{{ config.author | default(value='') }}",
-    "url": "{{ config.base_url | safe }}about/"
+    "url": "{{ config.base_url | safe }}/about/"
   }
 }
 </script>
@@ -82,7 +82,7 @@
   "author": {
     "@type": "Person",
     "name": "{{ config.author | default(value='Dhanur') }}",
-    "url": "{{ config.base_url | safe }}about/"
+    "url": "{{ config.base_url | safe }}/about/"
   },
   "datePublished": "{{ page.date | date(format='%+') }}",
   "dateModified": "{{ page.updated | default(value=page.date) | date(format='%+') }}",

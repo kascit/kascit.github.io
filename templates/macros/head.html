@@ -34,6 +34,36 @@
     {% if current_url is not defined or current_url == "" %}
         {% set current_url = config.base_url %}
     {% endif %}
+    <script>
+      if (window.trustedTypes && trustedTypes.createPolicy) {
+        // 1. Initialize pass-through policy for the parent window context
+        try {
+          trustedTypes.createPolicy('default', {
+            createHTML: (string) => string,
+            createScript: (string) => string,
+            createScriptURL: (string) => string,
+          });
+        } catch (err) {}
+
+        // 2. Intercept iframe injections to seed child contexts (Resolves Cloudflare innerHTML crash)
+        var originalAppend = Node.prototype.appendChild;
+        Node.prototype.appendChild = function(child) {
+          var result = originalAppend.call(this, child);
+          if (child.nodeName === 'IFRAME' && child.contentWindow) {
+            try {
+              if (child.contentWindow.trustedTypes && child.contentWindow.trustedTypes.createPolicy) {
+                child.contentWindow.trustedTypes.createPolicy('default', {
+                  createHTML: function(s) { return s; },
+                  createScript: function(s) { return s; },
+                  createScriptURL: function(s) { return s; },
+                });
+              }
+            } catch (err) {}
+          }
+          return result;
+        };
+      }
+    </script>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="content-type" content="text/html; charset=utf-8">
@@ -41,17 +71,13 @@
     
     <!-- Security headers are managed via edge configuration. -->
     <!-- Fail-open CSP hand-off: fallback policy lives in this meta tag and is removed by the Cloudflare Worker when strict nonce CSP is injected as an HTTP header. -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://dhanur.me blob: https://*.dhanur.me https://www.googletagmanager.com https://www.google-analytics.com https://giscus.app https://utteranc.es https://static.cloudflareinsights.com https://gist.github.com https://asciinema.org https://challenges.cloudflare.com https://*.cloudflare.com https://*.sentry-cdn.com https://analytics.ahrefs.com; style-src 'self' 'unsafe-inline' https://*.dhanur.me https://fonts.googleapis.com https://giscus.app; font-src 'self' data: https://*.dhanur.me https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.dhanur.me https://*.sentry.io https://browser.sentry-cdn.com https://www.google-analytics.com https://stats.g.doubleclick.net https://analytics.ahrefs.com; manifest-src 'self' https://*.dhanur.me; frame-src 'self' https://giscus.app https://utteranc.es https://www.youtube.com https://codepen.io https://www.openstreetmap.org https://asciinema.org https://challenges.cloudflare.com; worker-src 'self' blob: https://*.dhanur.me; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests; require-trusted-types-for 'script'; trusted-types default giscus googletagmanager sentry 'allow-duplicates';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://dhanur.me blob: https://*.dhanur.me https://www.googletagmanager.com https://www.google-analytics.com https://giscus.app https://utteranc.es https://static.cloudflareinsights.com https://gist.github.com https://asciinema.org https://challenges.cloudflare.com https://*.cloudflare.com https://*.sentry-cdn.com https://analytics.ahrefs.com; style-src 'self' 'unsafe-inline' https://*.dhanur.me https://fonts.googleapis.com https://giscus.app; font-src 'self' data: https://*.dhanur.me https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.dhanur.me https://*.sentry.io https://browser.sentry-cdn.com https://www.google-analytics.com https://stats.g.doubleclick.net https://analytics.ahrefs.com; manifest-src 'self' https://*.dhanur.me; frame-src 'self' https://giscus.app https://utteranc.es https://www.youtube.com https://codepen.io https://www.openstreetmap.org https://asciinema.org https://challenges.cloudflare.com; worker-src 'self' blob: https://*.dhanur.me; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests; require-trusted-types-for 'script'; trusted-types default dompurify giscus googletagmanager sentry 'allow-duplicates';">
     <meta name="referrer" content="strict-origin-when-cross-origin">
     <meta name="application-name" content="{{ config.title | default(value='dhanur.me') }}">
 
     <!-- Resource hints: only preconnect to origins needed before first paint. -->
     <link rel="preconnect" href="https://auth.dhanur.me" crossorigin>
     {% set theme_colorset = self::get_theme_colorset(config=config) | trim %}
-    <!-- Trusted Types: pass-through default policy for 3rd-party compat (GTM, Sentry, Cloudflare). -->
-    <script>
-    if(window.trustedTypes&&trustedTypes.createPolicy){trustedTypes.createPolicy('default',{createHTML:function(s){return s},createScript:function(s){return s},createScriptURL:function(s){return s}});}
-    </script>
     <!-- Critical prepaint bootstrap lives in js/boot.js and must run synchronously. -->
     {%- set cookie_domain = config.base_url | replace(from="https://", to="") | replace(from="http://", to="") -%}
     <script data-cookie-domain="{{ cookie_domain }}"
@@ -128,9 +154,7 @@
       {% set resolved_meta_type = meta_type %}
     {% endif %}
 
-    <title>
-      {{ resolved_title }}
-    </title>
+    <title>{{- resolved_title -}}</title>
 
     <link rel="canonical" href="{{ current_url | safe }}" />
 

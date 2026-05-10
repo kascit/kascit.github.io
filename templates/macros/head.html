@@ -36,15 +36,32 @@
     {% endif %}
     <script>
       if (window.trustedTypes && trustedTypes.createPolicy) {
+        // 1. Initialize pass-through policy for the parent window context
         try {
           trustedTypes.createPolicy('default', {
             createHTML: (string) => string,
             createScript: (string) => string,
             createScriptURL: (string) => string,
           });
-        } catch (err) {
-          // Absorb duplicate policy errors silently to allow page execution to continue
-        }
+        } catch (err) {}
+
+        // 2. Intercept iframe injections to seed child contexts (Resolves Cloudflare innerHTML crash)
+        var originalAppend = Node.prototype.appendChild;
+        Node.prototype.appendChild = function(child) {
+          var result = originalAppend.call(this, child);
+          if (child.nodeName === 'IFRAME' && child.contentWindow) {
+            try {
+              if (child.contentWindow.trustedTypes && child.contentWindow.trustedTypes.createPolicy) {
+                child.contentWindow.trustedTypes.createPolicy('default', {
+                  createHTML: function(s) { return s; },
+                  createScript: function(s) { return s; },
+                  createScriptURL: function(s) { return s; },
+                });
+              }
+            } catch (err) {}
+          }
+          return result;
+        };
       }
     </script>
     <meta charset="utf-8">

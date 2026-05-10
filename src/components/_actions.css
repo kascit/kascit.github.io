@@ -101,8 +101,9 @@ h6:hover .copy-heading-link-button {
 .tooltip-content-smart {
   @apply inline-flex items-center gap-1.5;
   max-width: 24rem;
-  font-size: 0.74rem;
-  line-height: 1.2;
+  font-size: 0.75rem;
+  line-height: 1.25rem;
+  min-height: 28px;
 }
 
 .tooltip-content-smart .tooltip-label {
@@ -147,6 +148,8 @@ h6:hover .copy-heading-link-button {
 .tooltip:has(> .tooltip-content[data-smart-tooltip="1"])::after {
   transition-duration: 130ms !important;
   transition-timing-function: cubic-bezier(0.2, 0, 0.2, 1) !important;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
 }
 
 @media (hover: none), (pointer: coarse), (max-width: 1023px) {

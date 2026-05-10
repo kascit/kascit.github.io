@@ -49,7 +49,8 @@ console.log(`Removed ${removed} page/1 redirect directories.`);
 // index redirect stubs. Zola generates the sitemap before post-build cleanup runs.
 const sitemapPath = path.join(publicDir, "sitemap.xml");
 if (fs.existsSync(sitemapPath) && removedPaths.length > 0) {
-  let sitemap = fs.readFileSync(sitemapPath, "utf8");
+  const originalSitemap = fs.readFileSync(sitemapPath, "utf8");
+  let sitemap = originalSitemap;
   let purged = 0;
   for (const urlPath of removedPaths) {
     // Match the full <url>...</url> block containing this path in <loc>
@@ -58,9 +59,11 @@ if (fs.existsSync(sitemapPath) && removedPaths.length > 0) {
       `\\s*<url>[\\s\\S]*?<loc>[^<]*${escaped}[^<]*<\\/loc>[\\s\\S]*?<\\/url>`,
       "g",
     );
-    const before = sitemap.length;
-    sitemap = sitemap.replace(pattern, "");
-    if (sitemap.length < before) purged += 1;
+    const replaced = sitemap.replace(pattern, "");
+    if (replaced !== sitemap) {
+      sitemap = replaced;
+      purged += 1;
+    }
   }
   if (purged > 0) {
     fs.writeFileSync(sitemapPath, sitemap, "utf8");

@@ -43,7 +43,6 @@
                 <div class="relative h-18 flex items-center">
                     {# Dark theme logo — visible by default, positioned in flow to set container width #}
                     <picture>
-                        <source type="image/webp" srcset="{{ get_url(path=dark_logo_src | replace(from=".png", to=".webp") | replace(from=".svg", to=".webp")) | safe }}">
                         <img src="{{ get_url(path=dark_logo_src) | safe }}"
                              alt="{{ logo_text }}"
                              class="h-18 w-auto logo-dark"
@@ -54,7 +53,6 @@
                     </picture>
                     {# Light theme logo — overlaid absolutely so it occupies same space #}
                     <picture class="absolute inset-0 flex items-center">
-                        <source type="image/webp" srcset="{{ get_url(path=light_logo_src | replace(from=".png", to=".webp") | replace(from=".svg", to=".webp")) | safe }}">
                         <img src="{{ get_url(path=light_logo_src) | safe }}"
                              alt="{{ logo_text }}"
                              class="h-18 w-auto logo-light"

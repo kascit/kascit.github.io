@@ -44,17 +44,6 @@
 <!DOCTYPE html>
 {{ macros_head::html_tag(config=config, lang=lang) }}
 <head>
-    <script>
-      if (window.trustedTypes && trustedTypes.createPolicy) {
-        if (!trustedTypes.defaultPolicy) {
-          trustedTypes.createPolicy('default', {
-            createHTML: (string) => string,
-            createScript: (string) => string,
-            createScriptURL: (string) => string,
-          });
-        }
-      }
-    </script>
     {% block seo %}
     {% set resolved_meta_title = "" %}
     {% set resolved_meta_description = "" %}

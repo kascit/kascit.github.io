@@ -22,8 +22,8 @@
     {% if config.build_search_index and not is_export %}
     <div class="px-2 pt-4 pb-0 flex flex-col items-center gap-2">
         <div class="w-full flex items-center gap-2">
-            <label
-                for="search-modal"
+            <button
+                type="button"
                 class="sidebar-search-trigger input w-full flex items-center justify-between gap-3 text-left cursor-pointer transition"
                 aria-label="Search"
                 data-search-open="true"
@@ -38,7 +38,7 @@
                     <kbd class="kbd kbd-xs">D</kbd>
                     <kbd class="kbd kbd-xs">K</kbd>
                 </span>
-            </label>
+            </button>
         </div>
     </div>
     {% endif %}

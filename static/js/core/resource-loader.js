@@ -40,7 +40,7 @@ export function appendScriptOnce({
   }
 
   const script = document.createElement("script");
-  const policy = window.__staticLoaderPolicy;
+  const policy = window.__defaultPolicy;
   script.src = policy ? policy.createScriptURL(src) : src;
   script.async = async;
   script.defer = defer;

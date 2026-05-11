@@ -648,7 +648,7 @@ var ASK_AI_ICON_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.813 15.904L9 18l-1.813-2.096a5.5 5.5 0 117.626 0L13 18l-.813-2.096M12 8v4m0 3h.01" /></svg>';
 
 function parseSvgString(svgString) {
-  var p = window.__staticLoaderPolicy;
+  var p = window.__defaultPolicy;
   var safeString =
     p && typeof p.createHTML === "function"
       ? p.createHTML(svgString)
@@ -1285,7 +1285,7 @@ function loadSearchLibraries(callback) {
       }
 
       var script = document.createElement("script");
-      var p = window.__staticLoaderPolicy;
+      var p = window.__defaultPolicy;
       script.src =
         p && typeof p.createScriptURL === "function"
           ? p.createScriptURL(safeSrc)

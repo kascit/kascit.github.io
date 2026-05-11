@@ -49,6 +49,29 @@
             });
           } catch(e) {}
         }
+
+        function installFramePolicy(methodName) {
+          const original = Element.prototype[methodName];
+          Element.prototype[methodName] = function(...args) {
+            const result = original.apply(this, args);
+            const node = args[0];
+            if (node && node.tagName === 'IFRAME') {
+              try {
+                const win = node.contentWindow;
+                if (win && win.trustedTypes && !win.trustedTypes.defaultPolicy) {
+                  win.trustedTypes.createPolicy('default', {
+                    createHTML: s => s,
+                    createScript: s => s,
+                    createScriptURL: s => s
+                  });
+                }
+              } catch (err) {}
+            }
+            return result;
+          };
+        }
+        installFramePolicy('appendChild');
+        installFramePolicy('insertBefore');
       })();
     </script>
     <meta name="application-name" content="{{ config.title | default(value='dhanur.me') }}">

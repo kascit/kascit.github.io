@@ -371,9 +371,31 @@ function showHints() {
   for (const el of targets) {
     let explicitHint = null;
 
-    // Semantic rules — skip TOC sidebar: those are page-internal anchors
-    // (#skills, #section-heading) that must not inherit site-nav shortcuts.
-    if (!el.closest("[data-toc-sidebar]")) {
+    // Semantic rules — normally skip TOC sidebar because those are
+    // page-internal anchors that must not inherit site-nav shortcuts.
+    // However, some TOC entries are site-level links (e.g. /archive/, /about/)
+    // and should still receive their semantic shortcuts. Detect those by
+    // allowing semantic-rule matching for anchors that point to a same-origin
+    // pathname with no hash (i.e. true site nav links), even when inside the
+    // TOC sidebar.
+    const inToc = !!el.closest("[data-toc-sidebar]");
+    let allowSemanticInToc = false;
+    if (el.tagName === "A" && el.href) {
+      try {
+        const u = new URL(el.href, window.location.origin);
+        // same-origin and no fragment/hash
+        if (u.origin === window.location.origin && !u.hash) {
+          // treat shallow site nav paths as nav links (e.g. /about/, /archive/)
+          const segments = u.pathname.replace(/(^\/|\/$)/g, "").split("/");
+          // allow 0 (root) or 1-segment paths to be treated as site links
+          if (segments.length <= 1) allowSemanticInToc = true;
+        }
+      } catch (e) {
+        allowSemanticInToc = false;
+      }
+    }
+
+    if (!inToc || allowSemanticInToc) {
       for (const rule of SEMANTIC_RULES) {
         if (
           (rule.selector && el.matches(rule.selector)) ||

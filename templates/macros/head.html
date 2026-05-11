@@ -158,7 +158,13 @@
 
     {# Google Analytics and Sentry are loaded client-side only after cookie consent. #}
     {# Ahrefs Analytics: lightweight site-analytics script, no consent gate required. #}
-    {% if config.extra.ahrefs_analytics_key is defined and config.extra.ahrefs_analytics_key != "" %}
+    {% set env_ahrefs_key = get_env(name="AHREFS_KEY", default="") %}
+    {% if env_ahrefs_key != "" %}
+      {% set ahrefs_key = env_ahrefs_key %}
+    {% elif config.extra.ahrefs_analytics_key is defined and config.extra.ahrefs_analytics_key != "" %}
+      {% set ahrefs_key = config.extra.ahrefs_analytics_key %}
+    {% endif %}
+    {% if ahrefs_key is defined and ahrefs_key != "" %}
     <script data-telemetry="ahrefs">
       (function(){
         function load(){
@@ -167,7 +173,7 @@
           var p = window.__defaultPolicy;
           s.src = p ? p.createScriptURL(url) : url;
           s.async=true;
-          s.setAttribute("data-key","{{ config.extra.ahrefs_analytics_key | safe }}");
+          s.setAttribute("data-key","{{ ahrefs_key | safe }}");
           document.head.appendChild(s);
         }
         function schedule(){

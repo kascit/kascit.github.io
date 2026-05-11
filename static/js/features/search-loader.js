@@ -43,7 +43,6 @@ function sanitizeScriptSrc(src) {
 
   try {
     var url = new URL(trimmed, window.location.origin);
-    if (url.origin !== window.location.origin) return "";
     if (!/\.js(?:[?#].*)?$/i.test(url.pathname)) return "";
     return url.pathname + url.search + url.hash;
   } catch {
@@ -528,18 +527,6 @@ function initPageFindEvents() {
     });
   }
 
-  window.addEventListener("pagefind:toggle", function () {
-    togglePageFindPanel();
-  });
-
-  window.addEventListener("pagefind:open", function () {
-    openPageFindPanel();
-  });
-
-  window.addEventListener("pagefind:close", function () {
-    closePageFindPanel(true);
-  });
-
   document.addEventListener("keydown", function (event) {
     if (!state.isOpen) return;
     if (event.key !== "Escape") return;
@@ -661,7 +648,12 @@ var ASK_AI_ICON_SVG =
   '<svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.813 15.904L9 18l-1.813-2.096a5.5 5.5 0 117.626 0L13 18l-.813-2.096M12 8v4m0 3h.01" /></svg>';
 
 function parseSvgString(svgString) {
-  var doc = new DOMParser().parseFromString(svgString, "image/svg+xml");
+  var p = window.__staticLoaderPolicy;
+  var safeString =
+    p && typeof p.createHTML === "function"
+      ? p.createHTML(svgString)
+      : svgString;
+  var doc = new DOMParser().parseFromString(safeString, "image/svg+xml");
   var svg = doc.documentElement;
   if (!svg || svg.nodeName === "parsererror") return null;
   return document.importNode(svg, true);
@@ -1293,7 +1285,11 @@ function loadSearchLibraries(callback) {
       }
 
       var script = document.createElement("script");
-      script.src = safeSrc;
+      var p = window.__staticLoaderPolicy;
+      script.src =
+        p && typeof p.createScriptURL === "function"
+          ? p.createScriptURL(safeSrc)
+          : safeSrc;
       script.async = true;
       script.onload = function () {
         script.setAttribute("data-loaded", "1");
@@ -1342,9 +1338,7 @@ function bindSearchEvents() {
   if (searchModal) {
     searchModal.addEventListener("change", function () {
       if (this.checked) {
-        loadSearchLibraries().catch(function () {
-          // Keep modal usable even if search libraries fail to load.
-        });
+        loadSearchLibraries().catch(function () {});
       }
     });
   }
@@ -1354,36 +1348,113 @@ function bindSearchEvents() {
     trigger.addEventListener(
       "mouseenter",
       function () {
-        loadSearchLibraries().catch(function () {
-          // Ignore prefetch errors here; active open handles user-visible state.
-        });
+        loadSearchLibraries().catch(function () {});
       },
       { once: true },
     );
-
     trigger.addEventListener(
       "focus",
       function () {
-        loadSearchLibraries().catch(function () {
-          // Ignore prefetch errors here; active open handles user-visible state.
-        });
+        loadSearchLibraries().catch(function () {});
       },
       { once: true },
     );
-
     trigger.addEventListener(
       "touchstart",
       function () {
-        loadSearchLibraries().catch(function () {
-          // Ignore prefetch errors here; active open handles user-visible state.
-        });
+        loadSearchLibraries().catch(function () {});
       },
       { once: true, passive: true },
     );
   });
 }
 
+function instantiateSearchTemplate() {
+  var template = document.getElementById("search-modal-template");
+  if (template) {
+    document.body.appendChild(template.content.cloneNode(true));
+    template.remove();
+    return true;
+  }
+  return false;
+}
+
 export function initSearchLoader() {
-  bindSearchEvents();
-  initPageFindEvents();
+  var searchTriggers = getSearchOpenTriggers();
+  var initialized = false;
+
+  function wakeUpSearch(e) {
+    if (e && e.type === "click" && e.target && e.target.closest) {
+      var isLabel = e.target.closest('label[for="search-modal"]');
+      if (isLabel) {
+        e.preventDefault();
+      }
+    }
+
+    if (!initialized) {
+      instantiateSearchTemplate();
+      bindSearchEvents();
+      initPageFindEvents();
+      initialized = true;
+    }
+
+    if (e && (e.type === "click" || e.type === "keydown")) {
+      var modal = getSearchModal();
+      if (modal) {
+        modal.checked = true;
+        modal.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    }
+  }
+
+  // Eager page-find event listeners so shortcuts work immediately
+  window.addEventListener("pagefind:toggle", function () {
+    wakeUpSearch();
+    togglePageFindPanel();
+  });
+
+  window.addEventListener("pagefind:open", function () {
+    wakeUpSearch();
+    openPageFindPanel();
+  });
+
+  window.addEventListener("pagefind:close", function () {
+    if (!initialized) return;
+    closePageFindPanel(true);
+  });
+
+  document.addEventListener("keydown", function (e) {
+    if ((e.ctrlKey || e.metaKey) && e.key === "k") {
+      e.preventDefault();
+      wakeUpSearch(e);
+    }
+  });
+
+  searchTriggers.forEach(function (trigger) {
+    trigger.addEventListener("mouseenter", wakeUpSearch, { once: true });
+    trigger.addEventListener("focus", wakeUpSearch, { once: true });
+    trigger.addEventListener("touchstart", wakeUpSearch, {
+      once: true,
+      passive: true,
+    });
+
+    trigger.addEventListener("click", wakeUpSearch);
+    trigger.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        wakeUpSearch(e);
+      }
+    });
+  });
+
+  try {
+    if (
+      window.sessionStorage &&
+      window.sessionStorage.getItem(PAGE_FIND_TRANSFER_KEY)
+    ) {
+      wakeUpSearch();
+    }
+  } catch {
+    // Ignore storage access restrictions in strict privacy modes
+  }
 }

@@ -40,18 +40,21 @@
 {% endmacro meta_tags %}
 
 {% macro website_schema(config) %}
+{% set site_name = macros_utils::json_escape(value=config.title | default(value='dhanur.me')) %}
+{% set site_desc = macros_utils::json_escape(value=config.description | default(value='')) %}
+{% set site_author = macros_utils::json_escape(value=config.author | default(value='')) %}
 <!-- Website Structured Data -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "WebSite",
-  "name": "{{ config.title | default(value='dhanur.me') }}",
+  "name": "{{ site_name | safe }}",
   "url": "{{ config.base_url | safe }}",
-  "description": "{{ config.description | default(value='') }}",
+  "description": "{{ site_desc | safe }}",
   {% if config.extra.logo and config.extra.logo.image_path %}
   "publisher": {
     "@type": "Organization",
-    "name": "{{ config.title | default(value='dhanur.me') }}",
+    "name": "{{ site_name | safe }}",
     "logo": {
       "@type": "ImageObject",
       "url": "{{ get_url(path=config.extra.logo.image_path) | safe }}"
@@ -60,7 +63,7 @@
   {% endif %}
   "author": {
     "@type": "Person",
-    "name": "{{ config.author | default(value='') }}",
+    "name": "{{ site_author | safe }}",
     "url": "{{ config.base_url | safe }}/about/"
   }
 }
@@ -72,6 +75,8 @@
 {% if is_blog_post %}
 {% set headline = macros_utils::json_escape(value=page.title) | trim %}
 {% set desc = macros_utils::json_escape(value=page.description | default(value='')) | trim %}
+{% set site_name = macros_utils::json_escape(value=config.title | default(value='dhanur.me')) %}
+{% set site_author = macros_utils::json_escape(value=config.author | default(value='Dhanur')) %}
 <!-- Article Structured Data -->
 <script type="application/ld+json">
 {
@@ -81,14 +86,14 @@
   "description": "{{ desc | safe }}",
   "author": {
     "@type": "Person",
-    "name": "{{ config.author | default(value='Dhanur') }}",
+    "name": "{{ site_author | safe }}",
     "url": "{{ config.base_url | safe }}/about/"
   },
   "datePublished": "{{ page.date | date(format='%+') }}",
   "dateModified": "{{ page.updated | default(value=page.date) | date(format='%+') }}",
   "publisher": {
     "@type": "Organization",
-    "name": "{{ config.title | default(value='dhanur.me') }}",{% if config.extra.logo and config.extra.logo.image_path %}
+    "name": "{{ site_name | safe }}",{% if config.extra.logo and config.extra.logo.image_path %}
     "logo": {
       "@type": "ImageObject",
       "url": "{{ get_url(path=config.extra.logo.image_path) | safe }}"

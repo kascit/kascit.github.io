@@ -2,18 +2,18 @@
 
 ## Supported Versions
 
-| Version | Supported |
-| ------- | --------- |
-| Latest (`main`) | ✅ |
-| Older deploys | ❌ |
+| Version         | Supported |
+| --------------- | --------- |
+| Latest (`main`) | ✅        |
+| Older deploys   | ❌        |
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability in this project, **please do not open a public issue.**
+Please report any suspected or confirmed security vulnerabilities privately to **[security@dhanur.me](mailto:security@dhanur.me)**. Please do not open a public issue.
 
 Instead, report it privately:
 
-1. **Email:** [contact@dhanur.me](mailto:[contact@dhanur.me])
+1. **Email:** [security@dhanur.me](mailto:security@dhanur.me)
 2. **Subject line:** `[SECURITY] kascit.github.io — <brief description>`
 
 ### What to include

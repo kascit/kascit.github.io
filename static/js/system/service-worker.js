@@ -61,7 +61,9 @@ async function requestNotificationPermission() {
 
 async function setupServiceWorker(swPath) {
   try {
-    await navigator.serviceWorker.register(swPath);
+    const policy = window.__staticLoaderPolicy;
+    const safePath = policy ? policy.createScriptURL(swPath) : swPath;
+    await navigator.serviceWorker.register(safePath);
     const registration = await navigator.serviceWorker.ready;
 
     registerPeriodicSync(registration);

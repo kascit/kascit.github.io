@@ -75,7 +75,7 @@ Comments are powered by **[Giscus](https://giscus.app)** and stored through GitH
 This site uses two forms of analytics:
 
 1. **Ahrefs Analytics**: A privacy-friendly, cookieless script loaded by default to monitor basic traffic patterns.
-2. **Google Analytics**: A more detailed tracking script loaded *only* if you opt-in by enabling optional cookies. This helps understand aggregate traffic patterns like page views, device types, and referrers to improve content. None of this is used for user-level profiling.
+2. **Google Analytics**: A more detailed tracking script loaded _only_ if you opt-in by enabling optional cookies. This helps understand aggregate traffic patterns like page views, device types, and referrers to improve content. None of this is used for user-level profiling.
 
 ## What We Collect (summary)
 

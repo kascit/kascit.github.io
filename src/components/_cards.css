@@ -3,26 +3,45 @@
   --post-thumb-blur: 14px;
   position: relative;
   isolation: isolate;
+  overflow: hidden;
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-base-100) 68%, transparent) 0%,
+      color-mix(in oklab, var(--color-base-200) 56%, transparent) 100%
+    ),
+    radial-gradient(
+      ellipse at top,
+      color-mix(in oklab, var(--color-base-content) 8%, transparent) 0%,
+      transparent 64%
+    );
 }
 
-.post-hero-thumb__bg {
+.post-hero-thumb::before,
+.post-hero-thumb::after {
+  content: "";
   position: absolute;
   inset: 0;
   z-index: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: cover;
+  background:
+    radial-gradient(
+      circle at 30% 20%,
+      color-mix(in oklab, var(--color-base-content) 10%, transparent) 0%,
+      transparent 52%
+    ),
+    radial-gradient(
+      circle at 70% 65%,
+      color-mix(in oklab, var(--color-base-content) 8%, transparent) 0%,
+      transparent 55%
+    );
   filter: blur(var(--post-thumb-blur));
   transform: scale(1.03);
-  opacity: 0.52;
+  opacity: 0.45;
 }
 
-.post-hero-thumb__bg--expanded {
+.post-hero-thumb::after {
   inset: calc(-1 * var(--post-thumb-blur));
-  opacity: 0.38;
+  opacity: 0.28;
 }
 
 .post-hero-thumb__img {
@@ -31,7 +50,7 @@
   display: block;
   width: 100%;
   height: 100%;
-  object-fit: contain;
+  object-fit: cover;
   object-position: center;
 }
 

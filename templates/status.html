@@ -1,10 +1,11 @@
-{% import "macros/head.html" as macros_head %}
-{% import "macros/search.html" as macros_search %}
-{% import "macros/header.html" as macros_header %}
-{% import "macros/sidebar.html" as macros_sidebar %}
-{% import "macros/drawer.html" as macros_drawer %}
-{% import "macros/cookie_consent.html" as macros_cookie_consent %}
-{% import "macros/runtime.html" as macros_runtime %}
+{%- import "macros/head.html" as macros_head -%}
+{%- import "macros/search.html" as macros_search -%}
+{%- import "macros/header.html" as macros_header -%}
+{%- import "macros/sidebar.html" as macros_sidebar -%}
+{%- import "macros/drawer.html" as macros_drawer -%}
+{%- import "macros/cookie_consent.html" as macros_cookie_consent -%}
+{%- import "macros/runtime.html" as macros_runtime -%}
+<!DOCTYPE html>
 
 {% set status_title = "Status" %}
 {% set status_desc = "System status and route diagnostics." %}
@@ -22,7 +23,6 @@
 {% set status_meta_title = status_title ~ " | " ~ site_title %}
 {% set status_url = config.base_url ~ status_path %}
 
-<!DOCTYPE html>
 {{ macros_head::html_tag(config=config, lang=config.default_language) }}
 <head>
     {{ macros_head::head(
@@ -60,7 +60,7 @@
             </div>
         </div>
 
-        <div id="sidebar" data-sidebar-root="true" class="drawer-side pt-16 z-[60] lg:z-40">
+        <div id="navigation-drawer" data-sidebar-root="true" class="drawer-side pt-16 z-[60] lg:z-40">
             {{ macros_drawer::drawer_overlay() }}
             {{ macros_sidebar::sidebar(config=config, lang=config.default_language, current_path=status_path, section=false) }}
         </div>

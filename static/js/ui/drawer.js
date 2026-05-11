@@ -113,7 +113,7 @@ function initSidebarToggle() {
 }
 
 function initAppsGridCollapse() {
-  const details = document.querySelector("details[data-apps-grid-sidebar]");
+  const details = document.querySelector("details:has([data-app-menu-grid])");
   if (!details) return;
 
   // Restore persisted state

@@ -36,7 +36,12 @@ function setText(el, value) {
 }
 
 function setSrc(el, value) {
-  if (el) el.src = value;
+  if (!el) return;
+  if (value) {
+    el.src = value;
+    return;
+  }
+  el.removeAttribute("src");
 }
 
 function bindAll(root, selector, eventName, handler, options) {
@@ -148,7 +153,7 @@ export function initAuth(drawerElement = document, onAuthResolved = null) {
     const navbarRoot = drawerElement.querySelector(".navbar");
     const sidebarRoot =
       drawerElement.querySelector("[data-sidebar-root]") ||
-      drawerElement.querySelector("#sidebar");
+      drawerElement.querySelector("#navigation-drawer");
     const sidebarAccountRoot = drawerElement.querySelector(
       "[data-sidebar-account]",
     );

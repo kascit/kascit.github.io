@@ -1,4 +1,5 @@
 {% macro search(config) %} {% if config.build_search_index %}
+<template id="search-modal-template">
 <!-- Search Modal -->
 <input
   type="checkbox"
@@ -23,7 +24,7 @@
         class="search-input-container px-6 pt-3 pb-4 border-b border-base-300/30"
       >
         <h2 id="search-title" class="sr-only">Search</h2>
-        <div class="search-input-wrap relative">
+        <form class="search-input-wrap relative" action="javascript:void(0);">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             class="search-icon absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-base-content/40"
@@ -61,9 +62,9 @@
             type="button"
             class="search-modal-close search-modal-close-inline"
             data-search-close="true"
-            aria-label="Close search"
             title="Close search"
           >
+            <span class="sr-only">Close search</span>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               class="h-4 w-4"
@@ -75,7 +76,7 @@
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-        </div>
+        </form>
       </div>
       <!-- Search Results Container -->
       <div data-search-results-container="true" class="search-results-container px-2 py-2 h-96 overflow-y-auto">
@@ -121,7 +122,7 @@
   aria-label="Search in current page"
   hidden
 >
-  <div class="page-find-shell">
+  <form class="page-find-shell" action="javascript:void(0);">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       class="page-find-icon h-4 w-4"
@@ -153,6 +154,7 @@
     <button type="button" class="page-find-btn" data-page-find-next="true" aria-label="Next match">↓</button>
     <button type="button" class="page-find-clear" data-page-find-clear="true" aria-label="Clear current page search">Clear</button>
     <button type="button" class="page-find-btn page-find-close" data-page-find-close="true" aria-label="Close page search" title="Close (Esc)">✕</button>
-  </div>
+  </form>
 </div>
+</template>
 {% endif %} {% endmacro search %}

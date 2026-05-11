@@ -92,24 +92,10 @@
     {% else %}
         {% set post_thumbnail_url = get_url(path=post_thumbnail) | safe %}
     {% endif %}
-<div class="not-prose mb-8 md:mb-10 overflow-hidden rounded-2xl border border-base-content/10 bg-base-200/30 shadow-sm post-hero-thumb aspect-video">
-    <img src="{{ post_thumbnail_url | safe }}"
-         class="post-hero-thumb__bg"
-         aria-hidden="true"
-         alt=""
-         loading="eager"
-         fetchpriority="high"
-         decoding="async" />
-    <img src="{{ post_thumbnail_url | safe }}"
-         class="post-hero-thumb__bg post-hero-thumb__bg--expanded"
-         aria-hidden="true"
-         alt=""
-         loading="eager"
-         fetchpriority="high"
-         decoding="async" />
+<div class="not-prose mb-8 md:mb-10 overflow-hidden rounded-2xl border border-base-content/10 bg-base-200/30 shadow-sm post-hero-thumb aspect-video relative">
     <img src="{{ post_thumbnail_url | safe }}"
          alt="{{ page.extra.thumbnail_alt | default(value=page.title) }}"
-         class="post-hero-thumb__img"
+         class="post-hero-thumb__img relative z-10"
          loading="eager"
          fetchpriority="high"
          decoding="async" />
@@ -138,9 +124,6 @@
     {% set show_notify_banner = is_blog_post %}
     {% if page is defined and page.extra.notify_banner is defined %}
         {% set show_notify_banner = page.extra.notify_banner %}
-    {% endif %}
-    {% if show_notify_banner %}
-    <script defer src="{{ get_url(path='js/ui/notify-banner.js') | safe }}"></script>
     {% endif %}
 {% endblock js_body %}
 
@@ -172,7 +155,7 @@
         {% set prev_post = blog_section.pages[prev_index] %}
         {{ macros_nav::render_button(url=prev_post.permalink, title=prev_post.title, subtitle="Previous", direction="prev") }}
     {% elif current_index == 0 %}
-        {{ macros_nav::render_button(url="/blog", title="Blog", subtitle="Back to", direction="prev") }}
+        {{ macros_nav::render_button(url="/blog/", title="Blog", subtitle="Back to", direction="prev") }}
     {% endif %}
     {% endif %}
 {% endblock prev_link %}
@@ -205,7 +188,7 @@
         {% set next_post = blog_section.pages[next_index] %}
         {{ macros_nav::render_button(url=next_post.permalink, title=next_post.title, subtitle="Next", direction="next") }}
     {% elif current_index >= 0 %}
-        {{ macros_nav::render_button(url="/archive", title="Archive", subtitle="View All", direction="next") }}
+        {{ macros_nav::render_button(url="/archive/", title="Archive", subtitle="View All", direction="next") }}
     {% endif %}
     {% endif %}
 {% endblock next_link %}

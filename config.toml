@@ -14,7 +14,7 @@ default_language = "en"
 # BUILD & OUTPUT
 # =============================================================================
 compile_sass = true                 # Required by Zola theme
-minify_html = true                  # Always enable in production
+minify_html = false                 # Disabled to preserve strict HTML5 closures and quoted attributes
 
 build_search_index = true           # Required for site search
 generate_feeds = true
@@ -53,7 +53,7 @@ external_links_target_blank = true
 external_links_no_referrer = true   # Security best practice
 
 [markdown.highlighting]
-style = "inline"                   # Latest Zola-compatible highlighting without generated giallo source files
+style = "class"                      # Map syntax to CSS variables instead of bloated inline rules
 light_theme = "github-light"
 dark_theme = "github-dark"
 
@@ -84,7 +84,7 @@ default_thumbnail = "images/thumbs/default_thumbnail.jpg"
 
 # Analytics (leave empty to disable cleanly)
 gtag = "G-BY8SPYYYYR"
-ahrefs_analytics_key = "zpZ3KAfSjE0wBbf1DHDY0w"
+ahrefs_analytics_key = "$AHREFS_KEY"
 
 # GitHub edit link (used by theme templates)
 edit_url = "https://github.com/kascit/kascit.github.io/edit/main"

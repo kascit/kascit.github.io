@@ -34,26 +34,13 @@
       <p class="notify-banner__text">Stay updated when I publish new content.</p>
     </div>
     <div class="notify-banner__actions">
-      <button class="notify-banner__btn" type="button" data-notify-dismiss>
+      <button class="notify-banner__btn focus-visible:ring-2 focus-visible:ring-primary" type="button" data-notify-dismiss>
         Dismiss
       </button>
-      <button class="notify-banner__btn notify-banner__btn--primary" type="button" data-notify-enable>
+      <button class="notify-banner__btn notify-banner__btn--primary focus-visible:ring-2 focus-visible:ring-primary" type="button" data-notify-enable>
         Enable
       </button>
     </div>
-  </div>
-
-  <div
-    class="notify-toast hidden"
-    data-notify-toast
-    role="status"
-    aria-live="polite"
-    aria-atomic="true"
-  >
-    <div class="notify-toast__content notify-toast__content--info" data-notify-toast-alert>
-      <span class="notify-toast__message" data-notify-toast-message></span>
-    </div>
-  </div>
 </div>
 {% endif %}
 {% endmacro notify_banner %}

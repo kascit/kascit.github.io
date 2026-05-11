@@ -15,8 +15,13 @@
   {% set project_status = project.status | default(value="") %}
   <article class="project-card">
     {% if project.thumbnail_image %}
+    {% if project.thumbnail_image is starting_with("http://") or project.thumbnail_image is starting_with("https://") %}
+        {% set project_thumb_url = project.thumbnail_image %}
+    {% else %}
+        {% set project_thumb_url = get_url(path=project.thumbnail_image) | safe %}
+    {% endif %}
     <a href="/projects/{{ project.slug }}/" class="block aspect-video w-full overflow-hidden rounded-md mb-3 border border-base-content/10 bg-base-300/30">
-      <img src="{{ project.thumbnail_image }}" alt="{{ project.thumbnail_alt | default(value=project.title) }}" sizes="(min-width: 1024px) 50vw, 100vw" class="w-full h-full object-cover transition-transform duration-300 hover:scale-105" loading="lazy" width="800" height="450">
+      <img src="{{ project_thumb_url | safe }}" alt="{{ project.thumbnail_alt | default(value=project.title) }}" sizes="(min-width: 1024px) 50vw, 100vw" class="w-full h-full object-cover transition-transform duration-300 hover:scale-105" loading="lazy" width="800" height="450">
     </a>
     {% endif %}
     <div class="project-card-header">

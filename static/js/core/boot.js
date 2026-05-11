@@ -40,4 +40,20 @@
     getL("sidebar-collapsed") ? "1" : "0",
   );
   d.setAttribute("data-toc-collapsed", getL("toc-collapsed") ? "1" : "0");
+
+  function activateDeferredCss() {
+    var links = document.querySelectorAll('link[data-defer-css="true"]');
+    for (var i = 0; i < links.length; i += 1) {
+      links[i].media = "all";
+      links[i].removeAttribute("data-defer-css");
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", activateDeferredCss, {
+      once: true,
+    });
+  } else {
+    activateDeferredCss();
+  }
 })();

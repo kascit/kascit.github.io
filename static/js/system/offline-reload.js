@@ -7,6 +7,7 @@
   var ATTEMPT_KEY = "offlineReloadLastAttempt";
   var ATTEMPT_WINDOW_MS = 6000;
   var POLL_INTERVAL_MS = 5000;
+  var PING_TIMEOUT_MS = 2500;
   var isChecking = false;
   var pollInterval = null;
 
@@ -49,16 +50,25 @@
 
   function probeNetwork() {
     // Requests under /__runtime/ are excluded from SW handling in static/sw.js.
+    var controller = new AbortController();
+    var timeoutId = window.setTimeout(function () {
+      controller.abort();
+    }, PING_TIMEOUT_MS);
+
     return fetch("/__runtime/ping?ts=" + Date.now(), {
       method: "GET",
       cache: "no-store",
       credentials: "same-origin",
+      signal: controller.signal,
     })
       .then(function () {
         return true;
       })
       .catch(function () {
         return false;
+      })
+      .finally(function () {
+        window.clearTimeout(timeoutId);
       });
   }
 
@@ -89,6 +99,13 @@
 
   window.addEventListener("online", maybeRecover);
 
+  function stopPolling() {
+    if (pollInterval) {
+      window.clearInterval(pollInterval);
+      pollInterval = null;
+    }
+  }
+
   // Periodic polling: keep checking network status every POLL_INTERVAL_MS
   // even if 'online' event doesn't fire. This ensures recovery on reconnect.
   pollInterval = setInterval(function () {
@@ -96,4 +113,7 @@
       maybeRecover();
     }
   }, POLL_INTERVAL_MS);
+
+  window.addEventListener("pagehide", stopPolling, { once: true });
+  window.addEventListener("beforeunload", stopPolling, { once: true });
 })();

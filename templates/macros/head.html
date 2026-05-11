@@ -219,10 +219,8 @@
 
     <link rel="preload" href="{{ get_url(path="css/main.css") | safe }}" as="style">
     <link rel="stylesheet" href="{{ get_url(path="css/main.css") | safe }}">
-    
-    <!-- Deferred CSS Loading -->
-    <link rel="stylesheet" href="{{ get_url(path="css/lqip.css") | safe }}" media="print" onload="this.media='all'; this.onload=null;">
-    <link rel="stylesheet" href="{{ get_url(path="css/font-awesome.subset.css") | safe }}" media="print" onload="this.media='all'; this.onload=null;">
+    <link rel="stylesheet" href="{{ get_url(path="css/lqip.css") | safe }}" media="print" data-defer-css="true">
+    <link rel="stylesheet" href="{{ get_url(path="css/font-awesome.subset.css") | safe }}" media="print" data-defer-css="true">
     <noscript>
         <link rel="stylesheet" href="{{ get_url(path="css/lqip.css") | safe }}">
         <link rel="stylesheet" href="{{ get_url(path="css/font-awesome.subset.css") | safe }}">

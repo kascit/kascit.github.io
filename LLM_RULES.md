@@ -52,7 +52,7 @@ selectors: data-\*-mount ONLY for JS mount points. no generic IDs except well-kn
 responsive: use static/js/core/responsive.js helpers. no ad-hoc breakpoints in JS.
 daisyUI: data-tip XOR title. never both.
 typography: HTML class="not-prose". NO CSS @apply not-prose.
-access-keys: SEMANTIC_RULES in access-keys.js = single source of truth for keyboard hints. no data-hint in templates except override cases. elements inside [data-toc-sidebar] are excluded from semantic rules (internal anchors).
+access-keys: SEMANTIC_RULES in access-keys.js = single source of truth for keyboard hints. no data-hint in templates except override cases. elements inside [data-toc-sidebar] are excluded from semantic rules (internal anchors). if a force-rail page needs a shortcut for a rail item like Archive, set an explicit `data-hint` on that template link.
 TOC: single initToc() from toc.js covers ALL pages (blog, archive, taxonomy). getTocLink uses href$=#ID for full-URL zola children AND data-toc-ID for summary parents AND bare #ID for archive anchors.
 notify-banner: path is js/ui/notify-banner.js (not root-level js/).
 
@@ -62,7 +62,7 @@ macros: import separate files. no deep same-file chaining.
 404 routing: templates/404.html ONLY. no content/404.md.
 offline page: templates/offline.html (no content/offline.md).
 404 + offline layout: \_force_rail=true in base.html → use_fit_shell=true + has_layout_rail=true + empty #toc-sidebar nav (aria-label="Page tools") for full structural parity. Toggle button label is "Hide/Show tools rail" (not "table of contents"). offline page must have force_rail=true in [extra].
-CSP: no inline style="" attributes. use CSS classes. JS DOM manipulation toggles classes only.
+CSP: no inline style="" attributes. use CSS classes. JS DOM manipulation toggles classes only. deferred style sheets use `data-defer-css="true"` and get activated by `static/js/core/boot.js`; avoid inline event-handler attributes on style sheet links.
 
 SEO / SCHEMA
 article JSON-LD: author Person must include both name AND URL (→ /about/).

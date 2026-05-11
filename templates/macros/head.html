@@ -35,16 +35,15 @@
     {% endif %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
     {% if nonce != "" %}
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'nonce-{{ nonce }}' 'strict-dynamic' 'unsafe-inline' 'wasm-unsafe-eval' https://dhanur.me blob: https://*.dhanur.me https://www.googletagmanager.com https://www.google-analytics.com https://giscus.app https://utteranc.es https://static.cloudflareinsights.com https://gist.github.com https://asciinema.org https://challenges.cloudflare.com https://*.cloudflare.com https://*.sentry-cdn.com; style-src 'nonce-{{ nonce }}' data: https://*.dhanur.me https://fonts.googleapis.com https://giscus.app; style-src-attr 'unsafe-inline'; font-src 'self' data: https://*.dhanur.me https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.dhanur.me https://*.sentry.io https://browser.sentry-cdn.com https://www.google-analytics.com https://stats.g.doubleclick.net https://analytics.ahrefs.com; manifest-src 'self' https://*.dhanur.me; frame-src 'self' https://giscus.app https://utteranc.es https://www.youtube.com https://codepen.io https://www.openstreetmap.org https://asciinema.org https://challenges.cloudflare.com; worker-src 'self' blob: https://*.dhanur.me; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests; require-trusted-types-for 'script'; trusted-types static-loader dompurify giscus googletagmanager sentry 'allow-duplicates';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'nonce-{{ nonce }}' 'strict-dynamic' 'unsafe-inline' 'wasm-unsafe-eval' blob: https://dhanur.me https://*.dhanur.me https://www.googletagmanager.com https://www.google-analytics.com https://giscus.app https://utteranc.es https://static.cloudflareinsights.com https://gist.github.com https://asciinema.org https://challenges.cloudflare.com https://*.cloudflare.com https://*.sentry-cdn.com; style-src 'nonce-{{ nonce }}' data: https://*.dhanur.me https://fonts.googleapis.com https://giscus.app; style-src-attr 'unsafe-inline'; font-src 'self' data: https://*.dhanur.me https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://*.dhanur.me https://*.sentry.io https://browser.sentry-cdn.com https://www.google-analytics.com https://stats.g.doubleclick.net https://analytics.ahrefs.com; manifest-src 'self' https://*.dhanur.me; frame-src 'self' https://giscus.app https://utteranc.es https://www.youtube.com https://codepen.io https://www.openstreetmap.org https://asciinema.org https://challenges.cloudflare.com; worker-src 'self' blob: https://*.dhanur.me; object-src 'none'; base-uri 'self'; form-action 'self'; upgrade-insecure-requests; require-trusted-types-for 'script'; trusted-types default dompurify giscus googletagmanager sentry 'allow-duplicates';">
     {% endif %}
     <meta name="referrer" content="strict-origin-when-cross-origin">
-    <script nonce="">
+    <script>
       (function(){
-        if (window.trustedTypes && window.trustedTypes.createPolicy && !window.__staticLoaderPolicy) {
+        if (window.trustedTypes && window.trustedTypes.createPolicy) {
           try {
-            window.__staticLoaderPolicy = window.trustedTypes.createPolicy('static-loader', {
+            window.__defaultPolicy = window.trustedTypes.createPolicy('default', {
               createScriptURL: function(s) { return s; },
               createHTML: function(s) { return s; }
             });
@@ -57,7 +56,7 @@
     <link rel="preconnect" href="https://auth.dhanur.me" crossorigin>
     {% set theme_colorset = self::get_theme_colorset(config=config) | trim %}
     {%- set cookie_domain = config.base_url | replace(from="https://", to="") | replace(from="http://", to="") -%}
-    <script nonce="" data-cookie-domain="{{ cookie_domain }}"
+    <script data-cookie-domain="{{ cookie_domain }}"
             data-default-colorset="{{ theme_colorset }}"
             data-webmcp-compat="1">
 {{ load_data(path="static/js/core/boot.js") | safe }}
@@ -137,12 +136,12 @@
     {# Google Analytics and Sentry are loaded client-side only after cookie consent. #}
     {# Ahrefs Analytics: lightweight site-analytics script, no consent gate required. #}
     {% if config.extra.ahrefs_analytics_key is defined and config.extra.ahrefs_analytics_key != "" %}
-    <script data-telemetry="ahrefs" nonce="">
+    <script data-telemetry="ahrefs">
       (function(){
         function load(){
           var s=document.createElement("script");
           var url = "https://analytics.ahrefs.com/analytics.js";
-          var p = window.__staticLoaderPolicy;
+          var p = window.__defaultPolicy;
           s.src = p ? p.createScriptURL(url) : url;
           s.async=true;
           s.setAttribute("data-key","{{ config.extra.ahrefs_analytics_key | safe }}");
@@ -202,10 +201,8 @@
 
       <link rel="preload" href="{{ get_url(path="css/main.css") | safe }}" as="style">
     <link rel="stylesheet" href="{{ get_url(path="css/main.css") | safe }}">
-    <link rel="preload" href="{{ get_url(path="css/lqip.css") | safe }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{{ get_url(path="css/lqip.css") | safe }}"></noscript>
-      <link rel="preload" href="{{ get_url(path="css/font-awesome.subset.css") | safe }}" as="style" onload="this.onload=null;this.rel='stylesheet'">
-    <noscript><link rel="stylesheet" href="{{ get_url(path="css/font-awesome.subset.css") | safe }}"></noscript>
+    <link rel="stylesheet" href="{{ get_url(path="css/lqip.css") | safe }}">
+    <link rel="stylesheet" href="{{ get_url(path="css/font-awesome.subset.css") | safe }}">
 
     <meta name="js-modules"
             data-katex-css="{{ get_url(path="css/katex.min.css") | safe }}"

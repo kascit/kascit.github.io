@@ -61,7 +61,7 @@ async function requestNotificationPermission() {
 
 async function setupServiceWorker(swPath) {
   try {
-    const policy = window.__staticLoaderPolicy;
+    const policy = window.__defaultPolicy;
     const safePath = policy ? policy.createScriptURL(swPath) : swPath;
     await navigator.serviceWorker.register(safePath);
     const registration = await navigator.serviceWorker.ready;

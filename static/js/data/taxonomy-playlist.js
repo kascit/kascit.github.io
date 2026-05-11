@@ -51,7 +51,7 @@ function setButtonIcon(button, iconClass) {
 }
 
 function makeSvgFromMarkup(markup) {
-  const p = window.__staticLoaderPolicy;
+  const p = window.__defaultPolicy;
   const safeString =
     p && typeof p.createHTML === "function" ? p.createHTML(markup) : markup;
   const doc = new DOMParser().parseFromString(safeString, "image/svg+xml");

@@ -371,8 +371,9 @@ function showHints() {
   for (const el of targets) {
     let explicitHint = null;
 
-    // Semantic rules — skip TOC sidebar: those are page-internal anchors
-    // (#skills, #section-heading) that must not inherit site-nav shortcuts.
+    // Semantic rules — skip TOC sidebar: those are page-internal anchors that
+    // must not inherit site-nav shortcuts. If a TOC entry needs a shortcut,
+    // it should opt in explicitly with data-hint in the template.
     if (!el.closest("[data-toc-sidebar]")) {
       for (const rule of SEMANTIC_RULES) {
         if (

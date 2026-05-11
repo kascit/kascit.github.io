@@ -85,25 +85,26 @@
 {{ load_data(path="static/js/core/boot.js") | safe }}
     </script>
 
-        {# Font configuration with backward compatibility #}
-        {% if config.extra.font is defined %}
-            {% set font_enabled = config.extra.font.enabled | default(value=config.extra.custom_font_enabled | default(value=false)) %}
-            {% set font_name = config.extra.font.name | default(value=config.extra.custom_font_name | default(value='CustomFont')) %}
-            {% set font_path = config.extra.font.path | default(value=config.extra.custom_font_path | default(value='')) %}
+    {# Font configuration with backward compatibility #}
+    {% if config.extra.font is defined %}
+        {% set font_enabled = config.extra.font.enabled | default(value=config.extra.custom_font_enabled | default(value=false)) %}
+        {% set font_name = config.extra.font.name | default(value=config.extra.custom_font_name | default(value='CustomFont')) %}
+        {% set font_path = config.extra.font.path | default(value=config.extra.custom_font_path | default(value='')) %}
+    {% else %}
+        {% set font_enabled = config.extra.custom_font_enabled | default(value=false) %}
+        {% set font_name = config.extra.custom_font_name | default(value='CustomFont') %}
+        {% set font_path = config.extra.custom_font_path | default(value='') %}
+    {% endif %}
+    
+    {% if font_enabled and font_path != '' %}
+        {% if font_path is starting_with("http://") or font_path is starting_with("https://") %}
+            <link href="{{ font_path | safe }}" rel="stylesheet">
         {% else %}
-            {% set font_enabled = config.extra.custom_font_enabled | default(value=false) %}
-            {% set font_name = config.extra.custom_font_name | default(value='CustomFont') %}
-            {% set font_path = config.extra.custom_font_path | default(value='') %}
-        {% endif %}
-        {% if font_enabled and font_path != '' %}
-            {% if font_path is starting_with("http://") or font_path is starting_with("https://") %}
-                <link href="{{ font_path | safe }}" rel="stylesheet">
-            {% else %}
             {% set font_url = get_url(path=font_path) %}
             {% set font_css = "@font-face{font-family:'" ~ font_name ~ "';src:url('" ~ font_url ~ "') format('woff');font-weight:400;font-style:normal;font-display:swap;}body{font-family:'" ~ font_name ~ "',sans-serif !important;}" %}
-            <link rel="stylesheet" href="data:text/css;charset=utf-8,{{ font_css | urlencode_strict }}">
-            {% endif %}
+            <style>{{ font_css | safe }}</style>
         {% endif %}
+    {% endif %}
 
     {% if meta_description != "" %}
       <meta name="description" content="{{ meta_description }}" />
@@ -145,96 +146,88 @@
     {% endif %}
 
     <title>{{- resolved_title -}}</title>
-
     <link rel="canonical" href="{{ current_url | safe }}" />
 
-    {# Ahrefs Site Verification Integration via Env or Config #}
-    {% set env_ahrefs_key = get_env(name="AHREFS_KEY", default="") %}
-    {% if env_ahrefs_key != "" %}
-      <meta name="ahrefs-site-verification" content="{{ env_ahrefs_key | safe }}">
-    {% elif config.extra.ahrefs_analytics_key is defined and config.extra.ahrefs_analytics_key != "" %}
-      <meta name="ahrefs-site-verification" content="{{ config.extra.ahrefs_analytics_key | safe }}">
+    {# Ahrefs Integration (Consolidated) #}
+    {% set ahrefs_key = get_env(name="AHREFS_KEY", default="") %}
+    {% if ahrefs_key == "" and config.extra.ahrefs_analytics_key is defined %}
+        {% set ahrefs_key = config.extra.ahrefs_analytics_key %}
     {% endif %}
 
-    {# Google Analytics and Sentry are loaded client-side only after cookie consent. #}
-    {# Ahrefs Analytics: lightweight site-analytics script, no consent gate required. #}
-    {% set env_ahrefs_key = get_env(name="AHREFS_KEY", default="") %}
-    {% if env_ahrefs_key != "" %}
-      {% set ahrefs_key = env_ahrefs_key %}
-    {% elif config.extra.ahrefs_analytics_key is defined and config.extra.ahrefs_analytics_key != "" %}
-      {% set ahrefs_key = config.extra.ahrefs_analytics_key %}
-    {% endif %}
-    {% if ahrefs_key is defined and ahrefs_key != "" %}
-    <script data-telemetry="ahrefs">
-      (function(){
-        function load(){
-          var s=document.createElement("script");
-          var url = "https://analytics.ahrefs.com/analytics.js";
-          var p = window.__defaultPolicy;
-          s.src = p ? p.createScriptURL(url) : url;
-          s.async=true;
-          s.setAttribute("data-key","{{ ahrefs_key | safe }}");
-          document.head.appendChild(s);
-        }
-        function schedule(){
-          if ("requestIdleCallback" in window) {
-            requestIdleCallback(load, { timeout: 3000 });
-          } else {
-            setTimeout(load, 1500);
+    {% if ahrefs_key != "" %}
+      <meta name="ahrefs-site-verification" content="{{ ahrefs_key | safe }}">
+      <script data-telemetry="ahrefs">
+        (function(){
+          function load(){
+            var s=document.createElement("script");
+            var url = "https://analytics.ahrefs.com/analytics.js";
+            var p = window.__defaultPolicy;
+            s.src = p ? p.createScriptURL(url) : url;
+            s.async=true;
+            s.setAttribute("data-key","{{ ahrefs_key | safe }}");
+            document.head.appendChild(s);
           }
-        }
-        if (document.readyState === 'complete') schedule();
-        else window.addEventListener('load', schedule, {once:true});
-      })();
-    </script>
+          function schedule(){
+            if ("requestIdleCallback" in window) {
+              requestIdleCallback(load, { timeout: 3000 });
+            } else {
+              setTimeout(load, 1500);
+            }
+          }
+          if (document.readyState === 'complete') schedule();
+          else window.addEventListener('load', schedule, {once:true});
+        })();
+      </script>
     {% endif %}
 
-      {{ macros_seo::meta_tags(config=config, current_url=current_url, resolved_title=resolved_title, resolved_description=resolved_description, resolved_meta_type=resolved_meta_type, page=page | default(value=false)) }}
-      {{ macros_seo::website_schema(config=config) }}
+    {{ macros_seo::meta_tags(config=config, current_url=current_url, resolved_title=resolved_title, resolved_description=resolved_description, resolved_meta_type=resolved_meta_type, page=page | default(value=false)) }}
+    {{ macros_seo::website_schema(config=config) }}
 
-      <meta name="theme-color" content="{{ self::get_theme_color(config=config) | trim }}">
+    <meta name="theme-color" content="{{ self::get_theme_color(config=config) | trim }}">
 
-      {% if config.generate_feeds %}
-      <link rel="alternate" type="application/rss+xml" title="{{ config.title | default(value='RSS Feed') }}" href="{{ get_url(path='rss.xml', trailing_slash=false) | safe }}" />
-      {% endif %}
+    {% if config.generate_feeds %}
+    <link rel="alternate" type="application/rss+xml" title="{{ config.title | default(value='RSS Feed') }}" href="{{ get_url(path='rss.xml', trailing_slash=false) | safe }}" />
+    {% endif %}
 
-      {# Favicon configuration #}
-      {# Default path is /icons/ for all favicon files #}
-      {# Users can override individual paths in [extra.favicon] section #}
-      {% if config.extra.favicon is defined %}
-          {% set favicon_base = config.extra.favicon.base_path | default(value="/icons/") %}
-          {% set favicon_16x16 = config.extra.favicon.favicon_16x16 | default(value=favicon_base ~ "favicon-16x16-transparent.png") %}
-          {% set favicon_32x32 = config.extra.favicon.favicon_32x32 | default(value=favicon_base ~ "favicon-32x32-transparent.png") %}
-          {% set favicon_96x96 = config.extra.favicon.favicon_96x96 | default(value=favicon_base ~ "favicon-96x96-transparent.png") %}
-          {% set favicon_svg = config.extra.favicon.favicon_svg | default(value=favicon_base ~ "favicon.svg") %}
-          {% set favicon_ico = config.extra.favicon.favicon_ico | default(value=favicon_base ~ "favicon-transparent.ico") %}
-          {% set apple_touch_icon = config.extra.favicon.apple_touch_icon | default(value=favicon_base ~ "apple-touch-icon-180x180-transparent.png") %}
-          {% set site_webmanifest = config.extra.favicon.site_webmanifest | default(value=favicon_base ~ "site.webmanifest") %}
-      {% else %}
-          {% set favicon_base = "/icons/" %}
-          {% set favicon_16x16 = favicon_base ~ "favicon-16x16-transparent.png" %}
-          {% set favicon_32x32 = favicon_base ~ "favicon-32x32-transparent.png" %}
-          {% set favicon_96x96 = favicon_base ~ "favicon-96x96-transparent.png" %}
-          {% set favicon_svg = favicon_base ~ "favicon.svg" %}
-          {% set favicon_ico = favicon_base ~ "favicon-transparent.ico" %}
-          {% set apple_touch_icon = favicon_base ~ "apple-touch-icon-180x180-transparent.png" %}
-          {% set site_webmanifest = favicon_base ~ "site.webmanifest" %}
-      {% endif %}
-        <link rel="icon" type="image/png" href="{{ favicon_16x16 | safe }}" sizes="16x16" />
-        <link rel="icon" type="image/png" href="{{ favicon_32x32 | safe }}" sizes="32x32" />
-      <link rel="icon" type="image/png" href="{{ favicon_96x96 | safe }}" sizes="96x96" />
-      <link rel="icon" type="image/svg+xml" href="{{ favicon_svg | safe }}" />
-      <link rel="shortcut icon" href="{{ favicon_ico | safe }}" />
-      <link rel="apple-touch-icon" sizes="180x180" href="{{ apple_touch_icon | safe }}" />
-      <link rel="manifest" href="{{ site_webmanifest | safe }}" fetchpriority="low" />
+    {# Favicon configuration #}
+    {% if config.extra.favicon is defined %}
+        {% set favicon_base = config.extra.favicon.base_path | default(value="/icons/") %}
+        {% set favicon_16x16 = config.extra.favicon.favicon_16x16 | default(value=favicon_base ~ "favicon-16x16-transparent.png") %}
+        {% set favicon_32x32 = config.extra.favicon.favicon_32x32 | default(value=favicon_base ~ "favicon-32x32-transparent.png") %}
+        {% set favicon_96x96 = config.extra.favicon.favicon_96x96 | default(value=favicon_base ~ "favicon-96x96-transparent.png") %}
+        {% set favicon_svg = config.extra.favicon.favicon_svg | default(value=favicon_base ~ "favicon.svg") %}
+        {% set favicon_ico = config.extra.favicon.favicon_ico | default(value=favicon_base ~ "favicon-transparent.ico") %}
+        {% set apple_touch_icon = config.extra.favicon.apple_touch_icon | default(value=favicon_base ~ "apple-touch-icon-180x180-transparent.png") %}
+        {% set site_webmanifest = config.extra.favicon.site_webmanifest | default(value=favicon_base ~ "site.webmanifest") %}
+    {% else %}
+        {% set favicon_base = "/icons/" %}
+        {% set favicon_16x16 = favicon_base ~ "favicon-16x16-transparent.png" %}
+        {% set favicon_32x32 = favicon_base ~ "favicon-32x32-transparent.png" %}
+        {% set favicon_96x96 = favicon_base ~ "favicon-96x96-transparent.png" %}
+        {% set favicon_svg = favicon_base ~ "favicon.svg" %}
+        {% set favicon_ico = favicon_base ~ "favicon-transparent.ico" %}
+        {% set apple_touch_icon = favicon_base ~ "apple-touch-icon-180x180-transparent.png" %}
+        {% set site_webmanifest = favicon_base ~ "site.webmanifest" %}
+    {% endif %}
+    <link rel="icon" type="image/png" href="{{ favicon_16x16 | safe }}" sizes="16x16" />
+    <link rel="icon" type="image/png" href="{{ favicon_32x32 | safe }}" sizes="32x32" />
+    <link rel="icon" type="image/png" href="{{ favicon_96x96 | safe }}" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="{{ favicon_svg | safe }}" />
+    <link rel="shortcut icon" href="{{ favicon_ico | safe }}" />
+    <link rel="apple-touch-icon" sizes="180x180" href="{{ apple_touch_icon | safe }}" />
+    <link rel="manifest" href="{{ site_webmanifest | safe }}" fetchpriority="low" />
 
-      <link rel="preload" href="{{ get_url(path="css/main.css") | safe }}" as="style">
+    <link rel="preload" href="{{ get_url(path="css/main.css") | safe }}" as="style">
     <link rel="stylesheet" href="{{ get_url(path="css/main.css") | safe }}">
-    <link rel="stylesheet" href="{{ get_url(path="css/lqip.css") | safe }}">
-    <link rel="stylesheet" href="{{ get_url(path="css/font-awesome.subset.css") | safe }}">
+    <link rel="stylesheet" href="{{ get_url(path="css/lqip.css") | safe }}" media="print" data-defer-css="true">
+    <link rel="stylesheet" href="{{ get_url(path="css/font-awesome.subset.css") | safe }}" media="print" data-defer-css="true">
+    <noscript>
+        <link rel="stylesheet" href="{{ get_url(path="css/lqip.css") | safe }}">
+        <link rel="stylesheet" href="{{ get_url(path="css/font-awesome.subset.css") | safe }}">
+    </noscript>
 
     <meta name="js-modules"
-            data-katex-css="{{ get_url(path="css/katex.min.css") | safe }}"
-            data-sw-path="{{ get_url(path="sw.js") | safe }}">
+          data-katex-css="{{ get_url(path="css/katex.min.css") | safe }}"
+          data-sw-path="{{ get_url(path="sw.js") | safe }}">
 
 {% endmacro head %}

@@ -66,7 +66,12 @@ if (fs.existsSync(sitemapPath) && removedPaths.length > 0) {
     }
   }
   if (purged > 0) {
-    fs.writeFileSync(sitemapPath, sitemap, "utf8");
+    // Write atomically to avoid race conditions: write to a temp file
+    // and rename into place. This prevents other processes from reading
+    // a partially-written file and addresses file-system race warnings.
+    const tmpPath = sitemapPath + ".tmp";
+    fs.writeFileSync(tmpPath, sitemap, "utf8");
+    fs.renameSync(tmpPath, sitemapPath);
     console.log(`Purged ${purged} stale page/1 URL(s) from sitemap.xml.`);
   }
 }

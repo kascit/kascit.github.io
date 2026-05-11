@@ -97,7 +97,10 @@ function loadSelection() {
 
 function saveSelection(items) {
   try {
-    localStorage.setItem(TAXONOMY_SELECTION_STORAGE_KEY, serializeSelection(items));
+    localStorage.setItem(
+      TAXONOMY_SELECTION_STORAGE_KEY,
+      serializeSelection(items),
+    );
   } catch (_error) {
     // ignore storage write failures
   }
@@ -150,9 +153,7 @@ export function initTaxonomySubscribe() {
   if (termNodes.length === 0) return;
 
   const taxonomyName = rail.getAttribute("data-taxonomy-name") || "taxonomy";
-  const selected = new Map(
-    loadSelection().map((term) => [term.feed, term]),
-  );
+  const selected = new Map(loadSelection().map((term) => [term.feed, term]));
 
   function getTermData(node) {
     return {

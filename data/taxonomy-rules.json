@@ -155,21 +155,11 @@
     },
     {
       "tag": "gaming",
-      "keywords": [
-        "game",
-        "gaming",
-        "tic tac toe",
-        "word",
-        "rhythm"
-      ]
+      "keywords": ["game", "gaming", "tic tac toe", "word", "rhythm"]
     },
     {
       "tag": "portfolio",
-      "keywords": [
-        "portfolio",
-        "personal website",
-        "personal platform"
-      ]
+      "keywords": ["portfolio", "personal website", "personal platform"]
     },
     {
       "tag": "infra",
@@ -195,12 +185,7 @@
     },
     {
       "tag": "security",
-      "keywords": [
-        "security",
-        "cryptography",
-        "applied cryptography",
-        "auth"
-      ]
+      "keywords": ["security", "cryptography", "applied cryptography", "auth"]
     },
     {
       "tag": "data",
@@ -216,22 +201,11 @@
     },
     {
       "tag": "product",
-      "keywords": [
-        "product",
-        "saas",
-        "pricing",
-        "business",
-        "strategy"
-      ]
+      "keywords": ["product", "saas", "pricing", "business", "strategy"]
     },
     {
       "tag": "productivity",
-      "keywords": [
-        "productivity",
-        "workflow",
-        "task manager",
-        "tasks"
-      ]
+      "keywords": ["productivity", "workflow", "task manager", "tasks"]
     },
     {
       "tag": "debugging",
@@ -245,12 +219,7 @@
     },
     {
       "tag": "writing",
-      "keywords": [
-        "writing",
-        "documentation",
-        "technical writing",
-        "docs"
-      ]
+      "keywords": ["writing", "documentation", "technical writing", "docs"]
     },
     {
       "tag": "meta",
@@ -264,7 +233,14 @@
     },
     {
       "tag": "monitoring",
-      "keywords": ["monitoring", "uptime", "cron", "status", "health", "observability"]
+      "keywords": [
+        "monitoring",
+        "uptime",
+        "cron",
+        "status",
+        "health",
+        "observability"
+      ]
     },
     {
       "tag": "fullstack",
@@ -299,13 +275,7 @@
     },
     {
       "category": "notes",
-      "tags": [
-        "meta",
-        "product",
-        "productivity",
-        "gaming",
-        "portfolio"
-      ]
+      "tags": ["meta", "product", "productivity", "gaming", "portfolio"]
     }
   ],
   "default_blog_category": "notes"

@@ -7,10 +7,10 @@
 {# Priority: sidebar.* (new) > sidebar_expand_depth (legacy) #}
 {% if config.extra.sidebar is defined %}
     {% set sidebar_expand_depth = config.extra.sidebar.expand_depth | default(value=config.extra.sidebar_expand_depth | default(value=0)) | int %}
-    {% set sidebar_blog_preview_count = config.extra.sidebar.blog_preview_count | default(value=config.extra.sidebar_blog_preview_count | default(value=4)) | int %}
+    {% set sidebar_blog_preview_count = config.extra.sidebar.blog_preview_count | default(value=config.extra.sidebar_blog_preview_count | default(value=2)) | int %}
 {% else %}
     {% if config.extra.sidebar_expand_depth is defined %}{% set sidebar_expand_depth = config.extra.sidebar_expand_depth | int %}{% else %}{% set sidebar_expand_depth = 0 %}{% endif %}
-    {% if config.extra.sidebar_blog_preview_count is defined %}{% set sidebar_blog_preview_count = config.extra.sidebar_blog_preview_count | int %}{% else %}{% set sidebar_blog_preview_count = 4 %}{% endif %}
+    {% if config.extra.sidebar_blog_preview_count is defined %}{% set sidebar_blog_preview_count = config.extra.sidebar_blog_preview_count | int %}{% else %}{% set sidebar_blog_preview_count = 2 %}{% endif %}
 {% endif %}
 {# Normalize current_path for comparison by removing language prefix #}
 {% if lang != config.default_language and current_path is starting_with("/" ~ lang ~ "/") %}
@@ -22,8 +22,8 @@
     {% if config.build_search_index and not is_export %}
     <div class="px-2 pt-4 pb-0 flex flex-col items-center gap-2">
         <div class="w-full flex items-center gap-2">
-            <label
-                for="search-modal"
+            <button
+                type="button"
                 class="sidebar-search-trigger input w-full flex items-center justify-between gap-3 text-left cursor-pointer transition"
                 aria-label="Search"
                 data-search-open="true"
@@ -38,7 +38,7 @@
                     <kbd class="kbd kbd-xs">D</kbd>
                     <kbd class="kbd kbd-xs">K</kbd>
                 </span>
-            </label>
+            </button>
         </div>
     </div>
     {% endif %}
@@ -51,20 +51,20 @@
                     {% set section_key = nav_item.url | trim_start_matches(pat="/") | trim_end_matches(pat="/") %}
                     {% if section_key == "about" %}
             <li>
-                <a {% if normalized_current_path is starting_with("/about/") %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %} href="{{ nav_item.url | safe }}">{{ nav_item.name | default(value="About") }}</a>
+                <a {% if normalized_current_path is starting_with("/about/") %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %} href="{{ nav_item.url | safe }}">{{ nav_item.name | default(value="About") }}</a>
             </li>
                     {% elif section_key != "" %}
                         {% set section_path = section_key ~ "/_index.md" %}
                         {% set s1 = get_section(path=section_path) %}
                         {% if s1 %}
-                            {% set is_active1 = normalized_current_path is starting_with(s1.path) %}
+                            {% set is_active1 = normalized_current_path is starting_with(s1.path) or (section_key == "blog" and normalized_current_path is starting_with("/archive/")) %}
                             {% set is_projects_root = section_key == "projects" or s1.path is ending_with("/projects/") %}
             <li>
                 {% if (s1.subsections or s1.pages) and not is_projects_root %}
                     <details {% if is_active1 %}open{% endif %}>
                         <summary>{{ s1.title }}</summary>
                             <ul>
-                            <li {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
+                            <li {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %}>
                                 <a class="hover:no-underline" href="{{ nav_item.url | safe }}">{{ s1.extra.link_title | default(value=s1.title) }}</a>
                             </li>
                             {# Level 2 #}
@@ -74,7 +74,7 @@
                                     {{ sidebar_helpers::render_blog_preview(sorted_pages=sorted_pages, normalized_current_path=normalized_current_path, lang=lang, sidebar_blog_preview_count=sidebar_blog_preview_count) }}
                                 {% else %}
                                     {% for page in s1.pages %}
-                                        <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
+                                        <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %}>
                                             <a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a>
                                         </li>
                                     {% endfor %}
@@ -84,65 +84,65 @@
                                 <li>
                                     {% if s2.subsections or s2.pages %}
                                         <details {% if is_active2 %}open{% endif %}>
-                                            <summary {% if normalized_current_path == s2.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>{{ s2.title }}</summary>
+                                            <summary {% if normalized_current_path == s2.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %}>{{ s2.title }}</summary>
                                             <ul>
-                                                <li {% if normalized_current_path == s2.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
+                                                <li {% if normalized_current_path == s2.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %}>
                                                     <a class="hover:no-underline" href="{{ get_url(path=s2.path, lang=lang) | safe }}">{{ s2.title }}</a>
                                                 </li>
                                                 {# Level 3 #}
                                                 {% for page in s2.pages %}
-                                                    <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
+                                                    <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
                                                 {% endfor %}
                                                 {% for s3_path in s2.subsections %}
                                                     {% set s3 = get_section(path=s3_path) %}{% set is_active3 = normalized_current_path is starting_with(s3.path) %}
                                                     <li>
                                                         {% if s3.subsections or s3.pages %}
                                                             <details {% if is_active3 %}open{% endif %}>
-                                                                <summary {% if normalized_current_path == s3.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>{{ s3.title }}</summary>
+                                                                <summary {% if normalized_current_path == s3.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %}>{{ s3.title }}</summary>
                                                                 <ul>
-                                                                    <li {% if normalized_current_path == s3.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
+                                                                    <li {% if normalized_current_path == s3.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %}>
                                                                         <a class="hover:no-underline" href="{{ get_url(path=s3.path, lang=lang) | safe }}">{{ s3.title }}</a>
                                                                     </li>
                                                                     {# Level 4 #}
                                                                     {% for page in s3.pages %}
-                                                                        <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
+                                                                        <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
                                                                     {% endfor %}
                                                                     {% for s4_path in s3.subsections %}
                                                                         {% set s4 = get_section(path=s4_path) %}{% set is_active4 = normalized_current_path is starting_with(s4.path) %}
                                                                         <li>
                                                                             {% if s4.subsections or s4.pages %}
                                                                                 <details {% if is_active4 %}open{% endif %}>
-                                                                                    <summary {% if normalized_current_path == s4.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>{{ s4.title }}</summary>
+                                                                                    <summary {% if normalized_current_path == s4.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %}>{{ s4.title }}</summary>
                                                                                     <ul>
-                                                                                        <li {% if normalized_current_path == s4.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
+                                                                                        <li {% if normalized_current_path == s4.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %}>
                                                                                             <a class="hover:no-underline" href="{{ get_url(path=s4.path, lang=lang) | safe }}">{{ s4.title }}</a>
                                                                                         </li>
                                                                                         {# Level 5 #}
                                                                                         {% for page in s4.pages %}
-                                                                                            <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
+                                                                                            <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
                                                                                         {% endfor %}
                                                                                         {% for s5_path in s4.subsections %}
                                                                                             {% set s5 = get_section(path=s5_path) %}
-                                                                                            <li><a {% if normalized_current_path == s5.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %} href="{{ get_url(path=s5.path, lang=lang) | safe }}">{{ s5.title }}</a></li>
+                                                                                            <li><a {% if normalized_current_path == s5.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %} href="{{ get_url(path=s5.path, lang=lang) | safe }}">{{ s5.title }}</a></li>
                                                                                         {% endfor %}
                                                                                     </ul>
                                                                                 </details>
-                                                                            {% else %}<a {% if normalized_current_path == s4.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %} href="{{ get_url(path=s4.path, lang=lang) | safe }}">{{ s4.title }}</a>{% endif %}
+                                                                            {% else %}<a {% if normalized_current_path == s4.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %} href="{{ get_url(path=s4.path, lang=lang) | safe }}">{{ s4.title }}</a>{% endif %}
                                                                         </li>
                                                                     {% endfor %}
                                                                 </ul>
                                                             </details>
-                                                        {% else %}<a {% if normalized_current_path == s3.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %} href="{{ get_url(path=s3.path, lang=lang) | safe }}">{{ s3.title }}</a>{% endif %}
+                                                        {% else %}<a {% if normalized_current_path == s3.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %} href="{{ get_url(path=s3.path, lang=lang) | safe }}">{{ s3.title }}</a>{% endif %}
                                                     </li>
                                                 {% endfor %}
                                             </ul>
                                         </details>
-                                    {% else %}<a {% if normalized_current_path == s2.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %} href="{{ get_url(path=s2.path, lang=lang) | safe }}">{{ s2.title }}</a>{% endif %}
+                                    {% else %}<a {% if normalized_current_path == s2.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %} href="{{ get_url(path=s2.path, lang=lang) | safe }}">{{ s2.title }}</a>{% endif %}
                                 </li>
                             {% endfor %}
                         </ul>
                     </details>
-                {% else %}<a {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %} href="{{ nav_item.url | safe }}">{{ s1.title }}</a>{% endif %}
+                {% else %}<a {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %} href="{{ nav_item.url | safe }}">{{ s1.title }}</a>{% endif %}
             </li>
                         {% endif %}
                     {% endif %}
@@ -158,9 +158,9 @@
                 <li>
                     {% if (s1.subsections or s1.pages) and not is_projects_root %}
                         <details {% if is_active1 %}open{% endif %}>
-                            <summary {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>{{ s1.title }}</summary>
+                            <summary {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %}>{{ s1.title }}</summary>
                             <ul>
-                                <li {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
+                                <li {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %}>
                                     <a class="hover:no-underline" href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.title }}</a>
                                 </li>
                                 {# Level 2 #}
@@ -169,19 +169,19 @@
                                     {{ sidebar_helpers::render_blog_preview(sorted_pages=sorted_pages, normalized_current_path=normalized_current_path, lang=lang, sidebar_blog_preview_count=sidebar_blog_preview_count) }}
                                 {% else %}
                                     {% for page in s1.pages %}
-                                        <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
+                                        <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %}><a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a></li>
                                     {% endfor %}
                                 {% endif %}
                             </ul>
                         </details>
-                    {% else %}<a {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %} href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.title }}</a>{% endif %}
+                    {% else %}<a {% if normalized_current_path == s1.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %} href="{{ get_url(path=s1.path, lang=lang) | safe }}">{{ s1.title }}</a>{% endif %}
                 </li>
             {% endfor %}
         {% endif %}
     </ul>
 
     {# Apps grid — visible in sidebar for mobile, collapsible #}
-    <details class="lg:hidden border-t border-base-content/10" data-apps-grid-sidebar>
+    <details class="lg:hidden border-t border-base-content/10">
         <summary class="px-4 py-2 text-sm font-medium cursor-pointer hover:bg-base-200/50 transition-colors flex items-center justify-between">
             <span>Apps</span>
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 apps-grid-chevron" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -203,7 +203,7 @@
             </div>
             
             <div data-auth="sidebar-authed-avatar" class="hidden w-9 h-9 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-1 overflow-hidden shrink-0">
-                <img src="" alt="Profile" class="w-full h-full object-cover">
+                <img alt="Profile" class="w-full h-full object-cover">
             </div>
 
             <div class="flex-1 min-w-0">

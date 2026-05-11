@@ -1,4 +1,3 @@
----
 name: Lint & Quality
 
 on:
@@ -50,7 +49,8 @@ jobs:
           VALIDATE_CSS_PRETTIER: false
           VALIDATE_JSON_PRETTIER: false
           VALIDATE_MARKDOWN_PRETTIER: false
-          FILTER_REGEX_EXCLUDE: .*public/.*|.*scratch/.*|.*static/js/vendor/.*|.*templates/.*|.*data/.*|.*\.min\.js
+          # Unified exclusion regex covering public, scratch, templates, data, vendor assets, third-party CSS, and tools.
+          FILTER_REGEX_EXCLUDE: .*public/.*|.*scratch/.*|.*static/js/vendor/.*|.*static/css/(dui|main)\.css|.*tools/cloudflare/.*|.*templates/.*|.*data/.*|.*\.min\.js
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   quality:

@@ -12,84 +12,16 @@ import { initCookieConsent } from "../telemetry/cookie-consent.js";
 import { initWebMCP } from "../system/webmcp.js";
 import { initTooltips } from "../ui/tooltips.js";
 import { initExternalLinkUtm } from "../telemetry/external-link-utm.js";
-
-// Structural UX natively bundled
-// Deferred UX & Heavy components are loaded lazily on demand.
-
-function runSafely(task, label) {
-  try {
-    const result = task();
-    if (result && typeof result.catch === "function") {
-      result.catch((error) => {
-        console.error(`[Bootstrap] ${label} failed:`, error);
-      });
-    }
-  } catch (error) {
-    console.error(`[Bootstrap] ${label} failed:`, error);
-  }
-}
-
-function runAfterFirstPaint(callback) {
-  if (typeof window.requestAnimationFrame === "function") {
-    window.requestAnimationFrame(() => {
-      window.requestAnimationFrame(callback);
-    });
-    return;
-  }
-
-  window.setTimeout(callback, 0);
-}
-
-function runWhenIdle(callback, timeout = 1200) {
-  if (typeof window.requestIdleCallback === "function") {
-    window.requestIdleCallback(callback, { timeout });
-    return;
-  }
-
-  window.setTimeout(callback, 120);
-}
-
-function markUiInitReady() {
-  const apply = () => {
-    document.documentElement.setAttribute("data-ui-init", "1");
-  };
-
-  if (typeof window.requestAnimationFrame === "function") {
-    window.requestAnimationFrame(() => window.requestAnimationFrame(apply));
-    return;
-  }
-
-  window.setTimeout(apply, 0);
-}
-
-function syncPrepaintLayoutState() {
-  const doc = document.documentElement;
-  const sidebarCollapsed = doc.getAttribute("data-sidebar-collapsed") === "1";
-  const tocCollapsed = doc.getAttribute("data-toc-collapsed") === "1";
-
-  document.querySelectorAll(".drawer").forEach((drawer) => {
-    drawer.classList.toggle("sidebar-collapsed", sidebarCollapsed);
-  });
-
-  if (document.body) {
-    document.body.classList.toggle("toc-collapsed", tocCollapsed);
-  }
-}
-
-function has(selector) {
-  return !!document.querySelector(selector);
-}
-
-function hasAny(selectors) {
-  return selectors.some((selector) => has(selector));
-}
-
-function isHomeRoute() {
-  return (
-    window.location.pathname === "/" ||
-    window.location.pathname === "/index.html"
-  );
-}
+import {
+  runSafely,
+  runAfterFirstPaint,
+  runWhenIdle,
+  markUiInitReady,
+  syncPrepaintLayoutState,
+  has,
+  hasAny,
+  isHomeRoute,
+} from "./bootstrap-utils.js";
 
 function bootstrapSite() {
   console.log(`\x1b[1m
@@ -113,8 +45,6 @@ DDDDDDDDDDb·······················PDDDDDDDDDDDDDDDPP··�
 
   // Align classes with prepaint attrs before transitions are enabled.
   runSafely(() => syncPrepaintLayoutState(), "prepaint layout sync");
-
-  // Expose WebMCP imperative APIs early for inspector/runtime detection.
   runSafely(() => initWebMCP({ runtime: "main" }), "webmcp");
 
   // Keep key page-shell behavior eager to avoid flashes during navigation.
@@ -142,7 +72,7 @@ DDDDDDDDDDb·······················PDDDDDDDDDDDDDDDPP··�
 
     runSafely(() => initTooltips(document), "tooltips");
 
-    if (has("[data-search-mount]")) {
+    if (has("#search-modal-template") || has("[data-search-open]")) {
       runSafely(
         () =>
           import("../features/search-loader.js").then((mod) =>
@@ -287,6 +217,16 @@ DDDDDDDDDDb·······················PDDDDDDDDDDDDDDDPP··�
             mod.initTaxonomyPlaylist(),
           ),
         "taxonomy playlist",
+      );
+    }
+
+    if (has("[data-notify-banner-mount]")) {
+      runSafely(
+        () =>
+          import("../ui/notify-banner.js").then((mod) =>
+            mod.initNotifyBanner(),
+          ),
+        "notify banner",
       );
     }
 

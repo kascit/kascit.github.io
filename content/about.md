@@ -36,28 +36,28 @@ Most days look like APIs, infra, and architecture decisions. Nights are for AI e
     </h2>
     <ul class="space-y-5">
       <li class="flex gap-3.5 items-start">
-        <div class="about-expertise-icon" aria-hidden="true"><i class="fa-solid fa-server text-sm"></i></div>
+        <div class="about-expertise-icon" aria-hidden="true"><i class="fa-solid fa-server text-sm" aria-hidden="true"></i></div>
         <div class="min-w-0 pt-0.5">
           <span class="font-semibold text-base-content block mb-1">Backend Engineering</span>
           <span class="text-sm text-base-content/65 leading-relaxed">Designing services that stay calm under load, mostly in Java, Spring Boot, and Go.</span>
         </div>
       </li>
       <li class="flex gap-3.5 items-start">
-        <div class="about-expertise-icon" aria-hidden="true"><i class="fa-solid fa-cloud text-sm"></i></div>
+        <div class="about-expertise-icon" aria-hidden="true"><i class="fa-solid fa-cloud text-sm" aria-hidden="true"></i></div>
         <div class="min-w-0 pt-0.5">
           <span class="font-semibold text-base-content block mb-1">Cloud Infrastructure</span>
           <span class="text-sm text-base-content/65 leading-relaxed">Deploying across cloud stacks with enough observability to sleep at night.</span>
         </div>
       </li>
       <li class="flex gap-3.5 items-start">
-        <div class="about-expertise-icon" aria-hidden="true"><i class="fa-solid fa-terminal text-sm"></i></div>
+        <div class="about-expertise-icon" aria-hidden="true"><i class="fa-solid fa-terminal text-sm" aria-hidden="true"></i></div>
         <div class="min-w-0 pt-0.5">
           <span class="font-semibold text-base-content block mb-1">System Programming</span>
           <span class="text-sm text-base-content/65 leading-relaxed">Low-level experiments, performance tuning, and occasional graphics-heavy detours.</span>
         </div>
       </li>
       <li class="flex gap-3.5 items-start">
-        <div class="about-expertise-icon" aria-hidden="true"><i class="fa-solid fa-code-branch text-sm"></i></div>
+        <div class="about-expertise-icon" aria-hidden="true"><i class="fa-solid fa-code-branch text-sm" aria-hidden="true"></i></div>
         <div class="min-w-0 pt-0.5">
           <span class="font-semibold text-base-content block mb-1">Automation and DevOps</span>
           <span class="text-sm text-base-content/65 leading-relaxed">Automation pipelines that reduce surprises and keep releases boring (the good kind).</span>
@@ -72,7 +72,7 @@ Most days look like APIs, infra, and architecture decisions. Nights are for AI e
     <h2 class="card-title text-lg mb-5 border-b border-base-content/10 pb-3">
       <i class="fa-solid fa-layer-group text-primary" aria-hidden="true"></i> Technical Arsenal
     </h2>
-    <div class="space-y-5">
+    <div class="space-y-5 [content-visibility:auto]">
       <div>
         <h3 class="about-skill-heading"><i class="fa-solid fa-code text-[11px]" aria-hidden="true"></i> Languages</h3>
         <div class="flex flex-wrap gap-2">

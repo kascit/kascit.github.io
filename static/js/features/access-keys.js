@@ -66,9 +66,9 @@ const SEMANTIC_RULES = [
   { match: (el) => isPath(el, "/archive/"), hint: "x" },
 
   // Footer equivalents
-  { match: (el) => isPath(el, "/privacy"), hint: "yp" },
-  { match: (el) => isPath(el, "/tos"), hint: "yt" },
-  { match: (el) => isPath(el, "/appreciation"), hint: "yc" },
+  { match: (el) => isPath(el, "/privacy/"), hint: "yp" },
+  { match: (el) => isPath(el, "/tos/"), hint: "yt" },
+  { match: (el) => isPath(el, "/appreciation/"), hint: "yc" },
   // Links (/links/) will automatically be matched by the 'l' base rule above, even in the footer, which creates the perfect identical dedup you requested!
   { match: (el) => isExternalHost(el, "getzola.org"), hint: "yz" },
 ];
@@ -268,8 +268,7 @@ function createBadge(hint, element) {
 
 // ─── Scroll indicators ────────────────────────────────────────────────────────
 
-const svgUp = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>`;
-const svgDown = `<svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>`;
+// ─── Scroll indicators ────────────────────────────────────────────────────────
 
 function canScrollUp() {
   return (document.documentElement.scrollTop || window.scrollY) > 1;
@@ -292,7 +291,27 @@ function makeScrollBadge(direction) {
   const badge = document.createElement("span");
   badge.className = `access-key-badge access-key-scroll-badge access-key-scroll-badge--${direction}`;
   badge.setAttribute("data-access-key-scroll", direction);
-  badge.innerHTML = direction === "up" ? svgUp : svgDown;
+
+  const svgNs = "http://www.w3.org/2000/svg";
+  const icon = document.createElementNS(svgNs, "svg");
+  icon.setAttribute("width", "14");
+  icon.setAttribute("height", "14");
+  icon.setAttribute("fill", "none");
+  icon.setAttribute("stroke", "currentColor");
+  icon.setAttribute("stroke-width", "2.5");
+  icon.setAttribute("viewBox", "0 0 24 24");
+  icon.setAttribute("stroke-linecap", "round");
+  icon.setAttribute("stroke-linejoin", "round");
+
+  const path = document.createElementNS(svgNs, "path");
+  if (direction === "up") {
+    path.setAttribute("d", "M12 19V5M5 12l7-7 7 7");
+  } else {
+    path.setAttribute("d", "M12 5v14M5 12l7 7 7-7");
+  }
+  icon.appendChild(path);
+  badge.appendChild(icon);
+
   badge.title = direction === "up" ? "Alt+↑  Scroll up" : "Alt+↓  Scroll down";
   badge.style.cssText = `position:fixed;right:${Math.max(12, scrollbarW + 8)}px;top:${top}px;`;
   if (prefersReducedMotion()) badge.style.animation = "none";

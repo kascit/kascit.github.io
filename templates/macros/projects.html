@@ -8,15 +8,15 @@
 
 {% macro project_links(live_url="", github_url="", url="", url_label="Visit", external=false) %}
   {% if live_url %}
-  <a href="{{ live_url }}" target="_blank" rel="noopener" class="project-card-btn btn-live"><i class="fa-solid fa-arrow-up-right-from-square"></i> Live</a>
+  <a href="{{ live_url }}" target="_blank" rel="noopener" class="project-card-btn btn-live"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> Live</a>
   {% endif %}
 
   {% if github_url and github_url != live_url %}
-  <a href="{{ github_url }}" target="_blank" rel="noopener" class="project-card-btn"><i class="fa-brands fa-github"></i> Code</a>
+  <a href="{{ github_url }}" target="_blank" rel="noopener" class="project-card-btn"><i class="fa-brands fa-github" aria-hidden="true"></i> Code</a>
   {% endif %}
 
   {% if url and url != live_url and url != github_url %}
-  <a href="{{ url }}" {% if external %}target="_blank" rel="noopener"{% endif %} class="project-card-btn"><i class="fa-solid fa-link"></i> {{ url_label }}</a>
+  <a href="{{ url }}" {% if external %}target="_blank" rel="noopener"{% endif %} class="project-card-btn"><i class="fa-solid fa-link" aria-hidden="true"></i> {{ url_label }}</a>
   {% endif %}
 {% endmacro project_links %}
 

@@ -34,6 +34,18 @@
         {% if window_end < total_posts %}
             <li class="opacity-70 text-center text-base font-semibold tracking-[0.18em] px-2 py-1.5 select-none">...</li>
         {% endif %}
+    {% elif normalized_current_path is starting_with("/archive/") %}
+        {% if total_posts > sidebar_blog_preview_count %}
+            <li class="opacity-70 text-center text-base font-semibold tracking-[0.18em] px-2 py-1.5 select-none">...</li>
+            {% set start_idx = total_posts - sidebar_blog_preview_count %}
+        {% else %}
+            {% set start_idx = 0 %}
+        {% endif %}
+        {% for page in sorted_pages | slice(start=start_idx, end=total_posts) %}
+            <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
+                <a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a>
+            </li>
+        {% endfor %}
     {% else %}
         {% for page in sorted_pages | slice(start=0, end=sidebar_blog_preview_count) %}
             <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>

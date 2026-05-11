@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet type="text/css" href="/rss.css"?>
-<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:site="https://dhanur.me/ns/rss-ui" version="2.0" xml:id="top">
+<?xml-stylesheet type="text/xsl" href="/rss.xsl"?>
+<rss xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/" version="2.0">
   <channel>
       {% set channel_title = config.title %}
       {% set channel_description = config.description %}
@@ -41,9 +41,7 @@
       <generator>Zola</generator>
       <language>{{ config.default_language }}</language>
       <atom:link href="{{ feed_url | safe }}" rel="self" type="application/rss+xml"/>
-      <site:back>{{ channel_link }}</site:back>
-      <site:feed>{{ feed_url | safe }}</site:feed>
-      <site:top>{{ feed_url | safe }}#top</site:top>
+      
       {% set_global feed_last_build = "" %}
       {% for page in pages %}
         {% if feed_last_build == "" and page.date %}

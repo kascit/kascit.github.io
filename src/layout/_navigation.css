@@ -1,3 +1,18 @@
+/*
+ * Global focus-visible ring for interactive controls
+ * Ensures keyboard navigators always see a consistent, high-contrast
+ * focus indicator across all interactive surfaces.
+ */
+[data-keybind]:focus-visible,
+[data-app-menu-grid] a:focus-visible,
+.btn:focus-visible,
+.nav-button:focus-visible,
+.project-card-btn:focus-visible,
+.notify-banner__btn:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
 /* Dropdown panels: CSS-only hidden state, toggled via [data-open] */
 [data-dropdown] .dropdown-panel {
   position: absolute;
@@ -32,7 +47,7 @@
   }
 
   /* Keep navbar content positioned as-is, but paint a full-width topbar layer
-     so the titlebar control area doesn't show a visual gap. */
+    so the titlebar control area doesn't show a visual gap. */
   .site-topbar::after {
     content: "";
     position: fixed;

@@ -6,7 +6,7 @@
 import { isDesktop, onResponsiveChange } from "../core/responsive.js";
 
 const PLAYLIST_STORAGE_KEY = "site-playlist-v1";
-const PLAYLIST_EXIT_PATH = "/blog";
+const PLAYLIST_EXIT_PATH = "/blog/";
 const TITLE_MAX_LENGTH = 180;
 
 function normalizeTitle(raw) {
@@ -51,7 +51,10 @@ function setButtonIcon(button, iconClass) {
 }
 
 function makeSvgFromMarkup(markup) {
-  const doc = new DOMParser().parseFromString(markup, "image/svg+xml");
+  const p = window.__defaultPolicy;
+  const safeString =
+    p && typeof p.createHTML === "function" ? p.createHTML(markup) : markup;
+  const doc = new DOMParser().parseFromString(safeString, "image/svg+xml");
   const svg = doc.documentElement;
   if (!svg || svg.nodeName === "parsererror") return null;
   return document.importNode(svg, true);

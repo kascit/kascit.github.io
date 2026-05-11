@@ -1,0 +1,4 @@
+# Ignore vendor and compiled stylesheets
+static/css/dui.css
+static/css/main.css
+public/

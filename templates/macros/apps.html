@@ -1,11 +1,11 @@
 {% macro apps_grid(context="desktop", config=false) %}
 {% set is_desktop = context == "desktop" %}
-<div class="grid grid-cols-3 gap-2"{% if is_desktop %} data-apps-grid{% else %} data-apps-grid-sidebar{% endif %}>
+<div class="grid grid-cols-3 gap-2" data-app-menu-grid="{{ context }}">
     {% if config and config.extra and config.extra.apps and config.extra.apps | length > 0 %}
     {% for item in config.extra.apps %}
     <a href="{{ item.url | safe }}" class="group flex flex-col items-center gap-1.5 {% if is_desktop %}p-3{% else %}p-2.5{% endif %} rounded-md hover:bg-base-200 transition-colors duration-200 no-underline hover:no-underline text-base-content">
         <div class="w-10 h-10 rounded-md bg-base-300/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-            <i class="{{ item.icon | default(value='fa-solid fa-link') }} text-lg"></i>
+            <i class="{{ item.icon | default(value='fa-solid fa-link') }} text-lg" aria-hidden="true"></i>
         </div>
         <span class="text-[10px] font-medium opacity-70 group-hover:opacity-100">{{ item.name | default(value='App') }}</span>
     </a>
@@ -13,31 +13,31 @@
     {% else %}
     <a href="https://dhanur.me" class="group flex flex-col items-center gap-1.5 {% if is_desktop %}p-3{% else %}p-2.5{% endif %} rounded-md hover:bg-base-200 transition-colors duration-200 no-underline hover:no-underline text-base-content">
         <div class="w-10 h-10 rounded-md bg-base-300/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-            <i class="fa-solid fa-house text-lg"></i>
+            <i class="fa-solid fa-house text-lg" aria-hidden="true"></i>
         </div>
         <span class="text-[10px] font-medium opacity-70 group-hover:opacity-100">Home</span>
     </a>
     <a href="https://linkr.dhanur.me" class="group flex flex-col items-center gap-1.5 {% if is_desktop %}p-3{% else %}p-2.5{% endif %} rounded-md hover:bg-base-200 transition-colors duration-200 no-underline hover:no-underline text-base-content">
         <div class="w-10 h-10 rounded-md bg-base-300/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-            <i class="fa-solid fa-link text-lg"></i>
+            <i class="fa-solid fa-link text-lg" aria-hidden="true"></i>
         </div>
         <span class="text-[10px] font-medium opacity-70 group-hover:opacity-100">Linkr</span>
     </a>
     <a href="https://tasks.dhanur.me" class="group flex flex-col items-center gap-1.5 {% if is_desktop %}p-3{% else %}p-2.5{% endif %} rounded-md hover:bg-base-200 transition-colors duration-200 no-underline hover:no-underline text-base-content">
         <div class="w-10 h-10 rounded-md bg-base-300/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-            <i class="fa-solid fa-clipboard-list text-lg"></i>
+            <i class="fa-solid fa-clipboard-list text-lg" aria-hidden="true"></i>
         </div>
         <span class="text-[10px] font-medium opacity-70 group-hover:opacity-100">Tasks</span>
     </a>
     <a href="https://auth.dhanur.me" class="group flex flex-col items-center gap-1.5 {% if is_desktop %}p-3{% else %}p-2.5{% endif %} rounded-md hover:bg-base-200 transition-colors duration-200 no-underline hover:no-underline text-base-content">
         <div class="w-10 h-10 rounded-md bg-base-300/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-            <i class="fa-solid fa-fingerprint text-lg"></i>
+            <i class="fa-solid fa-fingerprint text-lg" aria-hidden="true"></i>
         </div>
         <span class="text-[10px] font-medium opacity-70 group-hover:opacity-100">Auth</span>
     </a>
     <a href="https://up.dhanur.me" class="group flex flex-col items-center gap-1.5 {% if is_desktop %}p-3{% else %}p-2.5{% endif %} rounded-md hover:bg-base-200 transition-colors duration-200 no-underline hover:no-underline text-base-content">
         <div class="w-10 h-10 rounded-md bg-base-300/50 flex items-center justify-center group-hover:bg-primary/10 group-hover:text-primary transition-colors">
-            <i class="fa-solid fa-heart-pulse text-lg"></i>
+            <i class="fa-solid fa-heart-pulse text-lg" aria-hidden="true"></i>
         </div>
         <span class="text-[10px] font-medium opacity-70 group-hover:opacity-100">Status</span>
     </a>

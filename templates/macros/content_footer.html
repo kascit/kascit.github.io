@@ -2,10 +2,11 @@
 <div class="mt-8 pt-6 border-t border-base-content/10">
   <div class="post-actions__row">
     {% if config.extra.edit_url and item.path is starting_with("/blog/") and item.relative_path != "blog/_index.md" %}
-    <button
-      type="button"
-      onclick="window.open('{{ config.extra.edit_url }}/content/{{ item.relative_path }}', '_blank')"
-      class="post-action-btn tooltip tooltip-bottom"
+    <a
+      href="{{ config.extra.edit_url }}/content/{{ item.relative_path }}"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="post-action-btn tooltip tooltip-bottom no-underline"
       data-tooltip-label="Fork and PR"
       data-tooltip-position="bottom"
     >
@@ -23,7 +24,7 @@
         ></path>
       </svg>
       <span>Edit</span>
-    </button>
+    </a>
     {% endif %}
 
     {% if config.extra.share is defined %} 
@@ -47,10 +48,11 @@
     {% endif %} 
     
     {% if enable_share_x and item.permalink and item.title %}
-    <button
-      type="button"
-      onclick="window.open('https://twitter.com/intent/tweet?url={{ item.permalink | urlencode }}&text={{ item.title | urlencode }}', '_blank')"
-      class="post-action-btn post-action-btn--share"
+    <a
+      href="https://twitter.com/intent/tweet?url={{ item.permalink | urlencode }}&amp;text={{ item.title | urlencode }}"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="post-action-btn post-action-btn--share flex items-center gap-2 no-underline"
     >
       <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
         <path
@@ -58,7 +60,7 @@
         ></path>
       </svg>
       <span>Share</span>
-    </button>
+    </a>
     {% endif %}
   </div>
 </div>

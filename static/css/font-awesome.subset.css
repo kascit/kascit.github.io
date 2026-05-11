@@ -480,9 +480,6 @@
 .fa-external-link {
   --fa: "\f08e";
 }
-.fa-trophy {
-  --fa: "\f091";
-}
 .fa-feed,
 .fa-rss {
   --fa: "\f09e";
@@ -557,10 +554,6 @@
 .fa-share-nodes {
   --fa: "\f1e0";
 }
-.fa-chart-line,
-.fa-line-chart {
-  --fa: "\f201";
-}
 .fa-heart-pulse,
 .fa-heartbeat {
   --fa: "\f21e";
@@ -620,9 +613,6 @@
 }
 .fa-pen-nib {
   --fa: "\f5ad";
-}
-.fa-laptop-code {
-  --fa: "\f5fc";
 }
 .fa-layer-group {
   --fa: "\f5fd";

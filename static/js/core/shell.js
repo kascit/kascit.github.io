@@ -202,14 +202,12 @@ function safeIconClass(value) {
 }
 
 function renderAppsGrid(shellRoot, apps) {
-  const grids = shellRoot.querySelectorAll(
-    "[data-apps-grid], [data-apps-grid-sidebar], [data-apps-grid-mobile]",
-  );
+  const grids = shellRoot.querySelectorAll("[data-app-menu-grid]");
   if (!grids.length) return;
 
   const entries = Array.isArray(apps) ? apps : [];
   grids.forEach((grid) => {
-    const isDesktop = grid.hasAttribute("data-apps-grid");
+    const isDesktop = grid.getAttribute("data-app-menu-grid") === "desktop";
     const padding = isDesktop ? "p-3" : "p-2.5";
 
     const fragment = document.createDocumentFragment();

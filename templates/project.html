@@ -4,6 +4,8 @@
 {% import "macros/taxonomy_chips.html" as taxonomy_chips %}
 {% import "macros/content_footer.html" as macros_content_footer %}
 
+
+
 {% block header %}
     {{ macros_header::header(config=config, lang=lang, page=page) }}
 {% endblock header %}
@@ -45,22 +47,8 @@
     {% endif %}
 <div class="not-prose mb-8 md:mb-10 overflow-hidden rounded-2xl border border-base-content/10 bg-base-200/30 shadow-sm post-hero-thumb aspect-video">
     <img src="{{ post_thumbnail_url | safe }}"
-         class="post-hero-thumb__bg"
-         aria-hidden="true"
-         alt=""
-         loading="eager"
-         fetchpriority="high"
-         decoding="async" />
-    <img src="{{ post_thumbnail_url | safe }}"
-         class="post-hero-thumb__bg post-hero-thumb__bg--expanded"
-         aria-hidden="true"
-         alt=""
-         loading="eager"
-         fetchpriority="high"
-         decoding="async" />
-    <img src="{{ post_thumbnail_url | safe }}"
          alt="{{ page.extra.thumbnail_alt | default(value=page.title) }}"
-         class="post-hero-thumb__img"
+      class="post-hero-thumb__img relative z-10"
          loading="eager"
          fetchpriority="high"
          decoding="async" />

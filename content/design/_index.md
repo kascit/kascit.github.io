@@ -8,8 +8,6 @@ in_search_index = true
 hide_toc = false
 +++
 
-<!-- markdownlint-disable MD034 -->
-
 This page is now intentionally Markdown-first. Instead of embedding large blocks of raw HTML inside content files, the design system is documented as guidance, examples, and reusable shortcodes so the source stays readable and maintainable.
 
 ## Design Language
@@ -33,23 +31,8 @@ The quickest integration path is to include the shared shell script and configur
     showThemeToggle: true,
   };
 </script>
-<script src="https://dhanur.me/js/shell.js" defer></script>
+<script
+  src="[https://dhanur.me/js/shell.js](https://dhanur.me/js/shell.js)"
+  defer
+></script>
 ```
-
-If you do not need overrides, a single script tag is enough and defaults will be used automatically.
-
-```html
-<script src="https://dhanur.me/js/shell.js" defer></script>
-```
-
-{{ link_card(url="https://github.com/kascit/kascit.github.io/blob/main/docs/design_system_integration_guide.md", external=true, icon="fa-solid fa-book-open", title="Integration Guide", description="Setup details, architecture notes, and implementation references.") }}
-
-## Working With Components
-
-Components should be consumed through shortcodes in Markdown wherever possible. This keeps content files focused on copy and structure while presentation logic stays centralized in templates, making future style updates safer and faster.
-
-For content pages, prefer shortcode primitives such as link_card, project_card, stat, and card. For product pages or apps, use the shell and shared CSS tokens, then layer app-specific styles only where necessary.
-
-## Practical Notes
-
-When adding new UI patterns, favor semantic naming over page-specific hacks so components can be reused across sections. Keep content prose in Markdown, push visual complexity into shortcodes, and treat docs updates as part of every UI change so the system remains coherent over time.

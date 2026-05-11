@@ -26,7 +26,7 @@
     <!-- Mobile hamburger (always visible) -->
     {% if show_mobile_menu %}
     <div class="flex-none lg:hidden">
-        <label id="hamburger-toggle" for="my-drawer-2" aria-label="Open menu" class="btn btn-ghost btn-circle btn-sm transition-colors duration-200">
+        <label for="my-drawer-2" aria-label="Open menu" class="btn btn-ghost btn-circle btn-sm transition-colors duration-200">
             {{ macros_icons::svg_hamburger() }}
         </label>
     </div>
@@ -45,22 +45,26 @@
                     <picture>
                         <img src="{{ get_url(path=dark_logo_src) | safe }}"
                              alt="{{ logo_text }}"
-                             class="h-18 w-auto logo-dark"
+                                class="h-18 w-auto {% if logo_image_padding != "" %}p-[15px]{% endif %} logo-dark"
                              sizes="200px"
                              data-logo-type="dark"
                              data-no-lqip
-                             {% if logo_image_padding != "" %}style="padding: {{ logo_image_padding }};"{% endif %}
+                             data-no-lazy="true"
+                             loading="eager"
+                             fetchpriority="high"
                         />
                     </picture>
                     {# Light theme logo — overlaid absolutely so it occupies same space #}
                     <picture class="absolute inset-0 flex items-center">
                         <img src="{{ get_url(path=light_logo_src) | safe }}"
                              alt="{{ logo_text }}"
-                             class="h-18 w-auto logo-light"
+                                class="h-18 w-auto {% if logo_image_padding != "" %}p-[15px]{% endif %} logo-light"
                              sizes="200px"
                              data-logo-type="light"
                              data-no-lqip
-                             {% if logo_image_padding != "" %}style="padding: {{ logo_image_padding }};"{% endif %}
+                             data-no-lazy="true"
+                             loading="eager"
+                             fetchpriority="high"
                         />
                     </picture>
                 </div>
@@ -69,9 +73,8 @@
                 <img 
                     src="{{ get_url(path=logo_image_path) | safe }}" 
                     alt="{{ logo_text }}" 
-                    class="h-18 w-auto"
+                    class="h-18 w-auto {% if logo_image_padding != "" %}p-[15px]{% endif %}"
                     sizes="200px"
-                    {% if logo_image_padding != "" %}style="padding: {{ logo_image_padding }};"{% endif %}
                 />
             {% else %}
                 {{ logo_text }}
@@ -186,7 +189,7 @@
                             <i class="fa-solid fa-user text-base-content/50 text-sm"></i>
                         </div>
                         <div data-auth="nav-authed-avatar" class="hidden w-9 h-9 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-1 overflow-hidden">
-                            <img src="" alt="Profile" class="w-full h-full object-cover" />
+                            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Profile" class="w-full h-full object-cover" />
                         </div>
                     </div>
                     <div class="dropdown-panel z-50 mt-2 bg-base-100 border border-base-content/10 rounded-box w-64 right-0 mr-2 md:mr-4 overflow-hidden">
@@ -194,7 +197,7 @@
                         <!-- authed header -->
                         <div data-auth="nav-authed-header" class="hidden px-3 pt-3 pb-2 border-b border-base-content/10 cursor-default select-none">
                             <div class="flex items-center gap-2.5">
-                                <div class="w-8 h-8 rounded-full overflow-hidden shrink-0"><img data-auth="nav-authed-header-avatar" class="w-full h-full object-cover" src="" alt="Profile" /></div>
+                                <div class="w-8 h-8 rounded-full overflow-hidden shrink-0"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" data-auth="nav-authed-header-avatar" class="w-full h-full object-cover" alt="Profile" /></div>
                                 <div class="flex-1 min-w-0">
                                     <div class="font-semibold truncate text-sm" data-auth="nav-name"></div>
                                     <div class="text-xs opacity-60 truncate" data-auth="nav-email"></div>

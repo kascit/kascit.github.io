@@ -5,6 +5,9 @@
     "public/**",
     "resources/**",
     "static/fuse.min.js",
-    "static/elasticlunr.min.js"
+    "static/elasticlunr.min.js",
+    "static/css/dui.css",
+    "static/css/main.css",
+    "tools/cloudflare/**"
   ]
 }

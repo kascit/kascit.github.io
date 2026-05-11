@@ -250,6 +250,8 @@ function enhanceCodeBlock(codeBlock) {
 
   pre.setAttribute("data-codeblock-enhanced", "1");
   pre.setAttribute("data-lang", language);
+  pre.setAttribute("tabindex", "0");
+  pre.setAttribute("aria-label", "Code snippet, " + languageLabel);
   pre.classList.add("codeblock-enhanced");
 
   clearInlineBackgrounds(pre);
@@ -259,6 +261,15 @@ function enhanceCodeBlock(codeBlock) {
   codeBlock.classList.add("z-code");
   codeBlock.setAttribute("spellcheck", "false");
   codeBlock.setAttribute("translate", "no");
+
+  codeBlock.querySelectorAll("span").forEach((span) => {
+    span.setAttribute("aria-hidden", "true");
+  });
+
+  const srFallback = document.createElement("span");
+  srFallback.className = "sr-only";
+  srFallback.textContent = rawCodeText;
+  codeBlock.appendChild(srFallback);
 
   syncCodeMetrics(pre, codeBlock);
   enhancedCodeBlocks.set(pre, codeBlock);

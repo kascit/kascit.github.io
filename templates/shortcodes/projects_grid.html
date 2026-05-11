@@ -16,7 +16,7 @@
   <article class="project-card">
     {% if project.thumbnail_image %}
     <a href="/projects/{{ project.slug }}/" class="block aspect-video w-full overflow-hidden rounded-md mb-3 border border-base-content/10 bg-base-300/30">
-      <img src="{{ project.thumbnail_image }}" alt="{{ project.thumbnail_alt | default(value=project.title) }}" sizes="(min-width: 1024px) 50vw, 100vw" class="w-full h-full object-cover transition-transform duration-300 hover:scale-105" loading="lazy">
+      <img src="{{ project.thumbnail_image }}" alt="{{ project.thumbnail_alt | default(value=project.title) }}" sizes="(min-width: 1024px) 50vw, 100vw" class="w-full h-full object-cover transition-transform duration-300 hover:scale-105" loading="lazy" width="800" height="450">
     </a>
     {% endif %}
     <div class="project-card-header">
@@ -59,7 +59,7 @@
     <div class="project-card-actions">
       {{ macros_projects::project_links(live_url=project_live, github_url=project_github, url=project_url, url_label=project_url_label, external=project_external) }}
 
-      <a href="/projects/{{ project.slug }}/" class="project-card-btn" aria-label="{{ project.title }}" title="{{ project.title }}"><i class="fa-solid fa-book-open"></i> Details</a>
+      <a href="/projects/{{ project.slug }}/" class="project-card-btn" aria-label="View details for {{ project.title }}"><i class="fa-solid fa-book-open" aria-hidden="true"></i> Details</a>
     </div>
   </article>
   {% endif %}

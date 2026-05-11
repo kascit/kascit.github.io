@@ -1,9 +1,9 @@
 /* =========================================================================
-   DHANUR UI / Base Component Layer
-   =========================================================================
-   A semantic, utility-first component library abstracting Tailwind logic.
-   This guarantees perfect UI consistency across all dhanur.me subdomains.
-   ========================================================================= */
+  DHANUR UI / Base Component Layer
+  =========================================================================
+  A semantic, utility-first component library abstracting Tailwind logic.
+  This guarantees perfect UI consistency across all dhanur.me subdomains.
+  ========================================================================= */
 
 /* --- 1. Surfaces & Layouts --- */
 .dui-surface {

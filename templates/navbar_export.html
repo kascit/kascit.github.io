@@ -28,7 +28,7 @@
         {{ macros_header::header(config=config, lang=lang, is_export=true, show_mobile_menu=true) }}
         <div class="site-nav-slot"></div>
     </div>
-    <div id="sidebar" data-sidebar-root="true" class="drawer-side pt-16 z-[60] lg:hidden">
+    <div id="navigation-drawer" data-sidebar-root="true" class="drawer-side pt-16 z-[60] lg:hidden">
         {{ macros_drawer::drawer_overlay() }}
         {{ macros_sidebar::sidebar(config=config, lang=lang, current_path="/", section=false, is_export=true) }}
     </div>

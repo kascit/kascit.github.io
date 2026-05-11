@@ -1,13 +1,14 @@
-{% import "macros/head.html" as macros_head %}
-{% import "macros/search.html" as macros_search %}
-{% import "macros/header.html" as macros_header %}
-{% import "macros/comments.html" as macros_comments %}
-{% import "macros/toc.html" as macros_toc %}
-{% import "macros/footer.html" as macros_footer %}
-{% import "macros/sidebar.html" as macros_sidebar %}
-{% import "macros/drawer.html" as macros_drawer %}
-{% import "macros/cookie_consent.html" as macros_cookie_consent %}
-{% import "macros/runtime.html" as macros_runtime %}
+{%- import "macros/head.html" as macros_head -%}
+{%- import "macros/search.html" as macros_search -%}
+{%- import "macros/header.html" as macros_header -%}
+{%- import "macros/comments.html" as macros_comments -%}
+{%- import "macros/toc.html" as macros_toc -%}
+{%- import "macros/footer.html" as macros_footer -%}
+{%- import "macros/sidebar.html" as macros_sidebar -%}
+{%- import "macros/drawer.html" as macros_drawer -%}
+{%- import "macros/cookie_consent.html" as macros_cookie_consent -%}
+{%- import "macros/runtime.html" as macros_runtime -%}
+<!DOCTYPE html>
 
 {% block variables %}
   {% set lang_root_path = "/" ~ lang ~ "/" %}
@@ -41,7 +42,6 @@
   {% endif %}
 {% endblock variables %}
 
-<!DOCTYPE html>
 {{ macros_head::html_tag(config=config, lang=lang) }}
 <head>
     {% block seo %}
@@ -92,7 +92,7 @@
 
     {% block extra_head %}{% endblock extra_head %}
 </head>
-<body class="{% block body_class %}{% if is_landing %}is-landing no-scrollbar{% endif %}{% endblock body_class %}">
+<body class="bg-base-100 text-base-content antialiased min-h-screen {% block body_class %}{% if is_landing %}is-landing no-scrollbar{% endif %}{% endblock body_class %}">
     {{ macros_search::search(config=config) }}
 
     <div class="drawer lg:drawer-open">
@@ -168,7 +168,7 @@
             {% endif %}
 
             <div class="p-4 md:p-8 w-full min-w-0 flex justify-center min-h-[calc(100dvh-4rem)]">
-                <div id="blog-layout" class="relative mx-auto w-full {% block layout_fit_class %}{% if use_fit_shell %}lg:w-fit{% endif %}{% endblock layout_fit_class %} min-w-0 max-w-7xl flex flex-row gap-0 rounded-box border border-base-content/5 bg-base-100 shadow-sm p-5 sm:p-6 md:p-8 lg:p-10">
+                <div id="{% block layout_id %}blog-layout{% endblock layout_id %}" class="relative mx-auto w-full {% block layout_fit_class %}{% if use_fit_shell %}lg:w-fit{% endif %}{% endblock layout_fit_class %} min-w-0 max-w-7xl flex flex-row gap-0 rounded-box border border-base-content/5 bg-base-100 shadow-sm p-5 sm:p-6 md:p-8 lg:p-10">
                     <main class="relative prose min-w-0 w-full {% block main_width_class %}{% if has_toc %}{% if wide_content %}max-w-[76rem]{% else %}max-w-prose{% endif %}{% elif is_taxonomy_view %}flex-1 max-w-prose lg:min-w-[65ch]{% elif force_compact_main %}{% if wide_content %}max-w-[76rem]{% else %}max-w-prose{% endif %}{% else %}{% if wide_content %}flex-1 max-w-[76rem]{% else %}flex-1 max-w-prose{% endif %}{% endif %}{% endblock main_width_class %}">
                         {% if has_layout_rail %}
                         <div id="toc-toggle-anchor" class="hidden lg:block absolute h-full top-0 right-0 z-50 pointer-events-none">

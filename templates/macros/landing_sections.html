@@ -27,25 +27,18 @@
     {% set light_src = section.extra.hero.image_light | default(value=section.extra.hero.image | default(value="")) %}
 
     {% if dark_src != "" and light_src != "" %}
-      <div class="hero-dark absolute inset-0">
-        <img src="{{ get_url(path=dark_src) | safe }}" alt="Hero Background Dark"
-          class="w-full h-full rounded-none object-cover object-center opacity-{{ dark_image_opacity }}"
-          width="3840" height="2160" fetchpriority="high" loading="eager" decoding="async" />
-      </div>
-
-      <div class="hero-light hidden absolute inset-0">
-        <img src="{{ get_url(path=light_src) | safe }}" alt="Hero Background Light"
-          class="w-full h-full rounded-none object-cover object-center opacity-{{ light_image_opacity }}"
-          width="3840" height="2160" fetchpriority="high" loading="eager" decoding="async" />
+      <div class="absolute inset-0 z-0">
+        <img src="{{ get_url(path=light_src) | safe }}" alt="Hero Background Light" class="hero-img-light w-full h-full rounded-none object-cover object-center opacity-{{ light_image_opacity }}" width="3840" height="2160" fetchpriority="high" loading="eager" decoding="async" data-no-lazy="true" />
+        <img src="{{ get_url(path=dark_src) | safe }}" alt="Hero Background Dark" class="hero-img-dark w-full h-full rounded-none object-cover object-center opacity-{{ dark_image_opacity }}" width="3840" height="2160" fetchpriority="high" loading="eager" decoding="async" data-no-lazy="true" />
       </div>
     {% elif dark_src != "" %}
       <img src="{{ get_url(path=dark_src) | safe }}" alt="Hero Background"
         class="w-full h-full rounded-none object-cover object-center opacity-{{ dark_image_opacity }}"
-        width="3840" height="2160" fetchpriority="high" loading="eager" decoding="async" />
+        width="3840" height="2160" fetchpriority="high" loading="eager" decoding="async" data-no-lazy="true" />
     {% elif light_src != "" %}
       <img src="{{ get_url(path=light_src) | safe }}" alt="Hero Background"
         class="w-full h-full rounded-none object-cover object-center opacity-{{ light_image_opacity }}"
-        width="3840" height="2160" fetchpriority="high" loading="eager" decoding="async" />
+        width="3840" height="2160" fetchpriority="high" loading="eager" decoding="async" data-no-lazy="true" />
     {% endif %}
 
   </div>
@@ -290,12 +283,7 @@
           {% if tab.image %}
           {# Show only image when image is provided #}
           <div class="flex justify-center">
-            <div
-              class="showcase-image-frame rounded-box shadow-lg border border-base-content/15"
-              style="--showcase-image: url('{{ tab.image | safe }}');"
-            >
-              <div class="showcase-image-bg" aria-hidden="true"></div>
-              <div class="showcase-image-bg showcase-image-bg--expanded" aria-hidden="true"></div>
+            <div class="showcase-image-frame rounded-box shadow-lg border border-base-content/15">
               <img
                 src="{{ tab.image | safe }}"
                 alt="{{ tab.title }}"

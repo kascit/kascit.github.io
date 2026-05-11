@@ -1,13 +1,10 @@
 // Notification banner logic for blog posts.
-(function () {
+export function initNotifyBanner() {
   "use strict";
 
   var banner = document.querySelector("[data-notify-banner]");
   var dismissBtn = banner && banner.querySelector("[data-notify-dismiss]");
   var enableBtn = banner && banner.querySelector("[data-notify-enable]");
-  var toast = document.querySelector("[data-notify-toast]");
-  var toastAlert = toast && toast.querySelector("[data-notify-toast-alert]");
-  var toastMsg = toast && toast.querySelector("[data-notify-toast-message]");
   var toastTimer = 0;
 
   var DISMISS_KEY = "notify-banner-dismissed";
@@ -54,8 +51,39 @@
     enableBtn.classList.toggle("is-loading", isBusy);
   }
 
-  // Toast helper
+  // Toast helper - dynamically creates toast node
   function showToast(message, type) {
+    var toast = document.querySelector("[data-notify-toast]");
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.className = "notify-toast hidden";
+      toast.setAttribute("data-notify-toast", "");
+      toast.setAttribute("role", "status");
+      toast.setAttribute("aria-live", "polite");
+      toast.setAttribute("aria-atomic", "true");
+
+      var content = document.createElement("div");
+      content.className = "notify-toast__content";
+      content.setAttribute("data-notify-toast-alert", "");
+
+      var msgSpan = document.createElement("span");
+      msgSpan.className = "notify-toast__message";
+      msgSpan.setAttribute("data-notify-toast-message", "");
+
+      content.appendChild(msgSpan);
+      toast.appendChild(content);
+
+      var wrap = document.querySelector("[data-notify-banner-mount]");
+      if (wrap) {
+        wrap.appendChild(toast);
+      } else {
+        document.body.appendChild(toast);
+      }
+    }
+
+    var toastAlert = toast.querySelector("[data-notify-toast-alert]");
+    var toastMsg = toast.querySelector("[data-notify-toast-message]");
+
     if (!toast || !toastAlert || !toastMsg) return;
 
     var variant =
@@ -212,4 +240,4 @@
         });
     });
   }
-})();
+}

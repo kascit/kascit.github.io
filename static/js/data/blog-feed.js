@@ -40,6 +40,9 @@ export function initBlogFeed() {
     span.appendChild(archiveLink);
     span.appendChild(document.createTextNode("."));
     sentinel.appendChild(span);
+    // Announce to screen readers via aria-live region
+    const liveRegion = sentinel.querySelector("[aria-live]");
+    if (liveRegion) liveRegion.textContent = "All posts loaded.";
   }
 
   function nearBottom() {

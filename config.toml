@@ -84,7 +84,7 @@ default_thumbnail = "images/thumbs/default_thumbnail.jpg"
 
 # Analytics (leave empty to disable cleanly)
 gtag = "G-BY8SPYYYYR"
-ahrefs_analytics_key = "$AHREFS_KEY"
+ahrefs_analytics_key = ""
 
 # GitHub edit link (used by theme templates)
 edit_url = "https://github.com/kascit/kascit.github.io/edit/main"

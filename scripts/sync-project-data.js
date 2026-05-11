@@ -28,10 +28,16 @@ function parseRepoFromUrl(url) {
   const match = value.match(/github\.com\/([^/]+)\/([^/#?]+)/i);
   if (!match) return null;
 
-  return {
-    owner: match[1],
-    repo: match[2].replace(/\.git$/i, ""),
-  };
+  const owner = match[1];
+  const repo = match[2].replace(/\.git$/i, "");
+
+  // Validate owner and repo against a strict whitelist of characters to
+  // prevent crafted file data from being used to build unexpected URLs.
+  // GitHub owners: alphanumeric and hyphens; repos: allow dot/underscore/hyphen.
+  if (!/^[A-Za-z0-9-]+$/.test(owner)) return null;
+  if (!/^[A-Za-z0-9._-]+$/.test(repo)) return null;
+
+  return { owner, repo };
 }
 
 function getGitHubToken() {
@@ -60,8 +66,22 @@ function githubRequest(endpoint, token) {
   if (token) headers.Authorization = `Bearer ${token}`; // lgtm[js/file-access-to-http] token sourced from env or gh CLI
 
   return new Promise((resolve, reject) => {
+    // Construct the full URL via the URL API and validate the hostname so
+    // injected or unexpected endpoint values cannot cause requests to other
+    // origins. This ensures outbound requests are constrained to GitHub.
+    let urlObj;
+    try {
+      urlObj = new URL(endpoint, API_BASE);
+    } catch (err) {
+      return reject(new Error("Invalid GitHub API endpoint"));
+    }
+
+    if (urlObj.hostname !== new URL(API_BASE).hostname) {
+      return reject(new Error("Disallowed GitHub API host"));
+    }
+
     const req = https.request(
-      `${API_BASE}${endpoint}`,
+      urlObj,
       {
         method: "GET",
         headers,

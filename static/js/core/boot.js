@@ -24,6 +24,16 @@
       : raw;
 
   d.setAttribute("data-theme", mode);
+  // Also set a theme class immediately so CSS prepaint rules using
+  // `html.dark` / `html.light` apply before the JS modules load. This
+  // prevents a flash/flicker of the wrong logo variant during navigation.
+  try {
+    d.classList.remove("light", "dark");
+    d.classList.add(mode);
+  } catch {
+    // Ignore failures (e.g. if classList isn't supported). The data-theme
+    // attribute will still be set correctly.
+  }
   d.setAttribute("data-ui-init", "0");
   d.setAttribute(
     "data-sidebar-collapsed",

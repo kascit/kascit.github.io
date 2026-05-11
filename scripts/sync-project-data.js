@@ -72,7 +72,7 @@ function githubRequest(endpoint, token) {
     let urlObj;
     try {
       urlObj = new URL(endpoint, API_BASE);
-    } catch (err) {
+    } catch {
       return reject(new Error("Invalid GitHub API endpoint"));
     }
 

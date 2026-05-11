@@ -390,7 +390,7 @@ function showHints() {
           // allow 0 (root) or 1-segment paths to be treated as site links
           if (segments.length <= 1) allowSemanticInToc = true;
         }
-      } catch (e) {
+      } catch {
         allowSemanticInToc = false;
       }
     }

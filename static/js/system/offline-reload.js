@@ -6,7 +6,9 @@
   if (!el) return;
   var ATTEMPT_KEY = "offlineReloadLastAttempt";
   var ATTEMPT_WINDOW_MS = 6000;
+  var POLL_INTERVAL_MS = 5000;
   var isChecking = false;
+  var pollInterval = null;
 
   el.textContent = "Waiting for connection";
   el.classList.add("status-pill", "status-pill--pending");
@@ -15,6 +17,8 @@
     el.textContent = "Back online - reloading";
     el.classList.remove("status-pill--pending");
     el.classList.add("status-pill--online");
+
+    if (pollInterval) clearInterval(pollInterval);
 
     setTimeout(function () {
       var path = window.location.pathname || "/";
@@ -84,4 +88,12 @@
   }
 
   window.addEventListener("online", maybeRecover);
+
+  // Periodic polling: keep checking network status every POLL_INTERVAL_MS
+  // even if 'online' event doesn't fire. This ensures recovery on reconnect.
+  pollInterval = setInterval(function () {
+    if (navigator.onLine) {
+      maybeRecover();
+    }
+  }, POLL_INTERVAL_MS);
 })();

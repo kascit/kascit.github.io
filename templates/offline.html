@@ -1,12 +1,33 @@
-{% extends "page.html" %}
+{% extends "base.html" %}
 {% import "macros/nav.html" as macros_nav %}
+
+{# Offline page — extends base.html directly (like 404.html) to force the rail layout.
+   This ensures _force_rail = true, which sets use_fit_shell = true for consistent width. #}
+
+{# Force the shell into the fitted layout so offline matches site width/state #}
+{% set shell_fit = true %}
+
+{% block extra_head %}
+<meta name="robots" content="noindex, nofollow" />
+{% endblock extra_head %}
+
+{% block content %}
+<div class="mb-8 lg:mb-10 pb-6 border-b border-base-content/10">
+    <div class="flex flex-col gap-3">
+        <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-base-content m-0">Offline</h1>
+        <p class="text-base sm:text-lg text-base-content/70 m-0 leading-relaxed">You appear to be offline.</p>
+    </div>
+</div>
+
+<p>Your browser has lost connection to the internet. Check your network and try reloading the page.</p>
+<p id="offline-status" class="mt-4">Waiting for connection</p>
+{% endblock content %}
 
 {% block prev_link %}
 {{ macros_nav::render_button(url="/", title="Home", subtitle="Back to", direction="prev") }}
 {% endblock prev_link %}
 
-{% block next_link %}
-{% endblock next_link %}
+{% block next_link %}{% endblock next_link %}
 
 {% block js_body %}
 {{ super() }}

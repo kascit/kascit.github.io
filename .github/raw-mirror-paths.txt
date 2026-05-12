@@ -2,3 +2,5 @@
 # Keep one path per line.
 
 rss.xml
+images/branding/logo-light.png
+images/branding/logo-dark.png

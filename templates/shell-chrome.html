@@ -6,10 +6,41 @@
         </button>
     </div>
 
-    <!-- Logo -->
+    <!-- Logo (centered on mobile) -->
     <div class="flex-1 flex justify-center items-center lg:flex lg:justify-start">
-        <a href="https://dhanur.me/" class="btn btn-ghost hover:bg-transparent hover:border-transparent normal-case text-xl font-bold text-base-content site-logo-link">
-            dhanur.me
+        <a
+            href="https://dhanur.me/"
+            data-keybind="d h"
+            data-keybind-action="click"
+            data-tooltip-label="Go to home"
+            data-tooltip-shortcut="d h"
+            data-tooltip-position="bottom"
+            class="btn btn-ghost hover:bg-transparent hover:border-transparent normal-case text-xl font-bold text-base-content logo-firefly site-logo-link tooltip tooltip-bottom"
+        >
+            <div class="relative h-18 flex items-center">
+                <picture>
+                    <img
+                        src="https://dhanur.me/images/branding/logo-light.png"
+                        alt="~/dhanur"
+                        class="h-18 w-auto p-[15px] logo-dark"
+                        sizes="200px"
+                        data-logo-type="dark"
+                        loading="eager"
+                        fetchpriority="high"
+                    />
+                </picture>
+                <picture class="absolute inset-0 flex items-center">
+                    <img
+                        src="https://dhanur.me/images/branding/logo-dark.png"
+                        alt="~/dhanur"
+                        class="h-18 w-auto p-[15px] logo-light"
+                        sizes="200px"
+                        data-logo-type="light"
+                        loading="eager"
+                        fetchpriority="high"
+                    />
+                </picture>
+            </div>
         </a>
     </div>
 

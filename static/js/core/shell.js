@@ -9,13 +9,21 @@
  */
 
 import { BASE_URL, getConfig } from "./config.js";
+import { ensureDefaultPolicy } from "./trusted-types.js";
 import { initResponsive } from "./responsive.js";
 import { initTheme } from "./theme-engine.js";
 import { initAuth } from "../system/auth-integration.js";
 import { checkAccess, renderAccessWall } from "../system/access-guard.js";
-import { filterAppsByRole, getManifestSync } from "../system/manifest.js";
+import {
+  fetchManifest,
+  filterAppsByRole,
+  getManifestSync,
+} from "../system/manifest.js";
 import { initDropdowns } from "../ui/dropdowns.js";
 import { SHELL_CONFIG_DEFAULTS } from "./shell-config.js";
+
+// Must run before any DOM injection sink is used (innerHTML, script.src, etc.)
+ensureDefaultPolicy();
 
 window.__componentsJS = true;
 let _injected = false;
@@ -202,12 +210,20 @@ function safeIconClass(value) {
 }
 
 function renderAppsGrid(shellRoot, apps) {
-  const grids = shellRoot.querySelectorAll("[data-app-menu-grid]");
+  // Backward compatibility:
+  // - New markup uses: [data-app-menu-grid="desktop"|"mobile"]
+  // - Older injected markup used: [data-apps-grid] and [data-apps-grid-mobile]
+  const grids = shellRoot.querySelectorAll(
+    "[data-app-menu-grid], [data-apps-grid], [data-apps-grid-mobile]",
+  );
   if (!grids.length) return;
 
   const entries = Array.isArray(apps) ? apps : [];
   grids.forEach((grid) => {
-    const isDesktop = grid.getAttribute("data-app-menu-grid") === "desktop";
+    const gridMode = grid.getAttribute("data-app-menu-grid");
+    const isDesktop =
+      gridMode === "desktop" ||
+      (!gridMode && grid.hasAttribute("data-apps-grid"));
     const padding = isDesktop ? "p-3" : "p-2.5";
 
     const fragment = document.createDocumentFragment();
@@ -243,11 +259,17 @@ function renderAppsGrid(shellRoot, apps) {
   });
 }
 
-function updateAppsGridForRole(shellRoot, role) {
-  const fallback = getManifestSync();
-  const visibleApps = filterAppsByRole(fallback.apps, role);
-  renderAppsGrid(shellRoot, visibleApps);
-  return Promise.resolve(visibleApps);
+async function updateAppsGridForRole(shellRoot, role) {
+  // Render cached/fallback immediately (fast paint).
+  const cached = getManifestSync();
+  const cachedVisible = filterAppsByRole(cached.apps, role);
+  renderAppsGrid(shellRoot, cachedVisible);
+
+  // Then refresh from the live manifest source of truth.
+  const fresh = await fetchManifest(role);
+  const freshVisible = filterAppsByRole(fresh.apps, role);
+  renderAppsGrid(shellRoot, freshVisible);
+  return freshVisible;
 }
 
 // --- Mobile panel logic ---
@@ -311,7 +333,14 @@ function syncMobileAuth(shellRoot, authStatus) {
     if (authedAvatar) {
       authedAvatar.classList.remove("hidden");
       const img = authedAvatar.querySelector("img");
-      if (img) img.src = user.avatar_url || "";
+      if (img) {
+        const avatarUrl = user.avatar_url;
+        if (avatarUrl) {
+          img.src = avatarUrl;
+        } else {
+          img.removeAttribute("src");
+        }
+      }
     }
     if (nameEl) nameEl.textContent = user.name || "User";
     if (emailEl) emailEl.textContent = user.email || "";
@@ -382,8 +411,6 @@ function hydrate(shellRoot) {
 
   applyChromeVisibility(shellRoot, config);
 
-  const cachedManifest = getManifestSync();
-  renderAppsGrid(shellRoot, filterAppsByRole(cachedManifest.apps, "guest"));
   updateAppsGridForRole(shellRoot, "guest");
 
   initResponsive();

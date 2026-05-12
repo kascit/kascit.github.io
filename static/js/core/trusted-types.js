@@ -8,6 +8,13 @@
  * Must run BEFORE any code that touches DOM injection sinks.
  */
 export function ensureDefaultPolicy() {
+  // Avoid attempting to create the policy if it already exists. Creating
+  // a TrustedTypes policy with the same name can trigger a CSP violation
+  // (browsers may block duplicate creations when CSP doesn't allow
+  // duplicates). The main site sets `window.__defaultPolicy` when it
+  // bootstraps — check that first to keep this function idempotent.
+  if (window.__defaultPolicy) return;
+
   if (window.trustedTypes && window.trustedTypes.createPolicy) {
     try {
       window.__defaultPolicy = window.trustedTypes.createPolicy("default", {
@@ -19,7 +26,7 @@ export function ensureDefaultPolicy() {
         },
       });
     } catch {
-      /* policy already exists — safe to ignore */
+      /* policy already exists or creation blocked by CSP — safe to ignore */
     }
   }
 

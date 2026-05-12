@@ -56,6 +56,8 @@ jobs:
         run: |
           set -euo pipefail
           MANIFEST_FILE=".github/raw-mirror-paths.txt"
+          # Set up CR variable for proper quoting in expansions
+          CR=$'\r'
 
           rm -rf .raw-mirror-staging
           mkdir -p .raw-mirror-staging
@@ -67,9 +69,9 @@ jobs:
 
           while IFS= read -r line || [ -n "$line" ]; do
             path="${line%%#*}"
-            path="${path%$'\r'}"
-            path="${path#${path%%[![:space:]]*}}"
-            path="${path%${path##*[![:space:]]}}"
+            path="${path%"$CR"}"
+            path="${path#"${path%%[![:space:]]*}"}"
+            path="${path%"${path##*[![:space:]]}"}"
 
             if [ -z "$path" ]; then
               continue
@@ -84,10 +86,27 @@ jobs:
                 ;;
             esac
 
+            # Support multiple potential build locations: prefer public/, fall back to static/ (some builds place assets there).
             source_file="public/$path"
             if [ ! -f "$source_file" ]; then
-              echo "Missing built artifact: $source_file"
-              exit 1
+              # try static/ (source assets present in repo)
+              if [ -f "static/$path" ]; then
+                source_file="static/$path"
+              else
+                # try static/images/branding/<basename> for image-only fallbacks (restrict to images/ prefix)
+                if [[ "$path" == images/* ]]; then
+                  base="$(basename "$path")"
+                  if [ -f "static/images/branding/$base" ]; then
+                    source_file="static/images/branding/$base"
+                  else
+                    echo "Missing built artifact: public/$path (also checked static/$path and static/images/branding/$base)"
+                    exit 1
+                  fi
+                else
+                  echo "Missing built artifact: public/$path (also checked static/$path)"
+                  exit 1
+                fi
+              fi
             fi
 
             mkdir -p ".raw-mirror-staging/$(dirname "$path")"

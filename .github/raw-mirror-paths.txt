@@ -4,3 +4,4 @@
 rss.xml
 images/branding/logo-light.png
 images/branding/logo-dark.png
+icons/favicon.ico

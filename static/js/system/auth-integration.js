@@ -1,6 +1,6 @@
 /**
  * Authentication Integration
- * Handles Auth client loading and UI state syncing.
+ * Handles Auth client loading and UI state syncing across root and subdomains.
  */
 
 import { appendScriptOnce } from "../core/resource-loader.js";
@@ -22,30 +22,96 @@ function once(fn) {
   };
 }
 
-function showElements(...elements) {
-  elements.forEach((el) => el && el.classList.remove("hidden"));
+// Robust unwrapping for single nodes, Arrays, or NodeLists
+function showElements(...items) {
+  items.forEach((item) => {
+    if (!item) return;
+    if (item instanceof NodeList || Array.isArray(item)) {
+      item.forEach((el) => el && el.classList.remove("hidden"));
+    } else if (item.classList) {
+      item.classList.remove("hidden");
+    }
+  });
 }
 
-function hideElements(...elements) {
-  elements.forEach((el) => el && el.classList.add("hidden"));
+function hideElements(...items) {
+  items.forEach((item) => {
+    if (!item) return;
+    if (item instanceof NodeList || Array.isArray(item)) {
+      item.forEach((el) => el && el.classList.add("hidden"));
+    } else if (item.classList) {
+      item.classList.add("hidden");
+    }
+  });
 }
 
-function setText(el, value) {
-  if (el) el.textContent = value;
+function setText(item, value) {
+  if (!item) return;
+  if (item instanceof NodeList || Array.isArray(item)) {
+    item.forEach((el) => {
+      if (el) el.textContent = value;
+    });
+  } else if (item.nodeType) {
+    item.textContent = value;
+  }
 }
 
-function setSrc(el, value) {
-  if (el) el.src = value;
+function setSrc(item, value) {
+  if (!item) return;
+  if (item instanceof NodeList || Array.isArray(item)) {
+    item.forEach((el) => {
+      if (!el) return;
+      if (value) {
+        el.src = value;
+      } else {
+        el.removeAttribute("src");
+      }
+    });
+  } else if (item.nodeType) {
+    if (value) {
+      item.src = value;
+    } else {
+      item.removeAttribute("src");
+    }
+  }
 }
 
-function bindAll(root, selector, eventName, handler, options) {
-  const elements = root.querySelectorAll(selector);
-  elements.forEach((el) => el.addEventListener(eventName, handler, options));
-}
+function updateCreditsUI(root, credits) {
+  const rows = root.querySelectorAll(
+    '[data-auth="credits-row"], [data-auth="sidebar-credits-row"]',
+  );
+  const balances = root.querySelectorAll(
+    '[data-auth="credits-balance"], [data-auth="sidebar-credits-balance"]',
+  );
+  const resets = root.querySelectorAll(
+    '[data-auth="credits-reset"], [data-auth="sidebar-credits-reset"]',
+  );
 
-// function updateCreditsUI(drawerElement, credits) {
-function updateCreditsUI() {
-  // Update credit badges/counters if applicable
+  if (!credits || rows.length === 0) {
+    hideElements(rows);
+    return;
+  }
+
+  showElements(rows);
+  if (credits.unlimited || credits.balance === -1) {
+    setText(balances, "∞");
+    setText(resets, "Admin");
+  } else {
+    setText(balances, String(credits.balance ?? "—"));
+    if (credits.periodEnd) {
+      try {
+        const d = new Date(credits.periodEnd);
+        setText(
+          resets,
+          `resets ${d.toLocaleDateString(undefined, { month: "short", day: "numeric" })}`,
+        );
+      } catch {
+        setText(resets, "");
+      }
+    } else {
+      setText(resets, "");
+    }
+  }
 }
 
 function injectAuthSDK(callback) {
@@ -71,6 +137,7 @@ function injectAuthSDK(callback) {
     },
     onError: () => {
       console.warn("[Auth] Could not load auth-client.js");
+      done();
     },
   });
 
@@ -87,29 +154,42 @@ export function initAuth(drawerElement = document, onAuthResolved = null) {
     const auth = getAuthClient();
     if (!auth) return;
 
-    // DOM references
+    // Comprehensive node mapping covering Desktop Navbars, Subdomain Panels, and Root Domain Sidebars
     const r = {
-      navGuestAvatar: drawerElement.querySelector('[data-auth="guest-avatar"]'),
-      navAuthedAvatar: drawerElement.querySelector(
-        '[data-auth="authed-avatar"]',
+      navGuestAvatar: drawerElement.querySelectorAll(
+        '[data-auth="nav-guest-avatar"], [data-auth="mobile-guest-avatar"], [data-auth="sidebar-guest-avatar"]',
       ),
-      navAvatarImg: drawerElement.querySelector('[data-auth="avatar-img"]'),
-      navAuthedHeaderImg: drawerElement.querySelector(
-        '[data-auth="authed-header-img"]',
+      navAuthedAvatar: drawerElement.querySelectorAll(
+        '[data-auth="nav-authed-avatar"], [data-auth="mobile-authed-avatar"], [data-auth="sidebar-authed-avatar"]',
       ),
-      navName: drawerElement.querySelector('[data-auth="user-name"]'),
-      navEmail: drawerElement.querySelector('[data-auth="user-email"]'),
-      navLoginItem: drawerElement.querySelector('[data-auth="nav-login-item"]'),
-      navAccountItem: drawerElement.querySelector(
-        '[data-auth="nav-account-item"]',
+      navAvatarImg: drawerElement.querySelectorAll(
+        '[data-auth="nav-authed-avatar"] img, [data-auth="mobile-authed-avatar"] img, [data-auth="sidebar-authed-avatar"] img',
       ),
-      navLogoutItem: drawerElement.querySelector(
-        '[data-auth="nav-logout-item"]',
+      navAuthedHeaderImg: drawerElement.querySelectorAll(
+        '[data-auth="nav-authed-header-avatar"], [data-auth="mobile-authed-header-avatar"]',
       ),
-      navGuestHeader: drawerElement.querySelector('[data-auth="guest-header"]'),
-      navAuthedHeader: drawerElement.querySelector(
-        '[data-auth="authed-header"]',
+      navName: drawerElement.querySelectorAll(
+        '[data-auth="nav-name"], [data-auth="mobile-name"], [data-auth="sidebar-name"]',
       ),
+      navEmail: drawerElement.querySelectorAll(
+        '[data-auth="nav-email"], [data-auth="mobile-email"], [data-auth="sidebar-email"]',
+      ),
+      navLoginItem: drawerElement.querySelectorAll(
+        '[data-auth="login-item"], [data-auth="mobile-login-btn"], [data-auth="sidebar-login-btn"]',
+      ),
+      navAccountItem: drawerElement.querySelectorAll(
+        '[data-auth="account-item"], [data-auth="mobile-account-btn"], [data-auth="sidebar-account-btn"]',
+      ),
+      navLogoutItem: drawerElement.querySelectorAll(
+        '[data-auth="logout-item"], [data-auth="mobile-logout-btn"], [data-auth="sidebar-logout-btn"]',
+      ),
+      navGuestHeader: drawerElement.querySelectorAll(
+        '[data-auth="nav-guest-header"], [data-auth="mobile-guest-header"]',
+      ),
+      navAuthedHeader: drawerElement.querySelectorAll(
+        '[data-auth="nav-authed-header"], [data-auth="mobile-authed-header"]',
+      ),
+      navRoleBadge: drawerElement.querySelectorAll('[data-auth="nav-role"]'),
     };
 
     function updateUI(status) {
@@ -131,12 +211,13 @@ export function initAuth(drawerElement = document, onAuthResolved = null) {
         setSrc(r.navAuthedHeaderImg, avatarUrl);
         setText(r.navName, userName);
         setText(r.navEmail, user.email || "");
+        setText(r.navRoleBadge, status.role || "user");
 
         try {
           if (avatarUrl)
             localStorage.setItem("dhanur_avatar_url_v1", avatarUrl);
         } catch {
-          // err
+          /* ignore */
         }
 
         updateCreditsUI(drawerElement, status.credits || null);
@@ -155,7 +236,6 @@ export function initAuth(drawerElement = document, onAuthResolved = null) {
       }
     }
 
-    // Initialize UI on SDK load
     if (typeof auth.onReady === "function") {
       auth.onReady((payload) =>
         updateUI(payload?.status || payload || auth.status || null),
@@ -164,48 +244,56 @@ export function initAuth(drawerElement = document, onAuthResolved = null) {
       updateUI(auth.status);
     }
 
-    // Listeners for SDK state changes
     document.addEventListener("authChanged", (e) => updateUI(e.detail));
     document.addEventListener("creditsChanged", (e) =>
       updateCreditsUI(drawerElement, e.detail),
     );
 
-    // Click Bindings
-    bindAll(
-      drawerElement,
-      '[data-auth="login-btn"], [data-auth="sidebar-login-btn"]',
-      "click",
-      (e) => {
-        e.preventDefault();
-        if (typeof auth.login === "function") auth.login();
-      },
-    );
+    // Global Event Delegation for all authentication triggers
+    if (!document.__authClickDelegated) {
+      document.__authClickDelegated = true;
+      document.addEventListener("click", (e) => {
+        const loginTarget = e.target.closest(
+          '[data-auth="login-btn"], [data-auth="sidebar-login-btn"], [data-auth="mobile-login-btn"]',
+        );
+        if (loginTarget) {
+          e.preventDefault();
+          if (typeof auth.login === "function") auth.login();
+          return;
+        }
 
-    bindAll(
-      drawerElement,
-      '[data-auth="logout-btn"], [data-auth="sidebar-logout-btn"]',
-      "click",
-      (e) => {
-        e.preventDefault();
-        if (typeof auth.logout === "function") auth.logout();
-      },
-    );
+        const logoutTarget = e.target.closest(
+          '[data-auth="logout-btn"], [data-auth="sidebar-logout-btn"], [data-auth="mobile-logout-btn"]',
+        );
+        if (logoutTarget) {
+          e.preventDefault();
+          if (typeof auth.logout === "function") auth.logout();
+          return;
+        }
+      });
+    }
 
-    // Intercept cross-origin messages from the OAuth popup
+    // Intercept cross-origin callbacks securely across domain boundaries
     window.addEventListener("message", async (event) => {
-      const trustedOrigins = ["https://auth.dhanur.me"];
-      if (!trustedOrigins.includes(event.origin)) return;
+      const isTrustedOrigin =
+        event.origin === "https://auth.dhanur.me" ||
+        event.origin === "https://dhanur.me" ||
+        event.origin.endsWith(".dhanur.me") ||
+        event.origin.startsWith("http://localhost:");
+
+      if (!isTrustedOrigin) return;
       if (!event.data || typeof event.data !== "object") return;
 
-      if (event.data.type === "auth-login-success") {
-        // Force the SDK to fetch the latest session set by the callback cookies
+      if (
+        event.data.type === "auth-login-success" ||
+        event.data.type === "auth-upgrade-success"
+      ) {
         if (auth && typeof auth.refresh === "function") {
           const freshStatus = await auth.refresh();
           updateUI(freshStatus);
         } else {
-          // Fallback manual fetch if the SDK does not expose refresh()
           try {
-            const res = await fetch("https://auth.dhanur.me/api/session", {
+            const res = await fetch("https://auth.dhanur.me/api/status", {
               credentials: "include",
             });
             if (res.ok) {
@@ -223,7 +311,6 @@ export function initAuth(drawerElement = document, onAuthResolved = null) {
           }
         }
 
-        // Send confirmation back to popup so it safely terminates
         if (event.source) {
           event.source.postMessage({ type: "auth-ack-close" }, event.origin);
         }

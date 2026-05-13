@@ -94,7 +94,7 @@ jobs:
                 source_file="static/$path"
               else
                 # try static/images/branding/<basename> for image-only fallbacks (restrict to images/ prefix)
-                if [[ "$path" == images/* ]]; then
+                if [[ "$path" == images/* || "$path" == icons/* ]]; then
                   base="$(basename "$path")"
                   if [ -f "static/images/branding/$base" ]; then
                     source_file="static/images/branding/$base"

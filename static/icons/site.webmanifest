@@ -23,25 +23,25 @@
   "related_applications": [],
   "icons": [
     {
-      "src": "/icons/icon-192x192.png",
+      "src": "/icons/icon-192x192-maskable.png?v=1200",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-512x512.png",
+      "src": "/icons/icon-512x512-maskable.png?v=1200",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/icons/icon-192x192-maskable.png",
+      "src": "/icons/icon-192x192-maskable.png?v=1200",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable"
     },
     {
-      "src": "/icons/icon-512x512-maskable.png",
+      "src": "/icons/icon-512x512-maskable.png?v=1200",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
@@ -71,7 +71,7 @@
       "url": "/blog/?source=pwa",
       "icons": [
         {
-          "src": "/icons/icon-192x192.png",
+          "src": "/icons/icon-192x192-maskable.png?v=1200",
           "sizes": "192x192",
           "type": "image/png",
           "purpose": "any"
@@ -85,7 +85,7 @@
       "url": "/about/?source=pwa",
       "icons": [
         {
-          "src": "/icons/icon-192x192.png",
+          "src": "/icons/icon-192x192-maskable.png?v=1200",
           "sizes": "192x192",
           "type": "image/png",
           "purpose": "any"

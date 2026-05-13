@@ -56,20 +56,20 @@ jobs:
         run: |
           set -euo pipefail
           MANIFEST_FILE=".github/raw-mirror-paths.txt"
-          # Set up CR variable for proper quoting in expansions
-          CR=$'\r'
 
           rm -rf .raw-mirror-staging
           mkdir -p .raw-mirror-staging
 
           if [ ! -f "$MANIFEST_FILE" ]; then
-            echo "Missing manifest: $MANIFEST_FILE"
+            echo "Error: Missing manifest at $MANIFEST_FILE"
             exit 1
           fi
 
           while IFS= read -r line || [ -n "$line" ]; do
+            # Strip comments and carriage returns
             path="${line%%#*}"
-            path="${path%"$CR"}"
+            path="${path//$'\\r'/}"
+            # Trim leading/trailing whitespace
             path="${path#"${path%%[![:space:]]*}"}"
             path="${path%"${path##*[![:space:]]}"}"
 
@@ -77,40 +77,36 @@ jobs:
               continue
             fi
 
-            path="${path#/}"
-
-            case "$path" in
-              *".."*)
-                echo "Invalid path in manifest: $path"
-                exit 1
-                ;;
-            esac
-
-            # Support multiple potential build locations: prefer public/, fall back to static/ (some builds place assets there).
-            source_file="public/$path"
-            if [ ! -f "$source_file" ]; then
-              # try static/ (source assets present in repo)
-              if [ -f "static/$path" ]; then
-                source_file="static/$path"
-              else
-                # try static/images/branding/<basename> for image-only fallbacks (restrict to images/ prefix)
-                if [[ "$path" == images/* || "$path" == icons/* ]]; then
-                  base="$(basename "$path")"
-                  if [ -f "static/images/branding/$base" ]; then
-                    source_file="static/images/branding/$base"
-                  else
-                    echo "Missing built artifact: public/$path (also checked static/$path and static/images/branding/$base)"
-                    exit 1
-                  fi
-                else
-                  echo "Missing built artifact: public/$path (also checked static/$path)"
-                  exit 1
-                fi
-              fi
+            if [[ "$path" == *".."* ]]; then
+              echo "Error: Directory traversal detected in path: $path"
+              exit 1
             fi
 
-            mkdir -p ".raw-mirror-staging/$(dirname "$path")"
-            cp "$source_file" ".raw-mirror-staging/$path"
+            path="${path#/}"
+            base="$(basename "$path")"
+            source_file=""
+
+            # 1. Check exact expected paths
+            for candidate in "public/$path" "static/$path"; do
+              if [ -f "$candidate" ]; then
+                source_file="$candidate"
+                break
+              fi
+            done
+
+            # 2. Fallback: Search anywhere in public/ or static/ by filename
+            if [ -z "$source_file" ]; then
+              source_file=$(find public static -name "$base" -type f -print -quit 2>/dev/null || true)
+            fi
+
+            if [ -z "$source_file" ] || [ ! -f "$source_file" ]; then
+              echo "Error: Missing artifact for '$path'. '$base' not found in public/ or static/."
+              exit 1
+            fi
+
+            dest=".raw-mirror-staging/$path"
+            mkdir -p "$(dirname "$dest")"
+            cp "$source_file" "$dest"
           done < "$MANIFEST_FILE"
 
           find .raw-mirror-staging -type f | sort
@@ -126,7 +122,7 @@ jobs:
           git fetch origin "$BRANCH" || true
 
           rm -rf .raw-mirror-branch
-          if git show-ref --verify --quiet "refs/remotes/origin/$BRANCH"; then
+          if git ls-remote --exit-code --heads origin "$BRANCH" >/dev/null 2>&1; then
             git worktree add -B "$BRANCH" .raw-mirror-branch "origin/$BRANCH"
           else
             git worktree add -d .raw-mirror-branch

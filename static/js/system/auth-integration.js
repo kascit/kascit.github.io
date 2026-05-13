@@ -44,8 +44,9 @@ function bindAll(root, selector, eventName, handler, options) {
 }
 
 // function updateCreditsUI(drawerElement, credits) {
-// Update credit badges/counters if applicable
-// }
+function updateCreditsUI() {
+  // Update credit badges/counters if applicable
+}
 
 function injectAuthSDK(callback) {
   const done = once(callback);
@@ -124,7 +125,7 @@ export function initAuth(drawerElement = document, onAuthResolved = null) {
           r.navAuthedAvatar,
           r.navAuthedHeader,
           r.navAccountItem,
-          r.navLogoutItem
+          r.navLogoutItem,
         );
         setSrc(r.navAvatarImg, avatarUrl);
         setSrc(r.navAuthedHeaderImg, avatarUrl);
@@ -145,7 +146,7 @@ export function initAuth(drawerElement = document, onAuthResolved = null) {
           r.navAuthedAvatar,
           r.navAuthedHeader,
           r.navAccountItem,
-          r.navLogoutItem
+          r.navLogoutItem,
         );
       }
 
@@ -157,7 +158,7 @@ export function initAuth(drawerElement = document, onAuthResolved = null) {
     // Initialize UI on SDK load
     if (typeof auth.onReady === "function") {
       auth.onReady((payload) =>
-        updateUI(payload?.status || payload || auth.status || null)
+        updateUI(payload?.status || payload || auth.status || null),
       );
     } else if (auth.status) {
       updateUI(auth.status);
@@ -166,7 +167,7 @@ export function initAuth(drawerElement = document, onAuthResolved = null) {
     // Listeners for SDK state changes
     document.addEventListener("authChanged", (e) => updateUI(e.detail));
     document.addEventListener("creditsChanged", (e) =>
-      updateCreditsUI(drawerElement, e.detail)
+      updateCreditsUI(drawerElement, e.detail),
     );
 
     // Click Bindings
@@ -177,7 +178,7 @@ export function initAuth(drawerElement = document, onAuthResolved = null) {
       (e) => {
         e.preventDefault();
         if (typeof auth.login === "function") auth.login();
-      }
+      },
     );
 
     bindAll(

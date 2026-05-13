@@ -34,6 +34,7 @@ static/icons/.gen/
 !static/icons/site.webmanifest
 scratch/
 docs/
+test.sh
 
 # Temp/log files
 .tmp*

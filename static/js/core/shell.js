@@ -28,10 +28,18 @@ ensureDefaultPolicy();
 window.__componentsJS = true;
 let _injected = false;
 
+// Explicitly default all standard modules to True to prevent configuration-drop erasures
 const DEFAULT_SHELL_CONFIG = {
   ...SHELL_CONFIG_DEFAULTS,
   noCss: false,
   showNavbar: true,
+  showLanguage: true,
+  showAppsGrid: true,
+  showAccountButton: true,
+  showThemeToggle: true,
+  showMobileMenu: true,
+  enablePwa: false,
+  favicon: false,
 };
 
 function getShellRuntimeConfig() {
@@ -49,12 +57,10 @@ function getShellRuntimeConfig() {
   return merged;
 }
 
-// Determines if relative paths work (primary domain context)
 function isSameOriginHost() {
   return window.location.origin === BASE_URL;
 }
 
-// Authorizes execution across all controlled top-level and subdomains
 function isTrustedHost() {
   const host = window.location.hostname;
   return (
@@ -75,14 +81,13 @@ function maybeRegisterServiceWorker(config) {
     "load",
     () => {
       navigator.serviceWorker.register(swPath).catch(() => {
-        // Subdomains can opt out or provide their own /sw.js.
+        // Subdomains opt out or host custom instances
       });
     },
     { once: true },
   );
 }
 
-// Helpers to inject CSS and favicon assets into foreign documents.
 function injectCSS(sameOrigin, config) {
   if (config.noCss) return;
   if (document.querySelector('link[data-shell-style="main"]')) return;
@@ -121,8 +126,6 @@ function injectFavicons(sameOrigin, config) {
     )
     .forEach((el) => el.remove());
 
-  // For cross-origin subdomains, skip .ico files to avoid CORB errors.
-  // Browsers block opaque cross-origin .ico reads even with CORS headers.
   const iconLinks = [
     {
       rel: "icon",
@@ -138,7 +141,6 @@ function injectFavicons(sameOrigin, config) {
     },
   ];
 
-  // Only include .ico for same-origin (avoids CORB on subdomains)
   if (sameOrigin) {
     iconLinks.push({
       rel: "shortcut icon",
@@ -146,7 +148,6 @@ function injectFavicons(sameOrigin, config) {
     });
   }
 
-  // Avoid cross-origin webmanifest warnings on subdomains.
   if (sameOrigin) {
     document
       .querySelectorAll('link[rel="manifest"]')
@@ -206,7 +207,7 @@ function safeHref(value) {
       return parsed.href;
     }
   } catch {
-    // Ignore malformed URL and fall back to anchor.
+    // Ignore malformed strings
   }
   return "#";
 }
@@ -276,20 +277,16 @@ async function updateAppsGridForRole(shellRoot, role) {
   return freshVisible;
 }
 
-// --- Mobile panel logic ---
-function initMobilePanel(shellRoot) {
-  const panel = shellRoot.querySelector("[data-shell-mobile-panel]");
+// --- Mobile Panel Event Delegation ---
+function initMobilePanel() {
+  const panel = document.querySelector("[data-shell-mobile-panel]");
   if (!panel) return;
 
-  const toggle = shellRoot.querySelector("#shell-mobile-toggle");
-  const backdrop = panel.querySelector("[data-shell-mobile-backdrop]");
   const drawer = panel.querySelector("[data-shell-mobile-drawer]");
-  const closeBtn = panel.querySelector("[data-shell-mobile-close]");
 
   function openPanel() {
     panel.classList.remove("hidden");
-    // Force DOM reflow to trigger slide animation cleanly
-    void panel.offsetWidth;
+    void panel.offsetWidth; // Trigger clean reflow layout execution
     if (drawer) drawer.style.transform = "translateX(0)";
     document.body.style.overflow = "hidden";
   }
@@ -302,103 +299,52 @@ function initMobilePanel(shellRoot) {
     }, 300);
   }
 
-  // Prevent duplicate event binding if hydrated multiple times
-  if (toggle && !toggle.hasAttribute("data-shell-bound")) {
-    toggle.setAttribute("data-shell-bound", "true");
-    toggle.addEventListener("click", openPanel);
-  }
+  // Pure single-listener routing blocks element detach loops
+  if (!document.__shellMobileDelegated) {
+    document.__shellMobileDelegated = true;
+    document.addEventListener("click", (e) => {
+      const toggleTarget = e.target.closest("#shell-mobile-toggle");
+      if (toggleTarget) {
+        e.preventDefault();
+        e.stopPropagation();
+        openPanel();
+        return;
+      }
 
-  if (backdrop && !backdrop.hasAttribute("data-shell-bound")) {
-    backdrop.setAttribute("data-shell-bound", "true");
-    backdrop.addEventListener("click", closePanel);
-  }
+      const closeTarget = e.target.closest("[data-shell-mobile-close]");
+      const backdropTarget = e.target.closest("[data-shell-mobile-backdrop]");
+      if (closeTarget || backdropTarget) {
+        e.preventDefault();
+        e.stopPropagation();
+        closePanel();
+        return;
+      }
+    });
 
-  if (closeBtn && !closeBtn.hasAttribute("data-shell-bound")) {
-    closeBtn.setAttribute("data-shell-bound", "true");
-    closeBtn.addEventListener("click", closePanel);
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape" && !panel.classList.contains("hidden")) {
+        closePanel();
+      }
+    });
   }
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && !panel.classList.contains("hidden")) {
-      closePanel();
-    }
-  });
 }
 
-// --- Mobile auth sync ---
 function syncMobileAuth(shellRoot, authStatus) {
+  // Redundant proxy check maintained strictly for edge consumers using local overrides
   const panel = shellRoot.querySelector("[data-shell-mobile-panel]");
   if (!panel) return;
 
   const isAuthed = authStatus?.authenticated === true;
   const user = authStatus?.user;
-
-  const guestAvatar = panel.querySelector('[data-auth="mobile-guest-avatar"]');
-  const authedAvatar = panel.querySelector(
-    '[data-auth="mobile-authed-avatar"]',
-  );
   const nameEl = panel.querySelector('[data-auth="mobile-name"]');
   const emailEl = panel.querySelector('[data-auth="mobile-email"]');
-  const loginBtn = panel.querySelector('[data-auth="mobile-login-btn"]');
-  const logoutBtn = panel.querySelector('[data-auth="mobile-logout-btn"]');
-  const accountBtn = panel.querySelector('[data-auth="mobile-account-btn"]');
 
   if (isAuthed && user) {
-    if (guestAvatar) guestAvatar.classList.add("hidden");
-    if (authedAvatar) {
-      authedAvatar.classList.remove("hidden");
-      const img = authedAvatar.querySelector("img");
-      if (img) {
-        const avatarUrl = user.avatar_url;
-        if (avatarUrl) {
-          img.src = avatarUrl;
-        } else {
-          img.removeAttribute("src");
-        }
-      }
-    }
     if (nameEl) nameEl.textContent = user.name || "User";
     if (emailEl) emailEl.textContent = user.email || "";
-    if (loginBtn) loginBtn.classList.add("hidden");
-    if (logoutBtn) logoutBtn.classList.remove("hidden");
-    if (accountBtn) accountBtn.classList.remove("hidden");
   } else {
-    if (guestAvatar) guestAvatar.classList.remove("hidden");
-    if (authedAvatar) authedAvatar.classList.add("hidden");
     if (nameEl) nameEl.textContent = "Guest";
     if (emailEl) emailEl.textContent = "Not signed in";
-    if (loginBtn) loginBtn.classList.remove("hidden");
-    if (logoutBtn) logoutBtn.classList.add("hidden");
-    if (accountBtn) accountBtn.classList.add("hidden");
-  }
-
-  if (logoutBtn) {
-    logoutBtn.onclick = (e) => {
-      e.preventDefault();
-      const auth = window.AUTH;
-      if (auth && typeof auth.logout === "function") {
-        const result = auth.logout();
-        if (result && typeof result.then === "function") {
-          result
-            .then(() => window.location.reload())
-            .catch(() => window.location.reload());
-        } else {
-          window.location.reload();
-        }
-      }
-    };
-  }
-
-  if (loginBtn) {
-    loginBtn.onclick = (e) => {
-      e.preventDefault();
-      const auth = window.AUTH;
-      if (auth && typeof auth.login === "function") {
-        auth.login();
-      } else {
-        window.location.href = "https://auth.dhanur.me";
-      }
-    };
   }
 }
 
@@ -421,15 +367,14 @@ function hydrate(shellRoot) {
   }
 
   applyChromeVisibility(shellRoot, config);
-
   updateAppsGridForRole(shellRoot, "guest");
 
   initResponsive();
   initTheme(shellRoot);
   initDropdowns(shellRoot);
-  initMobilePanel(shellRoot);
+  initMobilePanel();
 
-  initAuth(shellRoot, (authStatus) => {
+  initAuth(document, (authStatus) => {
     const role = authStatus?.role || "guest";
     const access = checkAccess(config, authStatus);
     const contentSlot =
@@ -459,7 +404,6 @@ async function bootstrapShell() {
   const config = getShellRuntimeConfig();
   if (config.showNavbar === false) return;
 
-  // Enforce execution mapping strictly to authorized domain zones
   if (!isTrustedHost()) {
     console.warn("[shell.js] Execution blocked on unauthorized origin.");
     return;
@@ -471,14 +415,12 @@ async function bootstrapShell() {
   const existingNavbar = document.querySelector(".navbar");
 
   if (existingNavbar) {
-    // Subdomains bypass primary origin scripts, requiring shell hydration
     if (!sameOrigin) {
       hydrate(document.body);
     }
     return;
   }
 
-  // Inject underlying platform CSS assets cleanly if targeting missing navigation blocks
   if (!sameOrigin) {
     injectCSS(false, config);
     injectFavicons(false, config);

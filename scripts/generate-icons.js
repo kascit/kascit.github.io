@@ -85,6 +85,8 @@ function renderIcon(
       `${size}x${size}`,
       "xc:none",
       "(",
+      "-density",
+      "1200",
       "-background",
       "none",
       src,
@@ -122,6 +124,8 @@ function renderIcon(
       `${size}x${size}`,
       `xc:${bg}`,
       "(",
+      "-density",
+      "1200",
       "-background",
       "none",
       src,
@@ -162,6 +166,8 @@ function renderIcon(
     "-draw",
     `roundrectangle 0,0,${max},${max},${radius},${radius}`,
     "(",
+    "-density",
+    "1200",
     "-background",
     "none",
     src,
@@ -281,6 +287,7 @@ function main() {
     BASE_GLYPH_COLOR,
   );
 
+  // Enforce true square boundary generation for all target maskables
   renderIcon(
     command,
     SRC_SVG,
@@ -289,6 +296,7 @@ function main() {
     path.join(ICON_DIR, "icon-192x192-maskable.png"),
     PWA_MASKABLE_GLYPH_SCALE,
     BASE_GLYPH_COLOR,
+    "square",
   );
   renderIcon(
     command,
@@ -298,6 +306,7 @@ function main() {
     path.join(ICON_DIR, "icon-512x512-maskable.png"),
     PWA_MASKABLE_GLYPH_SCALE,
     BASE_GLYPH_COLOR,
+    "square",
   );
 
   renderIcon(
@@ -308,6 +317,7 @@ function main() {
     path.join(ICON_DIR, "icon-192x192-maskable-transparent.png"),
     PWA_MASKABLE_GLYPH_SCALE,
     BASE_GLYPH_COLOR,
+    "square",
   );
   renderIcon(
     command,
@@ -317,6 +327,7 @@ function main() {
     path.join(ICON_DIR, "icon-512x512-maskable-transparent.png"),
     PWA_MASKABLE_GLYPH_SCALE,
     BASE_GLYPH_COLOR,
+    "square",
   );
   renderIcon(
     command,
@@ -344,6 +355,7 @@ function main() {
     path.join(ICON_DIR, "icon-192x192-maskable-dark.png"),
     PWA_MASKABLE_GLYPH_SCALE,
     WHITE_BG,
+    "square",
   );
   renderIcon(
     command,
@@ -353,6 +365,7 @@ function main() {
     path.join(ICON_DIR, "icon-512x512-maskable-dark.png"),
     PWA_MASKABLE_GLYPH_SCALE,
     WHITE_BG,
+    "square",
   );
 
   copyAlias(

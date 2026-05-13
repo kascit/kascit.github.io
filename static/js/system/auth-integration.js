@@ -43,9 +43,9 @@ function bindAll(root, selector, eventName, handler, options) {
   elements.forEach((el) => el.addEventListener(eventName, handler, options));
 }
 
-function updateCreditsUI(drawerElement, credits) {
-  // Update credit badges/counters if applicable
-}
+// function updateCreditsUI(drawerElement, credits) {
+// Update credit badges/counters if applicable
+// }
 
 function injectAuthSDK(callback) {
   const done = once(callback);
@@ -89,16 +89,26 @@ export function initAuth(drawerElement = document, onAuthResolved = null) {
     // DOM references
     const r = {
       navGuestAvatar: drawerElement.querySelector('[data-auth="guest-avatar"]'),
-      navAuthedAvatar: drawerElement.querySelector('[data-auth="authed-avatar"]'),
+      navAuthedAvatar: drawerElement.querySelector(
+        '[data-auth="authed-avatar"]',
+      ),
       navAvatarImg: drawerElement.querySelector('[data-auth="avatar-img"]'),
-      navAuthedHeaderImg: drawerElement.querySelector('[data-auth="authed-header-img"]'),
+      navAuthedHeaderImg: drawerElement.querySelector(
+        '[data-auth="authed-header-img"]',
+      ),
       navName: drawerElement.querySelector('[data-auth="user-name"]'),
       navEmail: drawerElement.querySelector('[data-auth="user-email"]'),
       navLoginItem: drawerElement.querySelector('[data-auth="nav-login-item"]'),
-      navAccountItem: drawerElement.querySelector('[data-auth="nav-account-item"]'),
-      navLogoutItem: drawerElement.querySelector('[data-auth="nav-logout-item"]'),
+      navAccountItem: drawerElement.querySelector(
+        '[data-auth="nav-account-item"]',
+      ),
+      navLogoutItem: drawerElement.querySelector(
+        '[data-auth="nav-logout-item"]',
+      ),
       navGuestHeader: drawerElement.querySelector('[data-auth="guest-header"]'),
-      navAuthedHeader: drawerElement.querySelector('[data-auth="authed-header"]'),
+      navAuthedHeader: drawerElement.querySelector(
+        '[data-auth="authed-header"]',
+      ),
     };
 
     function updateUI(status) {
@@ -122,8 +132,11 @@ export function initAuth(drawerElement = document, onAuthResolved = null) {
         setText(r.navEmail, user.email || "");
 
         try {
-          if (avatarUrl) localStorage.setItem("dhanur_avatar_url_v1", avatarUrl);
-        } catch (e) {}
+          if (avatarUrl)
+            localStorage.setItem("dhanur_avatar_url_v1", avatarUrl);
+        } catch {
+          // err
+        }
 
         updateCreditsUI(drawerElement, status.credits || null);
       } else {
@@ -174,11 +187,13 @@ export function initAuth(drawerElement = document, onAuthResolved = null) {
       (e) => {
         e.preventDefault();
         if (typeof auth.logout === "function") auth.logout();
-      }
+      },
     );
 
     // Intercept cross-origin messages from the OAuth popup
     window.addEventListener("message", async (event) => {
+      const trustedOrigins = ["https://auth.dhanur.me"];
+      if (!trustedOrigins.includes(event.origin)) return;
       if (!event.data || typeof event.data !== "object") return;
 
       if (event.data.type === "auth-login-success") {
@@ -195,10 +210,15 @@ export function initAuth(drawerElement = document, onAuthResolved = null) {
             if (res.ok) {
               const data = await res.json();
               updateUI(data);
-              document.dispatchEvent(new CustomEvent("authChanged", { detail: data }));
+              document.dispatchEvent(
+                new CustomEvent("authChanged", { detail: data }),
+              );
             }
           } catch (err) {
-            console.error("[Auth] Background session synchronization failed:", err);
+            console.error(
+              "[Auth] Background session synchronization failed:",
+              err,
+            );
           }
         }
 

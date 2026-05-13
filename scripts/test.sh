@@ -1,3 +1,8 @@
+<<<<<<< HEAD
+=======
+#!/usr/bin/env bash
+
+>>>>>>> 8e8280d (fix: raw + auth)
 # 1. Run your build
 just ci-build
 
@@ -36,7 +41,7 @@ while IFS= read -r line || [ -n "$line" ]; do
   dest=".raw-mirror-staging/$path"
   mkdir -p "$(dirname "$dest")"
   cp "$source_file" "$dest"
-done < "$MANIFEST_FILE"
+done <"$MANIFEST_FILE"
 
 # 3. Verify the staged output matches expectations
 find .raw-mirror-staging -type f | sort

@@ -49,8 +49,17 @@ function getShellRuntimeConfig() {
   return merged;
 }
 
+// Determines if relative paths work (primary domain context)
 function isSameOriginHost() {
   return window.location.origin === BASE_URL;
+}
+
+// Authorizes execution across all controlled top-level and subdomains
+function isTrustedHost() {
+  const host = window.location.hostname;
+  return (
+    host === "dhanur.me" || host.endsWith(".dhanur.me") || host === "localhost"
+  );
 }
 
 function maybeRegisterServiceWorker(config) {
@@ -210,9 +219,6 @@ function safeIconClass(value) {
 }
 
 function renderAppsGrid(shellRoot, apps) {
-  // Backward compatibility:
-  // - New markup uses: [data-app-menu-grid="desktop"|"mobile"]
-  // - Older injected markup used: [data-apps-grid] and [data-apps-grid-mobile]
   const grids = shellRoot.querySelectorAll(
     "[data-app-menu-grid], [data-apps-grid], [data-apps-grid-mobile]",
   );
@@ -260,12 +266,10 @@ function renderAppsGrid(shellRoot, apps) {
 }
 
 async function updateAppsGridForRole(shellRoot, role) {
-  // Render cached/fallback immediately (fast paint).
   const cached = getManifestSync();
   const cachedVisible = filterAppsByRole(cached.apps, role);
   renderAppsGrid(shellRoot, cachedVisible);
 
-  // Then refresh from the live manifest source of truth.
   const fresh = await fetchManifest(role);
   const freshVisible = filterAppsByRole(fresh.apps, role);
   renderAppsGrid(shellRoot, freshVisible);
@@ -284,25 +288,36 @@ function initMobilePanel(shellRoot) {
 
   function openPanel() {
     panel.classList.remove("hidden");
-    // Force reflow before adding transition class
-    void drawer.offsetWidth;
-    drawer.style.transform = "translateX(0)";
+    // Force DOM reflow to trigger slide animation cleanly
+    void panel.offsetWidth;
+    if (drawer) drawer.style.transform = "translateX(0)";
     document.body.style.overflow = "hidden";
   }
 
   function closePanel() {
-    drawer.style.transform = "translateX(-100%)";
+    if (drawer) drawer.style.transform = "translateX(-100%)";
     document.body.style.overflow = "";
     setTimeout(() => {
       panel.classList.add("hidden");
     }, 300);
   }
 
-  if (toggle) toggle.addEventListener("click", openPanel);
-  if (backdrop) backdrop.addEventListener("click", closePanel);
-  if (closeBtn) closeBtn.addEventListener("click", closePanel);
+  // Prevent duplicate event binding if hydrated multiple times
+  if (toggle && !toggle.hasAttribute("data-shell-bound")) {
+    toggle.setAttribute("data-shell-bound", "true");
+    toggle.addEventListener("click", openPanel);
+  }
 
-  // Close on escape
+  if (backdrop && !backdrop.hasAttribute("data-shell-bound")) {
+    backdrop.setAttribute("data-shell-bound", "true");
+    backdrop.addEventListener("click", closePanel);
+  }
+
+  if (closeBtn && !closeBtn.hasAttribute("data-shell-bound")) {
+    closeBtn.setAttribute("data-shell-bound", "true");
+    closeBtn.addEventListener("click", closePanel);
+  }
+
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && !panel.classList.contains("hidden")) {
       closePanel();
@@ -357,7 +372,6 @@ function syncMobileAuth(shellRoot, authStatus) {
     if (accountBtn) accountBtn.classList.add("hidden");
   }
 
-  // Wire up mobile logout
   if (logoutBtn) {
     logoutBtn.onclick = (e) => {
       e.preventDefault();
@@ -375,7 +389,6 @@ function syncMobileAuth(shellRoot, authStatus) {
     };
   }
 
-  // Wire up mobile login
   if (loginBtn) {
     loginBtn.onclick = (e) => {
       e.preventDefault();
@@ -400,8 +413,6 @@ function hydrate(shellRoot) {
     'link[rel="icon"], link[rel="shortcut icon"], link[rel="apple-touch-icon"]',
   );
 
-  // On subdomains always inject shared assets.
-  // On same-origin shell test pages, inject only if missing.
   if (!sameOrigin || !hasMainStyles) {
     injectCSS(sameOrigin, config);
   }
@@ -448,21 +459,26 @@ async function bootstrapShell() {
   const config = getShellRuntimeConfig();
   if (config.showNavbar === false) return;
 
+  // Enforce execution mapping strictly to authorized domain zones
+  if (!isTrustedHost()) {
+    console.warn("[shell.js] Execution blocked on unauthorized origin.");
+    return;
+  }
+
   maybeRegisterServiceWorker(config);
 
   const sameOrigin = isSameOriginHost();
-
   const existingNavbar = document.querySelector(".navbar");
+
   if (existingNavbar) {
-    // If shell is loaded onto the main site, skip mutations; if external and pre-rendered, hydrate.
+    // Subdomains bypass primary origin scripts, requiring shell hydration
     if (!sameOrigin) {
       hydrate(document.body);
     }
     return;
   }
 
-  // Security hardening: do not inject cross-origin HTML into this document.
-  // External consumers should ship a local shell markup and then call hydrate().
+  // Inject underlying platform CSS assets cleanly if targeting missing navigation blocks
   if (!sameOrigin) {
     injectCSS(false, config);
     injectFavicons(false, config);

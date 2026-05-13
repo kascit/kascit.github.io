@@ -1,7 +1,7 @@
 {
   "id": "/?source=pwa",
   "name": "dhanur.me",
-  "short_name": "dhanur",
+  "short_name": "dhanur.me",
   "description": "Unified progressive web application for all that is dhanur.me",
   "start_url": "/?source=pwa",
   "scope": "/",
@@ -18,7 +18,7 @@
   "dir": "ltr",
   "theme_color": "#ffffff",
   "background_color": "#ffffff",
-  "orientation": "any",
+  "orientation": "portrait",
   "prefer_related_applications": false,
   "related_applications": [],
   "icons": [

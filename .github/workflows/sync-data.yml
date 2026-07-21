@@ -6,6 +6,7 @@ on:
 
 permissions:
   contents: write # Needed to commit back to the repo
+  pull-requests: write # Needed to create pull request
 
 jobs:
   sync-projects:
@@ -23,12 +24,24 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/sync-project-data.js
 
-      - name: Commit and Push Changes
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git add data/projects.json
-          if ! git diff --quiet || ! git diff --staged --quiet; then
-            git commit -m "chore(data): auto-sync github project metadata"
-            git push
-          fi
+      # Note: Reused BUMP_PRIVATE_GPG key for signing data sync commits
+      - name: Import GPG Key
+        uses: crazy-max/ghaction-import-gpg@v7
+        with:
+          gpg_private_key: ${{ secrets.BUMP_PRIVATE_GPG }}
+          passphrase: ${{ secrets.GPG_PASSPHRASE }}
+          git_user_signingkey: true
+          git_commit_gpgsign: true
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8
+        with:
+          commit-message: "chore(data): auto-sync github project metadata"
+          title: "chore(data): auto-sync github project metadata"
+          body: |
+            Automated weekly sync of GitHub project metadata in `data/projects.json`.
+          branch: chore/auto-sync-project-metadata
+          delete-branch: true
+          labels: |
+            data-sync
+            automation

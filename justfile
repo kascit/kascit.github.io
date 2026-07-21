@@ -348,8 +348,6 @@ _post-build:
     @node scripts/just-run.js "generate font awesome subset" -- node scripts/generate-fa-subset.js public
     @node scripts/just-log.js info "Injecting responsive image markup"
     @node scripts/just-run.js "inject responsive image markup" -- node scripts/inject-responsive-image-markup.js public
-    @node scripts/just-log.js info "Generating LQIP stylesheet"
-    @node scripts/just-run.js "generate LQIP stylesheet" -- node scripts/generate-lqip-css.js public
     @node scripts/just-log.js info "Optimizing static image assets"
     @node scripts/just-run.js "optimize static assets" -- node scripts/optimize-static-assets.js public
     @node scripts/just-log.js info "Optimizing JavaScript"

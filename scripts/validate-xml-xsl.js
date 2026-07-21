@@ -78,9 +78,9 @@ function main() {
   });
 
   if (xmllintCheck.status !== 0) {
-    console.error("xmllint is required for XML/XSL validation.");
-    console.error("Install via Scoop: scoop install libxml2");
-    process.exit(1);
+    console.warn("xmllint is not installed. Skipping XML/XSL validation.");
+    console.warn("To run this check, install via Scoop: scoop install libxml2");
+    return;
   }
 
   const files = collectXmlFiles();

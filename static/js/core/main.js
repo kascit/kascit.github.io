@@ -9,7 +9,6 @@ import { initDropdowns } from "../ui/dropdowns.js";
 import { initDrawer } from "../ui/drawer.js";
 import { initServiceWorker } from "../system/service-worker.js";
 import { initCookieConsent } from "../telemetry/cookie-consent.js";
-import { initWebMCP } from "../system/webmcp.js";
 import { initTooltips } from "../ui/tooltips.js";
 import { initExternalLinkUtm } from "../telemetry/external-link-utm.js";
 import {
@@ -45,7 +44,6 @@ DDDDDDDDDDb·······················PDDDDDDDDDDDDDDDPP··�
 
   // Align classes with prepaint attrs before transitions are enabled.
   runSafely(() => syncPrepaintLayoutState(), "prepaint layout sync");
-  runSafely(() => initWebMCP({ runtime: "main" }), "webmcp");
 
   // Keep key page-shell behavior eager to avoid flashes during navigation.
   runSafely(() => initTheme(document), "theme");
@@ -170,6 +168,14 @@ DDDDDDDDDDb·······················PDDDDDDDDDDDDDDDPP··�
 
   // Heavier/optional page features during idle time natively bundled.
   runWhenIdle(() => {
+    runSafely(
+      () =>
+        import("../system/webmcp.js").then((mod) =>
+          mod.initWebMCP({ runtime: "main" }),
+        ),
+      "webmcp",
+    );
+
     if (has("[data-sidebar-toggle]") && has("[data-toc-toggle]")) {
       runSafely(
         () =>

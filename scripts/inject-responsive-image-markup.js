@@ -158,21 +158,52 @@ function injectIntoImgTag(tag) {
   return injectedTag;
 }
 
+function escapeCssUrl(value) {
+  return String(value || "")
+    .replace(/\\/g, "\\\\")
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, "");
+}
+
 function processHtmlFile(filePath) {
   const before = fs.readFileSync(filePath, "utf8");
   let injected = 0;
+  const collectedKeys = new Set();
 
   const after = before.replace(/<img\b[^>]*>/gi, (tag) => {
+    const srcMatch = tag.match(/\ssrc\s*=\s*(?:(["'])(.*?)\1|([^\s>]+))/i);
+    if (srcMatch) {
+      const srcValue = srcMatch[2] || srcMatch[3] || "";
+      const manifestKey = shouldHandleSource(srcValue);
+      if (manifestKey && manifest[manifestKey] && manifest[manifestKey].lqip) {
+        collectedKeys.add(manifestKey);
+      }
+    }
+
     const next = injectIntoImgTag(tag);
     if (next !== tag) injected += 1;
     return next;
   });
 
-  if (after !== before) {
-    fs.writeFileSync(filePath, after, "utf8");
+  let finalHtml = after;
+  if (collectedKeys.size > 0) {
+    const rules = [];
+    for (const key of collectedKeys) {
+      const data = manifest[key];
+      const className = lqipClassName(key);
+      const lqip = escapeCssUrl(data.lqip);
+      rules.push(`.${className}{background-image:url("${lqip}");background-size:cover;background-position:center;}`);
+    }
+    const styleTag = `<style>${rules.join("\n")}</style>`;
+    finalHtml = finalHtml.replace("</head>", `${styleTag}</head>`);
   }
 
-  return { changed: after !== before, injected };
+  const changed = finalHtml !== before;
+  if (changed) {
+    fs.writeFileSync(filePath, finalHtml, "utf8");
+  }
+
+  return { changed, injected };
 }
 
 function main() {

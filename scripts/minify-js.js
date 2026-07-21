@@ -86,28 +86,29 @@ function main() {
 
     const rel = path.relative(outputDir, file).split(path.sep).join("/");
     const isModule = !rel.startsWith("js/vendor/");
+    const relFile = path.relative(ROOT, file).split(path.sep).join("/");
 
     const pnpmArgs = [
       "dlx",
       `terser@${terserVersion}`,
-      file,
+      relFile,
       "--compress",
       "--mangle",
       "--ecma",
       "2020",
       "-o",
-      file,
+      relFile,
     ];
     const npxArgs = [
       "--yes",
       `terser@${terserVersion}`,
-      file,
+      relFile,
       "--compress",
       "--mangle",
       "--ecma",
       "2020",
       "-o",
-      file,
+      relFile,
     ];
 
     if (isModule) {
@@ -121,28 +122,29 @@ function main() {
 
   const swFile = path.join(outputDir, "sw.js");
   if (fs.existsSync(swFile) && fs.statSync(swFile).isFile()) {
+    const relSwFile = path.relative(ROOT, swFile).split(path.sep).join("/");
     runPkg(
       [
         "dlx",
         `terser@${terserVersion}`,
-        swFile,
+        relSwFile,
         "--compress",
         "--mangle",
         "--ecma",
         "2020",
         "-o",
-        swFile,
+        relSwFile,
       ],
       [
         "--yes",
         `terser@${terserVersion}`,
-        swFile,
+        relSwFile,
         "--compress",
         "--mangle",
         "--ecma",
         "2020",
         "-o",
-        swFile,
+        relSwFile,
       ],
     );
     minifiedCount += 1;

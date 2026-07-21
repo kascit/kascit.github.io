@@ -63,10 +63,12 @@ function canRun(command, args) {
 
 function resolveImageMagickCommand() {
   const magick = runCapture("magick", ["-version"]);
-  if (magick.status === 0 && (magick.stdout || "").includes("ImageMagick")) return "magick";
+  if (magick.status === 0 && (magick.stdout || "").includes("ImageMagick"))
+    return "magick";
 
   const convert = runCapture("convert", ["-version"]);
-  if (convert.status === 0 && (convert.stdout || "").includes("ImageMagick")) return "convert";
+  if (convert.status === 0 && (convert.stdout || "").includes("ImageMagick"))
+    return "convert";
 
   return "";
 }

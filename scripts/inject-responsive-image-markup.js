@@ -192,7 +192,9 @@ function processHtmlFile(filePath) {
       const data = manifest[key];
       const className = lqipClassName(key);
       const lqip = escapeCssUrl(data.lqip);
-      rules.push(`.${className}{background-image:url("${lqip}");background-size:cover;background-position:center;}`);
+      rules.push(
+        `.${className}{background-image:url("${lqip}");background-size:cover;background-position:center;}`,
+      );
     }
     const styleTag = `<style>${rules.join("\n")}</style>`;
     finalHtml = finalHtml.replace("</head>", `${styleTag}</head>`);

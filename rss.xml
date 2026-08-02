@@ -466,22 +466,21 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 </ul>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
+<li>JavaScript</li>
+<li>HTML</li>
 <li>Node.js</li>
 <li>TypeScript</li>
 <li>Express</li>
 <li>JWT</li>
-<li>Authentication</li>
-<li>SSO</li>
 </ul>
 <h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
-<li>Primary language: TypeScript</li>
+<li>Primary language: JavaScript</li>
 <li>Archived: No</li>
 <li>Stars: 0</li>
 <li>Forks: 0</li>
 <li>Open Issues: 0</li>
-<li>Last update: 2026-05-04T07:33:22.671Z</li>
-<li>Topics: auth, jwt, sso, nodejs</li>
+<li>Last update: 2026-07-27T03:35:52Z</li>
 </ul>
 ]]></content:encoded>
         </item>
@@ -562,17 +561,18 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <li>HTML</li>
 <li>CSS</li>
 <li>Just</li>
+<li>XSLT</li>
 <li>Github Pages</li>
-<li>Personal Website</li>
 </ul>
 <h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
 <li>Primary language: JavaScript</li>
 <li>Archived: No</li>
+<li>License: MIT License</li>
 <li>Stars: 1</li>
-<li>Forks: 0</li>
-<li>Open Issues: 0</li>
-<li>Last update: 2026-04-19T09:17:31Z</li>
+<li>Forks: 1</li>
+<li>Open Issues: 1</li>
+<li>Last update: 2026-08-02T12:55:24Z</li>
 <li>Topics: css, github-pages, html, javascript, personal-website, portfolio</li>
 </ul>
 ]]></content:encoded>
@@ -612,6 +612,7 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <ul>
 <li>Primary language: C++</li>
 <li>Archived: Yes</li>
+<li>License: MIT License</li>
 <li>Stars: 0</li>
 <li>Forks: 0</li>
 <li>Open Issues: 0</li>
@@ -659,6 +660,7 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
 <li>Archived: No</li>
+<li>License: MIT License</li>
 <li>Stars: 1</li>
 <li>Forks: 0</li>
 <li>Open Issues: 0</li>
@@ -691,20 +693,21 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
 <li>Java</li>
-<li>Python</li>
 <li>JavaScript</li>
 <li>C++</li>
 <li>Rust</li>
+<li>Python</li>
 <li>C</li>
 </ul>
 <h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
 <li>Primary language: Java</li>
 <li>Archived: No</li>
+<li>License: MIT License</li>
 <li>Stars: 1</li>
 <li>Forks: 0</li>
 <li>Open Issues: 0</li>
-<li>Last update: 2025-12-28T14:16:43Z</li>
+<li>Last update: 2026-05-08T13:29:16Z</li>
 <li>Topics: algorithms, coding-challenges, cpp, data-structures, interview-prep, java, leetcode, python, rust</li>
 </ul>
 ]]></content:encoded>
@@ -733,10 +736,11 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
 <li>Rust</li>
-<li>Axum</li>
-<li>HTMX</li>
-<li>Supabase</li>
-<li>Tailwind CSS</li>
+<li>HTML</li>
+<li>Shell</li>
+<li>JavaScript</li>
+<li>Dockerfile</li>
+<li>Batchfile</li>
 </ul>
 <h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
@@ -745,7 +749,7 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <li>Stars: 0</li>
 <li>Forks: 0</li>
 <li>Open Issues: 0</li>
-<li>Last update: 2026-04-04T16:48:28Z</li>
+<li>Last update: 2026-07-27T03:36:25Z</li>
 </ul>
 ]]></content:encoded>
         </item>
@@ -777,13 +781,14 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <li>Data Structures</li>
 <li>DSA</li>
 <li>Linked List</li>
-<li>OOP</li>
+<li>Oop</li>
 <li>Playlist Manager</li>
 </ul>
 <h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
 <li>Primary language: Java</li>
 <li>Archived: Yes</li>
+<li>License: MIT License</li>
 <li>Stars: 0</li>
 <li>Forks: 0</li>
 <li>Open Issues: 0</li>
@@ -817,23 +822,20 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
 <li>TypeScript</li>
+<li>JavaScript</li>
+<li>CSS</li>
+<li>HTML</li>
 <li>Node.js</li>
 <li>Express</li>
-<li>React</li>
-<li>Tailwind CSS</li>
-<li>MongoDB</li>
-<li>Zod</li>
-<li>Vite</li>
 </ul>
 <h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
 <li>Primary language: TypeScript</li>
 <li>Archived: No</li>
-<li>Stars: 1</li>
+<li>Stars: 0</li>
 <li>Forks: 0</li>
 <li>Open Issues: 0</li>
-<li>Last update: 2026-05-04T07:33:22.654Z</li>
-<li>Topics: uptime-monitor, cron-monitor, react, node, express, mongodb</li>
+<li>Last update: 2026-04-30T17:40:10Z</li>
 </ul>
 ]]></content:encoded>
         </item>
@@ -871,6 +873,7 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <ul>
 <li>Primary language: Python</li>
 <li>Archived: Yes</li>
+<li>License: MIT License</li>
 <li>Stars: 1</li>
 <li>Forks: 0</li>
 <li>Open Issues: 0</li>
@@ -942,21 +945,22 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 </ul>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
-<li>Java 21</li>
-<li>Spring Boot</li>
-<li>Spring Data JPA</li>
-<li>Hibernate</li>
-<li>H2</li>
-<li>Docker</li>
+<li>Java</li>
+<li>HTML</li>
+<li>JavaScript</li>
+<li>Dockerfile</li>
+<li>API</li>
+<li>Crud API</li>
 </ul>
 <h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
-<li>Primary language: HTML</li>
+<li>Primary language: Java</li>
 <li>Archived: No</li>
+<li>License: MIT License</li>
 <li>Stars: 1</li>
 <li>Forks: 0</li>
-<li>Open Issues: 0</li>
-<li>Last update: 2026-04-04T16:48:36Z</li>
+<li>Open Issues: 1</li>
+<li>Last update: 2026-06-22T03:34:55Z</li>
 <li>Topics: api, crud-api, docker, h2, hibernate, java, jpa, junit5, maven, openapi, rest-api, spring-boot, spring-data-jpa, swagger, task-manager</li>
 </ul>
 ]]></content:encoded>
@@ -985,9 +989,9 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
 <li>HTML</li>
-<li>CSS</li>
+<li>Css</li>
 <li>Game</li>
-<li>JavaScript</li>
+<li>Javascript</li>
 <li>Tic Tac Toe</li>
 <li>Web Game</li>
 </ul>
@@ -1070,20 +1074,20 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <h2 id="tech-focus">Tech Focus</h2>
 <ul>
 <li>Go</li>
+<li>JavaScript</li>
+<li>Dockerfile</li>
 <li>Monitoring</li>
 <li>Status Page</li>
 <li>Render</li>
-<li>Concurrency</li>
 </ul>
 <h2 id="repository-snapshot">Repository Snapshot</h2>
 <ul>
 <li>Primary language: Go</li>
 <li>Archived: No</li>
-<li>Stars: 1</li>
+<li>Stars: 0</li>
 <li>Forks: 0</li>
 <li>Open Issues: 0</li>
-<li>Last update: 2026-05-01T10:00:00Z</li>
-<li>Topics: go, status-page, monitoring, dashboard</li>
+<li>Last update: 2026-07-27T03:35:15Z</li>
 </ul>
 ]]></content:encoded>
         </item>

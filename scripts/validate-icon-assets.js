@@ -24,6 +24,7 @@ const GENERATED_ICON_FILES = new Set([
   "icon-192x192.png",
   "icon-192x192-maskable.png",
   "icon-512x512.png",
+  "icon-512x512-transparent.png",
   "icon-512x512-maskable.png",
 ]);
 

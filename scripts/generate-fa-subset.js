@@ -159,7 +159,17 @@ function main() {
 
   const sourceCss = readText(sourceCssPath);
   const blocks = parseBlocks(sourceCss);
-  const kept = blocks.filter((block) => shouldKeepBlock(block, used));
+  const kept = blocks
+    .filter((block) => shouldKeepBlock(block, used))
+    .map((block) => {
+      if (block.startsWith("@font-face") && !block.includes("font-display:")) {
+        return block.replace(
+          /^(@font-face[^{]*)\{/,
+          "$1{\n  font-display: swap;",
+        );
+      }
+      return block;
+    });
 
   const banner =
     "/* Auto-generated Font Awesome subset. Do not edit by hand. */";

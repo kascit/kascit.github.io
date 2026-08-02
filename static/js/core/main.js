@@ -23,23 +23,6 @@ import {
 } from "./bootstrap-utils.js";
 
 function bootstrapSite() {
-  console.log(`\x1b[1m
-···························································
-··············qpppu········································
-·······)pDDDDDDDDDDDDDDbpu······················)DDDDDDDDDD
-·····pDDDDDDDDDDDDDDDDDDDDDbu···················)DDDDDDDDDD
-···pDDDDDDDDDDDDDDDDDDDDDDDDDbp·················)DDDDDDDDDD
-·)DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDp···············)DDDDDDDDDD
-·DDDDDDDDDDDP·······PDDDDDDDDDDDDb··············QDDDDDDDDDD
-(DDDDDDDDDDP··········(DDDDDDDDDDDDb···········)DDDDDDDDDDP
-QDDDDDDDDDP·············PDDDDDDDDDDDDDp······)pDDDDDDDDDDD·
-DDDDDDDDDDb···············)QDDDDDDDDDDDDDDDDDDDDDDDDDDDDDP·
-DDDDDDDDDDb·················)DDDDDDDDDDDDDDDDDDDDDDDDDDP···
-DDDDDDDDDDb···················)DDDDDDDDDDDDDDDDDDDDDDPP····
-DDDDDDDDDDb·······················PDDDDDDDDDDDDDDDPP·······
-······································c(·PPPP(c············
-···························································
-\x1b[0m`);
   runSafely(() => initResponsive(), "responsive");
 
   // Align classes with prepaint attrs before transitions are enabled.
@@ -48,19 +31,17 @@ DDDDDDDDDDb·······················PDDDDDDDDDDDDDDDPP··�
   // Keep key page-shell behavior eager to avoid flashes during navigation.
   runSafely(() => initTheme(document), "theme");
   runSafely(() => initDrawer(), "drawer");
-  runSafely(() => initDropdowns(document), "dropdowns");
-  runSafely(() => initExternalLinkUtm(document), "external link utm");
-  runSafely(() => initCookieConsent(), "cookie consent");
-  runSafely(() => initAuth(document), "auth");
-
-  // Register SW early so runtime issues never block installability.
-  runSafely(() => initServiceWorker(), "service worker");
 
   // Turn transitions on only after initial shell state is fully synced.
   markUiInitReady();
 
   // UX niceties after initial paint.
   runAfterFirstPaint(() => {
+    runSafely(() => initDropdowns(document), "dropdowns");
+    runSafely(() => initExternalLinkUtm(document), "external link utm");
+    runSafely(() => initCookieConsent(), "cookie consent");
+    runSafely(() => initAuth(document), "auth");
+    runSafely(() => initServiceWorker(), "service worker");
     if (hasAny(["[data-toc-sidebar]", "[data-toc-toggle]"])) {
       runSafely(
         () => import("../features/toc.js").then((mod) => mod.initToc()),

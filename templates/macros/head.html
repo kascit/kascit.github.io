@@ -77,6 +77,14 @@
     <meta name="application-name" content="{{ config.title | default(value='dhanur.me') }}">
 
     <link rel="preconnect" href="https://auth.dhanur.me" crossorigin>
+    <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin>
+    <link rel="preconnect" href="https://analytics.ahrefs.com" crossorigin>
+    <link rel="dns-prefetch" href="https://analytics.ahrefs.com">
+
+    {% if current_url == config.base_url or current_url == config.base_url ~ "/" %}
+    <link rel="preload" as="image" href="{{ get_url(path="images/landing/whood-light.jpg") | safe }}" fetchpriority="high" media="(prefers-color-scheme: light)">
+    <link rel="preload" as="image" href="{{ get_url(path="images/landing/whood.jpg") | safe }}" fetchpriority="high" media="(prefers-color-scheme: dark)">
+    {% endif %}
     {% set theme_colorset = self::get_theme_colorset(config=config) | trim %}
     {%- set cookie_domain = config.base_url | replace(from="https://", to="") | replace(from="http://", to="") -%}
     <script data-cookie-domain="{{ cookie_domain }}"

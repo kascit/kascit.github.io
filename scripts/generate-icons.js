@@ -213,9 +213,10 @@ function main() {
 
   const command = resolveImageMagickCommand();
   if (!command) {
-    throw new Error(
-      "ImageMagick is required for icon generation (magick/convert not found).",
+    console.log(
+      "Icon generation skipped: ImageMagick is not installed (magick/convert not found).",
     );
+    return;
   }
 
   fs.rmSync(GEN_DIR, { recursive: true, force: true });

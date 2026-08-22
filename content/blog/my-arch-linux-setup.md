@@ -1,7 +1,7 @@
 +++
 title = "I Use Arch BTW: My Setup and Why I Torture Myself"
 date = 2025-12-29
-description = "A walkthrough of my Arch Linux setup, or: how I learned to stop worrying and love the terminal"
+description = "A comprehensive walkthrough of my minimal Arch Linux environment, window management, shell tooling, and productivity workflows."
 
 [extra]
 thumbnail_image = "images/thumbs/arch.jpg"

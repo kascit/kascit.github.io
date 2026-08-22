@@ -1,6 +1,6 @@
 +++
 title = "Projects"
-description = "Sometimes I build things. Sometimes they even work."
+description = "Production services, open-source developer tools, and systems prototypes built by Dhanur with Java, Go, Rust, TypeScript, and AWS."
 template = "section.html"
 sort_by = "date"
 transparent = true

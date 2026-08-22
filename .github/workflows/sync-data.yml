@@ -1,3 +1,4 @@
+---
 name: Data Sync
 on:
   schedule:
@@ -5,6 +6,7 @@ on:
   workflow_dispatch: # Allow manual trigger
 
 permissions:
+  actions: write
   contents: write # Needed to commit back to the repo
   pull-requests: write # Needed to create pull request
 
@@ -56,3 +58,12 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr merge --auto --squash "${{ steps.cpr.outputs.pull-request-number }}" || true
+
+      - name: Trigger CI Checks
+        if: steps.cpr.outputs.pull-request-operation != 'closed'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          branch="${{ steps.cpr.outputs.pull-request-branch || 'chore/auto-sync-project-metadata' }}"
+          gh workflow run ci.yml --ref "$branch" || true
+          gh workflow run linter.yml --ref "$branch" || true

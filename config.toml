@@ -5,7 +5,7 @@
 base_url = "https://dhanur.me"
 
 title = "dhanur.me"
-description = "My cozy corner of the internet."
+description = "Backend systems engineering, distributed architecture, and technical writing from Dhanur — exploring cloud infrastructure, Linux, and developer tools."
 author = "Dhanur"
 
 default_language = "en"
@@ -194,5 +194,5 @@ base_path = "/icons/"
 favicon_96x96 = "/icons/favicon-96x96-transparent.png"
 favicon_svg = "/icons/favicon.svg"
 favicon_ico = "/icons/favicon-transparent.ico"
-apple_touch_icon = "/icons/apple-touch-icon-180x180-transparent.png"
+apple_touch_icon = "/icons/apple-touch-icon.png"
 site_webmanifest = "/icons/site.webmanifest"

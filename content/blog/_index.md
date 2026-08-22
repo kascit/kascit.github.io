@@ -1,6 +1,6 @@
 +++
 title = "Blog"
-description = "Notes on software, debugging, and practical lessons from real engineering work."
+description = "In-depth technical articles covering backend architecture, Linux workflows, container orchestration, and real-world engineering deep-dives."
 template = "section.html"
 sort_by = "date"
 transparent = true

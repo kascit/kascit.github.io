@@ -1,6 +1,6 @@
 +++
 title = "About"
-description = "Hey there! I build things that are useful, curious, and occasionally a little dangerous."
+description = "Learn more about Dhanur — backend engineer focusing on distributed systems, cloud architecture, open-source tooling, and hands-on experiments."
 template = "page.html"
 
 [extra]

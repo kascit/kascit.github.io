@@ -42,8 +42,61 @@ function walk(dir) {
   }
 }
 
+function enhanceRedirectStubs(dir) {
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      enhanceRedirectStubs(fullPath);
+      continue;
+    }
+    if (!entry.isFile() || !entry.name.endsWith(".html")) continue;
+
+    const content = fs.readFileSync(fullPath, "utf8");
+    if (!content.includes('http-equiv="refresh"') && !content.includes("window.location.replace")) {
+      continue;
+    }
+
+    // Extract target URL
+    const match = content.match(/url=([^"'>]+)/i) || content.match(/const\s+target\s*=\s*"([^"]+)"/);
+    if (!match) continue;
+    const target = match[1].trim();
+
+    const enhanced = `<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Redirecting | dhanur.me</title>
+  <meta name="robots" content="noindex, follow">
+  <link rel="canonical" href="${target}">
+  <meta name="description" content="This page has moved. You are being redirected to ${target}">
+  <script>
+    const target = "${target}";
+    const hash = window.location.hash || "";
+    window.location.replace(target + hash);
+  </script>
+  <noscript>
+    <meta http-equiv="refresh" content="0; url=${target}">
+  </noscript>
+</head>
+<body>
+  <main style="font-family: sans-serif; padding: 2rem; text-align: center;">
+    <h1>Page Moved</h1>
+    <p><a href="${target}">Click here</a> to proceed if you are not redirected automatically.</p>
+    <p style="margin-top: 1.5rem;"><a href="/">Home</a> | <a href="/blog/">Blog</a> | <a href="/projects/">Projects</a> | <a href="/links/">Links</a> | <a href="/about/">About</a></p>
+  </main>
+</body>
+</html>
+`;
+    fs.writeFileSync(fullPath, enhanced, "utf8");
+  }
+}
+
 walk(publicDir);
 console.log(`Removed ${removed} page/1 redirect directories.`);
+
+enhanceRedirectStubs(publicDir);
 
 // Also purge stale /page/1/ entries from sitemap.xml so search engines don't
 // index redirect stubs. Zola generates the sitemap before post-build cleanup runs.
@@ -66,9 +119,6 @@ if (fs.existsSync(sitemapPath) && removedPaths.length > 0) {
     }
   }
   if (purged > 0) {
-    // Write atomically to avoid race conditions: write to a temp file
-    // and rename into place. This prevents other processes from reading
-    // a partially-written file and addresses file-system race warnings.
     const tmpPath = sitemapPath + ".tmp";
     fs.writeFileSync(tmpPath, sitemap, "utf8");
     fs.renameSync(tmpPath, sitemapPath);

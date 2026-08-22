@@ -45,8 +45,33 @@ function toUrlPath(absPath) {
   return `/${rel}`;
 }
 
-function isExcluded(urlPath) {
-  return EXCLUDED_PATH_PREFIXES.some((prefix) => urlPath.startsWith(prefix));
+function isRedirectOrNoindex(absPath) {
+  try {
+    const content = fs.readFileSync(absPath, "utf8");
+    if (
+      content.includes('http-equiv="refresh"') ||
+      content.includes("window.location.replace") ||
+      content.includes('content="0; url=')
+    ) {
+      return true;
+    }
+    if (
+      /<meta\s+name=["']robots["']\s+content=["'][^"']*noindex/i.test(content) ||
+      /<meta\s+content=["'][^"']*noindex["']\s+name=["']robots/i.test(content)
+    ) {
+      return true;
+    }
+  } catch (_e) {
+    // Ignore read error
+  }
+  return false;
+}
+
+function isExcluded(absPath, urlPath) {
+  if (EXCLUDED_PATH_PREFIXES.some((prefix) => urlPath.startsWith(prefix))) {
+    return true;
+  }
+  return isRedirectOrNoindex(absPath);
 }
 
 function escapeXml(value) {
@@ -88,7 +113,7 @@ function main() {
   const urls = new Set();
   for (const filePath of htmlFiles) {
     const urlPath = toUrlPath(filePath);
-    if (isExcluded(urlPath)) continue;
+    if (isExcluded(filePath, urlPath)) continue;
     urls.add(`${baseUrl}${urlPath}`);
   }
 

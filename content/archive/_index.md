@@ -1,6 +1,6 @@
 +++
 title = "Archive"
-description = "Browse all blog posts chronologically"
+description = "Complete chronological archive of all published blog posts, architecture write-ups, and engineering notes on dhanur.me."
 template = "archive.html"
 sort_by = "date"
 aliases = ["/blog/archive", "/blog/archive/"]

@@ -3,29 +3,29 @@
   "updatedAtHuman": "2026-03-12",
   "posts": [
     {
-      "title": "The Art of Writing Technical Documentation That People Actually Read",
+      "title": "Writing Technical Documentation People Actually Read",
       "url": "https://dhanur.me/blog/writing-documentation/",
-      "description": "How to write docs that stay useful after launch, based on years of fixing stale and unread documentation"
+      "description": "Practical guide to writing engineering documentation that stays accurate, readable, and useful long after product launch."
     },
     {
       "title": "Debugging Production Issues Like a Detective",
       "url": "https://dhanur.me/blog/debugging-production/",
-      "description": "A systematic approach to finding and fixing bugs when you can't reproduce the issue locally"
+      "description": "A systematic, battle-tested approach to triaging and debugging elusive production issues when local reproduction fails."
     },
     {
       "title": "The Hidden Cost of 'Free' SaaS Tools",
       "url": "https://dhanur.me/blog/hidden-cost-saas/",
-      "description": "Why 'free' software often costs more than you think, and how to calculate the real price"
+      "description": "An in-depth breakdown of why free software tiers often cost more than you think, and how to calculate the true operational total cost."
     },
     {
       "title": "Why I Switched from Visual Studio Code to Neovim",
       "url": "https://dhanur.me/blog/vscode-to-neovim/",
-      "description": "A journey of pain, frustration, and eventual productivity with terminal-based editors"
+      "description": "The transition journey from VS Code to Neovim — covering configuration, Lua plugins, LSP setup, and terminal productivity gains."
     },
     {
       "title": "Building APIs That Don't Suck: A Spring Boot Journey",
       "url": "https://dhanur.me/blog/building-scalable-apis/",
-      "description": "Lessons learned from building REST APIs that people actually want to use (and maintaining them at 3 AM)"
+      "description": "Architectural patterns and practical lessons learned from designing, building, and maintaining high-performance REST APIs in production."
     }
   ]
 }

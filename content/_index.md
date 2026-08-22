@@ -1,6 +1,6 @@
 +++
 title = "Home"
-description = "Backend engineering, side projects, and technical writing from Dhanur — my cozy corner of the internet."
+description = "Backend systems engineering, distributed architecture, and technical writing from Dhanur — exploring cloud infrastructure, Linux, and developer tools."
 template = "landing.html"
 
 [extra]

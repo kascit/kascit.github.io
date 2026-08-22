@@ -4,6 +4,16 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Protocol Handler | dhanur.me</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="Protocol handler destination router for seamless deep linking across the Dhanur web ecosystem and micro-services." />
+  <link rel="canonical" href="https://dhanur.me/handler/" />
+  <meta property="og:title" content="Protocol Handler | dhanur.me" />
+  <meta property="og:description" content="Protocol handler destination router for seamless deep linking across the Dhanur web ecosystem and micro-services." />
+  <meta property="og:url" content="https://dhanur.me/handler/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Protocol Handler | dhanur.me" />
+  <meta name="twitter:description" content="Protocol handler destination router for seamless deep linking across the Dhanur web ecosystem and micro-services." />
   <style>
     :root { color-scheme: dark; --bg:#0b1220; --text:#e5e7eb; --muted:#9ca3af; }
     body {
@@ -28,7 +38,7 @@
     }
     .title { margin: 0 0 .45rem; font-size: 1.12rem; font-weight: 700; }
     .muted { margin: 0; color: var(--muted); }
-    .actions { margin-top: 1rem; }
+    .actions { margin-top: 1rem; display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
     a {
       color: #93c5fd;
       text-decoration: none;
@@ -45,7 +55,11 @@
     <h1 class="title">Opening destination...</h1>
     <p id="status" class="muted">Redirecting now.</p>
     <div class="actions">
-      <a id="home-link" href="/">Go to homepage</a>
+      <a id="home-link" href="/">Home</a>
+      <a href="/blog/">Blog</a>
+      <a href="/projects/">Projects</a>
+      <a href="/links/">Links</a>
+      <a href="/about/">About</a>
     </div>
   </main>
 

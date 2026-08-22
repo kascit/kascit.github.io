@@ -1,15 +1,4 @@
 {% import "macros/seo.html" as macros_seo %}
-{% macro get_theme_color(config) %}
-{# Theme configuration with backward compatibility #}
-{# Priority: theme.dark_brightness/light_brightness (new per-theme) > theme.brightness (common) > brightness (legacy) #}
-{%- set colorset = self::get_theme_colorset(config=config) | trim -%}
-{%- if colorset == "dark" -%}
-#0a0a0f
-{%- else -%}
-#f8fafc
-{%- endif -%}
-{% endmacro get_theme_color %}
-
 {% macro get_theme_colorset(config) %}
 {% if config.extra.theme is defined %}
   {{ config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) }}
@@ -18,8 +7,30 @@
 {% endif %}
 {% endmacro get_theme_colorset %}
 
+{% macro get_theme_color(config) %}
+{%- if config.extra.theme is defined -%}
+  {%- set colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) | trim -%}
+{%- else -%}
+  {%- set colorset = config.extra.default_colorset | default(value='dark') | trim -%}
+{%- endif -%}
+{%- if colorset == "dark" -%}
+#0a0a0f
+{%- else -%}
+#f8fafc
+{%- endif -%}
+{% endmacro get_theme_color %}
+
 {% macro html_tag(config, lang) %}
-{%- set theme_color = self::get_theme_color(config=config) | trim -%}
+{%- if config.extra.theme is defined -%}
+  {%- set colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) | trim -%}
+{%- else -%}
+  {%- set colorset = config.extra.default_colorset | default(value='dark') | trim -%}
+{%- endif -%}
+{%- if colorset == "dark" -%}
+  {%- set theme_color = "#0a0a0f" -%}
+{%- else -%}
+  {%- set theme_color = "#f8fafc" -%}
+{%- endif -%}
 {%- set is_rtl = false -%}
 {%- if config.extra.lang is defined and config.extra.lang.rtl is defined -%}
     {%- if lang in config.extra.lang.rtl -%}
@@ -79,13 +90,20 @@
     <link rel="preconnect" href="https://auth.dhanur.me" crossorigin>
     <link rel="preconnect" href="https://static.cloudflareinsights.com" crossorigin>
     <link rel="preconnect" href="https://analytics.ahrefs.com" crossorigin>
-    <link rel="dns-prefetch" href="https://analytics.ahrefs.com">
-
     {% if current_url == config.base_url or current_url == config.base_url ~ "/" %}
     <link rel="preload" as="image" href="{{ get_url(path="images/landing/whood-light.jpg") | safe }}" fetchpriority="high" media="(prefers-color-scheme: light)">
     <link rel="preload" as="image" href="{{ get_url(path="images/landing/whood.jpg") | safe }}" fetchpriority="high" media="(prefers-color-scheme: dark)">
     {% endif %}
-    {% set theme_colorset = self::get_theme_colorset(config=config) | trim %}
+    {% if config.extra.theme is defined %}
+      {% set theme_colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) | trim %}
+    {% else %}
+      {% set theme_colorset = config.extra.default_colorset | default(value='dark') | trim %}
+    {% endif %}
+    {% if theme_colorset == "dark" %}
+      {% set theme_color = "#0a0a0f" %}
+    {% else %}
+      {% set theme_color = "#f8fafc" %}
+    {% endif %}
     {%- set cookie_domain = config.base_url | replace(from="https://", to="") | replace(from="http://", to="") -%}
     <script data-cookie-domain="{{ cookie_domain }}"
             data-default-colorset="{{ theme_colorset }}"
@@ -183,7 +201,7 @@
     {{ macros_seo::meta_tags(config=config, current_url=current_url, resolved_title=resolved_title, resolved_description=resolved_description, resolved_meta_type=resolved_meta_type, page=page | default(value=false)) }}
     {{ macros_seo::website_schema(config=config) }}
 
-    <meta name="theme-color" content="{{ self::get_theme_color(config=config) | trim }}">
+    <meta name="theme-color" content="{{ theme_color }}">
 
     {% if config.generate_feeds %}
     <link rel="alternate" type="application/rss+xml" title="{{ config.title | default(value='RSS Feed') }}" href="{{ get_url(path='rss.xml', trailing_slash=false) | safe }}" />

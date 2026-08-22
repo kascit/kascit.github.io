@@ -12,9 +12,11 @@
   grid) appears automatically via the {% block rail_content %} default.
 #}
 
-{% block seo %}
-    {{ macros_head::head(config=config, page=false, section=false, current_url=resolved_current_url, meta_title="404 Page Not Found | dhanur.me", meta_description="The page you requested could not be found on dhanur.me. Head back to the home page or browse the archive.", meta_type="website") }}
-{% endblock seo %}
+{% block variables %}
+{{ super() }}
+{% set meta_title = "404 Page Not Found | dhanur.me" %}
+{% set meta_description = "The page you requested could not be found on dhanur.me. Head back to the home page or browse the archive." %}
+{% endblock variables %}
 
 {% block extra_head %}
 <meta name="robots" content="noindex, nofollow" />

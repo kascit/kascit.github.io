@@ -4,18 +4,6 @@ name: CI - Build & Test
 on:
   pull_request:
     branches: [main]
-    paths-ignore:
-      - "**.md"
-      - "LICENSE"
-      - "docs/**"
-      - "CITATION.cff"
-      - ".codespellrc"
-      - ".markdownlint.json"
-      - ".github/workflows/labeler.yml"
-      - ".github/workflows/stale.yml"
-      - ".github/workflows/management-insights.yml"
-      - ".github/workflows/cache-hygiene.yml"
-      - ".github/LABELER.yml"
   workflow_dispatch:
 
 concurrency:

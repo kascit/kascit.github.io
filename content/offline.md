@@ -16,7 +16,7 @@ enabled = false
 +++
 
 <p class="not-prose mb-4">
-	<span id="offline-status" data-offline-status="true" class="status-pill status-pill--pending">Waiting for connection</span>
+  <span id="offline-status" data-offline-status="true" class="status-pill status-pill--pending">Waiting for connection</span>
 </p>
 
 Limited cached content is available while you are disconnected.

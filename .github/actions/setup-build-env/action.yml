@@ -85,9 +85,14 @@ runs:
 
     - name: Install Zola
       if: steps.cache-zola.outputs.cache-hit != 'true'
-      uses: taiki-e/install-action@1ed3272338f573e042a2e6bca3893aa19f43b47a # v2
-      with:
-        tool: zola@${{ steps.versions.outputs.ZOLA_VERSION }}
+      shell: bash
+      run: |
+        mkdir -p "$HOME/.install-action/bin"
+        zola_ver="${{ steps.versions.outputs.ZOLA_VERSION }}"
+        url="https://github.com/getzola/zola/releases/download/v${zola_ver}/zola-v${zola_ver}-x86_64-unknown-linux-gnu.tar.gz"
+        echo "Downloading Zola v${zola_ver} from ${url}..."
+        curl -sSL "$url" | tar -xz -C "$HOME/.install-action/bin"
+        chmod +x "$HOME/.install-action/bin/zola"
 
     - name: Add zola to PATH
       shell: bash

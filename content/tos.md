@@ -1,6 +1,6 @@
 +++
 title = "Terms of Service"
-description = "Terms of Service for dhanur.me and associated applications — acceptable use, accounts, and disclaimers."
+description = "Terms of Service for dhanur.me and associated web applications — covering acceptable usage, account terms, security, and disclaimers."
 template = "page.html"
 
 [extra]

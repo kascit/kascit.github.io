@@ -14,6 +14,8 @@ const SOURCES = [
 ];
 
 const GENERATED_ICON_FILES = new Set([
+  "apple-touch-icon.png",
+  "apple-touch-icon-180x180.png",
   "apple-touch-icon-180x180-transparent.png",
   "favicon-16x16-transparent.png",
   "favicon-32x32-transparent.png",

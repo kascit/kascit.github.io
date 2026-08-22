@@ -38,7 +38,9 @@ const REWRITE_EXTENSIONS = new Set([
   ".txt",
   ".webmanifest",
 ]);
-const STABLE_LOADER_ENTRIES = [];
+const STABLE_LOADER_ENTRIES = [
+  { kind: "esm", sourceRel: "js/core/shell.js", stableRel: "js/shell.js" },
+];
 
 function fileHash(contents) {
   return crypto
@@ -60,7 +62,9 @@ function shouldFingerprint(relPath) {
   if (
     normalized === "sw.js" ||
     normalized === "sw.min.js" ||
-    normalized === "js/shell.min.js"
+    normalized === "js/shell.min.js" ||
+    normalized === "favicon.ico" ||
+    normalized === "favicon.svg"
   )
     return false;
 

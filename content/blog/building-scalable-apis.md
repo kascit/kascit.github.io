@@ -1,7 +1,7 @@
 +++
 title = "Building APIs That Don't Suck: A Spring Boot Journey"
 date = 2025-12-31
-description = "Lessons learned from building REST APIs that people actually want to use (and maintaining them at 3 AM)"
+description = "Architectural patterns and practical lessons learned from designing, building, and maintaining high-performance REST APIs in production."
 
 [extra]
 thumbnail_image = "images/thumbs/code2.jpg"
@@ -309,6 +309,6 @@ Do those things right, and you're already ahead of 70% of APIs out there.
 
 ## Resources
 
-The [Spring Boot docs](https://spring.io/projects/spring-boot) and [Baeldung](https://www.baeldung.com/) are still the fastest way to validate implementation details, and when either leaves ambiguity, reading the framework source directly tends to clear things up faster than guesswork.
+The [Spring Boot docs](https://spring.io/projects/spring-boot/) and [Baeldung](https://www.baeldung.com/) are still the fastest way to validate implementation details, and when either leaves ambiguity, reading the framework source directly tends to clear things up faster than guesswork.
 
 \- Dhanur

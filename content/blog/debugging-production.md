@@ -1,7 +1,7 @@
 +++
 title = "Debugging Production Issues Like a Detective"
 date = 2026-02-28
-description = "A systematic approach to finding and fixing bugs when you can't reproduce the issue locally"
+description = "A systematic, battle-tested approach to triaging and debugging elusive production issues when local reproduction fails."
 
 [extra]
 thumbnail_image = "images/thumbs/code.jpg"

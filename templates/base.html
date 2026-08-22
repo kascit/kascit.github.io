@@ -56,9 +56,9 @@
         {% set term_page_count = term.pages | length %}
         {% set resolved_meta_title = term.name ~ " · " ~ taxonomy_name_cap ~ " | " ~ site_title %}
         {% if term_page_count == 1 %}
-            {% set resolved_meta_description = "1 post tagged " ~ term.name ~ " — engineering notes and technical writing on dhanur.me." %}
+            {% set resolved_meta_description = "Explore 1 article and technical note tagged with " ~ term.name ~ " on dhanur.me. Architecture patterns, implementation details, and insights." %}
         {% else %}
-            {% set resolved_meta_description = term_page_count ~ " posts tagged " ~ term.name ~ " — engineering notes and technical writing on dhanur.me." %}
+            {% set resolved_meta_description = "Explore " ~ term_page_count ~ " articles and technical notes tagged with " ~ term.name ~ " on dhanur.me. Architecture patterns, implementation details, and insights." %}
         {% endif %}
     {% elif taxonomy is defined %}
         {% set resolved_meta_type = "website" %}
@@ -67,7 +67,7 @@
         {% if taxonomy.config.description %}
             {% set resolved_meta_description = taxonomy.config.description %}
         {% else %}
-            {% set resolved_meta_description = "Browse all " ~ taxonomy.name ~ " used across dhanur.me — engineering notes, debugging guides, and technical writing." %}
+            {% set resolved_meta_description = "Browse all " ~ taxonomy.name ~ " used across dhanur.me — engineering notes, debugging guides, architecture patterns, and technical writing." %}
         {% endif %}
     {% endif %}
 

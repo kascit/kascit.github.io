@@ -1,7 +1,7 @@
 +++
 title = "Why I Switched from Visual Studio Code to Neovim"
 date = 2026-01-15
-description = "A journey of pain, frustration, and eventual productivity with terminal-based editors"
+description = "The transition journey from VS Code to Neovim — covering configuration, Lua plugins, LSP setup, and terminal productivity gains."
 
 [extra]
 thumbnail_image = "images/thumbs/nerd.jpg"

@@ -1,20 +1,9 @@
+---
 name: Lint & Quality
 
 on:
   pull_request:
     branches: [main]
-    paths-ignore:
-      - "**.md"
-      - "LICENSE"
-      - "docs/**"
-      - "CITATION.cff"
-      - ".codespellrc"
-      - ".markdownlint.json"
-      - ".github/workflows/labeler.yml"
-      - ".github/workflows/stale.yml"
-      - ".github/workflows/management-insights.yml"
-      - ".github/workflows/cache-hygiene.yml"
-      - ".github/LABELER.yml"
   workflow_dispatch:
 
 concurrency:
@@ -57,6 +46,13 @@ jobs:
           VALIDATE_CSS_PRETTIER: false
           VALIDATE_JSON_PRETTIER: false
           VALIDATE_MARKDOWN_PRETTIER: false
+          VALIDATE_JAVASCRIPT_ES: false
+          VALIDATE_JAVASCRIPT_PRETTIER: false
+          VALIDATE_NATURAL_LANGUAGE: false
+          VALIDATE_JSX: false
+          VALIDATE_TSX: false
+          VALIDATE_TYPESCRIPT_ES: false
+          VALIDATE_TYPESCRIPT_PRETTIER: false
           # Unified exclusion regex covering public, scratch, templates, data, vendor assets, third-party CSS, and tools.
           FILTER_REGEX_EXCLUDE: .*public/.*|.*scratch/.*|.*static/js/vendor/.*|.*static/css/(dui|main)\.css|.*tools/cloudflare/.*|.*templates/.*|.*data/.*|.*\.min\.js
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

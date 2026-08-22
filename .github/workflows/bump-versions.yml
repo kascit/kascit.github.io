@@ -7,6 +7,7 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: write
   contents: write
   pull-requests: write
 
@@ -188,3 +189,12 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr merge --auto --squash "${{ steps.cpr.outputs.pull-request-number }}" || true
+
+      - name: Trigger CI Checks
+        if: steps.cpr.outputs.pull-request-operation != 'closed'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          branch="${{ steps.cpr.outputs.pull-request-branch || 'chore/bump-tool-versions' }}"
+          gh workflow run ci.yml --ref "$branch" || true
+          gh workflow run linter.yml --ref "$branch" || true

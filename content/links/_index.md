@@ -1,6 +1,6 @@
 +++
 title = "Links"
-description = "Where to find me on the internet."
+description = "Connect with Dhanur across developer platforms, social networks, and community channels. Find GitHub, LinkedIn, Discord, and project links."
 template = "section.html"
 
 [extra.comments]
@@ -25,7 +25,7 @@ This page is the clean index of where to find me online. If you need to reach me
 
 {{ link_card(url="https://x.com/nkascit", external=true, icon="fa-brands fa-x-twitter", title="X (Twitter)", description="Occasional thoughts and updates") }}
 
-{{ link_card(url="https://discord.gg/U2UTGParYX", external=true, icon="fa-brands fa-discord", title="Discord", description="Come say hi") }}
+{{ link_card(url="https://discord.com/invite/U2UTGParYX", external=true, icon="fa-brands fa-discord", title="Discord", description="Come say hi") }}
 
 {{ link_card(url="https://mastodon.social/@kascit", external=true, icon="fa-brands fa-mastodon", title="Mastodon", description="Screaming into the decentralized void") }}
 
@@ -38,6 +38,8 @@ This page is the clean index of where to find me online. If you need to reach me
 {{ link_card(url="https://www.duolingo.com/profile/kascit", external=true, icon="fa-solid fa-language", title="Duolingo", description="Trying to keep the owl happy") }}
 
 {{ link_card(url="/projects/", external=false, icon="fa-solid fa-folder", title="Projects Portfolio", description="Check out what I've built") }}
+
+{{ link_card(url="/design/", external=false, icon="fa-solid fa-palette", title="Design System", description="UI components and styling tokens") }}
 
 {{ link_card(url="/rss.xml", external=false, icon="fa-solid fa-rss", title="RSS Feed", description="Subscribe via RSS") }}
 

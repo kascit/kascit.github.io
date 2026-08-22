@@ -34,7 +34,7 @@
         "systems"
       ],
       "github_url": "https://github.com/kascit/pulse",
-      "live_url": "https://pulse.dhanur.me",
+      "live_url": "https://pulse.dhanur.me/",
       "repo_language": "TypeScript",
       "repo_topics": [],
       "repo_updated_at": "2026-04-30T17:40:10Z",
@@ -49,7 +49,7 @@
       "title": "Authy",
       "group": "ecosystem",
       "icon": "fa-solid fa-shield-halved",
-      "description": "Centralized single sign-on (SSO) and JWT authentication service for the Dhanur ecosystem.",
+      "description": "Centralized single sign-on (SSO) and JWT authentication service powering secure user identity across the Dhanur ecosystem.",
       "extended_description": "Provides secure identity management and token issuance across all *.dhanur.me applications. Built to centralize auth logic and reduce redundancy in sibling services.",
       "role": "Authentication Service",
       "highlights": [
@@ -74,7 +74,7 @@
         "systems"
       ],
       "github_url": "https://github.com/kascit/authy",
-      "live_url": "https://auth.dhanur.me",
+      "live_url": "https://auth.dhanur.me/",
       "repo_language": "JavaScript",
       "repo_topics": [],
       "repo_updated_at": "2026-07-27T03:35:52Z",
@@ -116,7 +116,7 @@
         "tooling"
       ],
       "github_url": "https://github.com/kascit/up",
-      "live_url": "https://up.dhanur.me",
+      "live_url": "https://up.dhanur.me/",
       "repo_language": "Go",
       "repo_topics": [],
       "repo_updated_at": "2026-07-27T03:35:15Z",
@@ -131,7 +131,7 @@
       "title": "Face Rekognition",
       "group": "personal",
       "icon": "fa-solid fa-microchip",
-      "description": "IoT-powered automated attendance system using ESP32-CAM, AWS IoT Core, Lambda, and AWS Rekognition. Serverless architecture with face detection and real-time processing.",
+      "description": "IoT automated attendance system using ESP32-CAM, AWS IoT Core, Lambda, and Rekognition with real-time face detection.",
       "extended_description": "Built as an academic production-grade prototype, this project focused on low-latency recognition events, robust event ingestion, and auditable attendance records across unreliable network conditions.",
       "problem": "Manual attendance workflows are error-prone and slow, especially in classrooms where time-to-start matters.",
       "approach": "Combined edge camera capture with a serverless event pipeline. Recognition events flow through AWS IoT and Lambda, then persist to DynamoDB with timestamped logs for traceability.",
@@ -291,7 +291,7 @@
       "title": "dhanur.me",
       "group": "featured",
       "icon": "fa-solid fa-globe",
-      "description": "The site you're looking at right now. Fast, static, and occasionally broken when I push to main at 3 AM.",
+      "description": "Source code and architecture behind dhanur.me — static generation with Zola, modern Tailwind CSS, and zero-JS accessibility.",
       "extended_description": "This portfolio is built to stay lightweight while still supporting search, taxonomy navigation, performance-first rendering, and maintainable content generation workflows.",
       "highlights": [
         "Zola static architecture with data-driven content generation",
@@ -343,7 +343,7 @@
       "title": "Tasks",
       "group": "ecosystem",
       "icon": "fa-solid fa-check-double",
-      "description": "A production-ready RESTful API for managing tasks, built with Spring Boot 3.5.10 and Java 21.",
+      "description": "A production-ready RESTful task management API built with Spring Boot 3, Java 21, Spring Data JPA, and OpenAPI documentation.",
       "extended_description": "Built as a production-grade demonstration of the centralized Dhanur UI component system. Incorporates seamless theming, robust keyboard shortcuts, and local workflow persistence.",
       "role": "Productivity Tool",
       "lang": "Java · HTML",
@@ -369,7 +369,7 @@
         "devops"
       ],
       "github_url": "https://github.com/kascit/tasks",
-      "live_url": "https://tasks.dhanur.me",
+      "live_url": "https://tasks.dhanur.me/app/index.html",
       "repo_language": "Java",
       "repo_topics": [
         "api",
@@ -400,7 +400,7 @@
       "title": "Linkr",
       "group": "ecosystem",
       "icon": "fa-solid fa-link",
-      "description": "A minimal, secure, and intelligent URL shortener built with Rust and Supabase.",
+      "description": "A minimal, secure, and high-performance URL shortener built with Rust, Axum, and Supabase featuring real-time click telemetry.",
       "extended_description": "Linkr provides robust sub-link routing for my personal domains. Features a slick UI built top to bottom with the new Dhanur UI component library.",
       "role": "Infrastructure Service",
       "lang": "Rust · HTML",
@@ -426,7 +426,7 @@
         "portfolio"
       ],
       "github_url": "https://github.com/kascit/linkr",
-      "live_url": "https://linkr.dhanur.me",
+      "live_url": "https://linkr.dhanur.me/",
       "repo_language": "Rust",
       "repo_topics": [],
       "repo_updated_at": "2026-07-27T03:36:25Z",
@@ -441,7 +441,7 @@
       "title": "stuff",
       "group": "personal",
       "icon": "fa-solid fa-toolbox",
-      "description": "A whole lot of personal utility tools and experiments bundled in one repo.",
+      "description": "A versatile collection of personal utility tools, terminal scripts, and interactive prototypes bundled in a single repository.",
       "extended_description": "This is my practical junk drawer: tiny CLIs, helper scripts, and quality-of-life automations I keep building whenever something feels repetitive.",
       "role": "Personal Utility Suite",
       "lang": "HTML",
@@ -483,7 +483,7 @@
       "title": "LeetCode Solutions",
       "group": "learning",
       "icon": "fa-solid fa-bolt",
-      "description": "A structured collection of algorithmic problem-solving approaches and optimizations.",
+      "description": "Structured collection of algorithmic problem solutions, time and space complexity analyses, and optimization patterns in Java.",
       "extended_description": "Maintained as an algorithm notebook focused on patterns, edge-case handling, and complexity tradeoff documentation.",
       "role": "Practice Repository",
       "highlights": [
@@ -536,7 +536,7 @@
       "title": "Java DSA",
       "group": "learning",
       "icon": "fa-solid fa-sitemap",
-      "description": "From-scratch implementations of fundamental data structures and classic algorithms.",
+      "description": "Comprehensive implementations of fundamental data structures and classic algorithms written cleanly from scratch in Java.",
       "extended_description": "This repository serves as a fundamentals lab to keep core CS concepts fresh and implementation quality disciplined.",
       "role": "Foundations Lab",
       "highlights": [
@@ -582,7 +582,7 @@
       "title": "Selenium Automata",
       "group": "personal",
       "icon": "fa-solid fa-robot",
-      "description": "Web automation scripts for exploring browser workflows and routine UI-driven tasks.",
+      "description": "End-to-end browser automation framework built with Python and Selenium for testing workflows and routine web interactions.",
       "extended_description": "Created to test repeatable browser workflows and sharpen reliability instincts around UI automation.",
       "role": "Automation Sandbox",
       "highlights": [
@@ -631,7 +631,7 @@
       "title": "Tic-Tac-Toe",
       "group": "learning",
       "icon": "fa-solid fa-gamepad",
-      "description": "Because every developer has to build one eventually.",
+      "description": "Classic Tic-Tac-Toe game implementation built with vanilla JavaScript, interactive game state loop, and responsive modern styling.",
       "extended_description": "A compact frontend experiment for state updates, event handling, and small-game loop thinking.",
       "role": "Frontend Exercise",
       "highlights": [
@@ -678,7 +678,7 @@
       "title": "toAWS",
       "group": "experiments",
       "icon": "fa-brands fa-aws",
-      "description": "A handful of CLI utilities to make my AWS deployments slightly less painful.",
+      "description": "A lightweight command-line utility for streamlining AWS deployments, infrastructure provisioning, and service orchestration.",
       "extended_description": "A utility-first experiment focused on reducing repetitive deployment friction in personal workflows.",
       "role": "DevOps Utility",
       "highlights": [
@@ -723,7 +723,7 @@
       "title": "WalloWords",
       "group": "personal",
       "icon": "fa-solid fa-spell-check",
-      "description": "A word-based experiment actively in development.",
+      "description": "An interactive word exploration game experiment and lexical puzzle engine actively in development with modern web standards.",
       "extended_description": "Currently evolving as a lightweight idea sandbox for word mechanics, interaction rhythm, and UI feel.",
       "role": "Concept Prototype",
       "highlights": [

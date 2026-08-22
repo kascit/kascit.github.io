@@ -1,6 +1,6 @@
 +++
 title = "Privacy Policy"
-description = "Privacy policy for dhanur.me — how data is collected, stored, and what your choices are."
+description = "Privacy policy for dhanur.me — complete transparency regarding telemetry, analytics data collection, cookie usage, and visitor rights."
 template = "page.html"
 
 [extra]

@@ -1,6 +1,6 @@
 +++
 title = "Offline"
-description = "You appear to be offline. Reconnect to continue browsing the site."
+description = "You appear to be offline. Reconnect to your network connection to continue browsing articles and engineering notes on dhanur.me."
 template = "offline.html"
 path = "offline"
 in_search_index = false

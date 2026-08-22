@@ -1,7 +1,7 @@
 +++
 title = "Docker and Kubernetes: A Love-Hate Story"
 date = 2025-12-30
-description = "Learning containers and orchestration without losing your sanity (probably impossible)"
+description = "A practical engineer's introduction to containerization with Docker and cluster orchestration with Kubernetes from the ground up."
 
 [extra]
 thumbnail_image = "images/thumbs/ship.jpg"
@@ -258,7 +258,7 @@ kubectl logs -f <pod-name>  # When things inevitably break
 
 ## Resources That Helped Me Not Quit
 
-The [Docker docs](https://docs.docker.com/) and [Kubernetes docs](https://kubernetes.io/docs/) are still the best primary references, and community resources like conference talks, issue threads, and practical troubleshooting posts are usually what bridge the gap between theory and production reality.
+The [Docker docs](https://docs.docker.com/) and [Kubernetes docs](https://kubernetes.io/docs/home/) are still the best primary references, and community resources like conference talks, issue threads, and practical troubleshooting posts are usually what bridge the gap between theory and production reality.
 
 ## Final Thoughts
 

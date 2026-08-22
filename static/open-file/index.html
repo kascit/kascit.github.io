@@ -3,7 +3,17 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Open File | dhanur.me</title>
+  <title>Open File Handler | dhanur.me</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <meta name="description" content="Local file handler utility for opening, inspecting, and previewing launch payload files in the Dhanur web application." />
+  <link rel="canonical" href="https://dhanur.me/open-file/" />
+  <meta property="og:title" content="Open File Handler | dhanur.me" />
+  <meta property="og:description" content="Local file handler utility for opening, inspecting, and previewing launch payload files in the Dhanur web application." />
+  <meta property="og:url" content="https://dhanur.me/open-file/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Open File Handler | dhanur.me" />
+  <meta name="twitter:description" content="Local file handler utility for opening, inspecting, and previewing launch payload files in the Dhanur web application." />
   <style>
     :root {
       color-scheme: dark;
@@ -12,6 +22,7 @@
       --line: #1f2937;
       --text: #e5e7eb;
       --muted: #9ca3af;
+      --accent: #93c5fd;
     }
     body {
       margin: 0;
@@ -52,6 +63,15 @@
       color: #cbd5e1;
       font-size: .86rem;
     }
+    .actions { margin-top: 1rem; display: flex; gap: .6rem; flex-wrap: wrap; }
+    .btn {
+      text-decoration: none;
+      border: 1px solid var(--line);
+      color: var(--text);
+      padding: .45rem .7rem;
+      border-radius: 10px;
+      background: #0b1324;
+    }
   </style>
 </head>
 <body>
@@ -59,6 +79,13 @@
     <h1>Open File Handler</h1>
     <p id="status">Waiting for launch payload...</p>
     <div id="files"></div>
+    <div class="actions">
+      <a class="btn" href="/">Home</a>
+      <a class="btn" href="/blog/">Blog</a>
+      <a class="btn" href="/projects/">Projects</a>
+      <a class="btn" href="/links/">Links</a>
+      <a class="btn" href="/about/">About</a>
+    </div>
   </main>
 
   <script>

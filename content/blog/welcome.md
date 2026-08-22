@@ -1,7 +1,7 @@
 +++
 title = "So I Made a Blog..."
 date = 2025-12-28
-description = "First post vibes - what this blog is about and why I'm probably gonna abandon it in three months"
+description = "Welcome to dhanur.me — an engineering journal focused on distributed systems, backend infrastructure, and lessons from building software."
 
 [extra]
 thumbnail_image = "images/thumbs/wave.jpg"

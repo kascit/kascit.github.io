@@ -1,6 +1,6 @@
 +++
 title = "Design System"
-description = "Design language and integration notes for the dhanur.me shell and component system"
+description = "Design system specifications, color tokens, typography scales, and Dhanur UI component guidelines for consistent cross-site styling."
 sort_by = "weight"
 in_search_index = true
 
@@ -32,7 +32,7 @@ The quickest integration path is to include the shared shell script and configur
   };
 </script>
 <script
-  src="[https://dhanur.me/js/shell.js](https://dhanur.me/js/shell.js)"
+  src="https://dhanur.me/js/shell.js"
   defer
 ></script>
 ```

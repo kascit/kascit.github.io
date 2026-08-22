@@ -1,7 +1,7 @@
 +++
-title = "The Art of Writing Technical Documentation That People Actually Read"
+title = "Writing Technical Documentation People Actually Read"
 date = 2026-03-12
-description = "How to write docs that stay useful after launch, based on years of fixing stale and unread documentation"
+description = "Practical guide to writing engineering documentation that stays accurate, readable, and useful long after product launch."
 
 [extra]
 thumbnail_image = "images/thumbs/typing.jpg"

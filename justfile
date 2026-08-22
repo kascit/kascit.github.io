@@ -235,7 +235,7 @@ _dl-katex:
     curl -fsSL "https://github.com/KaTeX/KaTeX/releases/download/v${KATEX_VERSION}/katex.zip" -o katex.zip
     unzip -qo katex.zip -d _tmp
     cp _tmp/katex/katex.min.css static/css/katex.min.css
-    sed -i 's|url(fonts/|url(../fonts/katex/|g' static/css/katex.min.css
+    node -e 'const f="static/css/katex.min.css"; const fs=require("fs"); fs.writeFileSync(f, fs.readFileSync(f, "utf8").split("url(fonts/").join("url(../fonts/katex/"));'
     cp _tmp/katex/katex.min.js static/js/vendor/katex.min.js
     rm -rf static/fonts/katex
     cp -r _tmp/katex/fonts static/fonts/katex
@@ -560,7 +560,7 @@ doctor:
     #!/usr/bin/env bash
     set -euo pipefail
     ok=0; fail=0
-    check() { if [ "$1" = "true" ]; then echo "  [ok]  $2"; ((ok++)); else echo "  [!!]  $2 — $3"; ((fail++)); fi; }
+    check() { if [ "$1" = "true" ]; then echo "  [ok]  $2"; ok=$((ok + 1)); else echo "  [!!]  $2 — $3"; fail=$((fail + 1)); fi; }
     echo "Health check"
     echo "---"
     check "$(command -v zola >/dev/null 2>&1 && echo true || echo false)" \

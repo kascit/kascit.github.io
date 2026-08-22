@@ -1,6 +1,6 @@
 +++
 title = "Attribution & Appreciation"
-description = "Credits and shout-outs for the people, tools, and resources behind dhanur.me."
+description = "Attributions, credits, and acknowledgements for the open-source libraries, tooling, and creators that power the dhanur.me ecosystem."
 template = "page.html"
 date = "2026-04-14"
 

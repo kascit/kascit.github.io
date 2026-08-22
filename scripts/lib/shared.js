@@ -26,13 +26,13 @@ function supportsColor() {
 // Process helpers
 // ---------------------------------------------------------------------------
 
-function runCapture(command, args, cwd) {
+function runCapture(command, args, cwd, timeout = 60000) {
   return spawnSync(command, args, {
     cwd: cwd || ROOT,
     stdio: "pipe",
     shell: false,
     encoding: "utf8",
-    timeout: 1000,
+    timeout: timeout || 60000,
   });
 }
 

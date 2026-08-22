@@ -19,7 +19,7 @@
 
       <title>dhanur.me</title>
       <link>https:&#x2F;&#x2F;dhanur.me&#x2F;</link>
-      <description>My cozy corner of the internet.</description>
+      <description>Backend systems engineering, distributed architecture, and technical writing from Dhanur — exploring cloud infrastructure, Linux, and developer tools.</description>
       <generator>Zola</generator>
       <language>en</language>
       <atom:link href="https://dhanur.me/rss.xml" rel="self" type="application/rss+xml"/>
@@ -82,7 +82,7 @@
             <link>https://dhanur.me/appreciation/</link>
             <guid isPermaLink="true">https://dhanur.me/appreciation/</guid>
 
-            <description><![CDATA[Credits and shout-outs for the people, tools, and resources behind dhanur.me.]]></description>
+            <description><![CDATA[Attributions, credits, and acknowledgements for the open-source libraries, tooling, and creators that power the dhanur.me ecosystem.]]></description>
 
             <content:encoded><![CDATA[<blockquote>
 <p>Last updated: April 14, 2026</p>
@@ -142,7 +142,7 @@
         </item>
       
         <item>
-            <title>The Art of Writing Technical Documentation That People Actually Read</title>
+            <title>Writing Technical Documentation People Actually Read</title>
           
           <pubDate>Thu, 12 Mar 2026 00:00:00 +0000</pubDate>
           
@@ -150,7 +150,7 @@
             <link>https://dhanur.me/blog/writing-documentation/</link>
             <guid isPermaLink="true">https://dhanur.me/blog/writing-documentation/</guid>
 
-            <description><![CDATA[How to write docs that stay useful after launch, based on years of fixing stale and unread documentation]]></description>
+            <description><![CDATA[Practical guide to writing engineering documentation that stays accurate, readable, and useful long after product launch.]]></description>
 
             <content:encoded><![CDATA[<p>Most documentation fails for a simple reason: it is written once, merged, and then abandoned while the product keeps changing. The first draft is usually good enough for the sprint demo, but not resilient enough for real users who arrive months later with different assumptions and different urgency.</p>
 <p>The second reason is perspective drift. Experts forget what is obvious only after years of context, so they accidentally skip setup steps, naming conventions, and error expectations that new readers need before they can even begin.</p>
@@ -207,7 +207,7 @@
             <link>https://dhanur.me/blog/debugging-production/</link>
             <guid isPermaLink="true">https://dhanur.me/blog/debugging-production/</guid>
 
-            <description><![CDATA[A systematic approach to finding and fixing bugs when you can't reproduce the issue locally]]></description>
+            <description><![CDATA[A systematic, battle-tested approach to triaging and debugging elusive production issues when local reproduction fails.]]></description>
 
             <content:encoded><![CDATA[<p>It’s 3 AM. You get a Slack notification: “The site is down.” You check your local environment - everything works fine. You check staging - also works fine. But production is broken.</p>
 <p>This is the story of every developer’s life. Here’s how I learned to debug production issues like a detective instead of like a panicked developer.</p>
@@ -326,7 +326,7 @@ Our rate limiting was too aggressive for that specific user agent, causing race 
             <link>https://dhanur.me/blog/hidden-cost-saas/</link>
             <guid isPermaLink="true">https://dhanur.me/blog/hidden-cost-saas/</guid>
 
-            <description><![CDATA[Why 'free' software often costs more than you think, and how to calculate the real price]]></description>
+            <description><![CDATA[An in-depth breakdown of why free software tiers often cost more than you think, and how to calculate the true operational total cost.]]></description>
 
             <content:encoded><![CDATA[<p>We’ve all been there. You find a “free” tool that solves exactly the problem you’re having. You sign up, start using it, and everything seems great. Six months later, you’re paying $47/month for three different “freemium” tools that you can’t live without.</p>
 <p>This is the hidden cost of free SaaS.</p>
@@ -397,7 +397,7 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
             <link>https://dhanur.me/blog/vscode-to-neovim/</link>
             <guid isPermaLink="true">https://dhanur.me/blog/vscode-to-neovim/</guid>
 
-            <description><![CDATA[A journey of pain, frustration, and eventual productivity with terminal-based editors]]></description>
+            <description><![CDATA[The transition journey from VS Code to Neovim — covering configuration, Lua plugins, LSP setup, and terminal productivity gains.]]></description>
 
             <content:encoded><![CDATA[<p>Let me start by saying this: I still love Visual Studio Code. It’s an amazing editor that probably does 95% of what most developers need. But I switched to Neovim anyway, and here’s why.</p>
 <h2 id="the-breaking-point">The Breaking Point</h2>
@@ -453,10 +453,10 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
             <link>https://dhanur.me/projects/authy/</link>
             <guid isPermaLink="true">https://dhanur.me/projects/authy/</guid>
 
-            <description><![CDATA[Centralized single sign-on (SSO) and JWT authentication service for the Dhanur ecosystem.]]></description>
+            <description><![CDATA[Centralized single sign-on (SSO) and JWT authentication service powering secure user identity across the Dhanur ecosystem.]]></description>
 
             <content:encoded><![CDATA[<h2 id="overview">Overview</h2>
-<p>Centralized single sign-on (SSO) and JWT authentication service for the Dhanur ecosystem.</p>
+<p>Centralized single sign-on (SSO) and JWT authentication service powering secure user identity across the Dhanur ecosystem.</p>
 <p>Provides secure identity management and token issuance across all *.dhanur.me applications. Built to centralize auth logic and reduce redundancy in sibling services.</p>
 <h2 id="highlights">Highlights</h2>
 <ul>
@@ -480,7 +480,7 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <li>Stars: 0</li>
 <li>Forks: 0</li>
 <li>Open Issues: 0</li>
-<li>Last update: 2026-07-27T03:35:52Z</li>
+<li>Last update: 2026-08-10T03:37:24Z</li>
 </ul>
 ]]></content:encoded>
         </item>
@@ -543,10 +543,10 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
             <link>https://dhanur.me/projects/dhanur-me/</link>
             <guid isPermaLink="true">https://dhanur.me/projects/dhanur-me/</guid>
 
-            <description><![CDATA[The site you're looking at right now. Fast, static, and occasionally broken when I push to main at 3 AM.]]></description>
+            <description><![CDATA[Source code and architecture behind dhanur.me — static generation with Zola, modern Tailwind CSS, and zero-JS accessibility.]]></description>
 
             <content:encoded><![CDATA[<h2 id="overview">Overview</h2>
-<p>The site you’re looking at right now. Fast, static, and occasionally broken when I push to main at 3 AM.</p>
+<p>Source code and architecture behind dhanur.me — static generation with Zola, modern Tailwind CSS, and zero-JS accessibility.</p>
 <p>This portfolio is built to stay lightweight while still supporting search, taxonomy navigation, performance-first rendering, and maintainable content generation workflows.</p>
 <h2 id="highlights">Highlights</h2>
 <ul>
@@ -571,8 +571,8 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <li>License: MIT License</li>
 <li>Stars: 1</li>
 <li>Forks: 1</li>
-<li>Open Issues: 1</li>
-<li>Last update: 2026-08-02T12:55:24Z</li>
+<li>Open Issues: 3</li>
+<li>Last update: 2026-08-10T04:53:50Z</li>
 <li>Topics: css, github-pages, html, javascript, personal-website, portfolio</li>
 </ul>
 ]]></content:encoded>
@@ -587,10 +587,10 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
             <link>https://dhanur.me/projects/face-rekognition/</link>
             <guid isPermaLink="true">https://dhanur.me/projects/face-rekognition/</guid>
 
-            <description><![CDATA[IoT-powered automated attendance system using ESP32-CAM, AWS IoT Core, Lambda, and AWS Rekognition. Serverless architecture with face detection and real-time processing.]]></description>
+            <description><![CDATA[IoT automated attendance system using ESP32-CAM, AWS IoT Core, Lambda, and Rekognition with real-time face detection.]]></description>
 
             <content:encoded><![CDATA[<h2 id="overview">Overview</h2>
-<p>IoT-powered automated attendance system using ESP32-CAM, AWS IoT Core, Lambda, and AWS Rekognition. Serverless architecture with face detection and real-time processing.</p>
+<p>IoT automated attendance system using ESP32-CAM, AWS IoT Core, Lambda, and Rekognition with real-time face detection.</p>
 <p>Built as an academic production-grade prototype, this project focused on low-latency recognition events, robust event ingestion, and auditable attendance records across unreliable network conditions.</p>
 <h2 id="highlights">Highlights</h2>
 <ul>
@@ -637,10 +637,10 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
             <link>https://dhanur.me/projects/java-dsa/</link>
             <guid isPermaLink="true">https://dhanur.me/projects/java-dsa/</guid>
 
-            <description><![CDATA[From-scratch implementations of fundamental data structures and classic algorithms.]]></description>
+            <description><![CDATA[Comprehensive implementations of fundamental data structures and classic algorithms written cleanly from scratch in Java.]]></description>
 
             <content:encoded><![CDATA[<h2 id="overview">Overview</h2>
-<p>From-scratch implementations of fundamental data structures and classic algorithms.</p>
+<p>Comprehensive implementations of fundamental data structures and classic algorithms written cleanly from scratch in Java.</p>
 <p>This repository serves as a fundamentals lab to keep core CS concepts fresh and implementation quality disciplined.</p>
 <h2 id="highlights">Highlights</h2>
 <ul>
@@ -679,10 +679,10 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
             <link>https://dhanur.me/projects/leetcode-solutions/</link>
             <guid isPermaLink="true">https://dhanur.me/projects/leetcode-solutions/</guid>
 
-            <description><![CDATA[A structured collection of algorithmic problem-solving approaches and optimizations.]]></description>
+            <description><![CDATA[Structured collection of algorithmic problem solutions, time and space complexity analyses, and optimization patterns in Java.]]></description>
 
             <content:encoded><![CDATA[<h2 id="overview">Overview</h2>
-<p>A structured collection of algorithmic problem-solving approaches and optimizations.</p>
+<p>Structured collection of algorithmic problem solutions, time and space complexity analyses, and optimization patterns in Java.</p>
 <p>Maintained as an algorithm notebook focused on patterns, edge-case handling, and complexity tradeoff documentation.</p>
 <h2 id="highlights">Highlights</h2>
 <ul>
@@ -722,10 +722,10 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
             <link>https://dhanur.me/projects/linkr/</link>
             <guid isPermaLink="true">https://dhanur.me/projects/linkr/</guid>
 
-            <description><![CDATA[A minimal, secure, and intelligent URL shortener built with Rust and Supabase.]]></description>
+            <description><![CDATA[A minimal, secure, and high-performance URL shortener built with Rust, Axum, and Supabase featuring real-time click telemetry.]]></description>
 
             <content:encoded><![CDATA[<h2 id="overview">Overview</h2>
-<p>A minimal, secure, and intelligent URL shortener built with Rust and Supabase.</p>
+<p>A minimal, secure, and high-performance URL shortener built with Rust, Axum, and Supabase featuring real-time click telemetry.</p>
 <p>Linkr provides robust sub-link routing for my personal domains. Features a slick UI built top to bottom with the new Dhanur UI component library.</p>
 <h2 id="highlights">Highlights</h2>
 <ul>
@@ -749,7 +749,7 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <li>Stars: 0</li>
 <li>Forks: 0</li>
 <li>Open Issues: 0</li>
-<li>Last update: 2026-07-27T03:36:25Z</li>
+<li>Last update: 2026-08-10T03:38:05Z</li>
 </ul>
 ]]></content:encoded>
         </item>
@@ -849,10 +849,10 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
             <link>https://dhanur.me/projects/selenium-automata/</link>
             <guid isPermaLink="true">https://dhanur.me/projects/selenium-automata/</guid>
 
-            <description><![CDATA[Web automation scripts for exploring browser workflows and routine UI-driven tasks.]]></description>
+            <description><![CDATA[End-to-end browser automation framework built with Python and Selenium for testing workflows and routine web interactions.]]></description>
 
             <content:encoded><![CDATA[<h2 id="overview">Overview</h2>
-<p>Web automation scripts for exploring browser workflows and routine UI-driven tasks.</p>
+<p>End-to-end browser automation framework built with Python and Selenium for testing workflows and routine web interactions.</p>
 <p>Created to test repeatable browser workflows and sharpen reliability instincts around UI automation.</p>
 <h2 id="highlights">Highlights</h2>
 <ul>
@@ -892,10 +892,10 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
             <link>https://dhanur.me/projects/stuff/</link>
             <guid isPermaLink="true">https://dhanur.me/projects/stuff/</guid>
 
-            <description><![CDATA[A whole lot of personal utility tools and experiments bundled in one repo.]]></description>
+            <description><![CDATA[A versatile collection of personal utility tools, terminal scripts, and interactive prototypes bundled in a single repository.]]></description>
 
             <content:encoded><![CDATA[<h2 id="overview">Overview</h2>
-<p>A whole lot of personal utility tools and experiments bundled in one repo.</p>
+<p>A versatile collection of personal utility tools, terminal scripts, and interactive prototypes bundled in a single repository.</p>
 <p>This is my practical junk drawer: tiny CLIs, helper scripts, and quality-of-life automations I keep building whenever something feels repetitive.</p>
 <h2 id="highlights">Highlights</h2>
 <ul>
@@ -932,10 +932,10 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
             <link>https://dhanur.me/projects/tasks/</link>
             <guid isPermaLink="true">https://dhanur.me/projects/tasks/</guid>
 
-            <description><![CDATA[A production-ready RESTful API for managing tasks, built with Spring Boot 3.5.10 and Java 21.]]></description>
+            <description><![CDATA[A production-ready RESTful task management API built with Spring Boot 3, Java 21, Spring Data JPA, and OpenAPI documentation.]]></description>
 
             <content:encoded><![CDATA[<h2 id="overview">Overview</h2>
-<p>A production-ready RESTful API for managing tasks, built with Spring Boot 3.5.10 and Java 21.</p>
+<p>A production-ready RESTful task management API built with Spring Boot 3, Java 21, Spring Data JPA, and OpenAPI documentation.</p>
 <p>Built as a production-grade demonstration of the centralized Dhanur UI component system. Incorporates seamless theming, robust keyboard shortcuts, and local workflow persistence.</p>
 <h2 id="highlights">Highlights</h2>
 <ul>
@@ -975,10 +975,10 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
             <link>https://dhanur.me/projects/tic-tac-toe/</link>
             <guid isPermaLink="true">https://dhanur.me/projects/tic-tac-toe/</guid>
 
-            <description><![CDATA[Because every developer has to build one eventually.]]></description>
+            <description><![CDATA[Classic Tic-Tac-Toe game implementation built with vanilla JavaScript, interactive game state loop, and responsive modern styling.]]></description>
 
             <content:encoded><![CDATA[<h2 id="overview">Overview</h2>
-<p>Because every developer has to build one eventually.</p>
+<p>Classic Tic-Tac-Toe game implementation built with vanilla JavaScript, interactive game state loop, and responsive modern styling.</p>
 <p>A compact frontend experiment for state updates, event handling, and small-game loop thinking.</p>
 <h2 id="highlights">Highlights</h2>
 <ul>
@@ -1017,10 +1017,10 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
             <link>https://dhanur.me/projects/toaws/</link>
             <guid isPermaLink="true">https://dhanur.me/projects/toaws/</guid>
 
-            <description><![CDATA[A handful of CLI utilities to make my AWS deployments slightly less painful.]]></description>
+            <description><![CDATA[A lightweight command-line utility for streamlining AWS deployments, infrastructure provisioning, and service orchestration.]]></description>
 
             <content:encoded><![CDATA[<h2 id="overview">Overview</h2>
-<p>A handful of CLI utilities to make my AWS deployments slightly less painful.</p>
+<p>A lightweight command-line utility for streamlining AWS deployments, infrastructure provisioning, and service orchestration.</p>
 <p>A utility-first experiment focused on reducing repetitive deployment friction in personal workflows.</p>
 <h2 id="highlights">Highlights</h2>
 <ul>
@@ -1087,7 +1087,7 @@ Ended with: $99/month Mixpanel because we needed real-time data</p>
 <li>Stars: 0</li>
 <li>Forks: 0</li>
 <li>Open Issues: 0</li>
-<li>Last update: 2026-07-27T03:35:15Z</li>
+<li>Last update: 2026-08-10T03:36:48Z</li>
 </ul>
 ]]></content:encoded>
         </item>

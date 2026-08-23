@@ -49,7 +49,7 @@ ICONS & PWA
 - Manifest icons:
   - `purpose: "any"` -> `/icons/icon-192x192-transparent.png` & `/icons/icon-512x512-transparent.png`.
   - `purpose: "maskable"` -> `/icons/icon-192x192-maskable.png` & `/icons/icon-512x512-maskable.png`.
-- WCO: `display_override` starts with `window-controls-overlay`. `orientation: any`.
+- WCO: `display_override` starts with `window-controls-overlay`. `orientation: portrait`.
 
 SECURITY & HYGIENE
 - DOM: `textContent` over `innerHTML`. Guard URLs (`http:`, `https:` only).

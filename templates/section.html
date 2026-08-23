@@ -1,10 +1,7 @@
 {% extends "base.html" %}
-{% import "macros/content_footer.html" as macros_content_footer %}
-{% import "macros/nav.html" as macros_nav %}
-{% import "macros/post_card.html" as post_card %}
 
 {% block header %}
-    {{ macros_header::header(config=config, lang=lang, section=section) }}
+    {{ <header config={config} lang={lang} /> }}
 {% endblock header %}
 
 {% block content %}
@@ -12,7 +9,7 @@
   <div class="flex flex-row items-center justify-between gap-4">
     <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-base-content m-0 flex items-center gap-3">
       {{ section.title }}
-      {% if section.extra.badge %}
+      {% if section.extra and section.extra.badge %}
       <span class="text-xs font-semibold px-2 py-0.5 uppercase tracking-wide border border-base-content/20 rounded-sm bg-base-200/50">{{ section.extra.badge }}</span>
       {% endif %}
     </h1>
@@ -39,7 +36,9 @@
         <div data-blog-feed data-stream-container="all-posts" class="grid grid-cols-1 xl:grid-cols-2 gap-5">
             {% for post in section.pages %}
             <div data-feed-item {% if loop.index > 2 %}class="hidden"{% endif %}>
-                {{ post_card::render(post=post, default_thumb=config.extra.default_thumbnail | default(value="")) }}
+                {% set default_thumbnail = "" %}
+                {% if config.extra and config.extra.default_thumbnail %}{% set default_thumbnail = config.extra.default_thumbnail %}{% endif %}
+                {{ <post_card post={post} default_thumb={default_thumbnail} /> }}
             </div>
             {% endfor %}
         </div>
@@ -53,46 +52,46 @@
 </section>
 {% endif %}
 
-{{ macros_content_footer::content_footer(config=config, item=section) }}
+{{ <content_footer config={config} item={section} /> }}
 {% endblock content %}
 
 {% block prev_link %}
 {# Navigation order: home -> about -> projects -> links -> blog #}
-{% if section.path is starting_with("/about/") %}
+{% if section.path is starting_with(pat="/about/") %}
     {# About is first, link to home #}
     {% set index = get_section(path="_index.md") %}
-    {{ macros_nav::render_button(url=index.permalink, title="Home", subtitle="Back to", direction="prev") }}
-{% elif section.path is starting_with("/projects/") %}
+    {{ <nav_button url={index.permalink} title="Home" subtitle="Back to" direction="prev" /> }}
+{% elif section.path is starting_with(pat="/projects/") %}
     {# Projects -> About #}
-    {{ macros_nav::render_button(url="/about/", title="About", subtitle="Previous", direction="prev") }}
-{% elif section.path is starting_with("/links/") %}
+    {{ <nav_button url="/about/" title="About" subtitle="Previous" direction="prev" /> }}
+{% elif section.path is starting_with(pat="/links/") %}
     {# Links -> Projects #}
     {% set prev_section = get_section(path="projects/_index.md") %}
-    {{ macros_nav::render_button(url=prev_section.permalink, title=prev_section.title, subtitle="Previous", direction="prev") }}
-{% elif section.path is starting_with("/blog/") %}
+    {{ <nav_button url={prev_section.permalink} title={prev_section.title} subtitle="Previous" direction="prev" /> }}
+{% elif section.path is starting_with(pat="/blog/") %}
     {# Blog -> Links #}
     {% set prev_section = get_section(path="links/_index.md") %}
-    {{ macros_nav::render_button(url=prev_section.permalink, title=prev_section.title, subtitle="Previous", direction="prev") }}
+    {{ <nav_button url={prev_section.permalink} title={prev_section.title} subtitle="Previous" direction="prev" /> }}
 {% endif %}
 {% endblock prev_link %}
 
 {% block next_link %}
 {# Navigation order: home -> about -> projects -> links -> blog -> blog posts #}
-{% if section.path is starting_with("/about/") %}
+{% if section.path is starting_with(pat="/about/") %}
     {# About -> Projects #}
     {% set next_section = get_section(path="projects/_index.md") %}
-    {{ macros_nav::render_button(url=next_section.permalink, title=next_section.title, subtitle="Next", direction="next") }}
-{% elif section.path is starting_with("/projects/") %}
+    {{ <nav_button url={next_section.permalink} title={next_section.title} subtitle="Next" direction="next" /> }}
+{% elif section.path is starting_with(pat="/projects/") %}
     {# Projects -> Links #}
     {% set next_section = get_section(path="links/_index.md") %}
-    {{ macros_nav::render_button(url=next_section.permalink, title=next_section.title, subtitle="Next", direction="next") }}
-{% elif section.path is starting_with("/links/") %}
+    {{ <nav_button url={next_section.permalink} title={next_section.title} subtitle="Next" direction="next" /> }}
+{% elif section.path is starting_with(pat="/links/") %}
     {# Links -> Blog #}
     {% set next_section = get_section(path="blog/_index.md") %}
-    {{ macros_nav::render_button(url=next_section.permalink, title=next_section.title, subtitle="Next", direction="next") }}
-{% elif section.path is starting_with("/blog/") and section.pages %}
+    {{ <nav_button url={next_section.permalink} title={next_section.title} subtitle="Next" direction="next" /> }}
+{% elif section.path is starting_with(pat="/blog/") and section.pages %}
     {# Blog -> First (latest) blog post #}
-    {% set next_page = section.pages | first %}
-    {{ macros_nav::render_button(url=next_page.permalink, title=next_page.title, subtitle="Next", direction="next") }}
+    {% set next_page = section.pages[0] %}
+    {{ <nav_button url={next_page.permalink} title={next_page.title} subtitle="Next" direction="next" /> }}
 {% endif %}
 {% endblock next_link %}

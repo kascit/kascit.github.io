@@ -37,8 +37,40 @@ function isSourceImage(abs, entry) {
   return true;
 }
 
-function writeWebpVariant(command, sourcePath, outPath, width) {
-  runMagick(command, [
+const os = require("os");
+const { spawn } = require("child_process");
+
+const CONCURRENCY = Math.max(2, Math.min(16, os.cpus() ? os.cpus().length : 4));
+
+async function runPool(items, concurrency, fn) {
+  const executing = new Set();
+  const results = [];
+  for (const item of items) {
+    const p = Promise.resolve().then(() => fn(item));
+    results.push(p);
+    executing.add(p);
+    const clean = () => executing.delete(p);
+    p.then(clean, clean);
+    if (executing.size >= concurrency) {
+      await Promise.race(executing);
+    }
+  }
+  return Promise.all(results);
+}
+
+function runMagickAsync(command, args) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(command, args, { stdio: "ignore", shell: false });
+    child.on("close", (code) => {
+      if (code === 0) resolve();
+      else reject(new Error(`ImageMagick failed with code ${code}`));
+    });
+    child.on("error", reject);
+  });
+}
+
+function writeWebpVariantAsync(command, sourcePath, outPath, width) {
+  return runMagickAsync(command, [
     sourcePath,
     "-auto-orient",
     "-strip",
@@ -52,8 +84,8 @@ function writeWebpVariant(command, sourcePath, outPath, width) {
   ]);
 }
 
-function writeFallbackJpeg(command, sourcePath, outPath) {
-  runMagick(command, [
+function writeFallbackJpegAsync(command, sourcePath, outPath) {
+  return runMagickAsync(command, [
     sourcePath,
     "-auto-orient",
     "-strip",
@@ -74,7 +106,6 @@ function replaceExtension(filePath, suffixWithExtension) {
 }
 
 function getImageMetadata(command, sourcePath) {
-  // ImageMagick 6 uses standalone `identify`, whereas ImageMagick 7 uses `magick identify`
   const idCmd = command === "convert" ? "identify" : command;
   const args =
     command === "convert"
@@ -90,7 +121,6 @@ function getImageMetadata(command, sourcePath) {
 }
 
 function getLQIPBase64(command, sourcePath) {
-  // Use image magick to resize to 16px wide and output to stdout as webp
   const result = spawnSync(
     command,
     [sourcePath, "-resize", "16x", "-quality", "20", "webp:-"],
@@ -103,37 +133,39 @@ function getLQIPBase64(command, sourcePath) {
   return `data:image/webp;base64,${result.stdout.toString("base64")}`;
 }
 
-function optimizeResponsiveSet(command, sourcePath) {
+async function optimizeResponsiveSet(command, sourcePath) {
   const generated = [];
   const meta = getImageMetadata(command, sourcePath);
   const actualWidth = meta.width;
 
   const validBreakpoints = [];
+  const variantPromises = [];
 
   for (const targetWidth of TARGET_WIDTHS) {
     if (targetWidth > actualWidth && validBreakpoints.length > 0) {
-      // Don't up-scale if we already have the base width or a smaller width
       break;
     }
     const output = replaceExtension(sourcePath, `-${targetWidth}.webp`);
-    writeWebpVariant(command, sourcePath, output, targetWidth);
+    variantPromises.push(writeWebpVariantAsync(command, sourcePath, output, targetWidth));
     generated.push(output);
     validBreakpoints.push(targetWidth);
     if (targetWidth >= actualWidth) {
-      break; // Stop at the first width that matches or exceeds original
+      break;
     }
   }
 
   const fallbackOutput = replaceExtension(sourcePath, "-fallback.jpg");
-  writeFallbackJpeg(command, sourcePath, fallbackOutput);
+  variantPromises.push(writeFallbackJpegAsync(command, sourcePath, fallbackOutput));
   generated.push(fallbackOutput);
+
+  await Promise.all(variantPromises);
 
   const lqip = getLQIPBase64(command, sourcePath);
 
   return { generated, validBreakpoints, meta, lqip };
 }
 
-function main() {
+async function main() {
   if (!fs.existsSync(sourceDir) || !fs.statSync(sourceDir).isDirectory()) {
     console.error(
       `ERROR: Source directory for mode '${sourceModeArg}' does not exist: ${sourceDir}`,
@@ -161,24 +193,44 @@ function main() {
 
   const manifest = {};
 
-  for (const sourceFile of sourceFiles) {
-    try {
-      const result = optimizeResponsiveSet(command, sourceFile);
-      processed += 1;
-      generatedCount += result.generated.length;
+  console.log(
+    `Generating responsive images with ${CONCURRENCY} parallel workers...`,
+  );
 
+  const results = await runPool(sourceFiles, CONCURRENCY, async (sourceFile) => {
+    try {
+      const result = await optimizeResponsiveSet(command, sourceFile);
       const posixRel = toPosixRel(sourceFile, sourceDir);
-      manifest[`/${posixRel}`] = {
-        width: result.meta.width,
-        height: result.meta.height,
-        variants: result.validBreakpoints,
-        fallback: `/${replaceExtension(posixRel, "-fallback.jpg")}`,
-        lqip: result.lqip,
+      return {
+        success: true,
+        sourceFile,
+        posixRel,
+        result,
       };
     } catch (error) {
+      return {
+        success: false,
+        sourceFile,
+        error: error.message,
+      };
+    }
+  });
+
+  for (const item of results) {
+    if (item.success) {
+      processed += 1;
+      generatedCount += item.result.generated.length;
+      manifest[`/${item.posixRel}`] = {
+        width: item.result.meta.width,
+        height: item.result.meta.height,
+        variants: item.result.validBreakpoints,
+        fallback: `/${replaceExtension(item.posixRel, "-fallback.jpg")}`,
+        lqip: item.result.lqip,
+      };
+    } else {
       failed += 1;
       console.warn(
-        `WARN: Failed to generate responsive assets for ${toPosixRel(sourceFile)}: ${error.message}`,
+        `WARN: Failed to generate responsive assets for ${toPosixRel(item.sourceFile)}: ${item.error}`,
       );
     }
   }
@@ -199,4 +251,7 @@ function main() {
   );
 }
 
-main();
+main().catch((err) => {
+  console.error("Responsive image generation error:", err);
+  process.exit(1);
+});

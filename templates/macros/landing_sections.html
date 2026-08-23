@@ -1,8 +1,7 @@
 {# Landing Page Section Macros #}
 
-{# Hero Section - Ashen Minimalist Style #}
-{% macro render_hero(section) %}
-{% if section.extra.hero %}
+{% component render_hero(section) %}
+{% if section.extra and section.extra.hero %}
 <div
   class="relative min-h-[calc(100dvh-4rem)] flex items-center justify-center text-center overflow-hidden"
 >
@@ -87,17 +86,17 @@
   </div>
 </div>
 {% endif %}
-{% endmacro render_hero %}
+{% endcomponent render_hero %}
 
 
 {# Feature Grid - Ashen Minimal Design #}
-{% macro render_features(section) %}
+{% component render_features(section) %}
 {# Support both extra.features_section.features (new)
    and extra.features (legacy) for backward compatibility #}
 {% set features = false %}
-{% if section.extra.features_section is defined and section.extra.features_section.features is defined %}
+{% if section.extra and section.extra.features_section is defined and section.extra.features_section.features is defined %}
   {% set features = section.extra.features_section.features %}
-{% elif section.extra.features is defined %}
+{% elif section.extra and section.extra.features is defined %}
   {% set features = section.extra.features %}
 {% endif %}
 
@@ -110,7 +109,7 @@
     <div class="text-center mb-20">
       <h2 class="text-5xl font-black mb-6">
         <span class="hero-title">
-          {% if section.extra.features_section is defined and section.extra.features_section.title is defined %}
+          {% if section.extra and section.extra.features_section is defined and section.extra.features_section.title is defined %}
             {{ section.extra.features_section.title }}
           {% else %}
             Essential Features
@@ -118,7 +117,7 @@
         </span>
       </h2>
       <p class="text-xl hero-description max-w-2xl mx-auto">
-        {% if section.extra.features_section is defined and section.extra.features_section.description is defined %}
+        {% if section.extra and section.extra.features_section is defined and section.extra.features_section.description is defined %}
           {{ section.extra.features_section.description }}
         {% else %}
           Clean, minimal, and focused on content
@@ -154,12 +153,12 @@
   </div>
 </div>
 {% endif %}
-{% endmacro render_features %}
+{% endcomponent render_features %}
 
 
 {# Trust Section - Modern Glass Effect #}
-{% macro render_trust(section) %}
-{% if section.extra.trust_section %}
+{% component render_trust(section) %}
+{% if section.extra and section.extra.trust_section %}
 <div class="py-20 md:py-40 relative">
   <div class="container mx-auto px-6 text-center">
     <h2 class="text-3xl font-bold mb-16 trust-section-title">
@@ -181,12 +180,12 @@
   </div>
 </div>
 {% endif %}
-{% endmacro render_trust %}
+{% endcomponent render_trust %}
 
 
 {# Easy Command Section - Tabbed Code Blocks #}
-{% macro render_easy_command(section) %}
-{% if section.extra.easy_command_section %}
+{% component render_easy_command(section) %}
+{% if section.extra and section.extra.easy_command_section %}
 <div class="py-20 md:py-40 relative">
   <div
     class="absolute inset-0 bg-gradient-to-b from-transparent via-slate-500/5 to-transparent"
@@ -239,12 +238,12 @@
   </div>
 </div>
 {% endif %}
-{% endmacro render_easy_command %}
+{% endcomponent render_easy_command %}
 
 
 {# Showcase Section - Tabbed Content #}
-{% macro render_showcase(section) %}
-{% if section.extra.showcase_section %}
+{% component render_showcase(section) %}
+{% if section.extra and section.extra.showcase_section %}
 <div class="py-20 md:py-40 relative">
   <div
     class="absolute inset-0 bg-gradient-to-b from-transparent via-slate-500/5 to-transparent"
@@ -308,12 +307,12 @@
   </div>
 </div>
 {% endif %}
-{% endmacro render_showcase %}
+{% endcomponent render_showcase %}
 
 
 {# Social Proof Section - Clean Minimalist Cards #}
-{% macro render_social_proof(section) %}
-{% if section.extra.social_proof_section %}
+{% component render_social_proof(section) %}
+{% if section.extra and section.extra.social_proof_section %}
 <div class="py-20 md:py-40 relative">
   <div
     class="absolute inset-0 bg-gradient-to-b from-transparent via-slate-500/3 to-transparent"
@@ -368,12 +367,12 @@
   </div>
 </div>
 {% endif %}
-{% endmacro render_social_proof %}
+{% endcomponent render_social_proof %}
 
 
 {# Final CTA Section - Ashen Gradient Design #}
-{% macro render_final_cta(section) %}
-{% if section.extra.final_cta_section %}
+{% component render_final_cta(section) %}
+{% if section.extra and section.extra.final_cta_section %}
 <div class="py-20 md:py-40 relative overflow-hidden">
   <div class="absolute inset-0">
     <div
@@ -433,4 +432,4 @@
   </div>
 </div>
 {% endif %}
-{% endmacro render_final_cta %}
+{% endcomponent render_final_cta %}

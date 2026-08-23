@@ -20,12 +20,14 @@ function log(level, message) {
   }
 }
 
+const IS_WIN = process.platform === "win32";
+
 function run(command, args, label) {
   log("info", label);
   const result = spawnSync(command, args, {
     cwd: ROOT,
     stdio: "inherit",
-    shell: true,
+    shell: IS_WIN,
   });
 
   if (typeof result.status !== "number" || result.status !== 0) {

@@ -1,15 +1,15 @@
-{% import "macros/utils.html" as macros_utils %}
-
-{% macro comments(config, page, section) %}
+{% component comments(config, ...rest) %}
+{% set page = rest.page %}
+{% set section = rest.section %}
 {# Only show comments on blog posts (pages under /blog/), not on sections, taxonomies, or other pages #}
 {% set show_comments = false %}
 
 {# Check if this is a page (not a section) and it's under /blog/ #}
-{% if page is defined and page.path is defined %}
-  {% set is_blog_post = macros_utils::is_blog_post(page=page) | trim == "true" %}
+{% if page and page.path %}
+  {% set is_blog_post = page.path is starting_with(pat="/blog/") and not (page.path is ending_with(pat="/_index/")) %}
 
     {# Allow explicit override via page frontmatter #}
-    {% if page.extra.comments is defined %}
+    {% if page.extra and page.extra.comments %}
         {% set show_comments = page.extra.comments.enabled | default(value=false) %}
     {% else %}
         {# Default: show comments only on blog posts #}
@@ -18,7 +18,7 @@
 {% endif %}
 
 {# Check global config is enabled #}
-{% set global_enabled = config.extra.comments and config.extra.comments.enabled %}
+{% set global_enabled = config.extra and config.extra.comments and config.extra.comments.enabled %}
 
 {% if global_enabled and show_comments %}
 <div class="mt-12"
@@ -48,4 +48,4 @@
   {% endif %}
 </div>
 {% endif %}
-{% endmacro comments %}
+{% endcomponent comments %}

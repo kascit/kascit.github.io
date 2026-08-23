@@ -26,6 +26,8 @@ function supportsColor() {
 // Process helpers
 // ---------------------------------------------------------------------------
 
+const IS_WIN = process.platform === "win32";
+
 function runCapture(command, args, cwd, timeout = 60000) {
   return spawnSync(command, args, {
     cwd: cwd || ROOT,
@@ -38,10 +40,11 @@ function runCapture(command, args, cwd, timeout = 60000) {
 
 function runInherit(command, args, label, opts) {
   if (label) console.log(label);
+  const useShell = Boolean(opts && opts.shell && IS_WIN);
   const result = spawnSync(command, args, {
     cwd: ROOT,
     stdio: "inherit",
-    shell: Boolean(opts && opts.shell),
+    shell: useShell,
   });
   if (typeof result.status !== "number" || result.status !== 0) {
     process.exit(typeof result.status === "number" ? result.status : 1);
@@ -52,7 +55,7 @@ function canRun(command, args) {
   const result = spawnSync(command, args, {
     cwd: ROOT,
     stdio: "ignore",
-    shell: true,
+    shell: IS_WIN,
   });
   return result.status === 0;
 }

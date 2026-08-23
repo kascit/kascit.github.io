@@ -1,3 +1,4 @@
+{% component link_card(url: string, external: bool = false, icon: string = "", title: string = "", description: string = "", contrast: bool = false) %}
 {% set is_external = external | default(value=false) %} 
 {% set link_icon = icon | default(value="") %}
 {% set is_contrast = contrast | default(value=false) %}
@@ -12,3 +13,4 @@
   </div>
   <div class="link-desc text-sm">{{ description }}</div>
 </a>
+{% endcomponent link_card %}

@@ -1,19 +1,12 @@
-{%- import "macros/head.html" as macros_head -%}
-{%- import "macros/search.html" as macros_search -%}
-{%- import "macros/header.html" as macros_header -%}
-{%- import "macros/sidebar.html" as macros_sidebar -%}
-{%- import "macros/drawer.html" as macros_drawer -%}
-{%- import "macros/cookie_consent.html" as macros_cookie_consent -%}
-{%- import "macros/runtime.html" as macros_runtime -%}
 <!DOCTYPE html>
 
 {% set status_title = "Status" %}
 {% set status_desc = "System status and route diagnostics." %}
 {% set status_path = "/status/" %}
-{% if page is defined and page.title %}
+{% if page and page.title %}
     {% set status_title = page.title %}
 {% endif %}
-{% if page is defined and page.description %}
+{% if page and page.description %}
     {% set status_desc = page.description %}
 {% endif %}
 {% if current_path is defined and current_path != "" %}
@@ -23,25 +16,25 @@
 {% set status_meta_title = status_title ~ " | " ~ site_title %}
 {% set status_url = config.base_url ~ status_path %}
 
-{{ macros_head::html_tag(config=config, lang=config.default_language) }}
+{{ <html_tag config={config} lang={config.default_language} /> }}
 <head>
-    {{ macros_head::head(
-        config=config,
-        page=false,
-        section=false,
-        current_url=status_url,
-        meta_title=status_meta_title,
-        meta_description=status_desc,
+    {{ <head
+        config={config}
+        page={false}
+        section={false}
+        current_url={status_url}
+        meta_title={status_meta_title}
+        meta_description={status_desc}
         meta_type="website"
-    ) }}
+    /> }}
 </head>
 <body>
-    {{ macros_search::search(config=config) }}
+    {{ <search config={config} /> }}
 
     <div class="drawer lg:drawer-open">
         <input id="my-drawer-2" data-drawer-checkbox="true" type="checkbox" class="drawer-toggle" autocomplete="off" />
         <div class="drawer-content flex flex-col min-w-0 pt-16 bg-base-200">
-            {{ macros_header::header(config=config, lang=config.default_language) }}
+            {{ <header config={config} lang={config.default_language} /> }}
             <div class="p-4 md:p-8 w-full min-w-0 flex justify-center min-h-[calc(100dvh-4rem)]">
                 <div class="relative mx-auto w-full min-w-0 max-w-7xl rounded-box border border-base-content/5 bg-base-100 shadow-sm p-5 sm:p-6 md:p-8 lg:p-10">
                     <main class="prose min-w-0 w-full max-w-prose mx-auto">
@@ -61,15 +54,15 @@
         </div>
 
         <div id="navigation-drawer" data-sidebar-root="true" class="drawer-side pt-16 z-[60] lg:z-40">
-            {{ macros_drawer::drawer_overlay() }}
-            {{ macros_sidebar::sidebar(config=config, lang=config.default_language, current_path=status_path, section=false) }}
+            {{ <drawer_overlay /> }}
+            {{ <sidebar config={config} lang={config.default_language} current_path={status_path} /> }}
         </div>
     </div>
 
-    {{ macros_cookie_consent::banner() }}
+    {{ <cookie_consent_banner /> }}
 
-    {{ macros_runtime::site_config(config=config, lang=config.default_language) }}
-    {{ macros_runtime::app_main_script() }}
+    {{ <site_config config={config} lang={config.default_language} /> }}
+    {{ <app_main_script /> }}
     {% block status_scripts %}{% endblock status_scripts %}
 </body>
 </html>

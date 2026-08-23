@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% import "macros/post_card.html" as post_macro %}
+
 {# taxonomy_single: pages for one taxonomy term #}
 
 {% block content %}
@@ -67,7 +67,9 @@
                 >
                     <i class="fa-solid fa-plus"></i>
                 </button>
-                {{ post_macro::render(post=page, default_thumb=config.extra.default_thumbnail | default(value="")) }}
+                {% set default_thumbnail = "" %}
+                {% if config.extra and config.extra.default_thumbnail %}{% set default_thumbnail = config.extra.default_thumbnail %}{% endif %}
+                {{ <post_card post={page} default_thumb={default_thumbnail} /> }}
             </div>
             {% endfor %}
         </div>

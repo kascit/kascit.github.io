@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% import "macros/post_card.html" as post_macro %}
+
 {% block content %}
 <div class="mb-10 lg:mb-12 pb-6 border-b border-base-content/10">
   <div class="flex flex-row items-center justify-between gap-4">
@@ -62,7 +62,9 @@
       {% endif %}
     {% endif %}
 
-    {{ post_macro::render(post=post, default_thumb=config.extra.default_thumbnail | default(value="")) }}
+    {% set default_thumbnail = "" %}
+    {% if config.extra and config.extra.default_thumbnail %}{% set default_thumbnail = config.extra.default_thumbnail %}{% endif %}
+    {{ <post_card post={post} default_thumb={default_thumbnail} /> }}
 
     {% if loop.last %}
       </div></div></div>
@@ -198,5 +200,3 @@
     </div>
   </a>
 {% endblock next_link %}
-
-{% block custom_toc %}true{% endblock custom_toc %}

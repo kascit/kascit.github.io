@@ -1,9 +1,9 @@
 {# Shared non-semantic UI labels (keep typography/borders in one place). #}
-{% macro kind_pill(text) %}
+{% component kind_pill(text: string) %}
 <span class="ui-kind-pill">{{ text }}</span>
-{% endmacro %}
+{% endcomponent kind_pill %}
 
-{% macro theme_switcher(id, class="theme-switcher bg-base-300/60 text-xs font-medium") %}
+{% component theme_switcher(id: string, class: string = "theme-switcher bg-base-300/60 text-xs font-medium") %}
 <div id="{{ id }}" class="{{ class }}">
     <button data-theme-mode="light" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer" aria-label="Light theme">
         <i class="fa-solid fa-sun{% if id == 'theme-toggle' %} mr-1{% endif %}"></i>{% if id == 'theme-toggle' %}Light{% endif %}
@@ -15,4 +15,4 @@
         <i class="fa-solid fa-circle-half-stroke{% if id == 'theme-toggle' %} mr-1{% endif %}"></i>{% if id == 'theme-toggle' %}Auto{% endif %}
     </button>
 </div>
-{% endmacro theme_switcher %}
+{% endcomponent theme_switcher %}

@@ -13,17 +13,17 @@
         {% set channel_description = description %}
       {% endif %}
 
-      {% if feed_url and feed_url is containing("/tags/") %}
+      {% if feed_url and "/tags/" in feed_url %}
         {% set tag_name = feed_url | replace(from=config.base_url ~ "/tags/", to="") | replace(from="/rss.xml", to="") %}
-        {% if tag_name and tag_name is not containing("http") %}
+        {% if tag_name and "http" not in tag_name %}
           {% set channel_title = "Tag: " ~ tag_name ~ " | " ~ config.title %}
           {% set channel_description = "Posts tagged with " ~ tag_name ~ "." %}
         {% endif %}
       {% endif %}
 
-      {% if feed_url and feed_url is containing("/categories/") %}
+      {% if feed_url and "/categories/" in feed_url %}
         {% set category_name = feed_url | replace(from=config.base_url ~ "/categories/", to="") | replace(from="/rss.xml", to="") %}
-        {% if category_name and category_name is not containing("http") %}
+        {% if category_name and "http" not in category_name %}
           {% set channel_title = "Category: " ~ category_name ~ " | " ~ config.title %}
           {% set channel_description = "Posts in " ~ category_name ~ "." %}
         {% endif %}

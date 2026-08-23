@@ -1,12 +1,10 @@
-{% import "macros/taxonomy_chips.html" as taxonomy_chips %}
-
-{% macro render(post, default_thumb="") %}
+{% component post_card(post, default_thumb: string = "") %}
 {% set card_thumb = post.extra.thumbnail_image | default(value=post.extra.thumbnail | default(value=post.extra.image | default(value=""))) %}
 <article class="not-prose relative flex flex-col p-4 sm:p-5 border border-base-content/10 rounded-box bg-base-200/40 shadow-sm transition-all duration-300 ease-out hover:border-base-content/18 hover:shadow-lg hover:bg-base-200/75 hover:-translate-y-px group">
     <a href="{{ post.permalink | safe }}" class="absolute inset-0 z-10 block"><span class="sr-only">Read {{ post.title }}</span></a>
 
     {% if card_thumb != "" %}
-    {% if card_thumb is starting_with("http://") or card_thumb is starting_with("https://") %}
+    {% if card_thumb is starting_with(pat="http://") or card_thumb is starting_with(pat="https://") %}
         {% set card_thumb_url = card_thumb %}
     {% else %}
         {% set card_thumb_url = get_url(path=card_thumb) | safe %}
@@ -50,15 +48,15 @@
     <div class="mt-3 pt-3 border-t border-base-content/5 flex flex-wrap gap-2 relative z-20">
         {% if post.taxonomies.categories %}
             {% for cat in post.taxonomies.categories %}
-            {{ taxonomy_chips::category_link(name=cat) }}
+            {{ <category_link term={cat} /> }}
             {% endfor %}
         {% endif %}
         {% if post.taxonomies.tags %}
             {% for tag in post.taxonomies.tags %}
-            {{ taxonomy_chips::tag_link(name=tag) }}
+            {{ <tag_link term={tag} /> }}
             {% endfor %}
         {% endif %}
     </div>
     {% endif %}
 </article>
-{% endmacro render %}
+{% endcomponent post_card %}

@@ -76,48 +76,48 @@ Most days look like APIs, infra, and architecture decisions. Nights are for AI e
       <div>
         <h3 class="about-skill-heading"><i class="fa-solid fa-code text-[11px]" aria-hidden="true"></i> Languages</h3>
         <div class="flex flex-wrap gap-2">
-          {{ tag_chip(name="Java") }}
-          {{ tag_chip(name="Python") }}
-          {{ tag_chip(name="Go", label="Go language") }}
-          {{ tag_chip(name="C / C++") }}
-          {{ tag_chip(name="JavaScript") }}
-          {{ tag_chip(name="Lua") }}
-          {{ tag_chip(name="SQL") }}
-          {{ tag_chip(name="Bash") }}
+          {{ <tag_chip name="Java" /> }}
+          {{ <tag_chip name="Python" /> }}
+          {{ <tag_chip name="Go" label="Go language" /> }}
+          {{ <tag_chip name="C / C++" /> }}
+          {{ <tag_chip name="JavaScript" /> }}
+          {{ <tag_chip name="Lua" /> }}
+          {{ <tag_chip name="SQL" /> }}
+          {{ <tag_chip name="Bash" /> }}
         </div>
       </div>
       <div>
         <h3 class="about-skill-heading"><i class="fa-solid fa-cubes text-[11px]" aria-hidden="true"></i> Frameworks and Datastores</h3>
         <div class="flex flex-wrap gap-2">
-          {{ tag_chip(name="Spring Boot") }}
-          {{ tag_chip(name="Node.js") }}
-          {{ tag_chip(name="PostgreSQL") }}
-          {{ tag_chip(name="MongoDB") }}
-          {{ tag_chip(name="Redis") }}
-          {{ tag_chip(name="DynamoDB") }}
+          {{ <tag_chip name="Spring Boot" /> }}
+          {{ <tag_chip name="Node.js" /> }}
+          {{ <tag_chip name="PostgreSQL" /> }}
+          {{ <tag_chip name="MongoDB" /> }}
+          {{ <tag_chip name="Redis" /> }}
+          {{ <tag_chip name="DynamoDB" /> }}
         </div>
       </div>
       <div>
         <h3 class="about-skill-heading"><i class="fa-solid fa-cloud-arrow-up text-[11px]" aria-hidden="true"></i> Cloud and DevOps</h3>
         <div class="flex flex-wrap gap-2">
-          {{ tag_chip(name="AWS") }}
-          {{ tag_chip(name="GCP") }}
-          {{ tag_chip(name="Docker") }}
-          {{ tag_chip(name="Kubernetes") }}
-          {{ tag_chip(name="CI/CD") }}
-          {{ tag_chip(name="Terraform") }}
+          {{ <tag_chip name="AWS" /> }}
+          {{ <tag_chip name="GCP" /> }}
+          {{ <tag_chip name="Docker" /> }}
+          {{ <tag_chip name="Kubernetes" /> }}
+          {{ <tag_chip name="CI/CD" /> }}
+          {{ <tag_chip name="Terraform" /> }}
         </div>
       </div>
       <div>
         <h3 class="about-skill-heading"><i class="fa-solid fa-wrench text-[11px]" aria-hidden="true"></i> Tools and Domains</h3>
         <div class="flex flex-wrap gap-2">
-          {{ tag_chip(name="Neovim") }}
-          {{ tag_chip(name="Linux") }}
-          {{ tag_chip(name="Git") }}
-          {{ tag_chip(name="Postman") }}
-          {{ tag_chip(name="AI Systems") }}
-          {{ tag_chip(name="Applied Cryptography") }}
-          {{ tag_chip(name="Computer Graphics", label="Graphics") }}
+          {{ <tag_chip name="Neovim" /> }}
+          {{ <tag_chip name="Linux" /> }}
+          {{ <tag_chip name="Git" /> }}
+          {{ <tag_chip name="Postman" /> }}
+          {{ <tag_chip name="AI Systems" /> }}
+          {{ <tag_chip name="Applied Cryptography" /> }}
+          {{ <tag_chip name="Computer Graphics" label="Graphics" /> }}
         </div>
       </div>
     </div>
@@ -136,4 +136,4 @@ When I am not coding, I am usually on strategy games, sci-fi, or watching tsodin
 
 ## Keep In Touch
 
-{{ link_card(url="/links/", external=false, icon="fa-solid fa-link", title="Socials and Communities", description="Find me around the internet.", contrast=true) }}
+{{ <link_card url="/links/" external={false} icon="fa-solid fa-link" title="Socials and Communities" description="Find me around the internet." contrast={true} /> }}

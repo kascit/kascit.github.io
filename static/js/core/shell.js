@@ -106,7 +106,7 @@ function injectCSS(sameOrigin, config) {
 
   const faLink = document.createElement("link");
   faLink.rel = "stylesheet";
-  faLink.href = `${cssBase}/css/font-awesome.min.css`;
+  faLink.href = `${cssBase}/css/font-awesome.subset.css`;
   faLink.setAttribute("data-shell-style", "fa");
   faLink.media = "print";
   faLink.onload = function () {

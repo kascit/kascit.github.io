@@ -60,7 +60,7 @@ If you choose **Necessary Only**, these optional services are not loaded.
 
 ## Hosting & Architecture
 
-The site is statically hosted on **GitHub Pages**, and dynamic backend services are hosted securely. Providers may process server logs (e.g., IP address, user agent) for security, DDoS mitigation, and abuse prevention. See [GitHub's Privacy Statement](https://docs.github.com/en/site-policy/privacy-policies/github-privacy-statement).
+The site is statically hosted on **GitHub Pages**, and dynamic backend services are hosted securely. Providers may process server logs (e.g., IP address, user agent) for security, DDoS mitigation, and abuse prevention. See [GitHub's Privacy Statement](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement).
 
 ## User Accounts & Authentication
 

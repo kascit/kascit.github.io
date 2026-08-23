@@ -1,14 +1,13 @@
-{%- macro is_blog_post(page) -%}
-{% if page is defined and page.path is defined and page.path is starting_with('/blog/') and not page.path is ending_with('/_index/') %}true{% else %}false{% endif %}
-{%- endmacro -%}
+{% component is_blog_post(page = false) %}
+{%- if page and page.path and page.path is starting_with(pat="/blog/") and not page.path is ending_with(pat="/_index/") -%}true{%- else -%}false{%- endif -%}
+{% endcomponent is_blog_post %}
 
-{%- macro json_escape(value='') -%}
+{% component json_escape(value: string = "") %}
 {{ value
-  | default(value='')
   | replace(from='\\', to='\\\\')
   | replace(from='"', to='\\"')
   | replace(from='\n', to=' ')
   | replace(from='\r', to=' ')
   | trim
 }}
-{%- endmacro -%}
+{% endcomponent json_escape %}

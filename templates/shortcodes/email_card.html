@@ -1,7 +1,8 @@
-{% set link_icon = icon | default(value="fa-solid fa-envelope") %}
-{% set is_contrast = contrast | default(value=false) %}
-{% set enc_user = user | default(value="pbagnpg") %}
-{% set enc_domain = domain | default(value="qunahe.zr") %}
+{% component email_card(user: string = "pbagnpg", domain: string = "qunahe.zr", icon: string = "fa-solid fa-envelope", title: string = "Send an Email", description: string = "Drop me a message", contrast: bool = false) %}
+{% set link_icon = icon %}
+{% set is_contrast = contrast %}
+{% set enc_user = user %}
+{% set enc_domain = domain %}
 {#
   Email is stored ROT13-encoded in data-rot13-email.
   The JS module static/js/ui/email-links.js (loaded via main.js with the CF
@@ -23,7 +24,8 @@
 >
   <div class="link-title text-lg font-bold">
     <i class="{{ link_icon }} link-icon"></i>
-    {{ title | default(value="Send an Email") }}
+    {{ title }}
   </div>
-  <div class="link-desc text-sm">{{ description | default(value="Drop me a message") }}</div>
+  <div class="link-desc text-sm">{{ description }}</div>
 </a>
+{% endcomponent email_card %}

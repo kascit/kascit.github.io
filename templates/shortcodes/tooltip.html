@@ -1,11 +1,9 @@
-{# Tooltip shortcode — inline tooltip Args: text (required — visible text), tip
-(required — tooltip content), position (optional: top/bottom/left/right), color
-(optional) Usage: This has a {{ tooltip(text="hover me", tip="Extra info here")
-}} word. #}
+{% component tooltip(text: string = "", tip: string = "", position: string = "", color: string = "") %}
 <span
-  class="tooltip {% if position is defined %}tooltip-{{ position }}{% endif %} {% if color is defined %}tooltip-{{ color }}{% endif %}"
-  data-tip="{{ tip | default(value='') }}"
+  class="tooltip {% if position != '' %}tooltip-{{ position }}{% endif %} {% if color != '' %}tooltip-{{ color }}{% endif %}"
+  data-tip="{{ tip }}"
   ><span class="border-b border-dotted border-base-content/40 cursor-help"
-    >{{ text | default(value="") }}</span
+    >{{ text }}</span
   ></span
 >
+{% endcomponent tooltip %}

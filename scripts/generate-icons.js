@@ -65,7 +65,39 @@ function radiusPx(size) {
   return Math.floor((size * SQUIRCLE_RADIUS_PERCENT) / 100);
 }
 
-function renderIcon(
+const os = require("os");
+const { spawn } = require("child_process");
+
+const CONCURRENCY = Math.max(2, Math.min(16, os.cpus() ? os.cpus().length : 4));
+
+async function runPool(items, concurrency, fn) {
+  const executing = new Set();
+  const results = [];
+  for (const item of items) {
+    const p = Promise.resolve().then(() => fn(item));
+    results.push(p);
+    executing.add(p);
+    const clean = () => executing.delete(p);
+    p.then(clean, clean);
+    if (executing.size >= concurrency) {
+      await Promise.race(executing);
+    }
+  }
+  return Promise.all(results);
+}
+
+function runMagickAsync(command, args) {
+  return new Promise((resolve, reject) => {
+    const child = spawn(command, args, { stdio: "ignore", shell: false });
+    child.on("close", (code) => {
+      if (code === 0) resolve();
+      else reject(new Error(`ImageMagick failed with code ${code}`));
+    });
+    child.on("error", reject);
+  });
+}
+
+function renderIconAsync(
   command,
   src,
   size,
@@ -80,7 +112,7 @@ function renderIcon(
   const radius = radiusPx(size);
 
   if (bg === "none") {
-    runMagick(command, [
+    return runMagickAsync(command, [
       "-size",
       `${size}x${size}`,
       "xc:none",
@@ -115,11 +147,10 @@ function renderIcon(
       "png:color-type=6",
       out,
     ]);
-    return;
   }
 
   if (shape === "square") {
-    runMagick(command, [
+    return runMagickAsync(command, [
       "-size",
       `${size}x${size}`,
       `xc:${bg}`,
@@ -154,10 +185,9 @@ function renderIcon(
       "png:color-type=6",
       out,
     ]);
-    return;
   }
 
-  runMagick(command, [
+  return runMagickAsync(command, [
     "-size",
     `${size}x${size}`,
     "xc:none",
@@ -202,7 +232,7 @@ function copyAlias(src, dst) {
   fs.copyFileSync(src, dst);
 }
 
-function main() {
+async function main() {
   if (!fs.existsSync(OUTPUT_ROOT) || !fs.statSync(OUTPUT_ROOT).isDirectory()) {
     throw new Error(
       `Output directory not found for mode '${OUTPUT_MODE}': ${OUTPUT_ROOT}`,
@@ -223,150 +253,159 @@ function main() {
   fs.mkdirSync(ICON_DIR, { recursive: true });
   fs.mkdirSync(GEN_DIR, { recursive: true });
 
+  const tasks = [];
+
   for (const s of [16, 32, 48, 64, 96, 128]) {
-    renderIcon(
-      command,
-      SRC_SVG,
-      s,
-      "none",
-      path.join(ICON_DIR, `favicon-${s}x${s}-transparent.png`),
-      FAVICON_GLYPH_SCALE,
-      BASE_GLYPH_COLOR,
-    );
-    renderIcon(
-      command,
-      SRC_SVG,
-      s,
-      WHITE_BG,
-      path.join(ICON_DIR, `favicon-${s}x${s}.png`),
-      FAVICON_GLYPH_SCALE,
-      BASE_GLYPH_COLOR,
-    );
+    tasks.push({
+      src: SRC_SVG,
+      size: s,
+      bg: "none",
+      out: path.join(ICON_DIR, `favicon-${s}x${s}-transparent.png`),
+      glyphPercent: FAVICON_GLYPH_SCALE,
+      glyphColor: BASE_GLYPH_COLOR,
+      shape: "squircle",
+    });
+    tasks.push({
+      src: SRC_SVG,
+      size: s,
+      bg: WHITE_BG,
+      out: path.join(ICON_DIR, `favicon-${s}x${s}.png`),
+      glyphPercent: FAVICON_GLYPH_SCALE,
+      glyphColor: BASE_GLYPH_COLOR,
+      shape: "squircle",
+    });
   }
 
   for (const s of [120, 152, 167, 180]) {
-    renderIcon(
-      command,
-      SRC_SVG,
-      s,
-      WHITE_BG,
-      path.join(ICON_DIR, `apple-touch-icon-${s}x${s}.png`),
-      TOUCH_GLYPH_SCALE,
-      BASE_GLYPH_COLOR,
-    );
-    renderIcon(
-      command,
-      SRC_SVG,
-      s,
-      "none",
-      path.join(ICON_DIR, `apple-touch-icon-${s}x${s}-transparent.png`),
-      TOUCH_GLYPH_SCALE,
-      BASE_GLYPH_COLOR,
-    );
+    tasks.push({
+      src: SRC_SVG,
+      size: s,
+      bg: WHITE_BG,
+      out: path.join(ICON_DIR, `apple-touch-icon-${s}x${s}.png`),
+      glyphPercent: TOUCH_GLYPH_SCALE,
+      glyphColor: BASE_GLYPH_COLOR,
+      shape: "squircle",
+    });
+    tasks.push({
+      src: SRC_SVG,
+      size: s,
+      bg: "none",
+      out: path.join(ICON_DIR, `apple-touch-icon-${s}x${s}-transparent.png`),
+      glyphPercent: TOUCH_GLYPH_SCALE,
+      glyphColor: BASE_GLYPH_COLOR,
+      shape: "squircle",
+    });
   }
+
+  tasks.push({
+    src: SRC_SVG,
+    size: 192,
+    bg: "none",
+    out: path.join(ICON_DIR, "icon-192x192-transparent.png"),
+    glyphPercent: PWA_GLYPH_SCALE,
+    glyphColor: BASE_GLYPH_COLOR,
+    shape: "squircle",
+  });
+  tasks.push({
+    src: SRC_SVG,
+    size: 512,
+    bg: "none",
+    out: path.join(ICON_DIR, "icon-512x512-transparent.png"),
+    glyphPercent: PWA_GLYPH_SCALE,
+    glyphColor: BASE_GLYPH_COLOR,
+    shape: "squircle",
+  });
+
+  tasks.push({
+    src: SRC_SVG,
+    size: 192,
+    bg: WHITE_BG,
+    out: path.join(ICON_DIR, "icon-192x192-maskable.png"),
+    glyphPercent: PWA_MASKABLE_GLYPH_SCALE,
+    glyphColor: BASE_GLYPH_COLOR,
+    shape: "square",
+  });
+  tasks.push({
+    src: SRC_SVG,
+    size: 512,
+    bg: WHITE_BG,
+    out: path.join(ICON_DIR, "icon-512x512-maskable.png"),
+    glyphPercent: PWA_MASKABLE_GLYPH_SCALE,
+    glyphColor: BASE_GLYPH_COLOR,
+    shape: "square",
+  });
+
+  tasks.push({
+    src: SRC_SVG,
+    size: 192,
+    bg: "none",
+    out: path.join(ICON_DIR, "icon-192x192-maskable-transparent.png"),
+    glyphPercent: PWA_MASKABLE_GLYPH_SCALE,
+    glyphColor: BASE_GLYPH_COLOR,
+    shape: "square",
+  });
+  tasks.push({
+    src: SRC_SVG,
+    size: 512,
+    bg: "none",
+    out: path.join(ICON_DIR, "icon-512x512-maskable-transparent.png"),
+    glyphPercent: PWA_MASKABLE_GLYPH_SCALE,
+    glyphColor: BASE_GLYPH_COLOR,
+    shape: "square",
+  });
+  tasks.push({
+    src: SRC_SVG,
+    size: 192,
+    bg: BLACK_BG,
+    out: path.join(ICON_DIR, "icon-192x192-dark.png"),
+    glyphPercent: PWA_GLYPH_SCALE,
+    glyphColor: WHITE_BG,
+    shape: "squircle",
+  });
+  tasks.push({
+    src: SRC_SVG,
+    size: 512,
+    bg: BLACK_BG,
+    out: path.join(ICON_DIR, "icon-512x512-dark.png"),
+    glyphPercent: PWA_GLYPH_SCALE,
+    glyphColor: WHITE_BG,
+    shape: "squircle",
+  });
+  tasks.push({
+    src: SRC_SVG,
+    size: 192,
+    bg: BLACK_BG,
+    out: path.join(ICON_DIR, "icon-192x192-maskable-dark.png"),
+    glyphPercent: PWA_MASKABLE_GLYPH_SCALE,
+    glyphColor: WHITE_BG,
+    shape: "square",
+  });
+  tasks.push({
+    src: SRC_SVG,
+    size: 512,
+    bg: BLACK_BG,
+    out: path.join(ICON_DIR, "icon-512x512-maskable-dark.png"),
+    glyphPercent: PWA_MASKABLE_GLYPH_SCALE,
+    glyphColor: WHITE_BG,
+    shape: "square",
+  });
+
+  await runPool(tasks, CONCURRENCY, (t) =>
+    renderIconAsync(
+      command,
+      t.src,
+      t.size,
+      t.bg,
+      t.out,
+      t.glyphPercent,
+      t.glyphColor,
+      t.shape,
+    ),
+  );
+
   copyAlias(
     path.join(ICON_DIR, "apple-touch-icon-180x180.png"),
     path.join(ICON_DIR, "apple-touch-icon.png"),
-  );
-
-  renderIcon(
-    command,
-    SRC_SVG,
-    192,
-    "none",
-    path.join(ICON_DIR, "icon-192x192-transparent.png"),
-    PWA_GLYPH_SCALE,
-    BASE_GLYPH_COLOR,
-  );
-  renderIcon(
-    command,
-    SRC_SVG,
-    512,
-    "none",
-    path.join(ICON_DIR, "icon-512x512-transparent.png"),
-    PWA_GLYPH_SCALE,
-    BASE_GLYPH_COLOR,
-  );
-
-  // Enforce true square boundary generation for all target maskables
-  renderIcon(
-    command,
-    SRC_SVG,
-    192,
-    WHITE_BG,
-    path.join(ICON_DIR, "icon-192x192-maskable.png"),
-    PWA_MASKABLE_GLYPH_SCALE,
-    BASE_GLYPH_COLOR,
-    "square",
-  );
-  renderIcon(
-    command,
-    SRC_SVG,
-    512,
-    WHITE_BG,
-    path.join(ICON_DIR, "icon-512x512-maskable.png"),
-    PWA_MASKABLE_GLYPH_SCALE,
-    BASE_GLYPH_COLOR,
-    "square",
-  );
-
-  renderIcon(
-    command,
-    SRC_SVG,
-    192,
-    "none",
-    path.join(ICON_DIR, "icon-192x192-maskable-transparent.png"),
-    PWA_MASKABLE_GLYPH_SCALE,
-    BASE_GLYPH_COLOR,
-    "square",
-  );
-  renderIcon(
-    command,
-    SRC_SVG,
-    512,
-    "none",
-    path.join(ICON_DIR, "icon-512x512-maskable-transparent.png"),
-    PWA_MASKABLE_GLYPH_SCALE,
-    BASE_GLYPH_COLOR,
-    "square",
-  );
-  renderIcon(
-    command,
-    SRC_SVG,
-    192,
-    BLACK_BG,
-    path.join(ICON_DIR, "icon-192x192-dark.png"),
-    PWA_GLYPH_SCALE,
-    WHITE_BG,
-  );
-  renderIcon(
-    command,
-    SRC_SVG,
-    512,
-    BLACK_BG,
-    path.join(ICON_DIR, "icon-512x512-dark.png"),
-    PWA_GLYPH_SCALE,
-    WHITE_BG,
-  );
-  renderIcon(
-    command,
-    SRC_SVG,
-    192,
-    BLACK_BG,
-    path.join(ICON_DIR, "icon-192x192-maskable-dark.png"),
-    PWA_MASKABLE_GLYPH_SCALE,
-    WHITE_BG,
-    "square",
-  );
-  renderIcon(
-    command,
-    SRC_SVG,
-    512,
-    BLACK_BG,
-    path.join(ICON_DIR, "icon-512x512-maskable-dark.png"),
-    PWA_MASKABLE_GLYPH_SCALE,
-    WHITE_BG,
-    "square",
   );
 
   copyAlias(
@@ -435,20 +474,21 @@ function main() {
     path.join(ICON_DIR, "android-chrome-512x512-maskable-transparent.png"),
   );
 
-  runMagick(command, [
-    path.join(ICON_DIR, "favicon-16x16.png"),
-    path.join(ICON_DIR, "favicon-32x32.png"),
-    path.join(ICON_DIR, "favicon-48x48.png"),
-    path.join(ICON_DIR, "favicon-64x64.png"),
-    path.join(ICON_DIR, "favicon.ico"),
-  ]);
-
-  runMagick(command, [
-    path.join(ICON_DIR, "favicon-16x16-transparent.png"),
-    path.join(ICON_DIR, "favicon-32x32-transparent.png"),
-    path.join(ICON_DIR, "favicon-48x48-transparent.png"),
-    path.join(ICON_DIR, "favicon-64x64-transparent.png"),
-    path.join(ICON_DIR, "favicon-transparent.ico"),
+  await Promise.all([
+    runMagickAsync(command, [
+      path.join(ICON_DIR, "favicon-16x16.png"),
+      path.join(ICON_DIR, "favicon-32x32.png"),
+      path.join(ICON_DIR, "favicon-48x48.png"),
+      path.join(ICON_DIR, "favicon-64x64.png"),
+      path.join(ICON_DIR, "favicon.ico"),
+    ]),
+    runMagickAsync(command, [
+      path.join(ICON_DIR, "favicon-16x16-transparent.png"),
+      path.join(ICON_DIR, "favicon-32x32-transparent.png"),
+      path.join(ICON_DIR, "favicon-48x48-transparent.png"),
+      path.join(ICON_DIR, "favicon-64x64-transparent.png"),
+      path.join(ICON_DIR, "favicon-transparent.ico"),
+    ]),
   ]);
 
   copyAlias(
@@ -462,9 +502,7 @@ function main() {
   console.log(`Icon generation complete in '${OUTPUT_MODE}' from: ${SRC_SVG}`);
 }
 
-try {
-  main();
-} catch (error) {
+main().catch((error) => {
   console.error(`ERROR: ${error.message}`);
   process.exit(1);
-}
+});

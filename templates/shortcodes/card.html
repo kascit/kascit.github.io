@@ -1,12 +1,10 @@
-{# Card shortcode — generic DaisyUI card Args: title (optional), img (optional
-image URL), badge (optional badge text), badge_color (optional) Usage: {%
-card(title="My Card") %}Card content here{% end %} #}
+{% component card(title: string = "", img: string = "", badge: string = "", badge_color: string = "primary") %}
 <div class="card bg-base-200/40 border border-base-300/30 my-6">
-  {% if img is defined %}
+  {% if img != "" %}
   <figure class="px-4 pt-4">
     <img
       src="{{ img }}"
-      alt="{{ title | default(value='Card image') }}"
+      alt="{% if title != '' %}{{ title }}{% else %}Card image{% endif %}"
       class="rounded-md"
       sizes="(min-width: 1024px) 768px, 100vw"
       loading="lazy"
@@ -14,11 +12,11 @@ card(title="My Card") %}Card content here{% end %} #}
   </figure>
   {% endif %}
   <div class="card-body">
-    {% if title is defined %}
+    {% if title != "" %}
     <h3 class="card-title text-lg">
-      {{ title }} {% if badge is defined %}
+      {{ title }} {% if badge != "" %}
       <span
-        class="badge badge-{{ badge_color | default(value='primary') }} badge-sm"
+        class="badge badge-{{ badge_color }} badge-sm"
         >{{ badge }}</span
       >
       {% endif %}
@@ -27,3 +25,4 @@ card(title="My Card") %}Card content here{% end %} #}
     <div class="text-base-content/80 text-sm">{{ body | markdown | safe }}</div>
   </div>
 </div>
+{% endcomponent card %}

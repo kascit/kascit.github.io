@@ -1,7 +1,4 @@
 {% extends "base.html" %}
-{% import "macros/ui.html" as macros_ui %}
-{% import "macros/nav.html" as macros_nav %}
-{% import "macros/icons.html" as macros_icons %}
 
 {# taxonomy_list.html - List of terms for one taxonomy (e.g. /tags/, /categories/). #}
 
@@ -9,8 +6,8 @@
 <section class="not-prose mb-12 pb-6 border-b border-base-content/15">
   <div class="flex items-center justify-between gap-4 mb-3">
       <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-base-content m-0 flex items-center gap-3">
-        {{ taxonomy.config.title | default(value=taxonomy.name | capitalize) }}
-        {{ macros_ui::kind_pill(text="Taxonomy") }}
+        {{ taxonomy.name | capitalize }}
+        {{ <kind_pill text="Taxonomy" /> }}
       </h1>
       <div class="flex items-center gap-1.5 shrink-0">
         {% set site_rss_url = get_url(path="rss.xml", trailing_slash=false) %}
@@ -26,15 +23,9 @@
       </div>
   </div>
 
-  {% if taxonomy.config.description %}
-  <p class="text-base sm:text-lg text-base-content/70 m-0">
-    {{ taxonomy.config.description }}
-  </p>
-  {% else %}
   <p class="text-base sm:text-lg text-base-content/70 m-0">
     Browse all {{ taxonomy.name }} used across site content.
   </p>
-  {% endif %}
 
   <div class="mt-4 flex items-center gap-2 text-sm text-base-content/75">
     <span>{{ terms | length }} {{ taxonomy.name }} available</span>
@@ -143,5 +134,5 @@
 {% endblock taxonomy_sidebar %}
 
 {% block prev_link %}
-{{ macros_nav::render_button(url="/archive/", title="Archive", subtitle="Back to", direction="prev") }}
+{{ <nav_button url="/archive/" title="Archive" subtitle="Back to" direction="prev" /> }}
 {% endblock prev_link %}

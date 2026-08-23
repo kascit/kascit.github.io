@@ -1,21 +1,18 @@
-{# Timeline item — used inside timeline() Args: title (required), date
-(optional), icon (optional fa class), color (optional:
-primary/secondary/accent/success/warning/error) Usage: {{
-timeline_item(title="Event", date="2024") }}Description{{ end }} #}
+{% component timeline_item(title: string = "", date: string = "", icon: string = "", color: string = "") %}
 <li>
-  <hr {% if color is defined %}class="bg-{{ color }}" {% endif %} />
+  <hr {% if color != "" %}class="bg-{{ color }}" {% endif %} />
   <div class="timeline-start text-sm opacity-60">
-    {{ date | default(value="") }}
+    {{ date }}
   </div>
   <div class="timeline-middle">
-    {% if icon is defined %}
+    {% if icon != "" %}
     <i class="{{ icon }} text-sm"></i>
     {% else %}
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 20 20"
       fill="currentColor"
-      class="w-5 h-5 {% if color is defined %}text-{{ color }}{% endif %}"
+      class="w-5 h-5 {% if color != '' %}text-{{ color }}{% endif %}"
     >
       <path
         fill-rule="evenodd"
@@ -26,10 +23,11 @@ timeline_item(title="Event", date="2024") }}Description{{ end }} #}
     {% endif %}
   </div>
   <div class="timeline-end timeline-box">
-    <div class="font-semibold">{{ title | default(value="") }}</div>
+    <div class="font-semibold">{{ title }}</div>
     {% if body %}
     <div class="text-sm opacity-75 mt-1">{{ body | markdown | safe }}</div>
     {% endif %}
   </div>
-  <hr {% if color is defined %}class="bg-{{ color }}" {% endif %} />
+  <hr {% if color != "" %}class="bg-{{ color }}" {% endif %} />
 </li>
+{% endcomponent timeline_item %}

@@ -1,15 +1,14 @@
-{# Stat card shortcode Args: title (required), value (required), desc
-(optional), icon (optional fa class) Usage: {{ stat(title="Total Users",
-value="25.6K", desc="21% more than last month") }} #}
+{% component stat(title: string = "", value: string = "0", desc: string = "", icon: string = "") %}
 <div class="stat bg-base-200/30 rounded-box border border-base-content/10">
-  {% if icon is defined %}
+  {% if icon != "" %}
   <div class="stat-figure text-base-content/40">
     <i class="{{ icon }} text-2xl"></i>
   </div>
   {% endif %}
-  <div class="stat-title">{{ title | default(value="") }}</div>
-  <div class="stat-value text-2xl">{{ value | default(value="0") }}</div>
-  {% if desc is defined %}
+  <div class="stat-title">{{ title }}</div>
+  <div class="stat-value text-2xl">{{ value }}</div>
+  {% if desc != "" %}
   <div class="stat-desc">{{ desc }}</div>
   {% endif %}
 </div>
+{% endcomponent stat %}

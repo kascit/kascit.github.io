@@ -1,4 +1,5 @@
-{% macro toc(page) %} {% if page.toc %}
+{% component toc(page) %}
+{% if page.toc %}
 <!-- Table of Contents - Desktop only (lg breakpoint and up) -->
 <nav
   id="toc-sidebar"
@@ -40,4 +41,5 @@
     </ul>
   </div>
 </nav>
-{% endif %} {% endmacro toc %}
+{% endif %}
+{% endcomponent toc %}

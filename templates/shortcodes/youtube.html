@@ -1,3 +1,5 @@
+{% component youtube(video_id: string) %}
 <div class="youtube-container border border-base-content/10">
     <iframe class="w-full h-96" src="https://www.youtube.com/embed/{{ video_id }}" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
 </div>
+{% endcomponent youtube %}

@@ -1,3 +1,4 @@
+{% component pretty_link(url: string, title: string = "", description: string = "", image: string = "") %}
 <div class="pretty-link-card group">
   <a href="{{ url }}" target="_blank" rel="noopener noreferrer" class="block">
     <div class="flex items-start gap-4 p-5">
@@ -5,7 +6,7 @@
       <div class="flex-shrink-0 pretty-link-image-wrapper">
         <img
           src="{{ image }}"
-          alt="{{ title | default(value=url) }}"
+          alt="{% if title != '' %}{{ title }}{% else %}{{ url }}{% endif %}"
           class="pretty-link-image"
           sizes="80px"
           loading="lazy"
@@ -15,7 +16,7 @@
       <div class="flex-1 min-w-0">
         <div class="flex items-start justify-between gap-2 mb-2">
           <h3 class="pretty-link-title">
-            {% if title %}{{ title }}{% else %}{{ url | safe }}{% endif %}
+            {% if title != "" %}{{ title }}{% else %}{{ url | safe }}{% endif %}
           </h3>
           <div class="pretty-link-icon-wrapper">
             <svg
@@ -59,3 +60,4 @@
     </div>
   </a>
 </div>
+{% endcomponent pretty_link %}

@@ -4,7 +4,7 @@
 const fs = require("fs");
 const path = require("path");
 
-const ROOT = path.resolve(__dirname, "..");
+const { ROOT } = require("./lib/shared");
 const BLOG_DIR = path.join(ROOT, "content", "blog");
 const CONFIG_FILE = path.join(ROOT, "config.toml");
 const OUT_FILE = path.join(ROOT, "static", "widgets", "latest-posts-data.json");

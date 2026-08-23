@@ -1,1 +1,3 @@
-<div class="badge badge-{{ style | default(value="soft") }} badge-{{ type | default(value="primary") }}">{{ body | safe }}</div>
+{% component badge(style: string = "soft", type: string = "primary") %}
+<div class="badge badge-{{ style }} badge-{{ type }}">{{ body | safe }}</div>
+{% endcomponent badge %}

@@ -1,4 +1,5 @@
-{% macro apps_grid(context="desktop", config=false) %}
+{% component apps_grid(context: string = "desktop", ...rest) %}
+{% set config = rest.config %}
 {% set is_desktop = context == "desktop" %}
 <div class="grid grid-cols-3 gap-2" data-app-menu-grid="{{ context }}">
     {% if config and config.extra and config.extra.apps and config.extra.apps | length > 0 %}
@@ -43,4 +44,4 @@
     </a>
     {% endif %}
 </div>
-{% endmacro %}
+{% endcomponent apps_grid %}

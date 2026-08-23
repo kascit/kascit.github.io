@@ -1,11 +1,12 @@
 {% extends "base.html" %}
-{% import "macros/nav.html" as macros_nav %}
 
 {# Offline page — extends base.html directly (like 404.html) to force the rail layout.
    This ensures _force_rail = true, which sets use_fit_shell = true for consistent width. #}
 
-{# Force the shell into the fitted layout so offline matches site width/state #}
+{% block variables %}
+{{ super() }}
 {% set shell_fit = true %}
+{% endblock variables %}
 
 {% block extra_head %}
 <meta name="robots" content="noindex, nofollow" />
@@ -24,7 +25,7 @@
 {% endblock content %}
 
 {% block prev_link %}
-{{ macros_nav::render_button(url="/", title="Home", subtitle="Back to", direction="prev") }}
+{{ <nav_button url="/" title="Home" subtitle="Back to" direction="prev" /> }}
 {% endblock prev_link %}
 
 {% block next_link %}{% endblock next_link %}

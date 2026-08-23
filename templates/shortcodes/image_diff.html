@@ -1,13 +1,11 @@
-{% component image_diff(src1: string, src2: string, alt: string = "Image diff") %}
+{%- component image_diff(src1: string, src2: string, alt: string = "Image diff") -%}
 <figure class="diff aspect-16/9" tabindex="0">
-  <div class="diff-item-1" role="img" tabindex="0">
-    <img alt="{{ alt }} original" src="{{ src1 }}" sizes="(min-width: 1024px) 768px, 100vw"
-    loading="lazy" />
-  </div>
-  <div class="diff-item-2" role="img">
-    <img alt="{{ alt }} changed" src="{{ src2 }}" sizes="(min-width: 1024px) 768px, 100vw"
-    loading="lazy" />
-  </div>
-  <div class="diff-resizer"></div>
+<div class="diff-item-1" role="img" tabindex="0">
+<img alt="{{ alt }} original" src="{{ src1 }}" sizes="(min-width: 1024px) 768px, 100vw" loading="lazy" />
+</div>
+<div class="diff-item-2" role="img">
+<img alt="{{ alt }} changed" src="{{ src2 }}" sizes="(min-width: 1024px) 768px, 100vw" loading="lazy" />
+</div>
+<div class="diff-resizer"></div>
 </figure>
-{% endcomponent image_diff %}
+{%- endcomponent image_diff -%}

@@ -1,9 +1,3 @@
-{% component tooltip(text: string = "", tip: string = "", position: string = "", color: string = "") %}
-<span
-  class="tooltip {% if position != '' %}tooltip-{{ position }}{% endif %} {% if color != '' %}tooltip-{{ color }}{% endif %}"
-  data-tip="{{ tip }}"
-  ><span class="border-b border-dotted border-base-content/40 cursor-help"
-    >{{ text }}</span
-  ></span
->
-{% endcomponent tooltip %}
+{%- component tooltip(text: string = "", tip: string = "", position: string = "", color: string = "") -%}
+<span class="tooltip{% if position != '' %} tooltip-{{ position }}{% endif %}{% if color != '' %} tooltip-{{ color }}{% endif %}" data-tip="{{ tip }}"><span class="border-b border-dotted border-base-content/40 cursor-help">{{ text }}</span></span>
+{%- endcomponent tooltip -%}

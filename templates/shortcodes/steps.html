@@ -1,7 +1,5 @@
-{% component steps(vertical: bool = false) %}
-<ul
-  class="steps {% if vertical %}steps-vertical{% else %}w-full{% endif %}"
->
-  {{ body | safe }}
+{%- component steps(vertical: bool = false) -%}
+<ul class="steps {% if vertical %}steps-vertical{% else %}w-full{% endif %}">
+{{ body | safe }}
 </ul>
-{% endcomponent steps %}
+{%- endcomponent steps -%}

@@ -1,8 +1,5 @@
-{% component mockup_code(prefix: string = "$", color: string = "") %}
+{%- component mockup_code(prefix: string = "$", color: string = "") -%}
 <div class="mockup-code my-6">
-  <pre
-    data-prefix="{{ prefix }}"
-    {% if color != "" %}class="text-{{ color }}-content bg-{{ color }}"{% endif %}
-  ><code>{{ body | safe }}</code></pre>
+<pre data-prefix="{{ prefix }}"{% if color != "" %} class="text-{{ color }}-content bg-{{ color }}"{% endif %}><code>{{ body | safe }}</code></pre>
 </div>
-{% endcomponent mockup_code %}
+{%- endcomponent mockup_code -%}

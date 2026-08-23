@@ -1,3 +1,3 @@
-{% component badge(style: string = "soft", type: string = "primary") %}
+{%- component badge(style: string = "soft", type: string = "primary") -%}
 <div class="badge badge-{{ style }} badge-{{ type }}">{{ body | safe }}</div>
-{% endcomponent badge %}
+{%- endcomponent badge -%}

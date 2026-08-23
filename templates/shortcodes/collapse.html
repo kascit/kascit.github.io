@@ -1,10 +1,6 @@
-{% component collapse(title: string = "Collapse Title") %}
+{%- component collapse(title: string = "Collapse Title") -%}
 <div tabindex="0" class="collapse collapse-arrow bg-base-100 border-base-content/10 border">
-  <div class="collapse-title font-semibold">
-    {{ title }}
-  </div>
-  <div class="collapse-content text-sm">
-    {{ body | markdown | safe }}
-  </div>
+<div class="collapse-title font-semibold">{{ title }}</div>
+<div class="collapse-content text-sm">{{ body | markdown | safe }}</div>
 </div>
-{% endcomponent collapse %}
+{%- endcomponent collapse -%}

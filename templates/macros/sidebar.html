@@ -69,7 +69,7 @@
                                 {% if is_blog_root %}
                                     {% set sorted_pages = s1.pages | sort(attribute="date") | reverse %}
                                     {{ <render_blog_preview sorted_pages={sorted_pages} normalized_current_path={normalized_current_path} lang={lang} sidebar_blog_preview_count={sidebar_blog_preview_count} /> }}
-                                厚{% else %}
+                                {% else %}
                                     {% for page in s1.pages %}
                                         <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold" aria-current="page"{% endif %}>
                                             <a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a>

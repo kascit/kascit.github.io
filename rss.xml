@@ -124,14 +124,8 @@
 </ul>
 <h2 id="contact-for-credits">Contact for Credits</h2>
 <p>If I missed a person, package, script, or resource that should be acknowledged, send a message and I will update this page.</p>
-<p>&lt;a
-href=“/links/”</p>
-<p>class=“link-card link-card-contrast”</p>
-<blockquote>
-</blockquote>
-  <div class="link-title text-lg font-bold">
-    <i class="fa-solid fa-envelope link-icon"></i> 
-    Get in Touch
+<a href="/links/" class="link-card link-card-contrast">
+  <div class="link-title text-lg font-bold"><i class="fa-solid fa-envelope link-icon"></i> Get in Touch
   </div>
   <div class="link-desc text-sm">gotta credit that shit</div>
 </a>

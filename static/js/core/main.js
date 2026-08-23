@@ -31,33 +31,37 @@ function bootstrapSite() {
   // Keep key page-shell behavior eager to avoid flashes during navigation.
   runSafely(() => initTheme(document), "theme");
   runSafely(() => initDrawer(), "drawer");
+  runSafely(() => initDropdowns(document), "dropdowns");
 
   // Turn transitions on only after initial shell state is fully synced.
   markUiInitReady();
 
-  // UX niceties after initial paint.
+  // Phase 2: High-priority visual enhancements after initial paint.
   runAfterFirstPaint(() => {
-    runSafely(() => initDropdowns(document), "dropdowns");
-    runSafely(() => initExternalLinkUtm(document), "external link utm");
-    runSafely(() => initCookieConsent(), "cookie consent");
-    runSafely(() => initAuth(document), "auth");
-    runSafely(() => initServiceWorker(), "service worker");
+    runSafely(() => initTooltips(document), "tooltips");
+
+    if (has("[data-rot13-email]")) {
+      runSafely(
+        () =>
+          import("../ui/email-links.js").then((mod) =>
+            mod.initEmailLinks(document),
+          ),
+        "email links",
+      );
+    }
+
+    if (has("pre > code")) {
+      runSafely(
+        () =>
+          import("../ui/code-blocks.js").then((mod) => mod.initCodeBlocks()),
+        "code blocks",
+      );
+    }
+
     if (hasAny(["[data-toc-sidebar]", "[data-toc-toggle]"])) {
       runSafely(
         () => import("../features/toc.js").then((mod) => mod.initToc()),
         "toc",
-      );
-    }
-
-    runSafely(() => initTooltips(document), "tooltips");
-
-    if (has("#search-modal-template") || has("[data-search-open]")) {
-      runSafely(
-        () =>
-          import("../features/search-loader.js").then((mod) =>
-            mod.initSearchLoader(),
-          ),
-        "search loader",
       );
     }
 
@@ -70,12 +74,22 @@ function bootstrapSite() {
         "showcase rotate",
       );
     }
+  });
 
-    if (has("pre > code")) {
+  // Phase 3: Deferred non-critical background services & keyboard handlers during browser idle.
+  runWhenIdle(() => {
+    runSafely(() => initCookieConsent(), "cookie consent");
+    runSafely(() => initAuth(document), "auth");
+    runSafely(() => initServiceWorker(), "service worker");
+    runSafely(() => initExternalLinkUtm(document), "external link utm");
+
+    if (has("#search-modal-template") || has("[data-search-open]")) {
       runSafely(
         () =>
-          import("../ui/code-blocks.js").then((mod) => mod.initCodeBlocks()),
-        "code blocks",
+          import("../features/search-loader.js").then((mod) =>
+            mod.initSearchLoader(),
+          ),
+        "search loader",
       );
     }
 
@@ -128,16 +142,6 @@ function bootstrapSite() {
       "scroll top",
     );
 
-    if (has("[data-rot13-email]")) {
-      runSafely(
-        () =>
-          import("../ui/email-links.js").then((mod) =>
-            mod.initEmailLinks(document),
-          ),
-        "email links",
-      );
-    }
-
     if (hasAny([".katex-inline", ".katex-block", ".mermaid"])) {
       runSafely(
         () =>
@@ -145,10 +149,7 @@ function bootstrapSite() {
         "lazy plugins",
       );
     }
-  });
 
-  // Heavier/optional page features during idle time natively bundled.
-  runWhenIdle(() => {
     runSafely(
       () =>
         import("../system/webmcp.js").then((mod) =>

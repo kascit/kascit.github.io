@@ -89,6 +89,9 @@
             color: var(--text);
             font-size: 0.95rem;
           }
+          .item-description p {
+            margin: 0;
+          }
         </style>
       </head>
       <body>
@@ -99,13 +102,21 @@
           <div class="header">
             <h1><xsl:value-of select="/rss/channel/title"/></h1>
             <p><xsl:value-of select="/rss/channel/description"/></p>
-            <a href="{/rss/channel/link}">Visit Website &#x2192;</a>
+            <a>
+              <xsl:attribute name="href">
+                <xsl:value-of select="/rss/channel/link"/>
+              </xsl:attribute>
+              Visit Website &#x2192;
+            </a>
           </div>
           <div class="items">
             <xsl:for-each select="/rss/channel/item">
               <div class="item">
                 <h2>
-                  <a href="{link}">
+                  <a target="_blank">
+                    <xsl:attribute name="href">
+                      <xsl:value-of select="link"/>
+                    </xsl:attribute>
                     <xsl:value-of select="title"/>
                   </a>
                 </h2>
@@ -113,7 +124,7 @@
                   Published: <xsl:value-of select="pubDate"/>
                 </div>
                 <div class="item-description">
-                  <xsl:value-of select="description" disable-output-escaping="yes"/>
+                  <xsl:value-of select="description"/>
                 </div>
               </div>
             </xsl:for-each>

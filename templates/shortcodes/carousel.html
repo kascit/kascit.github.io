@@ -1,3 +1,4 @@
+{% component carousel(images: array = []) %}
 <div class="carousel w-full">
   {% for image in images %}
   <div id="slide{{ loop.index }}" class="carousel-item relative w-full">
@@ -19,3 +20,4 @@
   </div>
   {% endfor %}
 </div>
+{% endcomponent carousel %}

@@ -29,7 +29,7 @@ This is not a polished corporate content machine. I write in a conversational st
 
 I publish when there is something genuinely useful to share. Sometimes that means consistent weeks, and sometimes it means silence until a complicated problem is worth unpacking properly.
 
-{{ link_card(url="/rss.xml", external=false, icon="fa-solid fa-rss", title="RSS Feed", description="Follow future posts without checking manually.", contrast=true) }}
+{{ <link_card url="/rss.xml" external={false} icon="fa-solid fa-rss" title="RSS Feed" description="Follow future posts without checking manually." contrast={true} /> }}
 
 Thanks for stopping by. If you like watching systems being built, broken, and improved in public, you will probably feel at home here.
 

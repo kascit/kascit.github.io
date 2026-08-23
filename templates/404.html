@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-{% import "macros/nav.html" as macros_nav %}
 
 {#
   404 error page.
@@ -36,7 +35,7 @@
 {% endblock content %}
 
 {% block prev_link %}
-{{ macros_nav::render_button(url="/", title="Home", subtitle="Back to", direction="prev") }}
+{{ <nav_button url="/" title="Home" subtitle="Back to" direction="prev" /> }}
 {% endblock prev_link %}
 
 {% block next_link %}{% endblock next_link %}

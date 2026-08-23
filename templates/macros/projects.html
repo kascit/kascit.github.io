@@ -1,12 +1,12 @@
-{% macro status_badge(status) %}
+{% component status_badge(status: string) %}
 {% if status == "live" %}<span class="project-card-badge badge-live">Live</span>
 {% elif status == "academic" %}<span class="project-card-badge badge-academic">Academic</span>
 {% elif status == "archived" %}<span class="project-card-badge badge-archived">Archived</span>
 {% elif status == "wip" %}<span class="project-card-badge badge-wip">WIP</span>
 {% endif %}
-{% endmacro status_badge %}
+{% endcomponent status_badge %}
 
-{% macro project_links(live_url="", github_url="", url="", url_label="Visit", external=false) %}
+{% component project_links(live_url: string = "", github_url: string = "", url: string = "", url_label: string = "Visit", external: bool = false) %}
   {% if live_url %}
   <a href="{{ live_url }}" target="_blank" rel="noopener" class="project-card-btn btn-live"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> Live</a>
   {% endif %}
@@ -18,5 +18,5 @@
   {% if url and url != live_url and url != github_url %}
   <a href="{{ url }}" {% if external %}target="_blank" rel="noopener"{% endif %} class="project-card-btn"><i class="fa-solid fa-link" aria-hidden="true"></i> {{ url_label }}</a>
   {% endif %}
-{% endmacro project_links %}
+{% endcomponent project_links %}
 

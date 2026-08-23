@@ -1,12 +1,10 @@
 {% extends "base.html" %}
-{% import "macros/landing_sections.html" as landing_sections %}
-{% import "macros/nav.html" as macros_nav %}
 
 {% block extra_head %}
 {% endblock extra_head %}
 {% block prev_link %}{% endblock prev_link %}
 {% block next_link %}
-{{ macros_nav::render_button(url="/about/", title="About", subtitle="Next", direction="next") }}
+{{ <nav_button url="/about/" title="About" subtitle="Next" direction="next" /> }}
 {% endblock next_link %}
 
 {% block main_content %}
@@ -23,24 +21,27 @@
 {% set default_order = ["hero", "features", "trust", "easy_command", "showcase", "social_proof", "final_cta"] %}
 
 {# Use custom section_order if defined, otherwise use default order #}
-{% set section_order = section.extra.section_order | default(value=default_order) %}
+{% set section_order = default_order %}
+{% if section and section.extra and section.extra.section_order %}
+  {% set section_order = section.extra.section_order %}
+{% endif %}
 
 {# Render sections in the specified order. Unknown section names are silently ignored. #}
 {% for section_name in section_order %}
   {% if section_name == "hero" %}
-    {{ landing_sections::render_hero(section=section) }}
+    {{ <render_hero section={section} /> }}
   {% elif section_name == "features" %}
-    {{ landing_sections::render_features(section=section) }}
+    {{ <render_features section={section} /> }}
   {% elif section_name == "trust" %}
-    {{ landing_sections::render_trust(section=section) }}
+    {{ <render_trust section={section} /> }}
   {% elif section_name == "easy_command" %}
-    {{ landing_sections::render_easy_command(section=section) }}
+    {{ <render_easy_command section={section} /> }}
   {% elif section_name == "showcase" %}
-    {{ landing_sections::render_showcase(section=section) }}
+    {{ <render_showcase section={section} /> }}
   {% elif section_name == "social_proof" %}
-    {{ landing_sections::render_social_proof(section=section) }}
+    {{ <render_social_proof section={section} /> }}
   {% elif section_name == "final_cta" %}
-    {{ landing_sections::render_final_cta(section=section) }}
+    {{ <render_final_cta section={section} /> }}
   {% endif %}
 {% endfor %}
 
@@ -89,7 +90,7 @@
     >
     • Powered by
     <a
-      href="https://www.getzola.org"
+      href="https://www.getzola.org/"
       target="_blank"
       rel="noopener noreferrer"
       class="font-bold text-base-content/70 hover:text-base-content transition-colors duration-200"

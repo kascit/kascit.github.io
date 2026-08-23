@@ -1,8 +1,14 @@
 {# Category/tag links: same surface as blog post footer + listing cards. #}
-{% macro category_link(name) %}
-<a href="{{ get_taxonomy_url(kind='categories', name=name) }}" class="surface-chip-link taxonomy-chip taxonomy-chip--category">{{ name }}</a>
-{% endmacro %}
+{% component category_link(name: string = "", term: string = "") %}
+{% set val = name %}
+{% if val == "" %}{% set val = term %}{% endif %}
+{% set slug = val | slugify %}
+<a href="/categories/{{ slug }}/" class="surface-chip-link taxonomy-chip taxonomy-chip--category">{{ val }}</a>
+{% endcomponent category_link %}
 
-{% macro tag_link(name) %}
-<a href="{{ get_taxonomy_url(kind='tags', name=name) }}" class="surface-chip-link taxonomy-chip taxonomy-chip--tag"><span class="opacity-50 mr-0.5" aria-hidden="true">#</span>{{ name }}</a>
-{% endmacro %}
+{% component tag_link(name: string = "", term: string = "") %}
+{% set val = name %}
+{% if val == "" %}{% set val = term %}{% endif %}
+{% set slug = val | slugify %}
+<a href="/tags/{{ slug }}/" class="surface-chip-link taxonomy-chip taxonomy-chip--tag"><span class="opacity-50 mr-0.5" aria-hidden="true">#</span>{{ val }}</a>
+{% endcomponent tag_link %}

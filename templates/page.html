@@ -1,21 +1,12 @@
 {% extends "base.html" %}
-{% import "macros/seo.html" as macros_seo %}
-
-{% import "macros/content_footer.html" as macros_content_footer %}
-{% import "macros/notify_banner.html" as macros_notify_banner %}
-{% import "macros/icons.html" as macros_icons %}
-{% import "macros/article_meta.html" as macros_article_meta %}
-{% import "macros/nav.html" as macros_nav %}
-{% import "macros/taxonomy_chips.html" as taxonomy_chips %}
-{% import "macros/utils.html" as macros_utils %}
 
 {% block header %}
-    {{ macros_header::header(config=config, lang=lang, page=page|default(value=false)) }}
+    {{ <header config={config} lang={lang} /> }}
 {% endblock header %}
 
 {% block extra_head %}
 {% if page is defined %}
-{{ macros_seo::article_schema(config=config, page=page, lang=lang) }}
+{{ <article_schema config={config} page={page} lang={lang} /> }}
 {% endif %}
 {% endblock extra_head %}
 
@@ -23,7 +14,7 @@
 {% set hide_page_meta = false %}
 {% set hide_page_actions = false %}
 {% set hide_page_taxonomies = false %}
-{% if page.extra is defined %}
+{% if page and page.extra %}
 {% set hide_page_meta = page.extra.hide_page_meta | default(value=false) %}
 {% set hide_page_actions = page.extra.hide_post_actions | default(value=false) %}
 {% set hide_page_taxonomies = page.extra.hide_page_taxonomies | default(value=false) %}
@@ -32,7 +23,7 @@
     <div class="flex flex-col gap-3">
         <h1 class="text-3xl md:text-4xl font-extrabold tracking-tight text-base-content m-0 flex items-center gap-3 flex-wrap">
             {{ page.title }}
-            {% if page.extra.badge %}
+            {% if page and page.extra and page.extra.badge %}
             <span class="text-xs font-semibold px-2 py-0.5 uppercase tracking-wide border border-base-content/20 rounded-sm bg-base-200/50">{{ page.extra.badge }}</span>
             {% endif %}
         </h1>
@@ -62,7 +53,7 @@
             {% if page.date %}
             <div class="flex items-center gap-2">
                 <i class="fa-regular fa-calendar text-xs opacity-60"></i>
-                <time datetime="{{ page.date }}">{{ page.date | date(format="%B %e, %Y") }}</time>
+                <time datetime="{{ page.date }}">{{ page.date | date(format="%B %d, %Y") }}</time>
             </div>
             {% endif %}
         </div>
@@ -72,12 +63,12 @@
         <div class="mt-1 flex flex-wrap items-center gap-1.5 sm:gap-2 min-w-0">
             {% if page.taxonomies.categories %}
                 {% for cat in page.taxonomies.categories %}
-                {{ taxonomy_chips::category_link(name=cat) }}
+                {{ <category_link term={cat} /> }}
                 {% endfor %}
             {% endif %}
             {% if page.taxonomies.tags %}
                 {% for tag in page.taxonomies.tags %}
-                {{ taxonomy_chips::tag_link(name=tag) }}
+                {{ <tag_link term={tag} /> }}
                 {% endfor %}
             {% endif %}
         </div>
@@ -85,16 +76,19 @@
     </div>
 </div>
 
+{% set post_thumbnail = "" %}
+{% if page and page.extra %}
 {% set post_thumbnail = page.extra.thumbnail_image | default(value=page.extra.thumbnail | default(value=page.extra.image | default(value=""))) %}
+{% endif %}
 {% if post_thumbnail != "" %}
-    {% if post_thumbnail is starting_with("http://") or post_thumbnail is starting_with("https://") %}
+    {% if post_thumbnail is starting_with(pat="http://") or post_thumbnail is starting_with(pat="https://") %}
         {% set post_thumbnail_url = post_thumbnail %}
     {% else %}
         {% set post_thumbnail_url = get_url(path=post_thumbnail) | safe %}
     {% endif %}
 <div class="not-prose mb-8 md:mb-10 overflow-hidden rounded-2xl border border-base-content/10 bg-base-200/30 shadow-sm post-hero-thumb aspect-video relative">
     <img src="{{ post_thumbnail_url | safe }}"
-         alt="{{ page.extra.thumbnail_alt | default(value=page.title) }}"
+         alt="{% if page.extra and page.extra.thumbnail_alt %}{{ page.extra.thumbnail_alt }}{% else %}{{ page.title }}{% endif %}"
          class="post-hero-thumb__img relative z-10"
          loading="eager"
          fetchpriority="high"
@@ -102,27 +96,27 @@
 </div>
 {% endif %}
     
-    {{ macros_notify_banner::notify_banner(config=config, page=page) }}
+    {{ <notify_banner config={config} page={page} /> }}
     
     {{ page.content | safe }}
 
     {% if not hide_page_actions %}
     {% if not hide_page_taxonomies %}
-    {{ macros_article_meta::taxonomy_footer(page=page) }}
+    {{ <taxonomy_footer page={page} /> }}
     {% endif %}
 
-    {{ macros_content_footer::content_footer(config=config, item=page) }}
+    {{ <content_footer config={config} item={page} /> }}
     {% endif %}
 {% endblock content %}
 
 {% block js_body %}
     {{ super() }}
     {% set is_blog_post = false %}
-    {% if page is defined %}
-    {% set is_blog_post = macros_utils::is_blog_post(page=page) | trim == "true" %}
+    {% if page and page.path and page.path is starting_with(pat="/blog/") and not (page.path is ending_with(pat="/_index/")) %}
+    {% set is_blog_post = true %}
     {% endif %}
     {% set show_notify_banner = is_blog_post %}
-    {% if page is defined and page.extra.notify_banner is defined %}
+    {% if page and page.extra and page.extra.notify_banner is defined %}
         {% set show_notify_banner = page.extra.notify_banner %}
     {% endif %}
 {% endblock js_body %}
@@ -131,14 +125,14 @@
     {% set nav_back_url = "" %}
     {% set nav_back_title = "" %}
     {% set nav_back_subtitle = "Back to" %}
-    {% if page is defined and page.extra is defined %}
+    {% if page and page.extra %}
         {% set nav_back_url = page.extra.back_url | default(value="") %}
         {% set nav_back_title = page.extra.back_title | default(value="") %}
         {% set nav_back_subtitle = page.extra.back_subtitle | default(value=nav_back_subtitle) %}
     {% endif %}
 
     {% if nav_back_url != "" and nav_back_title != "" %}
-        {{ macros_nav::render_button(url=nav_back_url, title=nav_back_title, subtitle=nav_back_subtitle, direction="prev") }}
+        {{ <nav_button url={nav_back_url} title={nav_back_title} subtitle={nav_back_subtitle} direction="prev" /> }}
     {% elif page is defined %}
     {# Blog post navigation - only for blog posts #}
     {% set blog_section = get_section(path="blog/_index.md") %}
@@ -153,9 +147,9 @@
     {% if current_index > 0 %}
         {% set prev_index = current_index - 1 %}
         {% set prev_post = blog_section.pages[prev_index] %}
-        {{ macros_nav::render_button(url=prev_post.permalink, title=prev_post.title, subtitle="Previous", direction="prev") }}
+        {{ <nav_button url={prev_post.permalink} title={prev_post.title} subtitle="Previous" direction="prev" /> }}
     {% elif current_index == 0 %}
-        {{ macros_nav::render_button(url="/blog/", title="Blog", subtitle="Back to", direction="prev") }}
+        {{ <nav_button url="/blog/" title="Blog" subtitle="Back to" direction="prev" /> }}
     {% endif %}
     {% endif %}
 {% endblock prev_link %}
@@ -164,14 +158,14 @@
     {% set nav_next_url = "" %}
     {% set nav_next_title = "" %}
     {% set nav_next_subtitle = "Next" %}
-    {% if page is defined and page.extra is defined %}
+    {% if page and page.extra %}
         {% set nav_next_url = page.extra.next_url | default(value="") %}
         {% set nav_next_title = page.extra.next_title | default(value="") %}
         {% set nav_next_subtitle = page.extra.next_subtitle | default(value=nav_next_subtitle) %}
     {% endif %}
 
     {% if nav_next_url != "" and nav_next_title != "" %}
-        {{ macros_nav::render_button(url=nav_next_url, title=nav_next_title, subtitle=nav_next_subtitle, direction="next") }}
+        {{ <nav_button url={nav_next_url} title={nav_next_title} subtitle={nav_next_subtitle} direction="next" /> }}
     {% elif page is defined %}
     {# Blog post navigation - only for blog posts #}
     {% set blog_section = get_section(path="blog/_index.md") %}
@@ -186,9 +180,9 @@
     {% if current_index >= 0 and current_index + 1 < blog_section.pages | length %}
         {% set next_index = current_index + 1 %}
         {% set next_post = blog_section.pages[next_index] %}
-        {{ macros_nav::render_button(url=next_post.permalink, title=next_post.title, subtitle="Next", direction="next") }}
+        {{ <nav_button url={next_post.permalink} title={next_post.title} subtitle="Next" direction="next" /> }}
     {% elif current_index >= 0 %}
-        {{ macros_nav::render_button(url="/archive/", title="Archive", subtitle="View All", direction="next") }}
+        {{ <nav_button url="/archive/" title="Archive" subtitle="View All" direction="next" /> }}
     {% endif %}
     {% endif %}
 {% endblock next_link %}

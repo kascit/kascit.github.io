@@ -1,7 +1,6 @@
-{% import "macros/projects.html" as macros_projects %}
-{% import "macros/taxonomy_chips.html" as taxonomy_chips %}
-{% set target_group = group | default(value="featured") %}
-{% set target_grid = grid_class | default(value="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12") %}
+{% component projects_grid(group: string = "featured", grid_class: string = "grid grid-cols-1 lg:grid-cols-2 gap-4 mb-12") %}
+{% set target_group = group %}
+{% set target_grid = grid_class %}
 {% set catalog = load_data(path="data/projects.json", format="json") %}
 
 <div class="not-prose {{ target_grid }}">
@@ -15,7 +14,7 @@
   {% set project_status = project.status | default(value="") %}
   <article class="project-card">
     {% if project.thumbnail_image %}
-    {% if project.thumbnail_image is starting_with("http://") or project.thumbnail_image is starting_with("https://") %}
+    {% if project.thumbnail_image is starting_with(pat="http://") or project.thumbnail_image is starting_with(pat="https://") %}
         {% set project_thumb_url = project.thumbnail_image %}
     {% else %}
         {% set project_thumb_url = get_url(path=project.thumbnail_image) | safe %}
@@ -33,7 +32,6 @@
         {% endif %}
         <div class="project-card-info">
           <div class="project-card-title">
-            <!-- <a href="/projects/{{ project.slug }}/" class="no-underline hover:no-underline text-base-content hover:text-primary transition-colors duration-200">{{ project.title }}</a> -->
             <span class="no-underline hover:no-underline text-base-content hover:text-primary transition-colors duration-200">{{ project.title }}</span>
           </div>
           {% if project.lang %}
@@ -41,7 +39,7 @@
           {% endif %}
         </div>
       </div>
-      {{ macros_projects::status_badge(status=project_status) }}
+      {{ <status_badge status={project_status} /> }}
     </div>
 
     <div class="project-card-desc">{{ project.description }}</div>
@@ -50,7 +48,7 @@
     {% if project_tags %}
     <div class="project-card-techs">
       {% for tag in project_tags %}
-      {{ taxonomy_chips::tag_link(name=tag) }}
+      {{ <tag_link term={tag} /> }}
       {% endfor %}
     </div>
     {% elif project.techs %}
@@ -62,7 +60,7 @@
     {% endif %}
 
     <div class="project-card-actions">
-      {{ macros_projects::project_links(live_url=project_live, github_url=project_github, url=project_url, url_label=project_url_label, external=project_external) }}
+      {{ <project_links live_url={project_live} github_url={project_github} url={project_url} url_label={project_url_label} external={project_external} /> }}
 
       <a href="/projects/{{ project.slug }}/" class="project-card-btn" aria-label="View details for {{ project.title }}"><i class="fa-solid fa-book-open" aria-hidden="true"></i> Details</a>
     </div>
@@ -70,3 +68,4 @@
   {% endif %}
 {% endfor %}
 </div>
+{% endcomponent projects_grid %}

@@ -7,40 +7,40 @@ template = "section.html"
 enabled = false
 +++
 
-{{ email_card(user="pbagnpg", domain="qunahe.zr", icon="fa-solid fa-envelope", title="Send an Email", description="Drop me a message", contrast=true) }}
+{{ <email_card user="pbagnpg" domain="qunahe.zr" icon="fa-solid fa-envelope" title="Send an Email" description="Drop me a message" contrast={true} /> }}
 
 This page is the clean index of where to find me online. If you need to reach me quickly, email is the fastest route and everything else is grouped by context below.
 
 ## Code & Professional
 
-{{ link_card(url="https://github.com/kascit", external=true, icon="fa-brands fa-github", title="GitHub", description="Open source projects and random scripts") }}
+{{ <link_card url="https://github.com/kascit" external={true} icon="fa-brands fa-github" title="GitHub" description="Open source projects and random scripts" /> }}
 
-{{ link_card(url="https://www.linkedin.com/in/dhanur-relhan/", external=true, icon="fa-brands fa-linkedin", title="LinkedIn", description="The professional mask") }}
+{{ <link_card url="https://www.linkedin.com/in/dhanur-relhan/" external={true} icon="fa-brands fa-linkedin" title="LinkedIn" description="The professional mask" /> }}
 
-{{ link_card(url="https://dev.to/kascit", external=true, icon="fa-brands fa-dev", title="DEV Community", description="Articles and technical notes") }}
+{{ <link_card url="https://dev.to/kascit" external={true} icon="fa-brands fa-dev" title="DEV Community" description="Articles and technical notes" /> }}
 
-{{ link_card(url="https://codolio.com/profile/kascit", external=true, icon="fa-solid fa-code", title="Codolio", description="Where I go to feel inadequate") }}
+{{ <link_card url="https://codolio.com/profile/kascit" external={true} icon="fa-solid fa-code" title="Codolio" description="Where I go to feel inadequate" /> }}
 
 ## Socials & Communities
 
-{{ link_card(url="https://x.com/nkascit", external=true, icon="fa-brands fa-x-twitter", title="X (Twitter)", description="Occasional thoughts and updates") }}
+{{ <link_card url="https://x.com/nkascit" external={true} icon="fa-brands fa-x-twitter" title="X (Twitter)" description="Occasional thoughts and updates" /> }}
 
-{{ link_card(url="https://discord.com/invite/U2UTGParYX", external=true, icon="fa-brands fa-discord", title="Discord", description="Come say hi") }}
+{{ <link_card url="https://discord.com/invite/U2UTGParYX" external={true} icon="fa-brands fa-discord" title="Discord" description="Come say hi" /> }}
 
-{{ link_card(url="https://mastodon.social/@kascit", external=true, icon="fa-brands fa-mastodon", title="Mastodon", description="Screaming into the decentralized void") }}
+{{ <link_card url="https://mastodon.social/@kascit" external={true} icon="fa-brands fa-mastodon" title="Mastodon" description="Screaming into the decentralized void" /> }}
 
-{{ link_card(url="https://t.me/AIO_01", external=true, icon="fa-brands fa-telegram", title="Telegram", description="DMs closed usually") }}
+{{ <link_card url="https://t.me/AIO_01" external={true} icon="fa-brands fa-telegram" title="Telegram" description="DMs closed usually" /> }}
 
 ## Everything Else
 
-{{ link_card(url="https://steamcommunity.com/id/nkascit/", external=true, icon="fa-brands fa-steam", title="Steam", description="When I'm not coding") }}
+{{ <link_card url="https://steamcommunity.com/id/nkascit/" external={true} icon="fa-brands fa-steam" title="Steam" description="When I'm not coding" /> }}
 
-{{ link_card(url="https://www.duolingo.com/profile/kascit", external=true, icon="fa-solid fa-language", title="Duolingo", description="Trying to keep the owl happy") }}
+{{ <link_card url="https://www.duolingo.com/profile/kascit" external={true} icon="fa-solid fa-language" title="Duolingo" description="Trying to keep the owl happy" /> }}
 
-{{ link_card(url="/projects/", external=false, icon="fa-solid fa-folder", title="Projects Portfolio", description="Check out what I've built") }}
+{{ <link_card url="/projects/" external={false} icon="fa-solid fa-folder" title="Projects Portfolio" description="Check out what I've built" /> }}
 
-{{ link_card(url="/design/", external=false, icon="fa-solid fa-palette", title="Design System", description="UI components and styling tokens") }}
+{{ <link_card url="/design/" external={false} icon="fa-solid fa-palette" title="Design System" description="UI components and styling tokens" /> }}
 
-{{ link_card(url="/rss.xml", external=false, icon="fa-solid fa-rss", title="RSS Feed", description="Subscribe via RSS") }}
+{{ <link_card url="/rss.xml" external={false} icon="fa-solid fa-rss" title="RSS Feed" description="Subscribe via RSS" /> }}
 
-{{ link_card(url="https://whatsapp.com/channel/0029Vb7NBaYEwEjrmzg6ZS1B", external=true, icon="fa-brands fa-whatsapp", title="Wall o Words", description="WhatsApp Channel") }}
+{{ <link_card url="https://www.whatsapp.com/channel/0029Vb7NBaYEwEjrmzg6ZS1B" external={true} icon="fa-brands fa-whatsapp" title="Wall o Words" description="WhatsApp Channel" /> }}

@@ -1,18 +1,8 @@
-{%- import "macros/head.html" as macros_head -%}
-{%- import "macros/search.html" as macros_search -%}
-{%- import "macros/header.html" as macros_header -%}
-{%- import "macros/comments.html" as macros_comments -%}
-{%- import "macros/toc.html" as macros_toc -%}
-{%- import "macros/footer.html" as macros_footer -%}
-{%- import "macros/sidebar.html" as macros_sidebar -%}
-{%- import "macros/drawer.html" as macros_drawer -%}
-{%- import "macros/cookie_consent.html" as macros_cookie_consent -%}
-{%- import "macros/runtime.html" as macros_runtime -%}
 <!DOCTYPE html>
 
 {% block variables %}
   {% set lang_root_path = "/" ~ lang ~ "/" %}
-  {% if config.extra.sidebar is defined %}
+  {% if config.extra and config.extra.sidebar is defined %}
       {% set disable_root_sidebar_hide = config.extra.sidebar.disable_root_hide | default(value=config.extra.disable_root_sidebar_hide | default(value=false)) %}
   {% else %}
       {% set disable_root_sidebar_hide = config.extra.disable_root_sidebar_hide | default(value=false) %}
@@ -22,27 +12,27 @@
   {% set resolved_current_path = "/" %}
   {% if current_path is defined and current_path != "" %}
       {% set resolved_current_path = current_path %}
-  {% elif page is defined and page.path %}
+  {% elif page and page.path %}
       {% set resolved_current_path = page.path %}
-  {% elif section is defined and section.path %}
+  {% elif section and section.path %}
       {% set resolved_current_path = section.path %}
   {% endif %}
 
   {% set resolved_current_url = config.base_url %}
   {% if current_url is defined and current_url != "" %}
       {% set resolved_current_url = current_url %}
-  {% elif page is defined and page.permalink %}
+  {% elif page and page.permalink %}
       {% set resolved_current_url = page.permalink %}
-  {% elif section is defined and section.permalink %}
+  {% elif section and section.permalink %}
       {% set resolved_current_url = section.permalink %}
-  {% elif term is defined and term.permalink %}
+  {% elif term and term.permalink %}
       {% set resolved_current_url = term.permalink %}
   {% elif resolved_current_path != "" %}
       {% set resolved_current_url = config.base_url ~ resolved_current_path %}
   {% endif %}
 {% endblock variables %}
 
-{{ macros_head::html_tag(config=config, lang=lang) }}
+{{ <html_tag config={config} lang={lang} /> }}
 <head>
     {% block seo %}
     {% set resolved_meta_title = "" %}
@@ -62,13 +52,9 @@
         {% endif %}
     {% elif taxonomy is defined %}
         {% set resolved_meta_type = "website" %}
-        {% set taxonomy_heading = taxonomy.config.title | default(value=taxonomy.name | capitalize) %}
+        {% set taxonomy_heading = taxonomy.name | capitalize %}
         {% set resolved_meta_title = taxonomy_heading ~ " | " ~ site_title %}
-        {% if taxonomy.config.description %}
-            {% set resolved_meta_description = taxonomy.config.description %}
-        {% else %}
-            {% set resolved_meta_description = "Browse all " ~ taxonomy.name ~ " used across dhanur.me — engineering notes, debugging guides, architecture patterns, and technical writing." %}
-        {% endif %}
+        {% set resolved_meta_description = "Browse all " ~ taxonomy.name ~ " used across dhanur.me — engineering notes, debugging guides, architecture patterns, and technical writing." %}
     {% endif %}
 
     {% if meta_title is defined and meta_title != "" %}
@@ -82,24 +68,24 @@
     {% endif %}
 
     {% if page is defined %}
-        {{ macros_head::head(config=config, page=page, section=false, current_url=resolved_current_url, meta_title=resolved_meta_title, meta_description=resolved_meta_description, meta_type=resolved_meta_type) }}
+        {{ <head config={config} page={page} current_url={resolved_current_url} meta_title={resolved_meta_title} meta_description={resolved_meta_description} meta_type={resolved_meta_type} /> }}
     {% elif section is defined %}
-        {{ macros_head::head(config=config, page=false, section=section, current_url=resolved_current_url, meta_title=resolved_meta_title, meta_description=resolved_meta_description, meta_type=resolved_meta_type) }}
+        {{ <head config={config} section={section} current_url={resolved_current_url} meta_title={resolved_meta_title} meta_description={resolved_meta_description} meta_type={resolved_meta_type} /> }}
     {% else %}
-        {{ macros_head::head(config=config, page=false, section=false, current_url=resolved_current_url, meta_title=resolved_meta_title, meta_description=resolved_meta_description, meta_type=resolved_meta_type) }}
+        {{ <head config={config} current_url={resolved_current_url} meta_title={resolved_meta_title} meta_description={resolved_meta_description} meta_type={resolved_meta_type} /> }}
     {% endif %}
     {% endblock seo %}
 
     {% block extra_head %}{% endblock extra_head %}
 </head>
 <body class="bg-base-100 text-base-content antialiased min-h-screen {% block body_class %}{% if is_landing %}is-landing no-scrollbar{% endif %}{% endblock body_class %}">
-    {{ macros_search::search(config=config) }}
+    {{ <search config={config} /> }}
 
     <div class="drawer lg:drawer-open">
         <input id="my-drawer-2" data-drawer-checkbox="true" type="checkbox" class="drawer-toggle" autocomplete="off" />
         <div class="drawer-content flex flex-col min-w-0 pt-16 bg-base-200">
             {% block header %}
-            {{ macros_header::header(config=config, lang=lang) }}
+            {{ <header config={config} lang={lang} /> }}
             {% endblock header %}
 
             {# Force right-rail layout for special pages:
@@ -109,10 +95,8 @@
             {% if page is not defined and section is not defined and taxonomy is not defined %}
                 {% set _force_rail = true %}
             {% endif %}
-            {% if page is defined and page.extra is defined %}
-                {% if page.extra.force_rail is defined and page.extra.force_rail %}
-                    {% set _force_rail = true %}
-                {% endif %}
+            {% if page and page.extra and page.extra.force_rail %}
+                {% set _force_rail = true %}
             {% endif %}
 
             {% block main_content %}
@@ -146,11 +130,11 @@
             {% if compact_main is defined %}
                 {% set force_compact_main = compact_main %}
             {% endif %}
-            {% if page is defined and page.extra %}
+            {% if page and page.extra %}
                 {% set force_shell_fit = page.extra.shell_fit | default(value=force_shell_fit) %}
                 {% set force_compact_main = page.extra.compact_main | default(value=force_compact_main) %}
             {% endif %}
-            {% if section is defined and section.extra %}
+            {% if section and section.extra %}
                 {% set force_shell_fit = section.extra.shell_fit | default(value=force_shell_fit) %}
                 {% set force_compact_main = section.extra.compact_main | default(value=force_compact_main) %}
             {% endif %}
@@ -199,7 +183,7 @@
 
                         {% block content %}{% endblock content %}
 
-                        {{ macros_comments::comments(config=config, page=page|default(value=false), section=section|default(value=false)) }}
+                        {{ <comments config={config} page={page} section={section} /> }}
 
                         <nav class="mt-12 pt-8 border-t border-base-content/10">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -214,10 +198,10 @@
                         {% if has_toc %}
                             {% block toc_sidebar %}
                                 {% if page is defined %}
-                                    {{ macros_toc::toc(page=page) }}
+                                    {{ <toc page={page} /> }}
                                 {% endif %}
                                 {% if section is defined %}
-                                    {{ macros_toc::toc(page=section) }}
+                                    {{ <toc page={section} /> }}
                                 {% endif %}
                             {% endblock toc_sidebar %}
                         {% elif is_taxonomy_view %}
@@ -231,14 +215,14 @@
                                 <div class="sticky top-20 px-4 py-2 border-l border-base-content/10 w-full">
                                     {% block rail_content %}
                                     {#
-                                      Default right-rail for _force_rail pages (404, offline, etc).
-                                      Intentionally mirrors toc.html structure/typography so it feels
-                                      like a native part of the page rather than a separate widget.
-                                      Nav items sourced from config.extra.nav — same as the sidebar.
+                                       Default right-rail for _force_rail pages (404, offline, etc).
+                                       Intentionally mirrors toc.html structure/typography so it feels
+                                       like a native part of the page rather than a separate widget.
+                                       Nav items sourced from config.extra.nav — same as the sidebar.
                                     #}
                                     <h2 class="text-[11px] font-semibold uppercase tracking-wider text-base-content/68 mb-3">Navigate</h2>
                                     <ul class="menu menu-sm toc-menu">
-                                        {% if config.extra.nav is defined %}
+                                        {% if config.extra and config.extra.nav is defined %}
                                         {% for item in config.extra.nav %}
                                         {% if item.type == "url" and item.url %}
                                         <li>
@@ -272,11 +256,11 @@
         </div>
 
         <div id="sidebar" data-sidebar-root="true" class="drawer-side pt-16 z-[60] lg:z-40 {% if is_landing %}lg:hidden{% endif %}">
-            {{ macros_drawer::drawer_overlay() }}
+            {{ <drawer_overlay /> }}
             {% if section is defined %}
-                {{ macros_sidebar::sidebar(config=config, lang=lang, current_path=resolved_current_path, section=section) }}
+                {{ <sidebar config={config} lang={lang} current_path={resolved_current_path} section={section} /> }}
             {% else %}
-                {{ macros_sidebar::sidebar(config=config, lang=lang, current_path=resolved_current_path, section=false) }}
+                {{ <sidebar config={config} lang={lang} current_path={resolved_current_path} /> }}
             {% endif %}
         </div>
         
@@ -294,11 +278,11 @@
         {% endif %}
     </div>
 
-    {{ macros_cookie_consent::banner() }}
+    {{ <cookie_consent_banner /> }}
 
     {% block js_body %}
-        {{ macros_runtime::site_config(config=config, lang=lang) }}
-        {{ macros_runtime::app_main_script() }}
+        {{ <site_config config={config} lang={lang} /> }}
+        {{ <app_main_script /> }}
     {% endblock js_body %}
 </body>
 </html>

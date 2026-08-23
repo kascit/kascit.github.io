@@ -5,7 +5,8 @@ const fs = require("fs");
 const path = require("path");
 const { spawnSync } = require("child_process");
 
-const ROOT = path.resolve(__dirname, "..");
+const { ROOT } = require("./lib/shared");
+const IS_WIN = process.platform === "win32";
 const TARGET_DIRS = ["templates", "static"];
 const VALID_EXTENSIONS = new Set([".xml", ".xsl"]);
 const SKIP_DIRS = new Set([
@@ -52,7 +53,7 @@ function collectXmlFiles() {
 function validateFile(filePath) {
   const result = spawnSync("xmllint", ["--noout", filePath], {
     cwd: ROOT,
-    shell: true,
+    shell: IS_WIN,
     encoding: "utf8",
   });
 
@@ -73,7 +74,7 @@ function validateFile(filePath) {
 function main() {
   const xmllintCheck = spawnSync("xmllint", ["--version"], {
     cwd: ROOT,
-    shell: true,
+    shell: IS_WIN,
     stdio: "ignore",
   });
 

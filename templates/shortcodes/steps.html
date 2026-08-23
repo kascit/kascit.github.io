@@ -1,7 +1,7 @@
-{# Steps shortcode — wraps step items Args: vertical (optional bool, default
-false) Usage: {% steps() %} ... step items ... {% end %} #}
+{% component steps(vertical: bool = false) %}
 <ul
-  class="steps {% if vertical | default(value=false) %}steps-vertical{% else %}w-full{% endif %}"
+  class="steps {% if vertical %}steps-vertical{% else %}w-full{% endif %}"
 >
   {{ body | safe }}
 </ul>
+{% endcomponent steps %}

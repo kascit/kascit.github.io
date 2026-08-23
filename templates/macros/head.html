@@ -1,14 +1,13 @@
-{% import "macros/seo.html" as macros_seo %}
-{% macro get_theme_colorset(config) %}
-{% if config.extra.theme is defined %}
+{% component get_theme_colorset(config) %}
+{% if config.extra and config.extra.theme is defined %}
   {{ config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) }}
 {% else %}
   {{ config.extra.default_colorset | default(value='dark') }}
 {% endif %}
-{% endmacro get_theme_colorset %}
+{% endcomponent get_theme_colorset %}
 
-{% macro get_theme_color(config) %}
-{%- if config.extra.theme is defined -%}
+{% component get_theme_color(config) %}
+{%- if config.extra and config.extra.theme is defined -%}
   {%- set colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) | trim -%}
 {%- else -%}
   {%- set colorset = config.extra.default_colorset | default(value='dark') | trim -%}
@@ -18,10 +17,10 @@
 {%- else -%}
 #f8fafc
 {%- endif -%}
-{% endmacro get_theme_color %}
+{% endcomponent get_theme_color %}
 
-{% macro html_tag(config, lang) %}
-{%- if config.extra.theme is defined -%}
+{% component html_tag(config, lang = "en") %}
+{%- if config.extra and config.extra.theme is defined -%}
   {%- set colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) | trim -%}
 {%- else -%}
   {%- set colorset = config.extra.default_colorset | default(value='dark') | trim -%}
@@ -32,16 +31,18 @@
   {%- set theme_color = "#f8fafc" -%}
 {%- endif -%}
 {%- set is_rtl = false -%}
-{%- if config.extra.lang is defined and config.extra.lang.rtl is defined -%}
+{%- if config.extra and config.extra.lang is defined and config.extra.lang.rtl is defined -%}
     {%- if lang in config.extra.lang.rtl -%}
         {%- set is_rtl = true -%}
     {%- endif -%}
 {%- endif -%}
 <html lang="{{ lang | default(value='en') }}"{% if is_rtl %} dir="rtl"{% endif %}>
-{% endmacro html_tag %}
+{% endcomponent html_tag %}
 
-{% macro head(config, page, section, current_url, meta_title="", meta_description="", meta_type="", nonce="") %}
-    {% if current_url is not defined or current_url == "" %}
+{% component head(config, current_url: string = "", meta_title: string = "", meta_description: string = "", meta_type: string = "", nonce: string = "", ...rest) %}
+    {% set page = rest.page %}
+    {% set section = rest.section %}
+    {% if current_url == "" %}
         {% set current_url = config.base_url %}
     {% endif %}
     <meta charset="utf-8">
@@ -94,7 +95,7 @@
     <link rel="preload" as="image" href="{{ get_url(path="images/landing/whood-light.jpg") | safe }}" fetchpriority="high" media="(prefers-color-scheme: light)">
     <link rel="preload" as="image" href="{{ get_url(path="images/landing/whood.jpg") | safe }}" fetchpriority="high" media="(prefers-color-scheme: dark)">
     {% endif %}
-    {% if config.extra.theme is defined %}
+    {% if config.extra and config.extra.theme is defined %}
       {% set theme_colorset = config.extra.theme.colorset | default(value=config.extra.default_colorset | default(value='dark')) | trim %}
     {% else %}
       {% set theme_colorset = config.extra.default_colorset | default(value='dark') | trim %}
@@ -112,7 +113,7 @@
     </script>
 
     {# Font configuration with backward compatibility #}
-    {% if config.extra.font is defined %}
+    {% if config.extra and config.extra.font is defined %}
         {% set font_enabled = config.extra.font.enabled | default(value=config.extra.custom_font_enabled | default(value=false)) %}
         {% set font_name = config.extra.font.name | default(value=config.extra.custom_font_name | default(value='CustomFont')) %}
         {% set font_path = config.extra.font.path | default(value=config.extra.custom_font_path | default(value='')) %}
@@ -123,7 +124,7 @@
     {% endif %}
     
     {% if font_enabled and font_path != '' %}
-        {% if font_path is starting_with("http://") or font_path is starting_with("https://") %}
+        {% if font_path is starting_with(pat="http://") or font_path is starting_with(pat="https://") %}
             <link href="{{ font_path | safe }}" rel="stylesheet">
         {% else %}
             {% set font_url = get_url(path=font_path) %}
@@ -156,7 +157,7 @@
     {% endif %}
 
     {% set resolved_meta_type = "website" %}
-    {% if page and page.path is starting_with("/blog/") %}
+    {% if page and page.path and page.path is starting_with(pat="/blog/") %}
       {% set resolved_meta_type = "article" %}
     {% endif %}
     {% if meta_type != "" %}
@@ -167,8 +168,8 @@
     <link rel="canonical" href="{{ current_url | safe }}" />
 
     {# Ahrefs Integration (Consolidated) #}
-    {% set ahrefs_key = get_env(name="AHREFS_KEY", default="") %}
-    {% if ahrefs_key == "" and config.extra.ahrefs_analytics_key is defined %}
+    {% set ahrefs_key = "" %}
+    {% if config.extra and config.extra.ahrefs_analytics_key is defined %}
         {% set ahrefs_key = config.extra.ahrefs_analytics_key %}
     {% endif %}
 
@@ -198,8 +199,8 @@
       </script>
     {% endif %}
 
-    {{ macros_seo::meta_tags(config=config, current_url=current_url, resolved_title=resolved_title, resolved_description=resolved_description, resolved_meta_type=resolved_meta_type, page=page | default(value=false)) }}
-    {{ macros_seo::website_schema(config=config) }}
+    {{ <meta_tags config={config} current_url={current_url} resolved_title={resolved_title} resolved_description={resolved_description} resolved_meta_type={resolved_meta_type} page={page} /> }}
+    {{ <website_schema config={config} /> }}
 
     <meta name="theme-color" content="{{ theme_color }}">
 
@@ -208,7 +209,7 @@
     {% endif %}
 
     {# Favicon configuration #}
-    {% if config.extra.favicon is defined %}
+    {% if config.extra and config.extra.favicon is defined %}
         {% set favicon_base = config.extra.favicon.base_path | default(value="/icons/") %}
         {% set favicon_16x16 = config.extra.favicon.favicon_16x16 | default(value=favicon_base ~ "favicon-16x16-transparent.png") %}
         {% set favicon_32x32 = config.extra.favicon.favicon_32x32 | default(value=favicon_base ~ "favicon-32x32-transparent.png") %}
@@ -248,4 +249,4 @@
           data-katex-css="{{ get_url(path="css/katex.min.css") | safe }}"
           data-sw-path="{{ get_url(path="sw.js") | safe }}">
 
-{% endmacro head %}
+{% endcomponent head %}

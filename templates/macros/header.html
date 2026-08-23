@@ -1,11 +1,9 @@
-{% import "macros/apps.html" as macros_apps %}
-{% import "macros/icons.html" as macros_icons %}
-{% macro header(config, lang, is_export=false, show_mobile_menu=true) %}
+{% component header(config, lang = "en", is_export: bool = false, show_mobile_menu: bool = true, ...rest) %}
 {# Resolve logo configuration with backward compatibility #}
 {# Priority: logo.* (new) > logo_* (legacy) #}
 
 {# Check if new logo config exists #}
-{% if config.extra.logo is defined %}
+{% if config.extra and config.extra.logo is defined %}
     {% set logo_text = config.extra.logo.text | default(value=config.extra.logo_text | default(value=config.title)) %}
     {% set logo_image_path = config.extra.logo.image_path | default(value=config.extra.logo_image_path | default(value="")) %}
     {% set logo_image_padding = config.extra.logo.image_padding | default(value=config.extra.logo_image_padding | default(value="")) %}
@@ -27,7 +25,7 @@
     {% if show_mobile_menu %}
     <div class="flex-none lg:hidden">
         <label for="my-drawer-2" aria-label="Open menu" class="btn btn-ghost btn-circle btn-sm transition-colors duration-200">
-            {{ macros_icons::svg_hamburger() }}
+            {{ <svg_hamburger /> }}
         </label>
     </div>
     {% endif %}
@@ -103,7 +101,7 @@
                                 <div tabindex="0" role="button" class="btn btn-ghost">
                                     {% if item.icon %}<i class="{{ item.icon }}"></i>{% endif %}
                                     {{ item.name }}
-                                    {{ macros_icons::svg_chevron_down() }}
+                                    {{ <svg_chevron_down /> }}
                                 </div>
                                 <ul tabindex="0" class="dropdown-content menu bg-base-100 border border-base-content/10 rounded-box z-1 p-2 shadow-sm">
                                     {% for member in item.members %}
@@ -130,9 +128,9 @@
             {% if config.languages | length > 0 %}
             {# Language aliases configuration with backward compatibility #}
             {# Priority: lang.aliases (new) > lang_aliases (legacy) #}
-            {% if config.extra.lang is defined and config.extra.lang.aliases is defined %}
+            {% if config.extra and config.extra.lang is defined and config.extra.lang.aliases is defined %}
                 {% set lang_aliases = config.extra.lang.aliases %}
-            {% elif config.extra.lang_aliases is defined %}
+            {% elif config.extra and config.extra.lang_aliases is defined %}
                 {% set lang_aliases = config.extra.lang_aliases %}
             {% else %}
                 {% set lang_aliases = false %}
@@ -140,21 +138,23 @@
             <li data-nav-chrome="lang">
                 <div class="dropdown dropdown-end p-0">
                     <div tabindex="0" role="button" class="btn btn-ghost px-2" aria-label="Languages">
-                        {{ macros_icons::svg_language() }}
+                        {{ <svg_language /> }}
                     </div>
                     <ul tabindex="0" class="dropdown-content menu bg-base-100 border border-base-content/10 rounded-box z-1 p-2 min-w-max whitespace-nowrap">
                         {% for lang_code, lang_config in config.languages %}
                             {% if lang_code != lang %}
-                                {% if page is defined and page.translations %}
-                                {% set translation = page.translations | filter(attribute="lang", value=lang_code) | first %}
-                                {% if translation %}
+                                {% if page and page.translations %}
+                                {% set page_matches = [t for t in page.translations if t.lang == lang_code] %}
+                                {% if page_matches | length > 0 %}
+                                    {% set translation = page_matches[0] %}
                                     <li><a href="{{ translation.permalink | safe }}">{% if lang_aliases and lang_aliases[lang_code] %}{{ lang_aliases[lang_code] }}{% else %}{{ lang_config.name | default(value=lang_code) }}{% endif %}</a></li>
                                 {% else %}
                                     <li><a href="{{ get_url(path="/", lang=lang_code) | safe }}">{% if lang_aliases and lang_aliases[lang_code] %}{{ lang_aliases[lang_code] }}{% else %}{{ lang_config.name | default(value=lang_code) }}{% endif %}</a></li>
                                 {% endif %}
-                            {% elif section is defined and section.translations %}
-                                {% set translation = section.translations | filter(attribute="lang", value=lang_code) | first %}
-                                {% if translation %}
+                            {% elif section and section.translations %}
+                                {% set section_matches = [t for t in section.translations if t.lang == lang_code] %}
+                                {% if section_matches | length > 0 %}
+                                    {% set translation = section_matches[0] %}
                                     <li><a href="{{ translation.permalink | safe }}">{% if lang_aliases and lang_aliases[lang_code] %}{{ lang_aliases[lang_code] }}{% else %}{{ lang_config.name | default(value=lang_code) }}{% endif %}</a></li>
                                 {% else %}
                                     <li><a href="{{ get_url(path="/", lang=lang_code) | safe }}">{% if lang_aliases and lang_aliases[lang_code] %}{{ lang_aliases[lang_code] }}{% else %}{{ lang_config.name | default(value=lang_code) }}{% endif %}</a></li>
@@ -173,10 +173,10 @@
             <li data-nav-chrome="apps" class="ml-1">
                 <div class="relative p-0" data-dropdown="apps">
                     <div tabindex="0" role="button" class="btn btn-ghost btn-square tooltip tooltip-bottom" data-tooltip-label="Apps" data-tooltip-position="bottom" aria-label="Apps">
-                        {{ macros_icons::svg_apps_grid() }}
+                        {{ <svg_apps_grid /> }}
                     </div>
                     <div class="dropdown-panel z-50 mt-2 p-4 bg-base-100 border border-base-content/10 rounded-box w-64 right-0 mr-2 md:mr-4">
-                        {{ macros_apps::apps_grid(context="desktop", config=config) }}
+                        {{ <apps_grid context="desktop" config={config} /> }}
                     </div>
                 </div>
             </li>
@@ -232,7 +232,7 @@
                         </div>
 
                         <ul class="menu p-2">
-                            {% if config.extra.theme is defined %}
+                            {% if config.extra and config.extra.theme is defined %}
                                 {% set disable_theme_toggle = config.extra.theme.disable_toggle | default(value=config.extra.disable_theme_toggle | default(value=false)) %}
                             {% else %}
                                 {% set disable_theme_toggle = config.extra.disable_theme_toggle | default(value=false) %}
@@ -257,13 +257,13 @@
                             {% endif %}
                             
                             <li data-auth="login-item">
-                                <a class="flex items-center gap-3 hover:no-underline" href="https://auth.dhanur.me" data-auth="login-btn">
+                                <a class="flex items-center gap-3 hover:no-underline" href="https://auth.dhanur.me/" data-auth="login-btn">
                                     <i class="fa-solid fa-right-to-bracket w-4 text-center"></i><span>Sign In</span>
                                 </a>
                             </li>
 
                             <li class="hidden" data-auth="account-item">
-                                <a class="flex items-center gap-3 hover:no-underline" href="https://auth.dhanur.me">
+                                <a class="flex items-center gap-3 hover:no-underline" href="https://auth.dhanur.me/">
                                     <i class="fa-solid fa-gear w-4 text-center"></i><span>Account Settings</span>
                                 </a>
                             </li>
@@ -281,4 +281,4 @@
         </ul>
     </div>
 </div>
-{% endmacro header %}
+{% endcomponent header %}

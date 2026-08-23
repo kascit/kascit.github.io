@@ -52,15 +52,23 @@ runs:
     - name: Install system packages
       shell: bash
       run: |
-        # Skip packages that are already installed (warm runner pool reuse)
-        pkgs=()
-        command -v xmllint &>/dev/null || pkgs+=(libxml2-utils)
-        if [[ "${{ inputs.install-imagemagick }}" == "true" ]]; then
-          command -v convert &>/dev/null || pkgs+=(imagemagick librsvg2-bin)
-        fi
-        if [[ ${#pkgs[@]} -gt 0 ]]; then
-          sudo apt-get update -qq
-          sudo apt-get install --no-install-recommends -y "${pkgs[@]}"
+        if command -v apt-get &>/dev/null; then
+          pkgs=()
+          command -v xmllint &>/dev/null || pkgs+=(libxml2-utils)
+          if [[ "${{ inputs.install-imagemagick }}" == "true" ]]; then
+            command -v convert &>/dev/null || pkgs+=(imagemagick librsvg2-bin)
+          fi
+          if [[ ${#pkgs[@]} -gt 0 ]]; then
+            sudo apt-get update -qq
+            sudo apt-get install --no-install-recommends -y "${pkgs[@]}"
+          fi
+        elif command -v brew &>/dev/null; then
+          if ! command -v xmllint &>/dev/null; then
+            brew install libxml2
+          fi
+          if [[ "${{ inputs.install-imagemagick }}" == "true" ]] && ! command -v convert &>/dev/null; then
+            brew install imagemagick librsvg
+          fi
         fi
 
     - name: Cache just binary
@@ -68,7 +76,7 @@ runs:
       uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
       with:
         path: ~/.cargo/bin/just
-        key: just-${{ runner.os }}-${{ steps.versions.outputs.JUST_VERSION }}
+        key: just-${{ runner.os }}-${{ runner.arch }}-${{ steps.versions.outputs.JUST_VERSION }}
 
     - name: Install just
       if: steps.cache-just.outputs.cache-hit != 'true'
@@ -81,7 +89,7 @@ runs:
       uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
       with:
         path: ~/.install-action/bin/zola
-        key: zola-${{ steps.versions.outputs.ZOLA_VERSION }}
+        key: zola-${{ runner.os }}-${{ runner.arch }}-${{ steps.versions.outputs.ZOLA_VERSION }}
 
     - name: Install Zola
       if: steps.cache-zola.outputs.cache-hit != 'true'
@@ -89,7 +97,17 @@ runs:
       run: |
         mkdir -p "$HOME/.install-action/bin"
         zola_ver="${{ steps.versions.outputs.ZOLA_VERSION }}"
-        url="https://github.com/getzola/zola/releases/download/v${zola_ver}/zola-v${zola_ver}-x86_64-unknown-linux-gnu.tar.gz"
+        os_name="unknown-linux-gnu"
+        arch_name="x86_64"
+        uname_s="$(uname -s | tr '[:upper:]' '[:lower:]')"
+        uname_m="$(uname -m)"
+        if [ "$uname_s" = "darwin" ]; then
+          os_name="apple-darwin"
+        fi
+        if [ "$uname_m" = "aarch64" ] || [ "$uname_m" = "arm64" ]; then
+          arch_name="aarch64"
+        fi
+        url="https://github.com/getzola/zola/releases/download/v${zola_ver}/zola-v${zola_ver}-${arch_name}-${os_name}.tar.gz"
         echo "Downloading Zola v${zola_ver} from ${url}..."
         curl -sSL "$url" | tar -xz -C "$HOME/.install-action/bin"
         chmod +x "$HOME/.install-action/bin/zola"

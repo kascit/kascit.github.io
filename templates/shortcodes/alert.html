@@ -1,3 +1,5 @@
-<div role="alert" class="alert alert-{{ type | default(value="info") }} alert-{{ style | default(value="soft") }}">
+{% component alert(type: string = "info", style: string = "soft") %}
+<div role="alert" class="alert alert-{{ type }} alert-{{ style }}">
   <span>{{ body | safe }}</span>
 </div>
+{% endcomponent alert %}

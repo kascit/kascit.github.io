@@ -13,7 +13,7 @@ This blog is where I publish practical notes from real engineering work. Some po
 
 Think of it as a running engineering notebook rather than a polished publication schedule. If a post helps you solve a problem faster, it did its job.
 
-{{ link_card(url="/rss.xml", external=false, icon="fa-solid fa-rss", title="RSS Feed", description="Subscribe to get new posts as they are published.", contrast=true) }}
+{{ <link_card url="/rss.xml" external={false} icon="fa-solid fa-rss" title="RSS Feed" description="Subscribe to get new posts as they are published." contrast={true} /> }}
 
 ## Latest Posts
 

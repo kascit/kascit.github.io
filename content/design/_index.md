@@ -14,7 +14,7 @@ This page is now intentionally Markdown-first. Instead of embedding large blocks
 
 The visual system is built around semantic color tokens, predictable spacing, and component primitives from DaisyUI layered with custom styles. Theme state is shared across subdomains through a single cookie so users keep a consistent dark or light preference everywhere.
 
-{{ link_card(url="https://github.com/kascit/kascit.github.io/blob/main/docs/design-language.md", external=true, icon="fa-solid fa-palette", title="Design Language Doc", description="Color tokens, typography, spacing, motion, and component behavior.", contrast=true) }}
+{{ <link_card url="https://github.com/kascit/kascit.github.io/blob/main/docs/design-language.md" external={true} icon="fa-solid fa-palette" title="Design Language Doc" description="Color tokens, typography, spacing, motion, and component behavior." contrast={true} /> }}
 
 ## Integration Model
 

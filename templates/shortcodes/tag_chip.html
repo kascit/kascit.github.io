@@ -1,7 +1,12 @@
-{% set chip_name = name | default(value="") | trim %}
+{% component tag_chip(name: string = "", variant: string = "tag", label: string = "") %}
+{% set chip_name = name | trim %}
 {% if chip_name %}
-{% set chip_variant = variant | default(value="tag") %}
-{% set chip_label = label | default(value=chip_name) | trim %}
+{% set chip_variant = variant %}
+{% set chip_label = chip_name %}
+{% if label != "" %}
+{% set chip_label = label | trim %}
+{% endif %}
 {% set chip_slug = chip_name | slugify %}
 <a href="/tags/{{ chip_slug }}/" class="surface-chip-link taxonomy-chip taxonomy-chip--{{ chip_variant }}">{{ chip_label }}</a>
 {% endif %}
+{% endcomponent tag_chip %}

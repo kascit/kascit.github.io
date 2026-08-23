@@ -14,11 +14,14 @@ function readText(filePath) {
 function extractAboutSkillTags(raw) {
   const tags = [];
   const tagChipRegex =
-    /\{\{\s*tag_chip\(\s*name\s*=\s*"([^"]+)"[^)]*\)\s*\}\}/g;
+    /\{\{\s*<tag_chip\b[^>]*\bname="([^"]+)"[^>]*\/>\s*\}\}|\{\{\s*tag_chip\(\s*name\s*=\s*"([^"]+)"[^)]*\)\s*\}\}/g;
 
   let match;
   while ((match = tagChipRegex.exec(raw)) !== null) {
-    tags.push(match[1]);
+    const val = match[1] || match[2];
+    if (val) {
+      tags.push(val);
+    }
   }
 
   return compactUnique(tags);

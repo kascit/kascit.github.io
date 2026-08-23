@@ -1,31 +1,10 @@
-{% component email_card(user: string = "pbagnpg", domain: string = "qunahe.zr", icon: string = "fa-solid fa-envelope", title: string = "Send an Email", description: string = "Drop me a message", contrast: bool = false) %}
-{% set link_icon = icon %}
-{% set is_contrast = contrast %}
-{% set enc_user = user %}
-{% set enc_domain = domain %}
-{#
-  Email is stored ROT13-encoded in data-rot13-email.
-  The JS module static/js/ui/email-links.js (loaded via main.js with the CF
-  nonce) decodes it at runtime and sets the real mailto: href.
-
-  Why ROT13?  Cloudflare's email obfuscation scanner replaces literal `mailto:`
-  hrefs in static HTML with /cdn-cgi/l/email-protection#… which Ahrefs
-  crawls and receives a 404.  ROT13 encoding means the static HTML contains
-  no `mailto:` at all, so CF has nothing to rewrite.
-
-  Why no inline script?  The CF Worker removes 'unsafe-inline' from the
-  Content-Security-Policy and enforces a nonce-only policy.  Inline scripts
-  lacking the nonce are blocked.  The decode runs through the module bundle.
-#}
-<a
-  href="#"
-  class="link-card {% if is_contrast %}link-card-contrast{% endif %}"
-  data-rot13-email="{{ enc_user }}@{{ enc_domain }}"
->
+{%- component email_card(user: string = "pbagnpg", domain: string = "qunahe.zr", icon: string = "fa-solid fa-envelope", title: string = "Send an Email", description: string = "Drop me a message", contrast: bool = false) -%}
+{%- set is_contrast = contrast | default(value=false) -%}
+<a href="#" class="link-card{% if is_contrast %} link-card-contrast{% endif %}" data-rot13-email="{{ user }}@{{ domain }}">
   <div class="link-title text-lg font-bold">
-    <i class="{{ link_icon }} link-icon"></i>
+    <i class="{{ icon }} link-icon"></i>
     {{ title }}
   </div>
   <div class="link-desc text-sm">{{ description }}</div>
 </a>
-{% endcomponent email_card %}
+{%- endcomponent email_card -%}

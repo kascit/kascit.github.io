@@ -1,30 +1,22 @@
-{% component gallery(page, cols: number = 3, show_name: bool = true) %}
+{%- component gallery(page, cols: number = 3, show_name: bool = true) -%}
 <div class="gallery-container my-8">
-  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-{{ cols }} gap-4 justify-items-center">
-    {% for asset in page.assets %}
-      {% if asset is matching(pat="(?i)[.](jpg|jpeg|png|gif|webp)$") %}
-        {% set image = resize_image(path=asset, width=480, height=360, op="fill") %}
-        {% set filename = asset | split(pat="/") | last %}
-        {% set name_parts = filename | split(pat=".") %}
-        {% set name = name_parts[:-1] | join(sep=".") %}
-        <div class="gallery-item w-full text-center">
-          <a href="{{ get_url(path=asset) }}" target="_blank" class="block overflow-hidden rounded-md shadow-md hover:shadow-lg transition-shadow duration-200">
-        <img
-          src="{{ image.url }}"
-          alt="{{ name }}"
-          class="w-full h-48 object-cover hover:scale-105 transition-transform duration-300"
-          sizes="(min-width: 768px) 33vw, 50vw"
-          loading="lazy"
-        />
-      </a>
-      {% if show_name %}
-      <div class="mt-2 text-sm text-base-content/70 truncate px-2">
-        {{ name }}
-      </div>
-      {% endif %}
-    </div>
-    {% endif %}
-    {% endfor %}
-  </div>
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-{{ cols }} gap-4 justify-items-center">
+{%- for asset in page.assets -%}
+{%- if asset is matching(pat="(?i)[.](jpg|jpeg|png|gif|webp)$") -%}
+{%- set image = resize_image(path=asset, width=480, height=360, op="fill") -%}
+{%- set filename = asset | split(pat="/") | last -%}
+{%- set name_parts = filename | split(pat=".") -%}
+{%- set name = name_parts[:-1] | join(sep=".") -%}
+<div class="gallery-item w-full text-center">
+<a href="{{ get_url(path=asset) }}" target="_blank" class="block overflow-hidden rounded-md shadow-md hover:shadow-lg transition-shadow duration-200">
+<img src="{{ image.url }}" alt="{{ name }}" class="w-full h-48 object-cover hover:scale-105 transition-transform duration-300" sizes="(min-width: 768px) 33vw, 50vw" loading="lazy" />
+</a>
+{%- if show_name -%}
+<div class="mt-2 text-sm text-base-content/70 truncate px-2">{{ name }}</div>
+{%- endif -%}
 </div>
-{% endcomponent gallery %}
+{%- endif -%}
+{%- endfor -%}
+</div>
+</div>
+{%- endcomponent gallery -%}

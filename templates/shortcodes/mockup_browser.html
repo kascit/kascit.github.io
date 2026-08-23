@@ -1,8 +1,8 @@
-{% component mockup_browser(url: string = "https://dhanur.me") %}
+{%- component mockup_browser(url: string = "https://dhanur.me") -%}
 <div class="mockup-browser bg-base-300 border border-base-300/30 my-6">
-  <div class="mockup-browser-toolbar">
-    <div class="input">{{ url }}</div>
-  </div>
-  <div class="bg-base-200 px-4 py-8">{{ body | markdown | safe }}</div>
+<div class="mockup-browser-toolbar">
+<div class="input">{{ url }}</div>
 </div>
-{% endcomponent mockup_browser %}
+<div class="bg-base-200 px-4 py-8">{{ body | markdown | safe }}</div>
+</div>
+{%- endcomponent mockup_browser -%}

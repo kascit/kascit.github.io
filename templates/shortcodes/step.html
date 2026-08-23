@@ -1,5 +1,3 @@
-{% component step(text: string = "", color: string = "") %}
-<li class="step {% if color != '' %}step-{{ color }}{% endif %}">
-  {{ text }}
-</li>
-{% endcomponent step %}
+{%- component step(text: string = "", color: string = "") -%}
+<li class="step{% if color != '' %} step-{{ color }}{% endif %}">{{ text }}</li>
+{%- endcomponent step -%}

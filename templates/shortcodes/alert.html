@@ -1,5 +1,5 @@
-{% component alert(type: string = "info", style: string = "soft") %}
+{%- component alert(type: string = "info", style: string = "soft") -%}
 <div role="alert" class="alert alert-{{ type }} alert-{{ style }}">
-  <span>{{ body | safe }}</span>
+<span>{{ body | safe }}</span>
 </div>
-{% endcomponent alert %}
+{%- endcomponent alert -%}

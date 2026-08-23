@@ -1,14 +1,12 @@
-{% component stat(title: string = "", value: string = "0", desc: string = "", icon: string = "") %}
+{%- component stat(title: string = "", value: string = "0", desc: string = "", icon: string = "") -%}
 <div class="stat bg-base-200/30 rounded-box border border-base-content/10">
-  {% if icon != "" %}
-  <div class="stat-figure text-base-content/40">
-    <i class="{{ icon }} text-2xl"></i>
-  </div>
-  {% endif %}
-  <div class="stat-title">{{ title }}</div>
-  <div class="stat-value text-2xl">{{ value }}</div>
-  {% if desc != "" %}
-  <div class="stat-desc">{{ desc }}</div>
-  {% endif %}
+{%- if icon != "" -%}
+<div class="stat-figure text-base-content/40"><i class="{{ icon }} text-2xl"></i></div>
+{%- endif -%}
+<div class="stat-title">{{ title }}</div>
+<div class="stat-value text-2xl">{{ value }}</div>
+{%- if desc != "" -%}
+<div class="stat-desc">{{ desc }}</div>
+{%- endif -%}
 </div>
-{% endcomponent stat %}
+{%- endcomponent stat -%}

@@ -11,36 +11,42 @@ const {
   ROOT,
 } = require("./lib/shared");
 
-const outputDirLabel = "public";
-const outputDir = path.resolve(ROOT, "public");
+const outputDirLabel = process.argv[2] || "public";
+const outputDir = path.resolve(ROOT, outputDirLabel);
 
 const OPTIMIZERS = {
   ".jpg": {
     args: [
+      "-resize",
+      "1920x1920>",
       "-strip",
       "-sampling-factor",
       "4:2:0",
       "-interlace",
       "Plane",
       "-quality",
-      "86",
+      "84",
     ],
     minGainBytes: 128,
   },
   ".jpeg": {
     args: [
+      "-resize",
+      "1920x1920>",
       "-strip",
       "-sampling-factor",
       "4:2:0",
       "-interlace",
       "Plane",
       "-quality",
-      "86",
+      "84",
     ],
     minGainBytes: 128,
   },
   ".png": {
     args: [
+      "-resize",
+      "1920x1920>",
       "-strip",
       "-define",
       "png:compression-level=9",

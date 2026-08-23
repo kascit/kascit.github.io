@@ -108,8 +108,10 @@ jobs:
 
             raise RuntimeError(f"Failed to fetch latest npm version for {package_name} after retries")
 
+          # Note: Zola 0.23+ introduces Tera 2.0 breaking changes (removing macros and shortcodes).
+          # Pinned to 0.22.1 until template suite migration is executed.
           versions = {
-            "zola": latest_tag("getzola/zola").lstrip("v"),
+            "zola": "0.22.1",
             "tailwind": latest_tag("tailwindlabs/tailwindcss").lstrip("v"),
             "daisyui": latest_tag("saadeghi/daisyui").lstrip("v"),
             "katex": latest_tag("KaTeX/KaTeX").lstrip("v"),

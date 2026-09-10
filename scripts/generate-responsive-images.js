@@ -31,6 +31,16 @@ const GENERATED_RE =
   /-(240|320|360|480|640|768|800|1024|1200|1280|1600|1920|2560|3840|fallback)\.(webp|jpe?g)$/i;
 
 function isSourceImage(abs, entry) {
+  const rel = toPosixRel(abs, sourceDir);
+  if (
+    rel.startsWith("icons/") ||
+    rel.startsWith("favicon") ||
+    entry.name.startsWith("favicon") ||
+    entry.name.startsWith("icon-") ||
+    entry.name.startsWith("apple-touch-icon")
+  ) {
+    return false;
+  }
   const ext = path.extname(entry.name).toLowerCase();
   if (!SOURCE_EXTENSIONS.has(ext)) return false;
   if (GENERATED_RE.test(entry.name)) return false;

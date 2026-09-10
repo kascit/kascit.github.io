@@ -1,0 +1,33 @@
+---
+name: Auto Update PRs
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-prs:
+    name: Update Outdated PRs
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Update all open internal PRs with latest main
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          open_prs=$(gh pr list --state open --json number,headRefName,isCrossRepository --jq '.[] | select(.isCrossRepository == false) | .number')
+          if [ -z "$open_prs" ]; then
+            echo "No open internal PRs found to update."
+            exit 0
+          fi
+          for pr in $open_prs; do
+            echo "Updating PR #${pr} against main..."
+            gh api -X PUT "repos/${{ github.repository }}/pulls/${pr}/update-branch" || true
+          done

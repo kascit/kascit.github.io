@@ -63,8 +63,10 @@ function shouldFingerprint(relPath) {
     normalized === "sw.js" ||
     normalized === "sw.min.js" ||
     normalized === "js/shell.min.js" ||
+    normalized === "motherland.js" ||
     normalized === "favicon.ico" ||
-    normalized === "favicon.svg"
+    normalized === "favicon.svg" ||
+    normalized.startsWith("icons/")
   )
     return false;
 

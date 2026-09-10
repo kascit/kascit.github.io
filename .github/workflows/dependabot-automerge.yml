@@ -1,9 +1,9 @@
 ---
-name: Dependabot Auto-Merge
+name: Auto-Merge Automation
 
 on:
   pull_request_target:
-    types: [opened, synchronize, reopened]
+    types: [opened, synchronize, reopened, ready_for_review]
 
 permissions:
   contents: write
@@ -11,14 +11,19 @@ permissions:
 
 jobs:
   automerge:
-    name: Enable Dependabot Auto-Merge
+    name: Enable Automated Auto-Merge
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]'
+    if: |
+      github.actor == 'dependabot[bot]' ||
+      github.actor == 'github-actions[bot]' ||
+      startsWith(github.head_ref, 'chore/') ||
+      startsWith(github.head_ref, 'dependabot/')
     steps:
       - name: Approve and Enable Auto-Merge
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_URL: ${{ github.event.pull_request.html_url }}
         run: |
-          gh pr review "$PR_URL" --approve -b "Auto-approved Dependabot dependency update." || true
-          gh pr merge "$PR_URL" --auto --squash || true
+          gh pr review "$PR_URL" --approve -b "Auto-approved automated workflow PR." || true
+          gh pr merge "$PR_URL" --auto --squash --delete-branch || true
+

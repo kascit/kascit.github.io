@@ -1,6 +1,23 @@
 const TRACKING_PARAM = "utm_source";
 const TRACKING_VALUE = "dhanur.me";
 
+const EXEMPT_EXTERNAL_HOSTNAMES = new Set([
+  "dev.to",
+  "www.dev.to",
+  "duolingo.com",
+  "www.duolingo.com",
+  "discord.com",
+  "www.discord.com",
+  "t.me",
+  "telegram.me",
+  "whatsapp.com",
+  "www.whatsapp.com",
+  "steamcommunity.com",
+  "feedly.com",
+  "www.inoreader.com",
+  "inoreader.com",
+]);
+
 function isTrackableExternalLink(anchor) {
   if (!anchor || anchor.dataset.noUtmSource === "true") {
     return false;
@@ -25,7 +42,8 @@ function isTrackableExternalLink(anchor) {
   // Exempt all *.dhanur.me domains and dhanur.me itself
   if (
     linkUrl.hostname === "dhanur.me" ||
-    linkUrl.hostname.endsWith(".dhanur.me")
+    linkUrl.hostname.endsWith(".dhanur.me") ||
+    EXEMPT_EXTERNAL_HOSTNAMES.has(linkUrl.hostname.toLowerCase())
   ) {
     return false;
   }

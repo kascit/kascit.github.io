@@ -11,7 +11,7 @@ Referrer-Policy: strict-origin-when-cross-origin
 Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), payment=(), usb=(), browsing-topics=()
 
 # =============================================================================
-# CACHE HEADERS FOR STATIC ASSETS 
+# CACHE HEADERS FOR STATIC ASSETS
 # =============================================================================
 
 # Build output fingerprints all static assets and removes original non-fingerprinted files.
@@ -37,12 +37,17 @@ Access-Control-Allow-Origin: *
 Cache-Control: public, max-age=300, must-revalidate
 Access-Control-Allow-Origin: *
 
+# Legacy motherland endpoint
+/motherland.js
+Cache-Control: public, max-age=300, must-revalidate
+Access-Control-Allow-Origin: *
+
 /webfonts/*
 Cache-Control: public, max-age=31536000, immutable
 Access-Control-Allow-Origin: *
 
 /icons/*
-Cache-Control: public, max-age=31536000, immutable
+Cache-Control: public, max-age=3600, must-revalidate
 Access-Control-Allow-Origin: *
 
 # =============================================================================
@@ -98,13 +103,13 @@ Cache-Control: public, max-age=3600
 -> Cache-Control = public, max-age=3600
 
 # RSS Content Type (Requires Update)
-(http.request.uri.path eq "/rss.xml") 
+(http.request.uri.path eq "/rss.xml")
 -> Content-Type = application/rss+xml
 
 # Sitemap Content Type
-(http.request.uri.path eq "/sitemap.xml") 
+(http.request.uri.path eq "/sitemap.xml")
 -> Content-Type = application/xml; charset=utf-8
 
 # XSLT Content Type
-(ends_with(http.request.uri.path, ".xsl")) 
+(ends_with(http.request.uri.path, ".xsl"))
 -> Content-Type = text/xsl; charset=utf-8

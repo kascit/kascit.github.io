@@ -397,6 +397,181 @@ function hydrate(shellRoot) {
   });
 }
 
+const CANONICAL_SHELL_HTML = `<div class="navbar site-topbar fixed top-0 left-0 right-0 z-50 h-16 bg-base-100/80 backdrop-blur-md border-b border-base-content/10">
+    <div class="flex-none lg:hidden">
+        <button id="shell-mobile-toggle" type="button" aria-label="Open menu" class="btn btn-ghost btn-circle btn-sm transition-colors duration-200">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+        </button>
+    </div>
+
+    <div class="flex-1 flex justify-center items-center lg:flex lg:justify-start">
+        <a href="https://dhanur.me/" class="btn btn-ghost hover:bg-transparent hover:border-transparent normal-case text-xl font-bold text-base-content logo-firefly site-logo-link">
+            <div class="relative h-16 flex items-center">
+                <picture>
+                    <img src="https://raw.githubusercontent.com/kascit/kascit.github.io/raw-mirror/images/branding/logo-light.png" alt="~/dhanur" class="h-16 w-auto p-[14px] logo-dark" sizes="200px" data-logo-type="dark" loading="eager" fetchpriority="high" />
+                </picture>
+                <picture class="absolute inset-0 flex items-center">
+                    <img src="https://raw.githubusercontent.com/kascit/kascit.github.io/raw-mirror/images/branding/logo-dark.png" alt="~/dhanur" class="h-16 w-auto p-[14px] logo-light" sizes="200px" data-logo-type="light" loading="eager" fetchpriority="high" />
+                </picture>
+            </div>
+        </a>
+    </div>
+
+    <div class="flex-none lg:hidden" aria-hidden="true"><div class="btn btn-circle btn-sm invisible"></div></div>
+
+    <div class="flex-none hidden lg:flex">
+        <ul class="menu menu-horizontal px-1 items-center">
+            <li data-nav-chrome="apps" class="ml-1">
+                <div class="relative p-0" data-dropdown="apps">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-square tooltip tooltip-bottom" data-tooltip-label="Apps" aria-label="Apps">
+                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M5 3a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2V5a2 2 0 00-2-2H5zM5 11a2 2 0 00-2 2v2a2 2 0 002 2h2a2 2 0 002-2v-2a2 2 0 00-2-2H5zM11 5a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V5zM11 13a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+                    </div>
+                    <div class="dropdown-panel z-50 mt-2 p-4 bg-base-100 border border-base-content/10 rounded-box w-64 right-0 mr-2 md:mr-4">
+                        <div class="grid grid-cols-3 gap-2" data-app-menu-grid="desktop">
+                            <div class="col-span-3 flex justify-center py-4 opacity-50"><span class="loading loading-spinner loading-sm"></span></div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+
+            <li data-nav-chrome="account" class="ml-1">
+                <div class="relative p-0" data-dropdown="account">
+                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle tooltip tooltip-bottom" data-tooltip-label="Account" aria-label="Account">
+                        <div data-auth="nav-guest-avatar" class="w-9 h-9 rounded-full bg-base-300 flex items-center justify-center">
+                            <i class="fa-solid fa-user text-base-content/50 text-sm"></i>
+                        </div>
+                        <div data-auth="nav-authed-avatar" class="hidden w-9 h-9 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-1 overflow-hidden">
+                            <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Profile" class="w-full h-full object-cover" />
+                        </div>
+                    </div>
+                    <div class="dropdown-panel z-50 mt-2 bg-base-100 border border-base-content/10 rounded-box w-64 right-0 mr-2 md:mr-4 overflow-hidden">
+                        <div data-auth="nav-authed-header" class="hidden px-3 pt-3 pb-2 border-b border-base-content/10 cursor-default select-none">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-full overflow-hidden shrink-0"><img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" data-auth="nav-authed-header-avatar" class="w-full h-full object-cover" alt="Profile" /></div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="font-semibold truncate text-sm" data-auth="nav-name"></div>
+                                    <div class="text-xs opacity-60 truncate" data-auth="nav-email"></div>
+                                </div>
+                                <span class="badge badge-sm hidden" data-auth="nav-role"></span>
+                            </div>
+                        </div>
+                        <div data-auth="nav-guest-header" class="px-3 pt-3 pb-2 border-b border-base-content/10 cursor-default select-none">
+                            <div class="flex items-center gap-2.5">
+                                <div class="w-8 h-8 rounded-full bg-base-300 flex items-center justify-center shrink-0">
+                                    <i class="fa-solid fa-user text-base-content/40"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <div class="font-semibold text-sm">Guest</div>
+                                    <div class="text-xs opacity-60">Not signed in</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hidden px-3 py-1.5 border-b border-base-content/10" data-auth="credits-row">
+                            <div class="flex items-center justify-between text-xs">
+                                <span class="flex items-center gap-1.5 opacity-70">
+                                    <span>🪙</span>
+                                    <span data-auth="credits-balance">—</span>
+                                    <span class="opacity-60">credits</span>
+                                </span>
+                                <span class="opacity-40 text-[10px]" data-auth="credits-reset"></span>
+                            </div>
+                        </div>
+                        <ul class="menu p-2">
+                            <li data-nav-chrome="theme">
+                                <div class="flex items-center gap-2.5 px-2.5 py-2">
+                                    <i class="fa-solid fa-circle-half-stroke w-4 text-center opacity-60"></i>
+                                    <div id="theme-toggle" class="theme-switcher w-full bg-base-300/70 text-xs font-medium">
+                                        <button data-theme-mode="light" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer"><i class="fa-solid fa-sun mr-1"></i>Light</button>
+                                        <button data-theme-mode="dark" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer"><i class="fa-solid fa-moon mr-1"></i>Dark</button>
+                                        <button data-theme-mode="auto" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer"><i class="fa-solid fa-circle-half-stroke mr-1"></i>Auto</button>
+                                    </div>
+                                </div>
+                            </li>
+                            <li data-auth="login-item">
+                                <a class="flex items-center gap-3" href="https://auth.dhanur.me/" data-auth="login-btn"><i class="fa-solid fa-right-to-bracket w-4 text-center"></i><span>Sign In</span></a>
+                            </li>
+                            <li class="hidden" data-auth="account-item">
+                                <a class="flex items-center gap-3" href="https://auth.dhanur.me/"><i class="fa-solid fa-gear w-4 text-center"></i><span>Account Settings</span></a>
+                            </li>
+                            <li class="hidden border-t border-base-content/10 mt-1 pt-1" data-auth="logout-item">
+                                <button type="button" class="w-full text-left flex items-center gap-3 text-error/80 hover:text-error" data-auth="logout-btn"><i class="fa-solid fa-right-from-bracket w-4 text-center"></i><span>Sign Out</span></button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+
+<div id="shell-mobile-panel" class="fixed inset-0 z-[100] hidden" data-shell-mobile-panel>
+    <div class="absolute inset-0 bg-black/50 transition-opacity" data-shell-mobile-backdrop></div>
+    <div class="absolute top-0 left-0 bottom-0 w-72 bg-base-100 shadow-2xl flex flex-col overflow-y-auto transform -translate-x-full transition-transform duration-300" data-shell-mobile-drawer>
+        <div class="flex items-center justify-between px-4 py-3 border-b border-base-content/10">
+            <a href="https://dhanur.me/" class="font-bold text-lg text-base-content no-underline hover:no-underline">dhanur.me</a>
+            <button type="button" class="btn btn-ghost btn-circle btn-sm" data-shell-mobile-close aria-label="Close menu">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <div class="px-4 py-4 border-b border-base-content/10" data-nav-chrome="apps">
+            <div class="text-xs font-semibold uppercase tracking-wider text-base-content/50 mb-3">Apps</div>
+            <div class="grid grid-cols-3 gap-2" data-app-menu-grid="mobile">
+                <div class="col-span-3 flex justify-center py-4 opacity-50"><span class="loading loading-spinner loading-sm"></span></div>
+            </div>
+        </div>
+        <div class="px-4 py-3 border-b border-base-content/10" data-nav-chrome="account">
+            <div class="flex items-center gap-3 mb-3">
+                <div data-auth="mobile-guest-avatar" class="w-9 h-9 rounded-full bg-base-300 flex items-center justify-center shrink-0">
+                    <i class="fa-solid fa-user text-base-content/50 text-sm"></i>
+                </div>
+                <div data-auth="mobile-authed-avatar" class="hidden w-9 h-9 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-1 overflow-hidden shrink-0">
+                  <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Profile" class="w-full h-full object-cover" />
+                </div>
+                <div class="flex-1 min-w-0">
+                    <div class="font-semibold text-sm truncate" data-auth="mobile-name">Guest</div>
+                    <div class="text-xs opacity-60 truncate" data-auth="mobile-email">Not signed in</div>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <a href="https://auth.dhanur.me/" class="btn btn-primary btn-sm flex-1 no-underline hover:no-underline" data-auth="mobile-login-btn">Sign In</a>
+                <button type="button" class="btn btn-ghost btn-sm flex-1 text-error/80 hover:text-error hidden" data-auth="mobile-logout-btn">Sign Out</button>
+                <a href="https://auth.dhanur.me/" class="btn btn-ghost btn-sm flex-1 hidden no-underline hover:no-underline" data-auth="mobile-account-btn">Account</a>
+            </div>
+        </div>
+        <div class="px-4 py-3" data-nav-chrome="theme">
+            <div class="flex items-center gap-2.5">
+                <i class="fa-solid fa-circle-half-stroke w-4 text-center opacity-60"></i>
+                <div class="theme-switcher w-full bg-base-300/70 text-xs font-medium">
+                    <button data-theme-mode="light" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer"><i class="fa-solid fa-sun mr-1"></i>Light</button>
+                    <button data-theme-mode="dark" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer"><i class="fa-solid fa-moon mr-1"></i>Dark</button>
+                    <button data-theme-mode="auto" class="theme-switcher-btn rounded-md px-2 py-1.5 cursor-pointer"><i class="fa-solid fa-circle-half-stroke mr-1"></i>Auto</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>`;
+
+function mountCanonicalShell() {
+  const mountPoint = document.getElementById("dhanur-shell");
+  const tempDiv = document.createElement("div");
+
+  if (window.trustedTypes && window.__defaultPolicy) {
+    tempDiv.innerHTML = window.__defaultPolicy.createHTML(CANONICAL_SHELL_HTML);
+  } else {
+    tempDiv.innerHTML = CANONICAL_SHELL_HTML;
+  }
+
+  if (mountPoint) {
+    mountPoint.replaceChildren(...tempDiv.children);
+  } else {
+    const fragment = document.createDocumentFragment();
+    while (tempDiv.firstChild) {
+      fragment.appendChild(tempDiv.firstChild);
+    }
+    document.body.prepend(fragment);
+  }
+}
+
 async function bootstrapShell() {
   if (_injected) return;
   _injected = true;
@@ -412,9 +587,14 @@ async function bootstrapShell() {
   maybeRegisterServiceWorker(config);
 
   const sameOrigin = isSameOriginHost();
-  const existingNavbar = document.querySelector(".navbar");
+  let navbar = document.querySelector(".navbar");
 
-  if (existingNavbar) {
+  if (!navbar) {
+    mountCanonicalShell();
+    navbar = document.querySelector(".navbar");
+  }
+
+  if (navbar) {
     hydrate(document.body);
     return;
   }
@@ -428,3 +608,4 @@ if (document.readyState === "loading") {
 } else {
   bootstrapShell();
 }
+

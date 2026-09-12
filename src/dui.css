@@ -161,3 +161,48 @@
   border-color: var(--color-info);
   box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-info) 15%, transparent);
 }
+
+/* --- 5. Ecosystem Layout Foundation --- */
+.eco-page {
+  @apply min-h-screen w-full flex flex-col;
+  padding-top: 5rem;
+  padding-bottom: 3.5rem;
+}
+
+.eco-container {
+  @apply w-full mx-auto px-4 sm:px-6 lg:px-8;
+  max-width: 56rem;
+}
+
+.eco-container-compact {
+  max-width: 42rem;
+}
+
+.eco-container-auth {
+  max-width: 28rem;
+}
+
+.eco-container-wide {
+  max-width: 72rem;
+}
+
+.eco-card {
+  @apply relative flex flex-col w-full rounded-2xl overflow-hidden shadow-sm transition-all duration-200;
+  border: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent);
+  background: color-mix(in oklab, var(--color-base-100) 80%, transparent);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  padding: 1.5rem;
+}
+
+.eco-card:hover {
+  @apply shadow-md;
+  border-color: color-mix(in oklab, var(--color-base-content) 18%, transparent);
+}
+
+.eco-footer {
+  @apply mt-14 pt-6 border-t flex items-center justify-between text-xs;
+  border-color: color-mix(in oklab, var(--color-base-content) 10%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 50%, transparent);
+}
+

@@ -17,17 +17,25 @@ jobs:
     timeout-minutes: 10
 
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
       - name: Update all open internal PRs with latest main
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
-          open_prs=$(gh pr list --state open --json number,headRefName,isCrossRepository --jq '.[] | select(.isCrossRepository == false) | .number')
+          open_prs=$(gh pr list --repo "${{ github.repository }}" --state open --json number,headRefName,isCrossRepository --jq '.[] | select(.isCrossRepository == false) | .number')
           if [ -z "$open_prs" ]; then
             echo "No open internal PRs found to update."
             exit 0
           fi
           for pr in $open_prs; do
             echo "Updating PR #${pr} against main..."
-            gh api -X PUT "repos/${{ github.repository }}/pulls/${pr}/update-branch" || true
+            if gh api -X PUT "repos/${{ github.repository }}/pulls/${pr}/update-branch" >/dev/null 2>&1; then
+              echo "Successfully triggered update for PR #${pr}."
+            else
+              echo "PR #${pr} is already up to date or cannot be updated automatically."
+            fi
           done

@@ -415,17 +415,12 @@ async function bootstrapShell() {
   const existingNavbar = document.querySelector(".navbar");
 
   if (existingNavbar) {
-    if (!sameOrigin) {
-      hydrate(document.body);
-    }
+    hydrate(document.body);
     return;
   }
 
-  if (!sameOrigin) {
-    injectCSS(false, config);
-    injectFavicons(false, config);
-    return;
-  }
+  injectCSS(sameOrigin, config);
+  injectFavicons(sameOrigin, config);
 }
 
 if (document.readyState === "loading") {

@@ -40,7 +40,9 @@ function main() {
 
   try {
     runPkg(pnpmArgs, npxArgs);
-    console.log("✅ Shell bundle built successfully.");
+    const fs = require("fs");
+    fs.copyFileSync(outputPath, "static/js/shell.js");
+    console.log("✅ Shell bundle built successfully (shell.min.js and shell.js).");
   } catch {
     console.error("❌ Build failed");
     process.exit(1);

@@ -192,7 +192,7 @@ _dl-tailwind:
 [private]
 [windows]
 _dl-tailwind:
-    @$url = "https://github.com/tailwindlabs/tailwindcss/releases/download/v$env:TAILWIND_VERSION/tailwindcss-windows-x64.exe"; $target = "{{ tailwind }}"; $targetDir = Split-Path -Parent $target; if (!(Test-Path $targetDir)) { New-Item -ItemType Directory -Path $targetDir | Out-Null }; echo "Installing Tailwind CSS v$env:TAILWIND_VERSION..."; Invoke-WebRequest -Uri $url -OutFile "$target.tmp"; Move-Item -Force "$target.tmp" $target; echo "  done."
+    @$url = "https://github.com/tailwindlabs/tailwindcss/releases/download/v$env:TAILWIND_VERSION/tailwindcss-windows-x64.exe"; $target = "{{ tailwind }}"; $targetDir = Split-Path -Parent $target; if (!(Test-Path $targetDir)) { New-Item -ItemType Directory -Path $targetDir | Out-Null }; echo "Installing Tailwind CSS v$env:TAILWIND_VERSION..."; curl.exe -fL --retry 3 "$url" -o "$target.tmp"; Move-Item -Force "$target.tmp" $target; echo "  done."
 
 [private, unix]
 _dl-daisyui:
@@ -207,7 +207,7 @@ _dl-daisyui:
 [private]
 [windows]
 _dl-daisyui:
-    @echo "Installing DaisyUI v$env:DAISYUI_VERSION..."; if (!(Test-Path "src/vendor")) { New-Item -ItemType Directory -Path "src/vendor" | Out-Null }; Invoke-WebRequest -Uri "https://github.com/saadeghi/daisyui/releases/download/v$env:DAISYUI_VERSION/daisyui.js" -OutFile "src/vendor/daisyui.js"; Invoke-WebRequest -Uri "https://github.com/saadeghi/daisyui/releases/download/v$env:DAISYUI_VERSION/daisyui-theme.js" -OutFile "src/vendor/daisyui-theme.js"; echo "  done."
+    @echo "Installing DaisyUI v$env:DAISYUI_VERSION..."; if (!(Test-Path "src/vendor")) { New-Item -ItemType Directory -Path "src/vendor" | Out-Null }; curl.exe -fsSL "https://github.com/saadeghi/daisyui/releases/download/v$env:DAISYUI_VERSION/daisyui.js" -o "src/vendor/daisyui.js"; curl.exe -fsSL "https://github.com/saadeghi/daisyui/releases/download/v$env:DAISYUI_VERSION/daisyui-theme.js" -o "src/vendor/daisyui-theme.js"; echo "  done."
 
 [private, unix]
 _dl-fontawesome:

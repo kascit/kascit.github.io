@@ -397,6 +397,9 @@ function hydrate(shellRoot) {
 
     if (!access.allowed) {
       if (contentSlot) {
+        if (!contentSlot.__originalContent) {
+          contentSlot.__originalContent = Array.from(contentSlot.childNodes);
+        }
         renderAccessWall(
           contentSlot,
           access.reason,
@@ -404,6 +407,11 @@ function hydrate(shellRoot) {
         );
       }
       return;
+    }
+
+    if (contentSlot && contentSlot.__originalContent) {
+      contentSlot.replaceChildren(...contentSlot.__originalContent);
+      delete contentSlot.__originalContent;
     }
 
     updateAppsGridForRole(shellRoot, role);

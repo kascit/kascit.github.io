@@ -50,7 +50,7 @@ export const CANONICAL_SHELL_HTML = `<div class="navbar site-topbar fixed top-0 
     <!-- Desktop Menu -->
     <div class="flex-none hidden lg:flex">
         <ul class="menu menu-horizontal px-1 items-center">
-            
+
             <!-- Apps Grid -->
             <li data-nav-chrome="apps" class="ml-1">
                 <div class="relative p-0" data-dropdown="apps">
@@ -78,7 +78,7 @@ export const CANONICAL_SHELL_HTML = `<div class="navbar site-topbar fixed top-0 
                         </div>
                     </button>
                     <div class="dropdown-panel z-50 mt-2 bg-base-100 border border-base-content/10 rounded-box w-64 right-0 mr-2 md:mr-4 overflow-hidden">
-                        
+
                         <!-- authed header -->
                         <div data-auth="nav-authed-header" class="hidden px-3 pt-3 pb-2 border-b border-base-content/10 cursor-default select-none">
                             <div class="flex items-center gap-2.5">

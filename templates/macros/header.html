@@ -68,9 +68,9 @@
                 </div>
             {% elif logo_image_path != "" %}
                 {# Single logo for all themes #}
-                <img 
-                    src="{{ get_url(path=logo_image_path) | safe }}" 
-                    alt="{{ logo_text }}" 
+                <img
+                    src="{{ get_url(path=logo_image_path) | safe }}"
+                    alt="{{ logo_text }}"
                     class="h-18 w-auto {% if logo_image_padding != "" %}p-[15px]{% endif %}"
                     sizes="200px"
                 />
@@ -193,7 +193,7 @@
                         </div>
                     </button>
                     <div class="dropdown-panel z-50 mt-2 bg-base-100 border border-base-content/10 rounded-box w-64 right-0 mr-2 md:mr-4 overflow-hidden">
-                        
+
                         <!-- authed header -->
                         <div data-auth="nav-authed-header" class="hidden px-3 pt-3 pb-2 border-b border-base-content/10 cursor-default select-none">
                             <div class="flex items-center gap-2.5">
@@ -255,7 +255,7 @@
                                 </div>
                             </li>
                             {% endif %}
-                            
+
                             <li data-auth="login-item">
                                 <a class="flex items-center gap-3 hover:no-underline" href="https://auth.dhanur.me/" data-auth="login-btn">
                                     <i class="fa-solid fa-right-to-bracket w-4 text-center"></i><span>Sign In</span>

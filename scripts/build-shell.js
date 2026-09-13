@@ -15,7 +15,12 @@ function syncCanonicalShellTemplate() {
 
   if (fs.existsSync(templatePath)) {
     const rawHtml = fs.readFileSync(templatePath, "utf8");
-    const sanitizedHtml = rawHtml.replace(/`/g, "\\`").replace(/\${/g, "\\${");
+    const sanitizedHtml = rawHtml
+      .split("\n")
+      .map((line) => line.trimEnd())
+      .join("\n")
+      .replace(/`/g, "\\`")
+      .replace(/\${/g, "\\${");
     const fileContent = `// AUTO-GENERATED from templates/shell-chrome.html — DO NOT EDIT MANUALLY\nexport const CANONICAL_SHELL_HTML = \`${sanitizedHtml}\`;\n`;
     fs.writeFileSync(generatedTemplatePath, fileContent, "utf8");
     console.log("✅ Synced CANONICAL_SHELL_HTML from templates/shell-chrome.html");

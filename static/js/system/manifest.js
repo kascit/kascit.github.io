@@ -22,6 +22,12 @@ const FALLBACK_APPS = [
     minRole: "guest",
   },
   {
+    name: "Stuff",
+    url: "https://dhanur.me/stuff/",
+    icon: "fa-solid fa-shapes",
+    minRole: "guest",
+  },
+  {
     name: "Auth",
     url: "https://auth.dhanur.me",
     icon: "fa-solid fa-fingerprint",

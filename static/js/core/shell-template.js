@@ -1,4 +1,5 @@
-<div class="navbar site-topbar fixed top-0 left-0 right-0 z-50 h-16">
+// AUTO-GENERATED from templates/shell-chrome.html — DO NOT EDIT MANUALLY
+export const CANONICAL_SHELL_HTML = `<div class="navbar site-topbar fixed top-0 left-0 right-0 z-50 h-16">
     <!-- Mobile hamburger (button, not label, so it works on subdomains without a drawer) -->
     <div class="flex-none lg:hidden">
         <button id="shell-mobile-toggle" type="button" aria-label="Open menu" class="btn btn-ghost btn-circle btn-sm transition-colors duration-200">
@@ -197,3 +198,4 @@
         </div>
     </div>
 </div>
+`;

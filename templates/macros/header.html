@@ -172,9 +172,9 @@
             {# Apps grid (Google Apps-style project launcher) #}
             <li data-nav-chrome="apps" class="ml-1">
                 <div class="relative p-0" data-dropdown="apps">
-                    <div tabindex="0" role="button" class="btn btn-ghost btn-square tooltip tooltip-bottom" data-tooltip-label="Apps" data-tooltip-position="bottom" aria-label="Apps">
+                    <button type="button" class="btn btn-ghost btn-square tooltip tooltip-bottom" data-tooltip-label="Apps" data-tooltip-position="bottom" aria-label="Apps">
                         {{ <svg_apps_grid /> }}
-                    </div>
+                    </button>
                     <div class="dropdown-panel z-50 mt-2 p-4 bg-base-100 border border-base-content/10 rounded-box w-64 right-0 mr-2 md:mr-4">
                         {{ <apps_grid context="desktop" config={config} /> }}
                     </div>
@@ -184,14 +184,14 @@
             {# Account & Theme Dropdown #}
             <li data-nav-chrome="account" class="ml-1">
                 <div class="relative p-0" data-dropdown="account">
-                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle tooltip tooltip-bottom" data-tooltip-label="Account" data-tooltip-position="bottom" aria-label="Account">
+                    <button type="button" class="btn btn-ghost btn-circle tooltip tooltip-bottom" data-tooltip-label="Account" data-tooltip-position="bottom" aria-label="Account">
                         <div data-auth="nav-guest-avatar" class="w-9 h-9 rounded-full bg-base-300 flex items-center justify-center">
                             <i class="fa-solid fa-user text-base-content/50 text-sm"></i>
                         </div>
                         <div data-auth="nav-authed-avatar" class="hidden w-9 h-9 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-1 overflow-hidden">
                             <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Profile" class="w-full h-full object-cover" />
                         </div>
-                    </div>
+                    </button>
                     <div class="dropdown-panel z-50 mt-2 bg-base-100 border border-base-content/10 rounded-box w-64 right-0 mr-2 md:mr-4 overflow-hidden">
                         
                         <!-- authed header -->

@@ -206,6 +206,7 @@ export function initAuth(drawerElement = document, onAuthResolved = null) {
           r.navAuthedHeader,
           r.navAccountItem,
           r.navLogoutItem,
+          r.navRoleBadge,
         );
         setSrc(r.navAvatarImg, avatarUrl);
         setSrc(r.navAuthedHeaderImg, avatarUrl);
@@ -228,6 +229,7 @@ export function initAuth(drawerElement = document, onAuthResolved = null) {
           r.navAuthedHeader,
           r.navAccountItem,
           r.navLogoutItem,
+          r.navRoleBadge,
         );
       }
 

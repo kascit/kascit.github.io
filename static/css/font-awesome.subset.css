@@ -617,6 +617,10 @@
 .fa-layer-group {
   --fa: "\f5fd";
 }
+.fa-shapes,
+.fa-triangle-circle-square {
+  --fa: "\f61f";
+}
 .fa-spell-check {
   --fa: "\f891";
 }

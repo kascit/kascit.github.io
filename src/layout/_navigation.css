@@ -202,6 +202,8 @@
 }
 
 .site-topbar #hamburger-toggle,
+.site-topbar #shell-mobile-toggle,
+.site-topbar label[for="my-drawer-2"],
 .site-topbar
   .menu.menu-horizontal
   > li
@@ -214,6 +216,8 @@
 }
 
 .site-topbar #hamburger-toggle:hover,
+.site-topbar #shell-mobile-toggle:hover,
+.site-topbar label[for="my-drawer-2"]:hover,
 .site-topbar
   .menu.menu-horizontal
   > li
@@ -225,6 +229,8 @@
 }
 
 .site-topbar #hamburger-toggle:focus-visible,
+.site-topbar #shell-mobile-toggle:focus-visible,
+.site-topbar label[for="my-drawer-2"]:focus-visible,
 .site-topbar
   .menu.menu-horizontal
   > li

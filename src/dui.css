@@ -206,3 +206,12 @@
   color: color-mix(in oklab, var(--color-base-content) 50%, transparent);
 }
 
+/* Canonical Header & Logo Dimensions */
+.h-18 {
+  height: 4.5rem;
+}
+
+.p-\[15px\] {
+  padding: 15px;
+}
+

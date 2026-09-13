@@ -228,6 +228,52 @@ function safeIconClass(value) {
   return input;
 }
 
+function syncNavLinks(shellRoot, config) {
+  const currentPath = window.location.pathname;
+
+  // Active path highlight
+  shellRoot.querySelectorAll("[data-nav-link] a").forEach((anchor) => {
+    try {
+      const parsed = new URL(anchor.href, window.location.origin);
+      if (
+        parsed.origin === window.location.origin &&
+        (parsed.pathname === currentPath ||
+          (parsed.pathname !== "/" && currentPath.startsWith(parsed.pathname)))
+      ) {
+        anchor.classList.add("text-primary", "font-semibold");
+      }
+    } catch {}
+  });
+
+  // Custom nav override if explicitly requested
+  if (config.customNav === true && Array.isArray(config.nav) && config.nav.length > 0) {
+    const desktopMenu = shellRoot.querySelector(".menu.menu-horizontal");
+    if (desktopMenu) {
+      desktopMenu.querySelectorAll("[data-nav-link]").forEach((el) => el.remove());
+      const appsItem = desktopMenu.querySelector('[data-nav-chrome="apps"]');
+      for (const item of config.nav) {
+        const li = document.createElement("li");
+        li.setAttribute("data-nav-link", "custom");
+        const a = document.createElement("a");
+        a.className = "btn btn-ghost hover:no-underline";
+        a.href = safeHref(item.url);
+        if (item.icon) {
+          const icon = document.createElement("i");
+          icon.className = safeIconClass(item.icon);
+          a.appendChild(icon);
+        }
+        a.appendChild(document.createTextNode(" " + String(item.name || "Link")));
+        li.appendChild(a);
+        if (appsItem) {
+          desktopMenu.insertBefore(li, appsItem);
+        } else {
+          desktopMenu.appendChild(li);
+        }
+      }
+    }
+  }
+}
+
 function renderAppsGrid(shellRoot, apps) {
   const grids = shellRoot.querySelectorAll(
     "[data-app-menu-grid], [data-apps-grid], [data-apps-grid-mobile]",
@@ -376,6 +422,7 @@ function hydrate(shellRoot) {
   }
 
   applyChromeVisibility(shellRoot, config);
+  syncNavLinks(shellRoot, config);
   updateAppsGridForRole(shellRoot, "guest");
 
   initResponsive();

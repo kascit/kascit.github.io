@@ -65,7 +65,15 @@ function isSameOriginHost() {
 function isTrustedHost() {
   const host = window.location.hostname;
   return (
-    host === "dhanur.me" || host.endsWith(".dhanur.me") || host === "localhost"
+    host === "dhanur.me" ||
+    host.endsWith(".dhanur.me") ||
+    host === "localhost" ||
+    host === "127.0.0.1" ||
+    host === "0.0.0.0" ||
+    host.endsWith(".github.io") ||
+    host.endsWith(".onrender.com") ||
+    host.endsWith(".local") ||
+    window.location.protocol === "file:"
   );
 }
 

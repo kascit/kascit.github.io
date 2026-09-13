@@ -42,7 +42,7 @@ export function initDropdowns(rootElement = document) {
   dropdowns.forEach((dd) => {
     if (dd.getAttribute("data-dropdown-init") === "1") return;
 
-    const btn = dd.querySelector('[role="button"]');
+    const btn = dd.querySelector('button, [role="button"]');
     if (!btn) return;
     const panel = dd.querySelector(".dropdown-panel");
 
@@ -53,13 +53,21 @@ export function initDropdowns(rootElement = document) {
         !!btn.querySelector(":scope > .tooltip-content"));
     dd.setAttribute("data-dropdown-tooltip", hasTooltip ? "1" : "0");
 
-    btn.addEventListener("click", (e) => {
+    const toggle = (e) => {
       e.stopPropagation();
       const wasOpen = dd.hasAttribute("data-open");
       if (wasOpen) {
         closeAllOpenDropdowns();
       } else {
         openPanel(dd);
+      }
+    };
+
+    btn.addEventListener("click", toggle);
+    btn.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggle(e);
       }
     });
 

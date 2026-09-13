@@ -532,8 +532,8 @@ html[data-toc-collapsed="1"] body #toc-toggle {
 /* -------------------------------------
  * Dropdown Toggle Active States
  * ------------------------------------- */
-[data-dropdown][data-open] > [role="button"],
-[data-dropdown]:hover > [role="button"] {
+[data-dropdown][data-open] > :is([role="button"], button),
+[data-dropdown]:hover > :is([role="button"], button) {
   @apply bg-base-content/10 shadow-inner border-transparent;
 }
 

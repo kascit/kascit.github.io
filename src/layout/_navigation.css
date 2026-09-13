@@ -205,8 +205,8 @@
 .site-topbar
   .menu.menu-horizontal
   > li
-  > :is(a.btn.btn-ghost, div.btn.btn-ghost),
-.site-topbar [data-dropdown] > [role="button"].btn.btn-ghost {
+  > :is(a.btn.btn-ghost, div.btn.btn-ghost, button.btn.btn-ghost),
+.site-topbar [data-dropdown] > :is([role="button"].btn.btn-ghost, button.btn.btn-ghost) {
   border: 1px solid transparent;
   background: transparent;
   color: color-mix(in oklab, var(--color-base-content) 84%, transparent);
@@ -217,8 +217,8 @@
 .site-topbar
   .menu.menu-horizontal
   > li
-  > :is(a.btn.btn-ghost, div.btn.btn-ghost):hover,
-.site-topbar [data-dropdown] > [role="button"].btn.btn-ghost:hover {
+  > :is(a.btn.btn-ghost, div.btn.btn-ghost, button.btn.btn-ghost):hover,
+.site-topbar [data-dropdown] > :is([role="button"].btn.btn-ghost, button.btn.btn-ghost):hover {
   border-color: var(--topbar-control-hover-border);
   background: var(--topbar-control-hover-bg);
   color: var(--color-base-content);
@@ -228,8 +228,8 @@
 .site-topbar
   .menu.menu-horizontal
   > li
-  > :is(a.btn.btn-ghost, div.btn.btn-ghost):focus-visible,
-.site-topbar [data-dropdown] > [role="button"].btn.btn-ghost:focus-visible {
+  > :is(a.btn.btn-ghost, div.btn.btn-ghost, button.btn.btn-ghost):focus-visible,
+.site-topbar [data-dropdown] > :is([role="button"].btn.btn-ghost, button.btn.btn-ghost):focus-visible {
   outline: 2px solid color-mix(in oklab, var(--color-primary) 40%, transparent);
   outline-offset: 2px;
 }

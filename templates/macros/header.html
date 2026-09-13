@@ -68,9 +68,9 @@
                 </div>
             {% elif logo_image_path != "" %}
                 {# Single logo for all themes #}
-                <img 
-                    src="{{ get_url(path=logo_image_path) | safe }}" 
-                    alt="{{ logo_text }}" 
+                <img
+                    src="{{ get_url(path=logo_image_path) | safe }}"
+                    alt="{{ logo_text }}"
                     class="h-18 w-auto {% if logo_image_padding != "" %}p-[15px]{% endif %}"
                     sizes="200px"
                 />
@@ -172,9 +172,9 @@
             {# Apps grid (Google Apps-style project launcher) #}
             <li data-nav-chrome="apps" class="ml-1">
                 <div class="relative p-0" data-dropdown="apps">
-                    <div tabindex="0" role="button" class="btn btn-ghost btn-square tooltip tooltip-bottom" data-tooltip-label="Apps" data-tooltip-position="bottom" aria-label="Apps">
+                    <button type="button" class="btn btn-ghost btn-square tooltip tooltip-bottom" data-tooltip-label="Apps" data-tooltip-position="bottom" aria-label="Apps">
                         {{ <svg_apps_grid /> }}
-                    </div>
+                    </button>
                     <div class="dropdown-panel z-50 mt-2 p-4 bg-base-100 border border-base-content/10 rounded-box w-64 right-0 mr-2 md:mr-4">
                         {{ <apps_grid context="desktop" config={config} /> }}
                     </div>
@@ -184,16 +184,16 @@
             {# Account & Theme Dropdown #}
             <li data-nav-chrome="account" class="ml-1">
                 <div class="relative p-0" data-dropdown="account">
-                    <div tabindex="0" role="button" class="btn btn-ghost btn-circle tooltip tooltip-bottom" data-tooltip-label="Account" data-tooltip-position="bottom" aria-label="Account">
+                    <button type="button" class="btn btn-ghost btn-circle tooltip tooltip-bottom" data-tooltip-label="Account" data-tooltip-position="bottom" aria-label="Account">
                         <div data-auth="nav-guest-avatar" class="w-9 h-9 rounded-full bg-base-300 flex items-center justify-center">
                             <i class="fa-solid fa-user text-base-content/50 text-sm"></i>
                         </div>
                         <div data-auth="nav-authed-avatar" class="hidden w-9 h-9 rounded-full ring-2 ring-primary ring-offset-base-100 ring-offset-1 overflow-hidden">
                             <img src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==" alt="Profile" class="w-full h-full object-cover" />
                         </div>
-                    </div>
+                    </button>
                     <div class="dropdown-panel z-50 mt-2 bg-base-100 border border-base-content/10 rounded-box w-64 right-0 mr-2 md:mr-4 overflow-hidden">
-                        
+
                         <!-- authed header -->
                         <div data-auth="nav-authed-header" class="hidden px-3 pt-3 pb-2 border-b border-base-content/10 cursor-default select-none">
                             <div class="flex items-center gap-2.5">
@@ -255,7 +255,7 @@
                                 </div>
                             </li>
                             {% endif %}
-                            
+
                             <li data-auth="login-item">
                                 <a class="flex items-center gap-3 hover:no-underline" href="https://auth.dhanur.me/" data-auth="login-btn">
                                     <i class="fa-solid fa-right-to-bracket w-4 text-center"></i><span>Sign In</span>

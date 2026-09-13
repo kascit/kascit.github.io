@@ -68,7 +68,9 @@ function shouldFingerprint(relPath) {
     normalized === "motherland.js" ||
     normalized === "favicon.ico" ||
     normalized === "favicon.svg" ||
-    normalized.startsWith("icons/")
+    normalized.startsWith("icons/") ||
+    normalized.startsWith("images/branding/") ||
+    normalized.startsWith("webfonts/")
   )
     return false;
 

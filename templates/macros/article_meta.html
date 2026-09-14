@@ -4,7 +4,7 @@
 <footer class="article-taxonomies not-prose mt-8 pt-5 border-t border-base-content/10" aria-label="Post topics">
   {% if page.taxonomies.categories %}
   <div class="article-taxonomies__row">
-    <a class="action-icon-btn article-taxonomies__jump" href="{{ get_url(path='/categories/', lang=lang) | safe }}" title="All categories">
+    <a class="action-icon-btn article-taxonomies__jump" href="{{ get_url(path='categories', trailing_slash=true, lang=lang) | safe }}" title="All categories">
       {{ <svg_folder /> }}
     </a>
     <div class="article-taxonomies__chips">
@@ -16,7 +16,7 @@
   {% endif %}
   {% if page.taxonomies.tags %}
   <div class="article-taxonomies__row">
-    <a class="action-icon-btn article-taxonomies__jump" href="{{ get_url(path='/tags/', lang=lang) | safe }}" title="All tags">
+    <a class="action-icon-btn article-taxonomies__jump" href="{{ get_url(path='tags', trailing_slash=true, lang=lang) | safe }}" title="All tags">
       {{ <svg_tag /> }}
     </a>
     <div class="article-taxonomies__chips">

@@ -1,5 +1,5 @@
 {% component content_footer(config, item) %} 
-<div class="mt-8 pt-6 border-t border-base-content/10">
+<div class="mt-8 pt-6 border-t border-base-content/10 flex flex-wrap items-center justify-between gap-4">
   <div class="post-actions__row">
     {% if config.extra and config.extra.edit_url and item.path and item.path is starting_with(pat="/blog/") and item.relative_path != "blog/_index.md" %}
     <a
@@ -63,5 +63,11 @@
     </a>
     {% endif %}
   </div>
+  {% if item.updated or item.date %}
+  <div class="text-xs text-base-content/50 font-mono flex items-center gap-1.5">
+    <i class="fa-regular fa-clock-rotate-left text-[11px] opacity-60"></i>
+    <span>{% if item.updated %}Updated {{ item.updated | date(format="%b %d, %Y") }}{% else %}Published {{ item.date | date(format="%b %d, %Y") }}{% endif %}</span>
+  </div>
+  {% endif %}
 </div>
 {% endcomponent content_footer %}

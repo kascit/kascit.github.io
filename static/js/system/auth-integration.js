@@ -250,73 +250,126 @@ export function initAuth(drawerElement = document, onAuthResolved = null) {
     document.addEventListener("creditsChanged", (e) =>
       updateCreditsUI(drawerElement, e.detail),
     );
+  });
+}
 
-    // Global Event Delegation for all authentication triggers
-    if (!document.__authClickDelegated) {
-      document.__authClickDelegated = true;
-      document.addEventListener("click", (e) => {
-        const loginTarget = e.target.closest(
-          '[data-auth="login-btn"], [data-auth="sidebar-login-btn"], [data-auth="mobile-login-btn"]',
-        );
-        if (loginTarget) {
-          e.preventDefault();
-          if (typeof auth.login === "function") auth.login();
-          return;
-        }
+export function openAuthLoginPopup(url = "https://auth.dhanur.me/login?popup=true") {
+  const auth = getAuthClient();
+  if (auth && typeof auth.login === "function") {
+    auth.login();
+    return;
+  }
+  const w = 500;
+  const h = 700;
+  const left = Math.max(0, Math.round((screen.width - w) / 2));
+  const top = Math.max(0, Math.round((screen.height - h) / 2));
+  const popup = window.open(
+    url,
+    "authy_popup",
+    `width=${w},height=${h},left=${left},top=${top},toolbar=no,menubar=no,status=no,resizable=yes,scrollbars=yes`,
+  );
+  if (popup && !popup.closed) {
+    try {
+      popup.focus();
+    } catch {}
+  }
+}
 
-        const logoutTarget = e.target.closest(
-          '[data-auth="logout-btn"], [data-auth="sidebar-logout-btn"], [data-auth="mobile-logout-btn"]',
-        );
-        if (logoutTarget) {
-          e.preventDefault();
-          if (typeof auth.logout === "function") auth.logout();
-          return;
-        }
-      });
+if (typeof window !== "undefined") {
+  window.openAuthLoginPopup = openAuthLoginPopup;
+}
+
+// Global Event Delegation for all authentication triggers (bound immediately, not deferred)
+if (typeof document !== "undefined" && !document.__authClickDelegated) {
+  document.__authClickDelegated = true;
+  document.addEventListener("click", (e) => {
+    const loginTarget = e.target.closest(
+      '[data-auth="login-btn"], [data-auth="sidebar-login-btn"], [data-auth="mobile-login-btn"]',
+    );
+    if (loginTarget) {
+      e.preventDefault();
+      openAuthLoginPopup();
+      return;
     }
 
-    // Intercept cross-origin callbacks securely across domain boundaries
-    window.addEventListener("message", async (event) => {
-      const isTrustedOrigin =
-        event.origin === "https://auth.dhanur.me" ||
-        event.origin === "https://dhanur.me" ||
-        event.origin.endsWith(".dhanur.me") ||
-        event.origin.startsWith("http://localhost:");
+    const logoutTarget = e.target.closest(
+      '[data-auth="logout-btn"], [data-auth="sidebar-logout-btn"], [data-auth="mobile-logout-btn"]',
+    );
+    if (logoutTarget) {
+      e.preventDefault();
+      const auth = getAuthClient();
+      if (auth && typeof auth.logout === "function") {
+        auth.logout();
+      } else {
+        fetch("https://auth.dhanur.me/api/auth/logout", {
+          method: "POST",
+          credentials: "include",
+          mode: "cors",
+        }).catch(() => {});
+        document.dispatchEvent(
+          new CustomEvent("authChanged", {
+            detail: {
+              authenticated: false,
+              role: "guest",
+              user: null,
+              credits: null,
+            },
+          }),
+        );
+      }
+      return;
+    }
+  });
+}
 
-      if (!isTrustedOrigin) return;
-      if (!event.data || typeof event.data !== "object") return;
+// Intercept cross-origin callbacks securely across domain boundaries (bound immediately)
+if (typeof window !== "undefined" && !window.__authMessageBound) {
+  window.__authMessageBound = true;
+  window.addEventListener("message", async (event) => {
+    const isTrustedOrigin =
+      event.origin === "https://auth.dhanur.me" ||
+      event.origin === "https://dhanur.me" ||
+      event.origin.endsWith(".dhanur.me") ||
+      event.origin.startsWith("http://localhost:");
 
-      if (
-        event.data.type === "auth-login-success" ||
-        event.data.type === "auth-upgrade-success"
-      ) {
-        if (auth && typeof auth.refresh === "function") {
-          const freshStatus = await auth.refresh();
-          updateUI(freshStatus);
-        } else {
-          try {
-            const res = await fetch("https://auth.dhanur.me/api/status", {
-              credentials: "include",
-            });
-            if (res.ok) {
-              const data = await res.json();
-              updateUI(data);
-              document.dispatchEvent(
-                new CustomEvent("authChanged", { detail: data }),
-              );
-            }
-          } catch (err) {
-            console.error(
-              "[Auth] Background session synchronization failed:",
-              err,
-            );
+    if (!isTrustedOrigin) return;
+    if (!event.data || typeof event.data !== "object") return;
+
+    if (
+      event.data.type === "auth-login-success" ||
+      event.data.type === "auth-upgrade-success"
+    ) {
+      const auth = getAuthClient();
+      let statusData = null;
+      if (auth && typeof auth.refresh === "function") {
+        statusData = await auth.refresh();
+      } else {
+        try {
+          const res = await fetch("https://auth.dhanur.me/api/status", {
+            credentials: "include",
+          });
+          if (res.ok) {
+            statusData = await res.json();
           }
-        }
-
-        if (event.source) {
-          event.source.postMessage({ type: "auth-ack-close" }, event.origin);
+        } catch (err) {
+          console.error(
+            "[Auth] Background session synchronization failed:",
+            err,
+          );
         }
       }
-    });
+
+      if (statusData) {
+        document.dispatchEvent(
+          new CustomEvent("authChanged", { detail: statusData }),
+        );
+      }
+
+      if (event.source) {
+        try {
+          event.source.postMessage({ type: "auth-ack-close" }, event.origin);
+        } catch {}
+      }
+    }
   });
 }

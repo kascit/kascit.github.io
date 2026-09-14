@@ -50,7 +50,12 @@
             </div>
             {% endif %}
 
-            {% if page.date %}
+            {% if page.updated %}
+            <div class="flex items-center gap-2">
+                <i class="fa-regular fa-clock-rotate-left text-xs opacity-60"></i>
+                <span>Updated <time datetime="{{ page.updated }}">{{ page.updated | date(format="%B %d, %Y") }}</time></span>
+            </div>
+            {% elif page.date %}
             <div class="flex items-center gap-2">
                 <i class="fa-regular fa-calendar text-xs opacity-60"></i>
                 <time datetime="{{ page.date }}">{{ page.date | date(format="%B %d, %Y") }}</time>

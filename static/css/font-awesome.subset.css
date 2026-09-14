@@ -550,6 +550,10 @@
 .fa-cubes {
   --fa: "\f1b3";
 }
+.fa-clock-rotate-left,
+.fa-history {
+  --fa: "\f1da";
+}
 .fa-share-alt,
 .fa-share-nodes {
   --fa: "\f1e0";

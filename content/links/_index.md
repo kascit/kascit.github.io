@@ -17,7 +17,7 @@ This page is the clean index of where to find me online. If you need to reach me
 
 {{ <link_card url="https://www.linkedin.com/in/dhanur-relhan/" external={true} icon="fa-brands fa-linkedin" title="LinkedIn" description="The professional mask" /> }}
 
-{{ <link_card url="https://dev.to/kascit" external={true} icon="fa-brands fa-dev" title="DEV Community" description="Articles and technical notes" /> }}
+{{ <link_card url="https://dev.to/kascit" external={true} nofollow={true} icon="fa-brands fa-dev" title="DEV Community" description="Articles and technical notes" /> }}
 
 {{ <link_card url="https://codolio.com/profile/kascit" external={true} icon="fa-solid fa-code" title="Codolio" description="Where I go to feel inadequate" /> }}
 
@@ -35,7 +35,7 @@ This page is the clean index of where to find me online. If you need to reach me
 
 {{ <link_card url="https://steamcommunity.com/id/nkascit/" external={true} icon="fa-brands fa-steam" title="Steam" description="When I'm not coding" /> }}
 
-{{ <link_card url="https://www.duolingo.com/profile/kascit" external={true} icon="fa-solid fa-language" title="Duolingo" description="Trying to keep the owl happy" /> }}
+{{ <link_card url="https://www.duolingo.com/profile/kascit" external={true} nofollow={true} icon="fa-solid fa-language" title="Duolingo" description="Trying to keep the owl happy" /> }}
 
 {{ <link_card url="/projects/" external={false} icon="fa-solid fa-folder" title="Projects Portfolio" description="Check out what I've built" /> }}
 

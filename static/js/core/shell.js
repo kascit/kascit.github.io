@@ -329,6 +329,11 @@ async function updateAppsGridForRole(shellRoot, role) {
   const fresh = await fetchManifest(role);
   const freshVisible = filterAppsByRole(fresh.apps, role);
   renderAppsGrid(shellRoot, freshVisible);
+  if (fresh.lastUpdated) {
+    document.querySelectorAll('[data-deploy-date]').forEach(el => {
+      el.textContent = 'Updated ' + fresh.lastUpdated;
+    });
+  }
   return freshVisible;
 }
 

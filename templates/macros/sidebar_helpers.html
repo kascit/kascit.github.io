@@ -22,7 +22,7 @@
             {% set is_current = normalized_current_path == page.path %}
             {% set rel_idx = loop.index0 + window_start %}
             <li {% if is_current %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
-                <a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a>
+                <a class="hover:no-underline" href="{{ page.permalink | safe }}">{{ page.title }}</a>
             </li>
         {% endfor %}
 
@@ -38,13 +38,13 @@
         {% endif %}
         {% for page in sorted_pages[start_idx:total_posts] %}
             <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
-                <a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a>
+                <a class="hover:no-underline" href="{{ page.permalink | safe }}">{{ page.title }}</a>
             </li>
         {% endfor %}
     {% else %}
         {% for page in sorted_pages[:sidebar_blog_preview_count] %}
             <li {% if normalized_current_path == page.path %}class="border-l-[3px] border-primary text-base-content font-semibold"{% endif %}>
-                <a class="hover:no-underline" href="{{ get_url(path=page.path, lang=lang) | safe }}">{{ page.title }}</a>
+                <a class="hover:no-underline" href="{{ page.permalink | safe }}">{{ page.title }}</a>
             </li>
         {% endfor %}
         {% if total_posts > sidebar_blog_preview_count %}
@@ -53,7 +53,7 @@
     {% endif %}
 
     <li>
-        <a class="hover:no-underline font-medium text-primary" href="{{ get_url(path="/archive/", lang=lang) | safe }}">Archive</a>
+        <a class="hover:no-underline font-medium text-primary" href="{{ get_url(path="archive", trailing_slash=true, lang=lang) | safe }}">Archive</a>
     </li>
 {% endif %}
 {% endcomponent render_blog_preview %}

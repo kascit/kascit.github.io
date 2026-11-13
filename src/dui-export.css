@@ -1,7 +1,8 @@
 @import "tailwindcss" source(none);
-@source "../templates/**/*.{html,md}";
-@source "../content/**/*.{html,md}";
-@source "../static/js/**/*.js";
+@source "../templates/shell-chrome.html";
+@source "../templates/macros/apps.html";
+@source "../static/js/core/shell.js";
+@source "../static/js/system/*.js";
 
 /* Cross-project safelist for shell consumers on external subdomains. */
 @source "./safelist.html";
@@ -37,12 +38,7 @@
 @import "./dui.css";
 
 /* Layout */
-@import "./layout/_gallery.css";
 @import "./layout/_navigation.css";
 @import "./layout/_sidebar.css";
 
-/* Pages */
-@import "./pages/_landing.css";
-
 @import "./responsive-display.css";
-@import "./syntax-highlight.css";

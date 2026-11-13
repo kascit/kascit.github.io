@@ -117,6 +117,16 @@ function main() {
     urls.add(`${baseUrl}${urlPath}`);
   }
 
+  const ADDITIONAL_ECOSYSTEM_PATHS = [
+    "/stuff/",
+    "/stuff/calculator/",
+    "/stuff/weather/",
+    "/Beat.pe/",
+  ];
+  for (const ecoPath of ADDITIONAL_ECOSYSTEM_PATHS) {
+    urls.add(`${baseUrl}${ecoPath}`);
+  }
+
   const sorted = Array.from(urls).sort();
   const xml = buildSitemap(baseUrl, sorted);
   fs.writeFileSync(SITEMAP_PATH, xml, "utf8");

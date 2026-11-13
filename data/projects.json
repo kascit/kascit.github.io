@@ -184,7 +184,7 @@
     },
     {
       "slug": "beat-pe",
-      "title": "Beat.pe",
+      "title": "Beat.pe — Web-Based Rhythm Game",
       "group": "learning",
       "icon": "fa-solid fa-drum",
       "description": "A web-based rhythm game where timing is everything. Built entirely from scratch with vanilla JavaScript and CSS animations.",

@@ -403,6 +403,29 @@ function syncMobileAuth(shellRoot, authStatus) {
   }
 }
 
+function hydrateFooter() {
+  document.querySelectorAll("[data-deploy-date]").forEach((el) => {
+    if (el.textContent && el.textContent.trim().length > 0) return;
+    try {
+      if (document.lastModified) {
+        const d = new Date(document.lastModified);
+        if (!isNaN(d.getTime()) && d.getFullYear() > 2000) {
+          el.textContent = "Updated " + d.toLocaleDateString("en-US", {
+            month: "short",
+            day: "numeric",
+            year: "numeric",
+          });
+        }
+      }
+    } catch {}
+  });
+
+  const yearEl = document.getElementById("year");
+  if (yearEl) {
+    yearEl.textContent = String(new Date().getFullYear());
+  }
+}
+
 function hydrate(shellRoot) {
   const config = getShellRuntimeConfig();
   const sameOrigin = isSameOriginHost();
@@ -429,6 +452,7 @@ function hydrate(shellRoot) {
   initTheme(shellRoot);
   initDropdowns(shellRoot);
   initMobilePanel();
+  hydrateFooter();
 
   initAuth(document, (authStatus) => {
     const role = authStatus?.role || "guest";

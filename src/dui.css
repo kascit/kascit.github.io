@@ -187,7 +187,7 @@
 }
 
 .eco-card {
-  @apply relative flex flex-col w-full rounded-2xl overflow-hidden shadow-sm transition-all duration-200;
+  @apply relative flex flex-col w-full rounded-xl overflow-hidden shadow-sm transition-all duration-200;
   border: 1px solid color-mix(in oklab, var(--color-base-content) 10%, transparent);
   background: color-mix(in oklab, var(--color-base-100) 80%, transparent);
   backdrop-filter: blur(12px);
@@ -197,13 +197,22 @@
 
 .eco-card:hover {
   @apply shadow-md;
-  border-color: color-mix(in oklab, var(--color-base-content) 18%, transparent);
+  border-color: color-mix(in oklab, var(--color-base-content) 20%, transparent);
 }
 
 .eco-footer {
-  @apply mt-14 pt-6 border-t flex items-center justify-between text-xs;
+  @apply mt-auto pt-8 border-t flex flex-wrap items-center justify-between gap-4 text-xs;
   border-color: color-mix(in oklab, var(--color-base-content) 10%, transparent);
-  color: color-mix(in oklab, var(--color-base-content) 50%, transparent);
+  color: color-mix(in oklab, var(--color-base-content) 55%, transparent);
+}
+
+.eco-footer a {
+  color: inherit;
+  transition: color 0.15s ease;
+}
+
+.eco-footer a:hover {
+  color: var(--color-base-content);
 }
 
 /* Canonical Header & Logo Dimensions */

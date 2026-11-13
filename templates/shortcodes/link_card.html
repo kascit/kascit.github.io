@@ -1,7 +1,8 @@
-{%- component link_card(url: string, external: bool = false, icon: string = "", title: string = "", description: string = "", contrast: bool = false) -%}
+{%- component link_card(url: string, external: bool = false, icon: string = "", title: string = "", description: string = "", contrast: bool = false, nofollow: bool = false) -%}
 {%- set is_external = external | default(value=false) -%}
 {%- set is_contrast = contrast | default(value=false) -%}
-<a href="{{ url }}"{% if is_external %} target="_blank" rel="noopener noreferrer"{% endif %} class="link-card{% if is_contrast %} link-card-contrast{% endif %}">
+{%- set is_nofollow = nofollow | default(value=false) -%}
+<a href="{{ url }}"{% if is_external %} target="_blank" rel="noopener noreferrer{% if is_nofollow %} nofollow{% endif %}"{% endif %} class="link-card{% if is_contrast %} link-card-contrast{% endif %}">
   <div class="link-title text-lg font-bold">
     {%- if icon %}<i class="{{ icon }} link-icon"></i> {% endif -%}
     {{ title }}

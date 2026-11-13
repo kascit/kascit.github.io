@@ -332,6 +332,12 @@ optimize-static:
     @node scripts/just-log.js info "Optimizing static image assets"
     @node scripts/just-run.js "optimize static assets" -- node scripts/optimize-static-assets.js public
 
+[doc("Submit URLs to IndexNow API for instant search engine indexing")]
+[group('build')]
+indexnow:
+    @node scripts/just-log.js info "Submitting URLs to IndexNow"
+    @node scripts/just-run.js "submit indexnow" -- node scripts/submit-indexnow.js
+
 # Post-build pipeline: shared steps after zola build (used by build and ci-build).
 # All steps operate on public/ and are cross-platform (Node.js).
 [private]

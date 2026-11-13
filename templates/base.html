@@ -250,6 +250,15 @@
                         {% endif %}
                     </div>
                     {% endif %}
+                    {# Mobile/End-of-page footer #}
+                    <div class="lg:hidden w-full mt-auto px-4 py-8 border-t border-base-content/10 text-center">
+                        <p class="text-xs text-base-content/60 leading-relaxed">
+                            © {{ now() | date(format="%Y") }} {{ config.extra.footer_html | default(value="Dhanur") | safe }}
+                            • <a href="/privacy/" class="hover:text-base-content transition-colors">Privacy</a>
+                            • <a href="/tos/" class="hover:text-base-content transition-colors">Terms</a>
+                            • <span class="opacity-60 font-mono text-[11px]">Deployed {{ now() | date(format="%b %d, %Y") }}</span>
+                        </p>
+                    </div>
                 </div>
             </div>
             {% endblock main_content %}
